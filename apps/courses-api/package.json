@@ -1,0 +1,12 @@
+{
+  "name": "@academeez/courses-api",
+  "version": "0.0.1",
+  "dependencies": {
+    "@nz/apollo": "^1.5.3",
+    "@nz/express-utils": "^0.1.1",
+    "type-graphql": "^1.1.1"
+  },
+  "peerDependencies": {
+    "express": ">4.0.0"
+  }
+}

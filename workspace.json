@@ -1,10 +1,67 @@
 {
-  
-  
   "version": 2,
-  
-  "projects": {},
   "cli": {
-    "defaultCollection": "@nrwl/workspace"
+    "defaultCollection": "@nrwl/express"
+  },
+  "defaultProject": "courses-api",
+  "projects": {
+    "courses-api": {
+      "root": "apps/courses-api",
+      "sourceRoot": "apps/courses-api/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/courses-api",
+            "main": "apps/courses-api/src/main.ts",
+            "tsConfig": "apps/courses-api/tsconfig.app.json",
+            "assets": [
+              "apps/courses-api/src/assets"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/courses-api/src/environments/environment.ts",
+                  "with": "apps/courses-api/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "courses-api:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/courses-api/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/courses-api"
+          ],
+          "options": {
+            "jestConfig": "apps/courses-api/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    }
   }
 }
