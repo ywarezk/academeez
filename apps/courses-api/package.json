@@ -8,5 +8,8 @@
   },
   "peerDependencies": {
     "express": ">4.0.0"
+  },
+  "devDependencies": {
+    "@nz/test": "^2.2.0"
   }
 }
