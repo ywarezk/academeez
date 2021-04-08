@@ -10,6 +10,10 @@
         "bdd",
         "--timeout",
         "999999",
+        "-r",
+        "../../node_modules/ts-node/register",
+        "-r",
+        "../../node_modules/tsconfig-paths/register",
         "--colors",
         "${workspaceFolder}/test",
         "**/*.spec.ts"
@@ -22,6 +26,9 @@
         "<node_internals>/**"
       ],
       "type": "pwa-node",
+      "env": {
+        "TS_NODE_PROJECT": "./tsconfig.spec.json"
+      },
       "cwd": "${workspaceFolder}/apps/courses-api"
     }
 	]
