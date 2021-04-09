@@ -1,8 +1,6 @@
 {
   "version": 2,
-  "cli": {
-    "defaultCollection": "@nrwl/express"
-  },
+  "cli": { "defaultCollection": "@nrwl/express" },
   "defaultProject": "courses-api",
   "projects": {
     "courses-api": {
@@ -12,16 +10,12 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/apps/courses-api",
             "main": "apps/courses-api/src/main.ts",
             "tsConfig": "apps/courses-api/tsconfig.app.json",
-            "assets": [
-              "apps/courses-api/src/assets"
-            ]
+            "assets": ["apps/courses-api/src/assets"]
           },
           "configurations": {
             "production": {
@@ -39,26 +33,48 @@
         },
         "serve": {
           "executor": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "courses-api:build"
-          }
+          "options": { "buildTarget": "courses-api:build" }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "apps/courses-api/**/*.ts"
-            ]
-          }
+          "options": { "lintFilePatterns": ["apps/courses-api/**/*.ts"] }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/courses-api"
-          ],
+          "outputs": ["coverage/apps/courses-api"],
           "options": {
             "jestConfig": "apps/courses-api/jest.config.js",
             "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "lessons": {
+      "root": "libs/lessons",
+      "sourceRoot": "libs/lessons/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": { "lintFilePatterns": ["libs/lessons/**/*.ts"] }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/lessons"],
+          "options": {
+            "jestConfig": "libs/lessons/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/lessons",
+            "tsConfig": "libs/lessons/tsconfig.lib.json",
+            "packageJson": "libs/lessons/package.json",
+            "main": "libs/lessons/src/index.ts",
+            "assets": ["libs/lessons/*.md"]
           }
         }
       }

@@ -15,5 +15,5 @@
       "options": { "cacheableOperations": ["build", "lint", "test", "e2e"] }
     }
   },
-  "projects": { "courses-api": { "tags": [] } }
+  "projects": { "courses-api": { "tags": [] }, "lessons": { "tags": [] } }
 }

@@ -14,12 +14,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {},
-    "types": [
-      "node",
-      "express",
-      "mocha"
-    ]
+    "paths": {
+      "@academeez/lessons": ["libs/lessons/src/index.ts"]
+    },
+    "types": ["node", "express", "mocha"]
   },
   "exclude": ["node_modules", "tmp"]
 }
