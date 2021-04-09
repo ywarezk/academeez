@@ -25,9 +25,11 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "type": "pwa-node",
+      "type": "node",
+      "runtimeVersion": "14.15.0",
       "env": {
-        "TS_NODE_PROJECT": "./tsconfig.spec.json"
+        "TS_NODE_PROJECT": "./tsconfig.spec.json",
+        "port": "3333"
       },
       "cwd": "${workspaceFolder}/apps/courses-api"
     }

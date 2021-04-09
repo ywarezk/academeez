@@ -9,9 +9,23 @@
 
 import { beforeAfterBootstrap } from '@nz/test/express';
 import { expect } from 'chai';
+import { coursesBootstrap } from '../courses.bootstrap';
+import axios from 'axios';
 
 describe('courses api', () => {
-  it('sanity', () => {
-    expect(true).to.equal(true);
+  beforeAfterBootstrap(coursesBootstrap);
+
+  it('sanity', async () => {
+    const response = await axios.post(
+      'http://localhost:3333/graphql',
+      {
+        query: `
+          query {
+            version
+          }
+        `
+      }
+    )
+    expect(response.data.data.version).to.equal('@academeez/courses-api V0.0.1');
   })
 })
