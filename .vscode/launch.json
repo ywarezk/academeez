@@ -15,7 +15,6 @@
         "-r",
         "../../node_modules/tsconfig-paths/register",
         "--colors",
-        "${workspaceFolder}/test",
         "**/*.spec.ts"
       ],
       "internalConsoleOptions": "openOnSessionStart",
@@ -27,10 +26,15 @@
       ],
       "type": "node",
       "runtimeVersion": "14.15.0",
+
+      // public env vars here
       "env": {
         "TS_NODE_PROJECT": "./tsconfig.spec.json",
         "port": "3333"
       },
+
+      // private env vars here
+      "envFile": "${workspaceFolder}/apps/courses-api/.env",
       "cwd": "${workspaceFolder}/apps/courses-api"
     }
 	]
