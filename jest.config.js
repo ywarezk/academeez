@@ -3,5 +3,6 @@ module.exports = {
     '<rootDir>/apps/courses-api',
     '<rootDir>/libs/lessons',
     '<rootDir>/apps/academeez',
+    '<rootDir>/libs/designs',
   ],
 };

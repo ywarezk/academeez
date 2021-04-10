@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@academeez/lessons": ["libs/lessons/src/index.ts"]
+      "@academeez/lessons": ["libs/lessons/src/index.ts"],
+      "@academeez/designs": ["libs/designs/src/index.ts"]
     },
     "types": ["node", "express", "mocha"]
   },
