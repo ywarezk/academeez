@@ -1,7 +1,22 @@
 {
   "version": 2,
-  "cli": { "defaultCollection": "@nrwl/express" },
+  "cli": {
+    "defaultCollection": "@nrwl/express"
+  },
   "defaultProject": "courses-api",
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "babel": true
+      }
+    },
+    "@nrwl/next": {
+      "application": {
+        "style": "styled-components",
+        "linter": "eslint"
+      }
+    }
+  },
   "projects": {
     "courses-api": {
       "root": "apps/courses-api",
@@ -33,11 +48,15 @@
         },
         "serve": {
           "executor": "@nrwl/node:execute",
-          "options": { "buildTarget": "courses-api:build" }
+          "options": {
+            "buildTarget": "courses-api:build"
+          }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["apps/courses-api/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": ["apps/courses-api/**/*.ts"]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -56,7 +75,9 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["libs/lessons/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": ["libs/lessons/**/*.ts"]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -75,6 +96,83 @@
             "packageJson": "libs/lessons/package.json",
             "main": "libs/lessons/src/index.ts",
             "assets": ["libs/lessons/*.md"]
+          }
+        }
+      }
+    },
+    "academeez": {
+      "root": "apps/academeez",
+      "sourceRoot": "apps/academeez",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/next:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "root": "apps/academeez",
+            "outputPath": "dist/apps/academeez"
+          },
+          "configurations": {
+            "production": {}
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/next:server",
+          "options": {
+            "buildTarget": "academeez:build",
+            "dev": true
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "academeez:build:production",
+              "dev": false
+            }
+          }
+        },
+        "export": {
+          "executor": "@nrwl/next:export",
+          "options": {
+            "buildTarget": "academeez:build:production"
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/academeez"],
+          "options": {
+            "jestConfig": "apps/academeez/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/academeez/**/*.{ts,tsx,js,jsx}"]
+          }
+        }
+      }
+    },
+    "academeez-e2e": {
+      "root": "apps/academeez-e2e",
+      "sourceRoot": "apps/academeez-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/academeez-e2e/cypress.json",
+            "tsConfig": "apps/academeez-e2e/tsconfig.e2e.json",
+            "devServerTarget": "academeez:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "academeez:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/academeez-e2e/**/*.{js,ts}"]
           }
         }
       }
