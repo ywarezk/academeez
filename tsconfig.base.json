@@ -18,7 +18,8 @@
       "@academeez/lessons": ["libs/lessons/src/index.ts"],
       "@academeez/designs": ["libs/designs/src/index.ts"],
       "@academeez/blog": ["libs/blog/src/index.ts"],
-      "@academeez/courses": ["libs/courses/src/index.ts"]
+      "@academeez/courses": ["libs/courses/src/index.ts"],
+      "@academeez/az/styles": ["apps/academeez/styles/index.ts"]
     },
     "types": ["node", "express", "mocha"]
   },

@@ -12,25 +12,28 @@ import Head from 'next/head';
 import { useRef } from 'react';
 import { LayoutContext } from './layout.context';
 import { Header } from './Header/Header';
+import { ThemeProvider } from '@academeez/az/styles';
 
 export function AppPage({ Component, pageProps }: AppProps) {
   const headerRef = useRef();
 
   return (
-    <LayoutContext.Provider value={ {header: headerRef} }>
-      <Head>
-        <title>academeez - learn coding</title>
-      </Head>
-      <div className="app">
+    <ThemeProvider>
+      <LayoutContext.Provider value={{ header: headerRef }}>
+        <Head>
+          <title>academeez - learn coding</title>
+        </Head>
+        <div className="app">
 
-        {/* header portal will be placed here */}
-        <div ref={ headerRef } />
+          {/* header portal will be placed here */}
+          <div ref={headerRef} />
 
-        <Header />
-        <main>
-          <Component {...pageProps} />
-        </main>
-      </div>
-    </LayoutContext.Provider>
+          <Header />
+          <main>
+            <Component {...pageProps} />
+          </main>
+        </div>
+      </LayoutContext.Provider>
+    </ThemeProvider>
   );
 }

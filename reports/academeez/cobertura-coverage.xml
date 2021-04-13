@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="23" lines-covered="23" line-rate="1" branches-valid="2" branches-covered="2" branch-rate="1" timestamp="1618082811880" complexity="0" version="0.1">
+<coverage lines-valid="31" lines-covered="31" line-rate="1" branches-valid="2" branches-covered="2" branch-rate="1" timestamp="1618342933894" complexity="0" version="0.1">
   <sources>
     <source>/Users/yarivkatz/Development/academeez2</source>
   </sources>
@@ -51,9 +51,9 @@
       <classes>
         <class name="Header.tsx" filename="apps/academeez/app/AppPage/Header/Header.tsx" line-rate="1" branch-rate="1">
           <methods>
-            <method name="(anonymous_0)" hits="4" signature="()V">
+            <method name="(anonymous_0)" hits="2" signature="()V">
               <lines>
-                <line number="28" hits="4"/>
+                <line number="28" hits="2"/>
               </lines>
             </method>
           </methods>
@@ -71,9 +71,44 @@
             <line number="23" hits="1" branch="false"/>
             <line number="24" hits="1" branch="false"/>
             <line number="28" hits="1" branch="false"/>
-            <line number="29" hits="4" branch="false"/>
-            <line number="31" hits="3" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="33" hits="2" branch="false"/>
+            <line number="29" hits="2" branch="false"/>
+            <line number="31" hits="2" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="33" hits="1" branch="false"/>
+          </lines>
+        </class>
+      </classes>
+    </package>
+    <package name="academeez.styles" line-rate="1" branch-rate="1">
+      <classes>
+        <class name="Flexbox.ts" filename="apps/academeez/styles/Flexbox.ts" line-rate="1" branch-rate="1">
+          <methods>
+          </methods>
+          <lines>
+            <line number="10" hits="1" branch="false"/>
+            <line number="12" hits="1" branch="false"/>
+          </lines>
+        </class>
+        <class name="ThemeProvider.tsx" filename="apps/academeez/styles/ThemeProvider.tsx" line-rate="1" branch-rate="1">
+          <methods>
+            <method name="(anonymous_0)" hits="2" signature="()V">
+              <lines>
+                <line number="25" hits="2"/>
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="12" hits="1" branch="false"/>
+            <line number="13" hits="1" branch="false"/>
+            <line number="18" hits="1" branch="false"/>
+            <line number="25" hits="1" branch="false"/>
+            <line number="26" hits="2" branch="false"/>
+          </lines>
+        </class>
+        <class name="index.ts" filename="apps/academeez/styles/index.ts" line-rate="1" branch-rate="1">
+          <methods>
+          </methods>
+          <lines>
+            <line number="10" hits="1" branch="false"/>
           </lines>
         </class>
       </classes>

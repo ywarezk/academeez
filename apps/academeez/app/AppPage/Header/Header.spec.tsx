@@ -12,6 +12,7 @@ import { Header } from './Header';
 import { expect } from 'chai';
 import { render, waitFor } from '@testing-library/react';
 import { LayoutContext } from '../layout.context';
+import { ThemeProvider } from '@academeez/az/styles';
 
 const HeaderWrapper = () => {
   const header = useRef();
@@ -22,10 +23,12 @@ const HeaderWrapper = () => {
   }, [])
 
   return (
-    <LayoutContext.Provider value={ {header} }>
-      <div ref={ header } />
-      <Header />
-    </LayoutContext.Provider>
+    <ThemeProvider>
+      <LayoutContext.Provider value={{ header }}>
+        <div ref={header} />
+        <Header />
+      </LayoutContext.Provider>
+    </ThemeProvider>
   )
 }
 

@@ -44,7 +44,7 @@ export const Header: FC<HeaderProps> = () => {
               />
             </a>
           </Link>
-          <List>
+          <List className="d-flex">
             <ListItem>
               <Link href="/courses">
                 <Typography variant="body1" component="span">
