@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<testsuite name="Chrome 89.0.4389.114 (Mac OS 11.2.3)" package="" timestamp="2021-04-10T19:26:51" id="0" hostname="Yarivs-MBP" tests="1" errors="0" failures="1" time="0.01">
+  <properties>
+    <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"/>
+  </properties>
+  <testcase name="&lt;Header /> &quot;before each&quot; hook for &quot;hello&quot;" time="0.01" classname="&lt;Header />">
+    <failure type="">Error: Uncaught ReferenceError: React is not defined (webpack:///apps/academeez/app/AppPage/Header/Header.tsx:13:1 &lt;- test.js:188)
+    at Object.invokeGuardedCallbackDev (webpack:///node_modules/react-dom/cjs/react-dom.development.js:3994:1 &lt;- test.js:57093:16)
+    at invokeGuardedCallback (webpack:///node_modules/react-dom/cjs/react-dom.development.js:4056:1 &lt;- test.js:57155:31)
+    at beginWork$1 (webpack:///node_modules/react-dom/cjs/react-dom.development.js:23964:1 &lt;- test.js:77058:7)
+    at performUnitOfWork (webpack:///node_modules/react-dom/cjs/react-dom.development.js:22779:1 &lt;- test.js:75873:12)
+    at workLoopSync (webpack:///node_modules/react-dom/cjs/react-dom.development.js:22707:1 &lt;- test.js:75801:5)
+    at renderRootSync (webpack:///node_modules/react-dom/cjs/react-dom.development.js:22670:1 &lt;- test.js:75764:7)
+    at performSyncWorkOnRoot (webpack:///node_modules/react-dom/cjs/react-dom.development.js:22293:1 &lt;- test.js:75387:18)
+    at webpack:///node_modules/react-dom/cjs/react-dom.development.js:11327:1 &lt;- test.js:64426:26
+    at unstable_runWithPriority (webpack:///node_modules/scheduler/cjs/scheduler.development.js:468:1 &lt;- test.js:85613:12)
+</failure>
+  </testcase>
+  <system-out>
+    <![CDATA[Chrome 89.0.4389.114 (Mac OS 11.2.3) ERROR: ReferenceError: React is not defined
+ReferenceError: React is not defined
+    at ./apps/academeez/app/AppPage/Header/Header.tsx.exports.Header (http://localhost:9876/base/test.js?8f9d71d2ffaedf21c52317ec800b1e6cf032525e:188:7977)
+    at renderWithHooks (http://localhost:9876/base/test.js?8f9d71d2ffaedf21c52317ec800b1e6cf032525e:68084:18)
+    at updateFunctionComponent (http://localhost:9876/base/test.js?8f9d71d2ffaedf21c52317ec800b1e6cf032525e:70455:20)
+    at beginWork (http://localhost:9876/base/test.js?8f9d71d2ffaedf21c52317ec800b1e6cf032525e:72162:16)
+    at HTMLUnknownElement.callCallback (http://localhost:9876/base/test.js?8f9d71d2ffaedf21c52317ec800b1e6cf032525e:57044:14)
+    at Object.invokeGuardedCallbackDev (http://localhost:9876/base/test.js?8f9d71d2ffaedf21c52317ec800b1e6cf032525e:57093:16)
+    at invokeGuardedCallback (http://localhost:9876/base/test.js?8f9d71d2ffaedf21c52317ec800b1e6cf032525e:57155:31)
+    at beginWork$1 (http://localhost:9876/base/test.js?8f9d71d2ffaedf21c52317ec800b1e6cf032525e:77058:7)
+    at performUnitOfWork (http://localhost:9876/base/test.js?8f9d71d2ffaedf21c52317ec800b1e6cf032525e:75873:12)
+    at workLoopSync (http://localhost:9876/base/test.js?8f9d71d2ffaedf21c52317ec800b1e6cf032525e:75801:5)
+,Chrome 89.0.4389.114 (Mac OS 11.2.3) ERROR: 'The above error occurred in one of your React components:
+
+    at ./apps/academeez/app/AppPage/Header/Header.tsx.exports.Header (http://localhost:9876/base/test.js?8f9d71d2ffaedf21c52317ec800b1e6cf032525e:188:7743)
+    at HeaderWrapper (http://localhost:9876/base/test.js?8f9d71d2ffaedf21c52317ec800b1e6cf032525e:147:28)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.'
+
+]]>
+  </system-out>
+  <system-err/>
+</testsuite>

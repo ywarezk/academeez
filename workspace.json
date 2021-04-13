@@ -114,11 +114,23 @@
           "options": { "buildTarget": "academeez:build:production" }
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/academeez"],
+          "executor": "@nrwl/workspace:run-commands",
           "options": {
-            "jestConfig": "apps/academeez/jest.config.js",
-            "passWithNoTests": true
+            "commands": [
+              {
+                "command": "npx ts-node -r tsconfig-paths/register --project apps/academeez/tsconfig.spec.json node_modules/.bin/karma start apps/academeez/karma.conf.ts --single-run true --browsers ChromeHeadlessNoSandbox"
+              }
+            ]
+          }
+        },
+        "test-dev": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx ts-node -r tsconfig-paths/register --project apps/academeez/tsconfig.spec.json node_modules/.bin/karma start apps/academeez/karma.conf.ts --single-run false --browsers Chrome"
+              }
+            ]
           }
         },
         "lint": {
@@ -177,6 +189,66 @@
             "packageJson": "libs/designs/package.json",
             "main": "libs/designs/src/index.ts",
             "assets": ["libs/designs/*.md"]
+          }
+        }
+      }
+    },
+    "blog": {
+      "root": "libs/blog",
+      "sourceRoot": "libs/blog/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": { "lintFilePatterns": ["libs/blog/**/*.ts"] }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/blog"],
+          "options": {
+            "jestConfig": "libs/blog/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/blog",
+            "tsConfig": "libs/blog/tsconfig.lib.json",
+            "packageJson": "libs/blog/package.json",
+            "main": "libs/blog/src/index.ts",
+            "assets": ["libs/blog/*.md"]
+          }
+        }
+      }
+    },
+    "courses": {
+      "root": "libs/courses",
+      "sourceRoot": "libs/courses/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": { "lintFilePatterns": ["libs/courses/**/*.ts"] }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/courses"],
+          "options": {
+            "jestConfig": "libs/courses/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/courses",
+            "tsConfig": "libs/courses/tsconfig.lib.json",
+            "packageJson": "libs/courses/package.json",
+            "main": "libs/courses/src/index.ts",
+            "assets": ["libs/courses/*.md"]
           }
         }
       }

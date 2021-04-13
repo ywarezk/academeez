@@ -11,6 +11,7 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useRef } from 'react';
 import { LayoutContext } from './layout.context';
+import { Header } from './Header/Header';
 
 export function AppPage({ Component, pageProps }: AppProps) {
   const headerRef = useRef();
@@ -25,6 +26,7 @@ export function AppPage({ Component, pageProps }: AppProps) {
         {/* header portal will be placed here */}
         <div ref={ headerRef } />
 
+        <Header />
         <main>
           <Component {...pageProps} />
         </main>

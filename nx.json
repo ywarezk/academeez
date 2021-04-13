@@ -20,6 +20,8 @@
     "lessons": { "tags": [] },
     "academeez": { "tags": [] },
     "academeez-e2e": { "tags": [], "implicitDependencies": ["academeez"] },
-    "designs": { "tags": [] }
+    "designs": { "tags": [] },
+    "blog": { "tags": [] },
+    "courses": { "tags": [] }
   }
 }
