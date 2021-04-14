@@ -22,6 +22,7 @@
     "academeez-e2e": { "tags": [], "implicitDependencies": ["academeez"] },
     "designs": { "tags": [] },
     "blog": { "tags": [] },
-    "courses": { "tags": [] }
+    "courses": { "tags": [] },
+    "prd": { "tags": [] }
   }
 }
