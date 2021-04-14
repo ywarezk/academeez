@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<testsuite name="Chrome 89.0.4389.114 (Mac OS 11.2.3)" package="" timestamp="2021-04-13T19:42:13" id="0" hostname="Yarivs-MBP" tests="1" errors="0" failures="0" time="0">
+<testsuite name="Chrome 89.0.4389.114 (Mac OS 11.2.3)" package="" timestamp="2021-04-13T19:56:23" id="0" hostname="Yarivs-MBP" tests="1" errors="0" failures="0" time="0">
   <properties>
     <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"/>
   </properties>

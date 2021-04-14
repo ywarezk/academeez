@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="31" lines-covered="31" line-rate="1" branches-valid="2" branches-covered="2" branch-rate="1" timestamp="1618342933894" complexity="0" version="0.1">
+<coverage lines-valid="35" lines-covered="35" line-rate="1" branches-valid="2" branches-covered="2" branch-rate="1" timestamp="1618343783298" complexity="0" version="0.1">
   <sources>
     <source>/Users/yarivkatz/Development/academeez2</source>
   </sources>
@@ -80,6 +80,20 @@
     </package>
     <package name="academeez.styles" line-rate="1" branch-rate="1">
       <classes>
+        <class name="Backgrounds.ts" filename="apps/academeez/styles/Backgrounds.ts" line-rate="1" branch-rate="1">
+          <methods>
+            <method name="(anonymous_0)" hits="1" signature="()V">
+              <lines>
+                <line number="14" hits="1"/>
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="10" hits="1" branch="false"/>
+            <line number="12" hits="1" branch="false"/>
+            <line number="14" hits="1" branch="false"/>
+          </lines>
+        </class>
         <class name="Flexbox.ts" filename="apps/academeez/styles/Flexbox.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
@@ -92,16 +106,17 @@
           <methods>
             <method name="(anonymous_0)" hits="2" signature="()V">
               <lines>
-                <line number="25" hits="2"/>
+                <line number="28" hits="2"/>
               </lines>
             </method>
           </methods>
           <lines>
             <line number="12" hits="1" branch="false"/>
             <line number="13" hits="1" branch="false"/>
-            <line number="18" hits="1" branch="false"/>
-            <line number="25" hits="1" branch="false"/>
-            <line number="26" hits="2" branch="false"/>
+            <line number="14" hits="1" branch="false"/>
+            <line number="19" hits="1" branch="false"/>
+            <line number="28" hits="1" branch="false"/>
+            <line number="29" hits="2" branch="false"/>
           </lines>
         </class>
         <class name="index.ts" filename="apps/academeez/styles/index.ts" line-rate="1" branch-rate="1">
