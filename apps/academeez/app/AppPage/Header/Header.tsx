@@ -22,6 +22,8 @@ import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
 import GithubIcon from '@material-ui/icons/GitHub';
 import YoutubeIcon from '@material-ui/icons/YouTube';
+import logo from './logo.png';
+import { Grid } from '@material-ui/core';
 
 type HeaderProps = { isTransparent? : boolean }
 
@@ -32,38 +34,40 @@ export const Header: FC<HeaderProps> = () => {
 
   return createPortal(
     (
-      <AppBar>
-        <Toolbar>
-          <Link href="/">
-            <a>
-              <Image
-                src="/logo.png"
-                alt="Academeez - coding courses"
-                height="31"
-                width="auto"
-              />
-            </a>
-          </Link>
-          <List className="d-flex">
-            <ListItem>
-              <Link href="/courses">
-                <Typography variant="body1" component="span">
-                  Learn a course
-                </Typography>
+      <AppBar className="bg-dark800">
+        <Grid container>
+          <Grid item xs={12}>
+            <Toolbar>
+              <Link href="/">
+                <a>
+                  <img
+                    src={logo}
+                    alt="Academeez - coding courses"
+                  />
+                </a>
               </Link>
-            </ListItem>
-            <ListItem>
-              <a href="https://github.com/ywarezk/academeez">
-                <GithubIcon />
-              </a>
-            </ListItem>
-            <ListItem>
-              <a href="https://www.youtube.com/channel/UCmnTSM4hGDJin7g5PyXa9pQ">
-                <YoutubeIcon />
-              </a>
-            </ListItem>
-          </List>
-        </Toolbar>
+              <List className="d-flex">
+                <ListItem>
+                  <Link href="/courses">
+                    <Typography variant="body1" component="span">
+                      Learn a course
+                </Typography>
+                  </Link>
+                </ListItem>
+                <ListItem>
+                  <a href="https://github.com/ywarezk/academeez">
+                    <GithubIcon />
+                  </a>
+                </ListItem>
+                <ListItem>
+                  <a href="https://www.youtube.com/channel/UCmnTSM4hGDJin7g5PyXa9pQ">
+                    <YoutubeIcon />
+                  </a>
+                </ListItem>
+              </List>
+            </Toolbar>
+          </Grid>
+        </Grid>
       </AppBar>
     ),
     header.current

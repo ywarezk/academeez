@@ -9,13 +9,18 @@
 
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { LayoutContext } from './layout.context';
 import { Header } from './Header/Header';
 import { ThemeProvider } from '@academeez/az/styles';
 
 export function AppPage({ Component, pageProps }: AppProps) {
   const headerRef = useRef();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, [])
 
   return (
     <ThemeProvider>

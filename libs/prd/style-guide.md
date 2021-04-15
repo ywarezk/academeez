@@ -13,3 +13,12 @@ for example in the header along with the hover and active state of the links
 ## Buttons
 
 different buttons we have along with their hover state
+
+## Forms
+
+text input, password input, text area, 
+
+## Colors
+
+our color pallete
+
