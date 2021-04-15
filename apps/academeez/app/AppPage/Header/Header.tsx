@@ -11,10 +11,8 @@
  */
 
 import { FC, useContext } from 'react';
-import Image from 'next/image';
 import { createPortal } from 'react-dom';
 import { LayoutContext } from '../layout.context';
-import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import Link from 'next/link';
@@ -24,6 +22,7 @@ import GithubIcon from '@material-ui/icons/GitHub';
 import YoutubeIcon from '@material-ui/icons/YouTube';
 import logo from './logo.png';
 import { Grid } from '@material-ui/core';
+import { MuiAppBar, LogoImage } from './Header.markup';
 
 type HeaderProps = { isTransparent? : boolean }
 
@@ -34,24 +33,24 @@ export const Header: FC<HeaderProps> = () => {
 
   return createPortal(
     (
-      <AppBar className="bg-dark800">
-        <Grid container>
-          <Grid item xs={12}>
+      <MuiAppBar className="bg-dark800 pt-2 pb-2">
+        <Grid container className="justify-content-center">
+          <Grid item xs={10}>
             <Toolbar>
               <Link href="/">
                 <a>
-                  <img
+                  <LogoImage
                     src={logo}
                     alt="Academeez - coding courses"
                   />
                 </a>
               </Link>
-              <List className="d-flex">
+              <List className="d-flex flex-grow-1">
                 <ListItem>
                   <Link href="/courses">
                     <Typography variant="body1" component="span">
                       Learn a course
-                </Typography>
+              </Typography>
                   </Link>
                 </ListItem>
                 <ListItem>
@@ -68,7 +67,7 @@ export const Header: FC<HeaderProps> = () => {
             </Toolbar>
           </Grid>
         </Grid>
-      </AppBar>
+      </MuiAppBar>
     ),
     header.current
   )

@@ -13,4 +13,12 @@ export const Flexbox = createGlobalStyle`
   .d-flex {
     display: flex !important;
   }
+
+  .flex-grow-1 {
+    flex-grow: 1!important;
+  }
+
+  .justify-content-center {
+    justify-content: center!important;
+  }
 `
