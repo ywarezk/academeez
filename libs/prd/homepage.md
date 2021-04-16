@@ -21,7 +21,8 @@ There should be a sliding/typewriting text with the following key message:
 3. `Learn to be an expert frontend, backend, devops`
 
 Bellow the text we have 2 call for actions:
-- Primary CFA: Start learning button that will direct him to the courses page
+- Primary CFA: Start learning button that will direct him to the courses page  
+if the user already start learning before this button should be `Continue learning React` which will restore the user to the same spot he left.
 - Secondery CFA: Play button of a video explaining about the site
 
 ## 2. Courses section

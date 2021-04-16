@@ -14,7 +14,7 @@ Note that a course has a primary logo color and we are adding that color to cert
 
 The header will contain a right side navigation.  
 For the first version there will be a link to the following pages:
-- courses - This is the call for action and should probably stand out a bit above the others
+- [courses](courses.md) - This is the call for action and should probably stand out a bit above the others
 - blog
 - donate
 - github icon - leading to the open source project
