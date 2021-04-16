@@ -21,4 +21,8 @@ export const Flexbox = createGlobalStyle`
   .justify-content-center {
     justify-content: center!important;
   }
+
+  .flex-row-reverse {
+    flex-direction: row-reverse!important;
+  }
 `

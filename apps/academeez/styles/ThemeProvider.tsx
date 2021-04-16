@@ -13,6 +13,7 @@ import { ThemeProvider as SCThemeProvider } from 'styled-components';
 import { Flexbox } from './Flexbox';
 import { Background } from './Backgrounds';
 import { Paddings } from './Paddings';
+import { TextColors } from './TextColors';
 
 /**
  * Academeez theme will be placed here
@@ -32,6 +33,7 @@ export const ThemeProvider: FC = ({ children }) => {
       <Flexbox />
       <Background />
       <Paddings />
+      <TextColors />
 
       { children }
     </SCThemeProvider>

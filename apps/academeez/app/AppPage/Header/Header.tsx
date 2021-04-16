@@ -16,13 +16,14 @@ import { LayoutContext } from '../layout.context';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import Link from 'next/link';
-import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
 import GithubIcon from '@material-ui/icons/GitHub';
 import YoutubeIcon from '@material-ui/icons/YouTube';
 import logo from './logo.png';
 import { Grid } from '@material-ui/core';
-import { MuiAppBar, LogoImage } from './Header.markup';
+import { MuiAppBar, LogoImage, ListItem } from './Header.markup';
+import MuiLink from '@material-ui/core/Link';
+
 
 type HeaderProps = { isTransparent? : boolean }
 
@@ -45,12 +46,14 @@ export const Header: FC<HeaderProps> = () => {
                   />
                 </a>
               </Link>
-              <List className="d-flex flex-grow-1">
+              <List className="d-flex flex-grow-1 flex-row-reverse">
                 <ListItem>
                   <Link href="/courses">
-                    <Typography variant="body1" component="span">
-                      Learn a course
-              </Typography>
+                    <MuiLink className="text-white">
+                      <Typography variant="body1" component="span">
+                        Learn a course
+                      </Typography>
+                    </MuiLink>
                   </Link>
                 </ListItem>
                 <ListItem>
