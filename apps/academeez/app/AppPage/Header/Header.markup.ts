@@ -12,8 +12,23 @@ import AppBar from '@material-ui/core/AppBar';
 import MuiListItem, {ListItemProps} from '@material-ui/core/ListItem';
 import { FC } from 'react';
 
-export const MuiAppBar = styled(AppBar)`
-  & {
+
+export const MuiAppBar: FC<any> = styled(AppBar)`
+  && {
+    ${(props: any) => {
+        return props.isTransparent ? `
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          background: transparent;;
+          box-shadow: none;
+        ` : `
+          position: static !important;
+          background: ${props.theme.colors.dark800}
+        `
+      }
+    }
   }
 `
 

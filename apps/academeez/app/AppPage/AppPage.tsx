@@ -33,7 +33,6 @@ export function AppPage({ Component, pageProps }: AppProps) {
           {/* header portal will be placed here */}
           <div ref={headerRef} />
 
-          <Header />
           <main>
             <Component {...pageProps} />
           </main>

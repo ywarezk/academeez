@@ -27,14 +27,14 @@ import MuiLink from '@material-ui/core/Link';
 
 type HeaderProps = { isTransparent? : boolean }
 
-export const Header: FC<HeaderProps> = () => {
+export const Header: FC<HeaderProps> = ( props ) => {
   const { header } = useContext( LayoutContext );
 
   if (!header.current) return null;
 
   return createPortal(
     (
-      <MuiAppBar className="bg-dark800 pt-2 pb-2">
+      <MuiAppBar {...props} className="pt-2 pb-2">
         <Grid container className="justify-content-center">
           <Grid item xs={10}>
             <Toolbar>

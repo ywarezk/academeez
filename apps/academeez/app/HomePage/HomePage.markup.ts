@@ -16,5 +16,6 @@ export const HeroSection = styled.section`
     min-height: 500px;
 
     background-color: black;
+    position: relative;
   }
 `

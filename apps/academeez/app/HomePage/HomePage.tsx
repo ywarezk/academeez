@@ -12,6 +12,7 @@ import Head from 'next/head';
 import { Header } from '../';
 import { Grid } from "@material-ui/core";
 import { HeroSection } from './HomePage.markup';
+import { LogoLineAnim } from './LogoLineAnim/LogoLineAnim';
 
 export const HomePage: FC = () => {
   return (
@@ -24,10 +25,9 @@ export const HomePage: FC = () => {
       </Head>
       <Header isTransparent />
 
-      <Header isTransparent />
-
       {/* begin hero */}
       <HeroSection>
+        <LogoLineAnim />
         <Grid container>
         </Grid>
       </HeroSection>

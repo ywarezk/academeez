@@ -29,3 +29,6 @@ Each lesson also have the lesson in an article format below the player.
 
 The student can often download the source code of the lesson
 
+## Hot topics
+
+The student will be able to quickly navigate to prerequisites or lessons that relates to this lesson
