@@ -8,6 +8,7 @@
  */
 
 import styled from 'styled-components';
+import bg from './bg.jpg';
 
 export const HeroSection = styled.section`
   & {
@@ -18,4 +19,19 @@ export const HeroSection = styled.section`
     background-color: black;
     position: relative;
   }
+`
+
+export const HeroBgImg = styled.div`
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  opacity: 0.05;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background-image: url(${bg});
 `

@@ -11,7 +11,7 @@ import { FC } from "react";
 import Head from 'next/head';
 import { Header } from '../';
 import { Grid } from "@material-ui/core";
-import { HeroSection } from './HomePage.markup';
+import { HeroSection, HeroBgImg } from './HomePage.markup';
 import { LogoLineAnim } from './LogoLineAnim/LogoLineAnim';
 
 export const HomePage: FC = () => {
@@ -28,6 +28,7 @@ export const HomePage: FC = () => {
       {/* begin hero */}
       <HeroSection>
         <LogoLineAnim />
+        <HeroBgImg />
         <Grid container>
         </Grid>
       </HeroSection>
