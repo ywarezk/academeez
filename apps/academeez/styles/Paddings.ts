@@ -17,4 +17,12 @@ export const Paddings = createGlobalStyle`
   .pb-2 {
     padding-bottom: 0.75rem !important;
   }
+
+  .p-0 {
+    padding: 0;
+  }
+
+  .m-0 {
+    margin: 0;
+  }
 `

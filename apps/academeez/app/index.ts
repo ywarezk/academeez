@@ -8,3 +8,5 @@
  */
 
 export * from './AppPage/AppPage';
+export * from './HomePage/HomePage';
+export * from './AppPage/Header/Header';

@@ -16,7 +16,7 @@ There are a few key messages we have to deliver quickly (arranged by important):
 
 There should be a sliding/typewriting text with the following key message:
 
-1. `Free coding video lessons`
+1. `Free coding video courses`
 2. `Donation based and open source`
 3. `Learn to be an expert frontend, backend, devops`
 

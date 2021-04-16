@@ -57,6 +57,24 @@ export const Header: FC<HeaderProps> = () => {
                   </Link>
                 </ListItem>
                 <ListItem>
+                  <Link href="/donate">
+                    <MuiLink className="text-white">
+                      <Typography variant="body1" component="span">
+                        Donate
+                      </Typography>
+                    </MuiLink>
+                  </Link>
+                </ListItem>
+                <ListItem>
+                  <Link href="/blog">
+                    <MuiLink className="text-white">
+                      <Typography variant="body1" component="span">
+                        Blog
+                      </Typography>
+                    </MuiLink>
+                  </Link>
+                </ListItem>
+                <ListItem>
                   <a href="https://github.com/ywarezk/academeez">
                     <GithubIcon />
                   </a>

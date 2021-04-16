@@ -14,6 +14,7 @@ import { Flexbox } from './Flexbox';
 import { Background } from './Backgrounds';
 import { Paddings } from './Paddings';
 import { TextColors } from './TextColors';
+import { Common } from './Common';
 
 /**
  * Academeez theme will be placed here
@@ -34,6 +35,7 @@ export const ThemeProvider: FC = ({ children }) => {
       <Background />
       <Paddings />
       <TextColors />
+      <Common />
 
       { children }
     </SCThemeProvider>
