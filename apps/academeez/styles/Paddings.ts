@@ -14,6 +14,14 @@ export const Paddings = createGlobalStyle`
     padding-top: 0.75rem !important;
   }
 
+  .pt-3 {
+    padding-top: 1rem !important;
+  }
+
+  .pt-4 {
+    padding-top: 2.5rem !important;
+  }
+
   .pb-2 {
     padding-bottom: 0.75rem !important;
   }

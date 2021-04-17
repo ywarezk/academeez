@@ -17,4 +17,8 @@ export const Text = createGlobalStyle`
   .text-center {
     text-align: center;
   }
+
+  .text-dark800 {
+    color: ${ props => (props.theme as any).colors.dark800 } !important;
+  }
 `

@@ -13,4 +13,8 @@ export const Background = createGlobalStyle`
   .bg-dark800 {
     background-color: ${ props => (props.theme as any).colors.dark800 } !important;
   }
+
+  .bg-gray200 {
+    background-color: ${ props => (props.theme as any).colors.gray200 } !important;
+  }
 `

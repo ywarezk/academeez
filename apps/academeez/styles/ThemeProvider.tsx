@@ -21,7 +21,8 @@ import { Common } from './Common';
  */
 const theme = {
   colors: {
-    dark800: '#2d2d2d'
+    dark800: '#2d2d2d',
+    gray200: '#f4f4f4'
   }
 }
 

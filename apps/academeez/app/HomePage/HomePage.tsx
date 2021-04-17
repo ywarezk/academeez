@@ -14,6 +14,8 @@ import { Grid, Typography } from "@material-ui/core";
 import { HeroSection, HeroBgImg } from './HomePage.markup';
 import { LogoLineAnim } from './LogoLineAnim/LogoLineAnim';
 import { PlayButton } from '@academeez/az/material';
+import Button from '@material-ui/core/Button';
+
 
 export const HomePage: FC = () => {
   return (
@@ -38,11 +40,23 @@ export const HomePage: FC = () => {
             <div className="d-flex justify-content-center mt-3">
               <PlayButton className="text-white" fontSize="7rem" />
             </div>
-
+            <div className="d-flex justify-content-center mt-3">
+              <Button size="large" color="primary" variant="contained">
+                Start Learning
+              </Button>
+            </div>
           </Grid>
         </Grid>
       </HeroSection>
       {/* end hero */}
+
+      {/* begin courses */}
+      <section className="bg-gray200 pt-4">
+        <Typography variant="h3" className="text-dark800 text-center">
+          Video Coding Courses
+        </Typography>
+      </section>
+      {/* end courses */}
 
     </div>
   )
