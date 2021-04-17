@@ -25,4 +25,8 @@ export const Paddings = createGlobalStyle`
   .m-0 {
     margin: 0;
   }
+
+  .mt-3 {
+    margin-top: 1rem !important;
+  }
 `

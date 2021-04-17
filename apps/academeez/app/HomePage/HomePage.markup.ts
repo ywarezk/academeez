@@ -19,6 +19,12 @@ export const HeroSection = styled.section`
     background-color: black;
     position: relative;
   }
+
+  & .MuiGrid-container {
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+  }
 `
 
 export const HeroBgImg = styled.div`
@@ -34,4 +40,6 @@ export const HeroBgImg = styled.div`
   width: 100%;
   position: absolute;
   background-image: url(${bg});
+
+
 `

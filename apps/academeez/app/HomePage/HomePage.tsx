@@ -10,9 +10,10 @@
 import { FC } from "react";
 import Head from 'next/head';
 import { Header } from '../';
-import { Grid } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import { HeroSection, HeroBgImg } from './HomePage.markup';
 import { LogoLineAnim } from './LogoLineAnim/LogoLineAnim';
+import { PlayButton } from '@academeez/az/material';
 
 export const HomePage: FC = () => {
   return (
@@ -29,7 +30,16 @@ export const HomePage: FC = () => {
       <HeroSection>
         <LogoLineAnim />
         <HeroBgImg />
-        <Grid container xs={12}>
+        <Grid container>
+          <Grid item xs={12} md={10}>
+            <Typography variant="h2" className="text-white text-center">
+              Free & Open Source video coding courses
+            </Typography>
+            <div className="d-flex justify-content-center mt-3">
+              <PlayButton className="text-white" fontSize="7rem" />
+            </div>
+
+          </Grid>
         </Grid>
       </HeroSection>
       {/* end hero */}

@@ -9,8 +9,12 @@
 
 import { createGlobalStyle } from 'styled-components';
 
-export const TextColors = createGlobalStyle`
+export const Text = createGlobalStyle`
   .text-white {
     color: white !important;
+  }
+
+  .text-center {
+    text-align: center;
   }
 `

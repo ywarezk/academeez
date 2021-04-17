@@ -13,7 +13,7 @@ import { ThemeProvider as SCThemeProvider } from 'styled-components';
 import { Flexbox } from './Flexbox';
 import { Background } from './Backgrounds';
 import { Paddings } from './Paddings';
-import { TextColors } from './TextColors';
+import { Text } from './TextColors';
 import { Common } from './Common';
 
 /**
@@ -34,7 +34,7 @@ export const ThemeProvider: FC = ({ children }) => {
       <Flexbox />
       <Background />
       <Paddings />
-      <TextColors />
+      <Text />
       <Common />
 
       { children }

@@ -14,4 +14,8 @@ export const Common = createGlobalStyle`
     margin: 0;
     padding: 0;
   }
+
+  .h-100 {
+    height: 100%;
+  }
 `
