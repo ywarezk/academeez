@@ -16,7 +16,7 @@ The header will contain a right side navigation.
 For the first version there will be a link to the following pages:
 - [courses](courses.md) - This is the call for action and should probably stand out a bit above the others
 - [blog](blog.md)
-- donate
+- [text](donate.md)
 - github icon - leading to the open source project
 - youtube icon - leading to the lectures on the channel in youtube
 

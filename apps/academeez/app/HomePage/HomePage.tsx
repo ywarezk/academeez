@@ -29,7 +29,7 @@ export const HomePage: FC = () => {
       <HeroSection>
         <LogoLineAnim />
         <HeroBgImg />
-        <Grid container>
+        <Grid container xs={12}>
         </Grid>
       </HeroSection>
       {/* end hero */}
