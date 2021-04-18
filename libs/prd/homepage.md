@@ -33,6 +33,8 @@ Each course ticket should have the following:
 - title
 - description
 - share
+- prerequisites
+
 
 ## 3. Donation section
 
