@@ -35,6 +35,8 @@ Each course ticket should have the following:
 - share
 - prerequisites
 
+The call for action on the card is to start studing the course which will move the user to the course chapters page.  
+Secondery call for action will be to play the video on the card that explains what the course is about
 
 ## 3. Donation section
 
