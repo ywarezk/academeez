@@ -1,30 +1,57 @@
 <?xml version="1.0"?>
-<testsuite name="Chrome 90.0.4430.72 (Mac OS 10.15.7)" package="" timestamp="2021-04-20T12:04:13" id="0" hostname="Yarivs-MBP" tests="2" errors="0" failures="1" time="60.007">
+<testsuite name="Chrome 90.0.4430.85 (Mac OS 10.15.7)" package="" timestamp="2021-04-20T21:11:49" id="0" hostname="Yarivs-MBP" tests="3" errors="0" failures="0" time="0.033">
   <properties>
-    <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36"/>
+    <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36"/>
   </properties>
-  <testcase name="buttons display all buttons" time="60.007" classname="buttons">
-    <failure type="">Error: Timeout of 60000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves.
-</failure>
-  </testcase>
+  <testcase name="&lt;Header /> hello" time="0" classname="&lt;Header />"/>
+  <testcase name="&lt;Link /> different links" time="0.013" classname="&lt;Link />"/>
+  <testcase name="buttons display all buttons" time="0.02" classname="buttons"/>
   <system-out>
-    <![CDATA[Chrome 90.0.4430.72 (Mac OS 10.15.7) ERROR: 'Warning: Failed %s type: %s%s', 'prop', 'Invalid prop `color` of value `green` supplied to `ForwardRef(Button)`, expected one of ["default","inherit","primary","secondary"].', '
-    at Button (http://localhost:9876/base/test.js?64559d501fa56b5bfef2254bd0be4e26a7f255a6:5264:24)
-    at WithStyles (http://localhost:9876/base/test.js?64559d501fa56b5bfef2254bd0be4e26a7f255a6:41395:31)
-    at O (http://localhost:9876/base/test.js?64559d501fa56b5bfef2254bd0be4e26a7f255a6:121350:19542)
+    <![CDATA[Chrome 90.0.4430.85 (Mac OS 10.15.7) ERROR: 'Warning: Received `%s` for a non-boolean attribute `%s`.
+
+If you want to write it to the DOM, pass a string instead: %s="%s" or %s={value.toString()}.%s', 'true', 'outline', 'outline', 'true', 'outline', '
+    at a
+    at Typography (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:34037:28)
+    at WithStyles (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:41473:31)
+    at Link (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:17874:23)
+    at WithStyles (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:41473:31)
+    at O (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:121428:19542)
+    at div
+    at Ge (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:121428:17052)
+    at ThemeProvider (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:633:4992)'
+,Chrome 90.0.4430.85 (Mac OS 10.15.7) ERROR: 'Warning: Failed %s type: %s%s', 'prop', 'Invalid prop `color` of value `green` supplied to `ForwardRef(Link)`, expected one of ["initial","inherit","primary","secondary","textPrimary","textSecondary","error"].', '
+    at Link (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:17874:23)
+    at WithStyles (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:41473:31)
+    at O (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:121428:19542)
+    at div
+    at Ge (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:121428:17052)
+    at ThemeProvider (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:633:4992)'
+,Chrome 90.0.4430.85 (Mac OS 10.15.7) ERROR: 'Warning: Failed %s type: %s%s', 'prop', 'Invalid prop `color` of value `green` supplied to `ForwardRef(Typography)`, expected one of ["initial","inherit","primary","secondary","textPrimary","textSecondary","error"].', '
+    at Typography (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:34037:28)
+    at WithStyles (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:41473:31)
+    at Link (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:17874:23)
+    at WithStyles (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:41473:31)
+    at O (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:121428:19542)
+    at div
+    at Ge (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:121428:17052)
+    at ThemeProvider (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:633:4992)'
+,Chrome 90.0.4430.85 (Mac OS 10.15.7) ERROR: 'Warning: Failed %s type: %s%s', 'prop', 'Invalid prop `color` of value `green` supplied to `ForwardRef(Button)`, expected one of ["default","inherit","primary","secondary"].', '
+    at Button (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:5342:24)
+    at WithStyles (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:41473:31)
+    at O (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:121428:19542)
     at div
     at div
-    at Ge (http://localhost:9876/base/test.js?64559d501fa56b5bfef2254bd0be4e26a7f255a6:121350:17052)
-    at ThemeProvider (http://localhost:9876/base/test.js?64559d501fa56b5bfef2254bd0be4e26a7f255a6:555:4758)'
-,Chrome 90.0.4430.72 (Mac OS 10.15.7) ERROR: 'Warning: Failed %s type: %s%s', 'prop', 'Invalid prop `color` of value `black` supplied to `ForwardRef(Button)`, expected one of ["default","inherit","primary","secondary"].', '
-    at Button (http://localhost:9876/base/test.js?64559d501fa56b5bfef2254bd0be4e26a7f255a6:5264:24)
-    at WithStyles (http://localhost:9876/base/test.js?64559d501fa56b5bfef2254bd0be4e26a7f255a6:41395:31)
-    at O (http://localhost:9876/base/test.js?64559d501fa56b5bfef2254bd0be4e26a7f255a6:121350:19542)
+    at Ge (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:121428:17052)
+    at ThemeProvider (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:633:4992)'
+,Chrome 90.0.4430.85 (Mac OS 10.15.7) ERROR: 'Warning: Failed %s type: %s%s', 'prop', 'Invalid prop `color` of value `black` supplied to `ForwardRef(Button)`, expected one of ["default","inherit","primary","secondary"].', '
+    at Button (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:5342:24)
+    at WithStyles (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:41473:31)
+    at O (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:121428:19542)
     at PlayButton
     at div
     at div
-    at Ge (http://localhost:9876/base/test.js?64559d501fa56b5bfef2254bd0be4e26a7f255a6:121350:17052)
-    at ThemeProvider (http://localhost:9876/base/test.js?64559d501fa56b5bfef2254bd0be4e26a7f255a6:555:4758)'
+    at Ge (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:121428:17052)
+    at ThemeProvider (http://localhost:9876/base/test.js?749f69154fd38397c932470bfb452e2ace557db0:633:4992)'
 
 ]]>
   </system-out>
