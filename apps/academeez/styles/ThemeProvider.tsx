@@ -15,15 +15,29 @@ import { Background } from './Backgrounds';
 import { Paddings } from './Paddings';
 import { Text } from './TextColors';
 import { Common } from './Common';
+import { DefaultTheme } from "styled-components/native";
+
+export interface Theme {
+  colors: {
+    dark800: string,
+    gray200: string,
+    green: string
+  }
+}
 
 /**
  * Academeez theme will be placed here
  */
-const theme = {
+const theme: Theme = {
   colors: {
     dark800: '#2d2d2d',
-    gray200: '#f4f4f4'
+    gray200: '#f4f4f4',
+    green: '#01D662'
   }
+}
+
+declare module "styled-components" {
+  export interface DefaultTheme extends Theme {}
 }
 
 /**
@@ -32,6 +46,7 @@ const theme = {
 export const ThemeProvider: FC = ({ children }) => {
   return (
     <SCThemeProvider theme={theme}>
+      {/* <Fonts /> */}
       <Flexbox />
       <Background />
       <Paddings />

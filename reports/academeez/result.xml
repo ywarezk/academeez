@@ -1,11 +1,30 @@
 <?xml version="1.0"?>
-<testsuite name="Chrome 89.0.4389.128 (Mac OS 11.2.3)" package="" timestamp="2021-04-14T19:03:11" id="0" hostname="Yarivs-MBP" tests="1" errors="0" failures="0" time="0">
+<testsuite name="Chrome 90.0.4430.72 (Mac OS 10.15.7)" package="" timestamp="2021-04-20T11:06:28" id="0" hostname="Yarivs-MBP" tests="2" errors="0" failures="1" time="60.007">
   <properties>
-    <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36"/>
+    <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36"/>
   </properties>
-  <testcase name="&lt;Header /> hello" time="0" classname="&lt;Header />"/>
+  <testcase name="buttons display all buttons" time="60.007" classname="buttons">
+    <failure type="">Error: Timeout of 60000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves.
+</failure>
+  </testcase>
   <system-out>
-    <![CDATA[
+    <![CDATA[Chrome 90.0.4430.72 (Mac OS 10.15.7) ERROR: 'Warning: Failed %s type: %s%s', 'prop', 'Invalid prop `color` of value `green` supplied to `ForwardRef(Button)`, expected one of ["default","inherit","primary","secondary"].', '
+    at Button (http://localhost:9876/base/test.js?d32a5f4e585bba9b1836503f7e3462965c876eb7:5227:24)
+    at WithStyles (http://localhost:9876/base/test.js?d32a5f4e585bba9b1836503f7e3462965c876eb7:41327:31)
+    at O (http://localhost:9876/base/test.js?d32a5f4e585bba9b1836503f7e3462965c876eb7:121282:19542)
+    at div
+    at div
+    at Ge (http://localhost:9876/base/test.js?d32a5f4e585bba9b1836503f7e3462965c876eb7:121282:17052)
+    at ThemeProvider (http://localhost:9876/base/test.js?d32a5f4e585bba9b1836503f7e3462965c876eb7:518:4758)'
+,Chrome 90.0.4430.72 (Mac OS 10.15.7) ERROR: 'Warning: Failed %s type: %s%s', 'prop', 'Invalid prop `color` of value `black` supplied to `ForwardRef(Button)`, expected one of ["default","inherit","primary","secondary"].', '
+    at Button (http://localhost:9876/base/test.js?d32a5f4e585bba9b1836503f7e3462965c876eb7:5227:24)
+    at WithStyles (http://localhost:9876/base/test.js?d32a5f4e585bba9b1836503f7e3462965c876eb7:41327:31)
+    at O (http://localhost:9876/base/test.js?d32a5f4e585bba9b1836503f7e3462965c876eb7:121282:19542)
+    at div
+    at div
+    at Ge (http://localhost:9876/base/test.js?d32a5f4e585bba9b1836503f7e3462965c876eb7:121282:17052)
+    at ThemeProvider (http://localhost:9876/base/test.js?d32a5f4e585bba9b1836503f7e3462965c876eb7:518:4758)'
+
 ]]>
   </system-out>
   <system-err/>
