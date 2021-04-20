@@ -13,7 +13,7 @@ import styled, {StyledProps} from 'styled-components';
 
 type ButtonColors = 'green' | 'black' | 'red'
 
-type ButtonProps = Omit< MuiButtonProps, 'color'> & {color: ButtonColors};
+export type ButtonProps = Omit< MuiButtonProps, 'color'> & {color: ButtonColors};
 
 export const Button: FC<ButtonProps> = styled(MuiButton)<ButtonProps>`
   && {

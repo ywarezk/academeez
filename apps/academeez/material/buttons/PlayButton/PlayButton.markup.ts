@@ -7,12 +7,13 @@
  * @license: MIT
  */
 
-import MuiPlayCircleOutline from '@material-ui/icons/PlayCircleFilled';
-import { FC } from 'react';
+import {Button} from '../Button';
 import styled from 'styled-components';
 
-export const PlayCircleOutline: FC<any> = styled(MuiPlayCircleOutline)`
+export const IconButton = styled(Button)`
   && {
-    font-size: ${props => { console.log(props); return props.fontSize } }
+    MuiSvgIcon-root {
+      font-size: 1.5rem;
+    }
   }
 `

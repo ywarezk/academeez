@@ -7,17 +7,19 @@
  * @license: MIT
  */
 
-import IconButton, { IconButtonProps } from '@material-ui/core/IconButton';
-import { FC } from 'react';
-import { PlayCircleOutline } from './PlayButton.markup';
+import { FC, ReactNode } from 'react';
+import { ButtonProps } from '../Button';
+import { IconButton } from './PlayButton.markup';
+import PlayArrow from '@material-ui/icons/PlayArrow';
 
-export const PlayButton: FC<IconButtonProps & {fontSize?: string}> = (props) => {
+export const PlayButton: FC<Omit<ButtonProps, 'color'>> = (props) => {
   return (
-    <div>
-      <IconButton {...props}>
-        <PlayCircleOutline fontSize={props.fontSize} />
-      </IconButton>
-    </div>
+    <IconButton
+      variant="contained"
+      color="black"
+      startIcon={<PlayArrow />}
+      {...props}
+    />
   )
 }
 

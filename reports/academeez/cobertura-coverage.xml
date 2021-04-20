@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="60" lines-covered="56" line-rate="0.9333" branches-valid="6" branches-covered="2" branch-rate="0.3333" timestamp="1618916848415" complexity="0" version="0.1">
+<coverage lines-valid="67" lines-covered="63" line-rate="0.9403" branches-valid="6" branches-covered="2" branch-rate="0.3333" timestamp="1618920314063" complexity="0" version="0.1">
   <sources>
     <source>/Users/yarivkatz/Development/academeez2</source>
   </sources>
@@ -103,7 +103,7 @@
           <methods>
             <method name="(anonymous_0)" hits="2" signature="()V">
               <lines>
-                <line number="31" hits="2"/>
+                <line number="32" hits="2"/>
               </lines>
             </method>
           </methods>
@@ -111,9 +111,37 @@
             <line number="10" hits="1" branch="false"/>
             <line number="12" hits="1" branch="false"/>
             <line number="18" hits="1" branch="false"/>
-            <line number="32" hits="2" branch="false"/>
-            <line number="34" hits="1" branch="false"/>
-            <line number="39" hits="1" branch="false"/>
+            <line number="33" hits="2" branch="false"/>
+            <line number="35" hits="1" branch="false"/>
+            <line number="40" hits="1" branch="false"/>
+          </lines>
+        </class>
+      </classes>
+    </package>
+    <package name="academeez.material.buttons.PlayButton" line-rate="1" branch-rate="1">
+      <classes>
+        <class name="PlayButton.markup.ts" filename="apps/academeez/material/buttons/PlayButton/PlayButton.markup.ts" line-rate="1" branch-rate="1">
+          <methods>
+          </methods>
+          <lines>
+            <line number="10" hits="1" branch="false"/>
+            <line number="11" hits="1" branch="false"/>
+            <line number="13" hits="1" branch="false"/>
+          </lines>
+        </class>
+        <class name="PlayButton.tsx" filename="apps/academeez/material/buttons/PlayButton/PlayButton.tsx" line-rate="1" branch-rate="1">
+          <methods>
+            <method name="(anonymous_0)" hits="2" signature="()V">
+              <lines>
+                <line number="15" hits="2"/>
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="12" hits="1" branch="false"/>
+            <line number="13" hits="1" branch="false"/>
+            <line number="15" hits="1" branch="false"/>
+            <line number="16" hits="2" branch="false"/>
           </lines>
         </class>
       </classes>

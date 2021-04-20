@@ -10,6 +10,7 @@
 import { render } from '@testing-library/react'
 import { Button } from './Button';
 import { ThemeProvider } from '@academeez/az/styles';
+import { PlayButton } from './PlayButton/PlayButton';
 
 describe('buttons', () => {
   it.only('display all buttons', (done) => {
@@ -22,9 +23,9 @@ describe('buttons', () => {
             </Button>
           </div>
           <div style={ { marginTop: '30px'} }>
-            <Button variant="contained" color="black">
-              Start Learning
-            </Button>
+            <PlayButton>
+              About academeez
+            </PlayButton>
           </div>
         </div>
       </ThemeProvider>
