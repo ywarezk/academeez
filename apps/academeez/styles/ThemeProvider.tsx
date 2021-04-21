@@ -15,6 +15,7 @@ import { Background } from './Backgrounds';
 import { Paddings } from './Paddings';
 import { Text } from './TextColors';
 import { Common } from './Common';
+import { Fonts } from './fonts/Fonts';
 import { DefaultTheme } from "styled-components/native";
 
 export interface Theme {
@@ -25,7 +26,8 @@ export interface Theme {
     white: string,
   },
   fonts: {
-    spaceMono: string
+    spaceMono: string,
+    radioGrotesk: string
   }
 }
 
@@ -40,7 +42,8 @@ const theme: Theme = {
     white: '#fff'
   },
   fonts: {
-    spaceMono: 'Space Mono'
+    spaceMono: 'Space Mono',
+    radioGrotesk: 'Radio Grotesk'
   }
 }
 
@@ -60,6 +63,7 @@ export const ThemeProvider: FC = ({ children }) => {
       <Paddings />
       <Text />
       <Common />
+      <Fonts />
 
       { children }
     </SCThemeProvider>

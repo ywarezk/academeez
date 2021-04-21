@@ -13,9 +13,7 @@ import { Header } from '../';
 import { Grid, Typography } from "@material-ui/core";
 import { HeroSection, HeroBgImg } from './HomePage.markup';
 import { LogoLineAnim } from './LogoLineAnim/LogoLineAnim';
-import { PlayButton } from '@academeez/az/material';
-import Button from '@material-ui/core/Button';
-
+import { Button, PlayButton } from '@academeez/az/material';
 
 export const HomePage: FC = () => {
   return (
@@ -37,11 +35,11 @@ export const HomePage: FC = () => {
             <Typography variant="h2" className="text-white text-center">
               Free & Open Source video coding courses
             </Typography>
-            <div className="d-flex justify-content-center mt-3">
-              <PlayButton className="text-white" fontSize="7rem" />
-            </div>
-            <div className="d-flex justify-content-center mt-3">
-              <Button size="large" color="primary" variant="contained">
+            <div className="d-flex justify-content-center mt-6">
+              <PlayButton className="mr-3">
+                About us
+              </PlayButton>
+              <Button variant="contained" color="green">
                 Start Learning
               </Button>
             </div>

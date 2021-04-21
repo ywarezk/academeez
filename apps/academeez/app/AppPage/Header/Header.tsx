@@ -22,7 +22,7 @@ import YoutubeIcon from '@material-ui/icons/YouTube';
 import logo from './logo.png';
 import { Grid } from '@material-ui/core';
 import { MuiAppBar, LogoImage, ListItem } from './Header.markup';
-import MuiLink from '@material-ui/core/Link';
+import { Link as AzMuiLink } from '@academeez/az/material';
 
 
 type HeaderProps = { isTransparent? : boolean }
@@ -48,33 +48,6 @@ export const Header: FC<HeaderProps> = ( props ) => {
               </Link>
               <List className="d-flex flex-grow-1 flex-row-reverse">
                 <ListItem>
-                  <Link href="/courses">
-                    <MuiLink className="text-white">
-                      <Typography variant="body1" component="span">
-                        Learn a course
-                      </Typography>
-                    </MuiLink>
-                  </Link>
-                </ListItem>
-                <ListItem>
-                  <Link href="/donate">
-                    <MuiLink className="text-white">
-                      <Typography variant="body1" component="span">
-                        Donate
-                      </Typography>
-                    </MuiLink>
-                  </Link>
-                </ListItem>
-                <ListItem>
-                  <Link href="/blog">
-                    <MuiLink className="text-white">
-                      <Typography variant="body1" component="span">
-                        Blog
-                      </Typography>
-                    </MuiLink>
-                  </Link>
-                </ListItem>
-                <ListItem>
                   <a href="https://github.com/ywarezk/academeez">
                     <GithubIcon />
                   </a>
@@ -83,6 +56,27 @@ export const Header: FC<HeaderProps> = ( props ) => {
                   <a href="https://www.youtube.com/channel/UCmnTSM4hGDJin7g5PyXa9pQ">
                     <YoutubeIcon />
                   </a>
+                </ListItem>
+                <ListItem>
+                  <Link href="/donate">
+                    <AzMuiLink>
+                      Donate
+                    </AzMuiLink>
+                  </Link>
+                </ListItem>
+                <ListItem>
+                  <Link href="/blog">
+                    <AzMuiLink>
+                      Blog
+                    </AzMuiLink>
+                  </Link>
+                </ListItem>
+                <ListItem>
+                  <Link href="/courses">
+                    <AzMuiLink outline color="green">
+                      Start Learning
+                    </AzMuiLink>
+                  </Link>
                 </ListItem>
               </List>
             </Toolbar>
