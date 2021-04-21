@@ -1,20 +1,21 @@
 <?xml version="1.0"?>
-<testsuite name="Chrome 90.0.4430.85 (Mac OS 10.15.7)" package="" timestamp="2021-04-21T12:47:01" id="0" hostname="Yarivs-MBP" tests="5" errors="0" failures="1" time="60.009">
+<testsuite name="Chrome 90.0.4430.85 (Mac OS 10.15.7)" package="" timestamp="2021-04-21T17:13:48" id="0" hostname="Yarivs-MBP" tests="5" errors="0" failures="1" time="60.01">
   <properties>
     <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36"/>
   </properties>
-  <testcase name="&lt;Typography /> sanity" time="60.009" classname="&lt;Typography />">
+  <testcase name="&lt;Typography /> sanity" time="60.01" classname="&lt;Typography />">
     <failure type="">Error: Timeout of 60000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves.
 </failure>
   </testcase>
   <system-out>
     <![CDATA[Chrome 90.0.4430.85 (Mac OS 10.15.7) ERROR: 'Warning: Failed %s type: %s%s', 'prop', 'Invalid prop `color` of value `white` supplied to `ForwardRef(Typography)`, expected one of ["initial","inherit","primary","secondary","textPrimary","textSecondary","error"].', '
-    at Typography (http://localhost:9876/base/test.js?cc1c46f7e4637101810c3a9e9206b68efec5ad16:34237:28)
-    at WithStyles (http://localhost:9876/base/test.js?cc1c46f7e4637101810c3a9e9206b68efec5ad16:41673:31)
-    at O (http://localhost:9876/base/test.js?cc1c46f7e4637101810c3a9e9206b68efec5ad16:121628:19542)
+    at Typography (http://localhost:9876/base/test.js?79d70ab381840349c12ce5db5e0cb4a1468ca306:34244:28)
+    at WithStyles (http://localhost:9876/base/test.js?79d70ab381840349c12ce5db5e0cb4a1468ca306:41680:31)
+    at O (http://localhost:9876/base/test.js?79d70ab381840349c12ce5db5e0cb4a1468ca306:121635:19542)
     at div
-    at Ge (http://localhost:9876/base/test.js?cc1c46f7e4637101810c3a9e9206b68efec5ad16:121628:17052)
-    at ThemeProvider (http://localhost:9876/base/test.js?cc1c46f7e4637101810c3a9e9206b68efec5ad16:790:5384)'
+    at div
+    at Ge (http://localhost:9876/base/test.js?79d70ab381840349c12ce5db5e0cb4a1468ca306:121635:17052)
+    at ThemeProvider (http://localhost:9876/base/test.js?79d70ab381840349c12ce5db5e0cb4a1468ca306:797:5456)'
 
 ]]>
   </system-out>

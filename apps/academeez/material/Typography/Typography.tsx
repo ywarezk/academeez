@@ -10,22 +10,26 @@
 import { Typography as MuiTypography } from '@material-ui/core';
 import styled, { css } from 'styled-components';
 
-type TextColors = 'white'
+type TextColors = 'white' | 'green' | 'red'
 
 export const Typography = styled(MuiTypography)<{color?: TextColors}>`
   &&.MuiTypography-subtitle2 {
     font-size: 0.8rem;
-    font-family: 'Radio Grotesk';
+    font-family: ${props => props.theme.fonts.radioGrotesk};
     font-weight: 700;
   }
 
+  &&.MuiTypography-h1 {
+    font-family: ${props => props.theme.fonts.radioGrotesk};
+    font-weight: 700;
+    font-size: 4.4rem;
+  }
+
   ${props => {
-    if (!props.color || props.color === 'white') {
       return css`
         && {
-          color: ${props.theme.colors.white}
+          color: ${props.theme.colors[props.color || 'white']}
         }
       `
-    }
   }}
 `

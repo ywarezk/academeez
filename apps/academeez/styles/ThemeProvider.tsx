@@ -24,6 +24,7 @@ export interface Theme {
     gray200: string,
     green: string,
     white: string,
+    red: string
   },
   fonts: {
     spaceMono: string,
@@ -39,7 +40,8 @@ const theme: Theme = {
     dark800: '#2d2d2d',
     gray200: '#f4f4f4',
     green: '#01D662',
-    white: '#fff'
+    white: '#fff',
+    red: '#D9614C'
   },
   fonts: {
     spaceMono: 'Space Mono',
