@@ -1,21 +1,142 @@
 <?xml version="1.0"?>
-<testsuite name="Chrome 90.0.4430.85 (Mac OS 10.15.7)" package="" timestamp="2021-04-21T17:13:48" id="0" hostname="Yarivs-MBP" tests="5" errors="0" failures="1" time="60.01">
+<testsuite name="Chrome 90.0.4430.85 (Mac OS 10.15.7)" package="" timestamp="2021-04-21T18:14:48" id="0" hostname="Yarivs-MBP" tests="5" errors="0" failures="1" time="60.079">
   <properties>
     <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36"/>
   </properties>
-  <testcase name="&lt;Typography /> sanity" time="60.01" classname="&lt;Typography />">
+  <testcase name="&lt;Header /> hello" time="0" classname="&lt;Header />"/>
+  <testcase name="&lt;ScrollLine /> sanity" time="60.003" classname="&lt;ScrollLine />">
     <failure type="">Error: Timeout of 60000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves.
 </failure>
   </testcase>
+  <testcase name="&lt;Link /> different links" time="0.011" classname="&lt;Link />"/>
+  <testcase name="&lt;Typography /> sanity" time="0.048" classname="&lt;Typography />"/>
+  <testcase name="buttons display all buttons" time="0.017" classname="buttons"/>
   <system-out>
-    <![CDATA[Chrome 90.0.4430.85 (Mac OS 10.15.7) ERROR: 'Warning: Failed %s type: %s%s', 'prop', 'Invalid prop `color` of value `white` supplied to `ForwardRef(Typography)`, expected one of ["initial","inherit","primary","secondary","textPrimary","textSecondary","error"].', '
-    at Typography (http://localhost:9876/base/test.js?79d70ab381840349c12ce5db5e0cb4a1468ca306:34244:28)
-    at WithStyles (http://localhost:9876/base/test.js?79d70ab381840349c12ce5db5e0cb4a1468ca306:41680:31)
-    at O (http://localhost:9876/base/test.js?79d70ab381840349c12ce5db5e0cb4a1468ca306:121635:19542)
+    <![CDATA[Chrome 90.0.4430.85 (Mac OS 10.15.7) ERROR: 'Warning: Failed %s type: %s%s', 'prop', 'Invalid prop `color` of value `green` supplied to `ForwardRef(Link)`, expected one of ["initial","inherit","primary","secondary","textPrimary","textSecondary","error"].', '
+    at Link (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:18104:23)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at O (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:19542)
+    at Link (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:79627:104)
+    at li
+    at ListItem (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:18529:33)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at O (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:19542)
+    at ul
+    at List (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:18287:24)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at div
+    at Toolbar (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:33312:23)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at div
+    at Grid (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:14221:35)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at div
+    at Grid (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:14221:35)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at header
+    at Paper (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:22266:23)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at AppBar (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:3746:23)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at O (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:19542)
+    at Header (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:237:1843)
+    at Ge (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:17052)
+    at ThemeProvider (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:820:5456)
+    at HeaderWrapper (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:198:28)'
+,Chrome 90.0.4430.85 (Mac OS 10.15.7) ERROR: 'Warning: Failed %s type: %s%s', 'prop', 'Invalid prop `color` of value `green` supplied to `ForwardRef(Typography)`, expected one of ["initial","inherit","primary","secondary","textPrimary","textSecondary","error"].', '
+    at Typography (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:34267:28)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at Link (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:18104:23)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at O (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:19542)
+    at Link (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:79627:104)
+    at li
+    at ListItem (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:18529:33)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at O (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:19542)
+    at ul
+    at List (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:18287:24)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at div
+    at Toolbar (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:33312:23)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at div
+    at Grid (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:14221:35)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at div
+    at Grid (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:14221:35)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at header
+    at Paper (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:22266:23)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at AppBar (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:3746:23)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at O (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:19542)
+    at Header (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:237:1843)
+    at Ge (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:17052)
+    at ThemeProvider (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:820:5456)
+    at HeaderWrapper (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:198:28)'
+,Chrome 90.0.4430.85 (Mac OS 10.15.7) ERROR: 'Warning: Received `%s` for a non-boolean attribute `%s`.
+
+If you want to write it to the DOM, pass a string instead: %s="%s" or %s={value.toString()}.%s', 'true', 'outline', 'outline', 'true', 'outline', '
+    at a
+    at Typography (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:34267:28)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at Link (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:18104:23)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at O (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:19542)
+    at Link (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:79627:104)
+    at li
+    at ListItem (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:18529:33)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at O (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:19542)
+    at ul
+    at List (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:18287:24)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at div
+    at Toolbar (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:33312:23)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at div
+    at Grid (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:14221:35)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at div
+    at Grid (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:14221:35)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at header
+    at Paper (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:22266:23)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at AppBar (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:3746:23)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at O (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:19542)
+    at Header (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:237:1843)
+    at Ge (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:17052)
+    at ThemeProvider (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:820:5456)
+    at HeaderWrapper (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:198:28)'
+,Chrome 90.0.4430.85 (Mac OS 10.15.7) ERROR: 'Warning: Failed %s type: %s%s', 'prop', 'Invalid prop `color` of value `white` supplied to `ForwardRef(Typography)`, expected one of ["initial","inherit","primary","secondary","textPrimary","textSecondary","error"].', '
+    at Typography (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:34267:28)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at O (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:19542)
     at div
     at div
-    at Ge (http://localhost:9876/base/test.js?79d70ab381840349c12ce5db5e0cb4a1468ca306:121635:17052)
-    at ThemeProvider (http://localhost:9876/base/test.js?79d70ab381840349c12ce5db5e0cb4a1468ca306:797:5456)'
+    at Ge (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:17052)
+    at ThemeProvider (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:820:5456)'
+,Chrome 90.0.4430.85 (Mac OS 10.15.7) ERROR: 'Warning: Failed %s type: %s%s', 'prop', 'Invalid prop `color` of value `green` supplied to `ForwardRef(Button)`, expected one of ["default","inherit","primary","secondary"].', '
+    at Button (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:5572:24)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at O (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:19542)
+    at div
+    at div
+    at Ge (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:17052)
+    at ThemeProvider (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:820:5456)'
+,Chrome 90.0.4430.85 (Mac OS 10.15.7) ERROR: 'Warning: Failed %s type: %s%s', 'prop', 'Invalid prop `color` of value `black` supplied to `ForwardRef(Button)`, expected one of ["default","inherit","primary","secondary"].', '
+    at Button (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:5572:24)
+    at WithStyles (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:41703:31)
+    at O (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:19542)
+    at PlayButton
+    at div
+    at div
+    at Ge (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:121658:17052)
+    at ThemeProvider (http://localhost:9876/base/test.js?30b9d93196a9b5c1ae0b50f493d2e23b7a66152e:820:5456)'
 
 ]]>
   </system-out>

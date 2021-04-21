@@ -15,7 +15,13 @@ describe('<ScrollLine />', () => {
   it('sanity', () => {
     render(
       <ThemeProvider>
-        <div style={ {position: 'relative', height: '100vh', backgroundColor: '#2d2d2d'} }>
+        <div style={ {
+          position: 'relative',
+          height: '100vh',
+          backgroundColor: '#2d2d2d',
+          display: 'flex',
+          justifyContent: 'center'
+        } }>
           <ScrollLine />
         </div>
       </ThemeProvider>

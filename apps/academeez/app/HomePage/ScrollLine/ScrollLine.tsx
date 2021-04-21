@@ -7,6 +7,7 @@
  * @license: MIT
  */
 
+import { Typography } from "@academeez/az/material";
 import { FC } from "react";
 import { ScrollLineWrapper } from './ScrollLine.markup';
 
@@ -14,11 +15,11 @@ export const ScrollLine: FC = () => {
   return (
     <ScrollLineWrapper>
       <div>
-        {/* <Typography */}
+        <Typography variant="subtitle2">
+          Scroll
+        </Typography>
       </div>
-      <h1>
-        Scroll component
-      </h1>
+      <div className="line" />
     </ScrollLineWrapper>
   )
 }

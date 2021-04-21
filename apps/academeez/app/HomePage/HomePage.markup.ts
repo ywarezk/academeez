@@ -18,6 +18,8 @@ export const HeroSection = styled.section`
 
     background-color: black;
     position: relative;
+    display: flex;
+    justify-content: center;
   }
 
   & .MuiGrid-container {

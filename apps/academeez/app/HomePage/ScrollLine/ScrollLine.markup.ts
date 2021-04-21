@@ -11,6 +11,16 @@ import styled from 'styled-components';
 
 export const ScrollLineWrapper = styled.div`
   & {
-    color: white;
+    position: absolute;
+    bottom: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  & .line{
+    border-left: 2px solid white;
+    height: 5rem;
+    margin-top: 2rem;
   }
 `

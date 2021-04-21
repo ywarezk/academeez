@@ -15,6 +15,7 @@ import { HeroSection, HeroBgImg } from './HomePage.markup';
 import { LogoLineAnim } from './LogoLineAnim/LogoLineAnim';
 import { Button, PlayButton } from '@academeez/az/material';
 import { Typography } from '@academeez/az/material';
+import { ScrollLine } from './ScrollLine/ScrollLine';
 
 export const HomePage: FC = () => {
   return (
@@ -51,6 +52,7 @@ export const HomePage: FC = () => {
             </div>
           </Grid>
         </Grid>
+        <ScrollLine />
       </HeroSection>
       {/* end hero */}
 
