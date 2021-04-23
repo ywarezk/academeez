@@ -75,7 +75,7 @@ And the `Flex items` to have a certain size and a red background.
 
 The result we got is this:
 
-![How flexbox position elements](flexbox-position-items)
+![How flexbox position elements](flexbox-position-items.png)
 
 ## Main Axis
 
