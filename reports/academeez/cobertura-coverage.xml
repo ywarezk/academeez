@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="92" lines-covered="92" line-rate="1" branches-valid="12" branches-covered="11" branch-rate="0.9167000000000001" timestamp="1619028948602" complexity="0" version="0.1">
+<coverage lines-valid="92" lines-covered="80" line-rate="0.8695999999999999" branches-valid="12" branches-covered="2" branch-rate="0.16670000000000001" timestamp="1619030364235" complexity="0" version="0.1">
   <sources>
     <source>/Users/yarivkatz/Development/academeez2</source>
   </sources>
@@ -47,13 +47,13 @@
         </class>
       </classes>
     </package>
-    <package name="academeez.app.AppPage.Header" line-rate="1" branch-rate="0.75">
+    <package name="academeez.app.AppPage.Header" line-rate="0.8261" branch-rate="0">
       <classes>
-        <class name="Header.markup.ts" filename="apps/academeez/app/AppPage/Header/Header.markup.ts" line-rate="1" branch-rate="0.5">
+        <class name="Header.markup.ts" filename="apps/academeez/app/AppPage/Header/Header.markup.ts" line-rate="0.8571" branch-rate="0">
           <methods>
-            <method name="(anonymous_0)" hits="1" signature="()V">
+            <method name="(anonymous_0)" hits="0" signature="()V">
               <lines>
-                <line number="18" hits="1"/>
+                <line number="18" hits="0"/>
               </lines>
             </method>
           </methods>
@@ -62,16 +62,16 @@
             <line number="11" hits="1" branch="false"/>
             <line number="12" hits="1" branch="false"/>
             <line number="16" hits="1" branch="false"/>
-            <line number="19" hits="1" branch="true" condition-coverage="50% (1/2)"/>
+            <line number="19" hits="0" branch="true" condition-coverage="0% (0/2)"/>
             <line number="35" hits="1" branch="false"/>
             <line number="41" hits="1" branch="false"/>
           </lines>
         </class>
-        <class name="Header.tsx" filename="apps/academeez/app/AppPage/Header/Header.tsx" line-rate="1" branch-rate="1">
+        <class name="Header.tsx" filename="apps/academeez/app/AppPage/Header/Header.tsx" line-rate="0.8125" branch-rate="0">
           <methods>
-            <method name="(anonymous_0)" hits="3" signature="()V">
+            <method name="(anonymous_0)" hits="0" signature="()V">
               <lines>
-                <line number="30" hits="3"/>
+                <line number="30" hits="0"/>
               </lines>
             </method>
           </methods>
@@ -89,14 +89,14 @@
             <line number="24" hits="1" branch="false"/>
             <line number="25" hits="1" branch="false"/>
             <line number="30" hits="1" branch="false"/>
-            <line number="31" hits="3" branch="false"/>
-            <line number="33" hits="2" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="35" hits="1" branch="false"/>
+            <line number="31" hits="0" branch="false"/>
+            <line number="33" hits="0" branch="true" condition-coverage="0% (0/2)"/>
+            <line number="35" hits="0" branch="false"/>
           </lines>
         </class>
       </classes>
     </package>
-    <package name="academeez.app.HomePage.ScrollLine" line-rate="1" branch-rate="1">
+    <package name="academeez.app.HomePage.ScrollLine" line-rate="0.8332999999999999" branch-rate="1">
       <classes>
         <class name="ScrollLine.markup.ts" filename="apps/academeez/app/HomePage/ScrollLine/ScrollLine.markup.ts" line-rate="1" branch-rate="1">
           <methods>
@@ -106,11 +106,11 @@
             <line number="12" hits="1" branch="false"/>
           </lines>
         </class>
-        <class name="ScrollLine.tsx" filename="apps/academeez/app/HomePage/ScrollLine/ScrollLine.tsx" line-rate="1" branch-rate="1">
+        <class name="ScrollLine.tsx" filename="apps/academeez/app/HomePage/ScrollLine/ScrollLine.tsx" line-rate="0.75" branch-rate="1">
           <methods>
-            <method name="(anonymous_0)" hits="1" signature="()V">
+            <method name="(anonymous_0)" hits="0" signature="()V">
               <lines>
-                <line number="14" hits="1"/>
+                <line number="14" hits="0"/>
               </lines>
             </method>
           </methods>
@@ -118,7 +118,7 @@
             <line number="10" hits="1" branch="false"/>
             <line number="12" hits="1" branch="false"/>
             <line number="14" hits="1" branch="false"/>
-            <line number="15" hits="1" branch="false"/>
+            <line number="15" hits="0" branch="false"/>
           </lines>
         </class>
       </classes>
@@ -137,28 +137,28 @@
         </class>
       </classes>
     </package>
-    <package name="academeez.material.Link" line-rate="1" branch-rate="1">
+    <package name="academeez.material.Link" line-rate="0.4286" branch-rate="0">
       <classes>
-        <class name="Link.tsx" filename="apps/academeez/material/Link/Link.tsx" line-rate="1" branch-rate="1">
+        <class name="Link.tsx" filename="apps/academeez/material/Link/Link.tsx" line-rate="0.4286" branch-rate="0">
           <methods>
-            <method name="(anonymous_0)" hits="6" signature="()V">
+            <method name="(anonymous_0)" hits="0" signature="()V">
               <lines>
-                <line number="15" hits="6"/>
+                <line number="15" hits="0"/>
               </lines>
             </method>
-            <method name="(anonymous_1)" hits="6" signature="()V">
+            <method name="(anonymous_1)" hits="0" signature="()V">
               <lines>
-                <line number="17" hits="6"/>
+                <line number="17" hits="0"/>
               </lines>
             </method>
-            <method name="(anonymous_2)" hits="6" signature="()V">
+            <method name="(anonymous_2)" hits="0" signature="()V">
               <lines>
-                <line number="22" hits="6"/>
+                <line number="22" hits="0"/>
               </lines>
             </method>
-            <method name="(anonymous_3)" hits="6" signature="()V">
+            <method name="(anonymous_3)" hits="0" signature="()V">
               <lines>
-                <line number="31" hits="6"/>
+                <line number="31" hits="0"/>
               </lines>
             </method>
           </methods>
@@ -166,31 +166,31 @@
             <line number="10" hits="1" branch="false"/>
             <line number="11" hits="1" branch="false"/>
             <line number="13" hits="1" branch="false"/>
-            <line number="15" hits="6" branch="false"/>
-            <line number="17" hits="6" branch="false"/>
-            <line number="22" hits="6" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="31" hits="6" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="15" hits="0" branch="false"/>
+            <line number="17" hits="0" branch="false"/>
+            <line number="22" hits="0" branch="true" condition-coverage="0% (0/2)"/>
+            <line number="31" hits="0" branch="true" condition-coverage="0% (0/2)"/>
           </lines>
         </class>
       </classes>
     </package>
-    <package name="academeez.material.Typography" line-rate="1" branch-rate="1">
+    <package name="academeez.material.Typography" line-rate="0.5" branch-rate="0">
       <classes>
-        <class name="Typography.tsx" filename="apps/academeez/material/Typography/Typography.tsx" line-rate="1" branch-rate="1">
+        <class name="Typography.tsx" filename="apps/academeez/material/Typography/Typography.tsx" line-rate="0.5" branch-rate="0">
           <methods>
-            <method name="(anonymous_0)" hits="3" signature="()V">
+            <method name="(anonymous_0)" hits="0" signature="()V">
               <lines>
-                <line number="18" hits="3"/>
+                <line number="18" hits="0"/>
               </lines>
             </method>
-            <method name="(anonymous_1)" hits="3" signature="()V">
+            <method name="(anonymous_1)" hits="0" signature="()V">
               <lines>
-                <line number="23" hits="3"/>
+                <line number="23" hits="0"/>
               </lines>
             </method>
-            <method name="(anonymous_2)" hits="3" signature="()V">
+            <method name="(anonymous_2)" hits="0" signature="()V">
               <lines>
-                <line number="28" hits="3"/>
+                <line number="28" hits="0"/>
               </lines>
             </method>
           </methods>
@@ -198,9 +198,9 @@
             <line number="10" hits="1" branch="false"/>
             <line number="11" hits="1" branch="false"/>
             <line number="15" hits="1" branch="false"/>
-            <line number="18" hits="3" branch="false"/>
-            <line number="23" hits="3" branch="false"/>
-            <line number="29" hits="3" branch="false"/>
+            <line number="18" hits="0" branch="false"/>
+            <line number="23" hits="0" branch="false"/>
+            <line number="29" hits="0" branch="false"/>
           </lines>
         </class>
       </classes>
@@ -211,7 +211,7 @@
           <methods>
             <method name="(anonymous_0)" hits="2" signature="()V">
               <lines>
-                <line number="32" hits="2"/>
+                <line number="37" hits="2"/>
               </lines>
             </method>
           </methods>
@@ -219,9 +219,9 @@
             <line number="10" hits="1" branch="false"/>
             <line number="12" hits="1" branch="false"/>
             <line number="18" hits="1" branch="false"/>
-            <line number="33" hits="2" branch="false"/>
-            <line number="35" hits="1" branch="false"/>
+            <line number="38" hits="2" branch="false"/>
             <line number="40" hits="1" branch="false"/>
+            <line number="47" hits="1" branch="false"/>
           </lines>
         </class>
       </classes>
@@ -258,22 +258,22 @@
       <classes>
         <class name="Backgrounds.ts" filename="apps/academeez/styles/Backgrounds.ts" line-rate="1" branch-rate="1">
           <methods>
-            <method name="(anonymous_0)" hits="5" signature="()V">
+            <method name="(anonymous_0)" hits="1" signature="()V">
               <lines>
-                <line number="14" hits="5"/>
+                <line number="14" hits="1"/>
               </lines>
             </method>
-            <method name="(anonymous_1)" hits="5" signature="()V">
+            <method name="(anonymous_1)" hits="1" signature="()V">
               <lines>
-                <line number="18" hits="5"/>
+                <line number="18" hits="1"/>
               </lines>
             </method>
           </methods>
           <lines>
             <line number="10" hits="1" branch="false"/>
             <line number="12" hits="1" branch="false"/>
-            <line number="14" hits="5" branch="false"/>
-            <line number="18" hits="5" branch="false"/>
+            <line number="14" hits="1" branch="false"/>
+            <line number="18" hits="1" branch="false"/>
           </lines>
         </class>
         <class name="Common.ts" filename="apps/academeez/styles/Common.ts" line-rate="1" branch-rate="1">
@@ -302,23 +302,23 @@
         </class>
         <class name="TextColors.ts" filename="apps/academeez/styles/TextColors.ts" line-rate="1" branch-rate="1">
           <methods>
-            <method name="(anonymous_0)" hits="5" signature="()V">
+            <method name="(anonymous_0)" hits="1" signature="()V">
               <lines>
-                <line number="22" hits="5"/>
+                <line number="22" hits="1"/>
               </lines>
             </method>
           </methods>
           <lines>
             <line number="10" hits="1" branch="false"/>
             <line number="12" hits="1" branch="false"/>
-            <line number="22" hits="5" branch="false"/>
+            <line number="22" hits="1" branch="false"/>
           </lines>
         </class>
         <class name="ThemeProvider.tsx" filename="apps/academeez/styles/ThemeProvider.tsx" line-rate="1" branch-rate="1">
           <methods>
-            <method name="(anonymous_0)" hits="6" signature="()V">
+            <method name="(anonymous_0)" hits="1" signature="()V">
               <lines>
-                <line number="59" hits="6"/>
+                <line number="63" hits="1"/>
               </lines>
             </method>
           </methods>
@@ -330,9 +330,9 @@
             <line number="16" hits="1" branch="false"/>
             <line number="17" hits="1" branch="false"/>
             <line number="18" hits="1" branch="false"/>
-            <line number="38" hits="1" branch="false"/>
-            <line number="59" hits="1" branch="false"/>
-            <line number="60" hits="6" branch="false"/>
+            <line number="40" hits="1" branch="false"/>
+            <line number="63" hits="1" branch="false"/>
+            <line number="64" hits="1" branch="false"/>
           </lines>
         </class>
         <class name="index.ts" filename="apps/academeez/styles/index.ts" line-rate="1" branch-rate="1">

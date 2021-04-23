@@ -9,7 +9,7 @@
 
 import MuiButton, { ButtonProps as MuiButtonProps } from '@material-ui/core/Button';
 import { FC } from 'react';
-import styled, {StyledProps} from 'styled-components';
+import styled, {StyledProps, css} from 'styled-components';
 
 type ButtonColors = 'green' | 'black' | 'red'
 
@@ -29,19 +29,33 @@ export const Button: FC<ButtonProps> = styled(MuiButton)<ButtonProps>`
     border-radius: 4px;
     box-shadow: unset;
 
-    ${(props: StyledProps<ButtonProps>) => {
-      switch (props.color) {
-        case 'black':
-          return `
-              color: ${props.theme.colors.gray200};
-              background-color: ${props.theme.colors.dark800}
-            `
-        default:
-          return `
-              color: ${props.theme.colors.dark800};
-              background-color: ${props.theme.colors.green}
-            `
-      }
-    }};
+    &:hover {
+      box-shadow: none;
+    }
   }
+
+  ${(props: StyledProps<ButtonProps>) => {
+    switch (props.color) {
+      case 'black':
+        return css`
+          && {
+            color: ${props.theme.colors.gray200};
+            background-color: ${props.theme.colors.dark800};
+            &:hover {
+              background-color: ${props.theme.colors.dark700};
+            }
+          }
+        `
+      default:
+        return css`
+          && {
+            color: ${props.theme.colors.dark800};
+            background-color: ${props.theme.colors.green};
+            &:hover {
+              background-color: ${props.theme.colors.greenHover};
+            }
+          }
+        `
+    }
+  }};
 ` as any

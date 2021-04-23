@@ -13,7 +13,7 @@ import { ThemeProvider } from '@academeez/az/styles';
 import { PlayButton } from './PlayButton/PlayButton';
 
 describe('buttons', () => {
-  it('display all buttons', () => {
+  it.only('display all buttons', (done) => {
     render(
       <ThemeProvider>
         <div style={ {marginTop: '100px', marginLeft: '100px'} }>

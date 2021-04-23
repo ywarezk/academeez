@@ -21,8 +21,10 @@ import { DefaultTheme } from "styled-components/native";
 export interface Theme {
   colors: {
     dark800: string,
+    dark700: string,
     gray200: string,
     green: string,
+    greenHover: string,
     white: string,
     red: string
   },
@@ -38,10 +40,12 @@ export interface Theme {
 const theme: Theme = {
   colors: {
     dark800: '#2d2d2d',
+    dark700: '#444444',
     gray200: '#f4f4f4',
     green: '#01D662',
+    greenHover: '#19EB79',
     white: '#fff',
-    red: '#D9614C'
+    red: '#D9614C',
   },
   fonts: {
     spaceMono: 'Space Mono',
