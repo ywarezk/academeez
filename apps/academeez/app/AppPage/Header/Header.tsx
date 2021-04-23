@@ -49,12 +49,12 @@ export const Header: FC<HeaderProps> = ( props ) => {
               <List className="d-flex flex-grow-1 flex-row-reverse">
                 <ListItem>
                   <a href="https://github.com/ywarezk/academeez">
-                    <GithubIcon />
+                    <GithubIcon className="hover-green" />
                   </a>
                 </ListItem>
                 <ListItem>
                   <a href="https://www.youtube.com/channel/UCmnTSM4hGDJin7g5PyXa9pQ">
-                    <YoutubeIcon />
+                    <YoutubeIcon className="hover-green" />
                   </a>
                 </ListItem>
                 <ListItem>
