@@ -7,12 +7,14 @@
  * @license: MIT
  */
 
-import { Typography as MuiTypography } from '@material-ui/core';
+import { Typography as MuiTypography, TypographyProps as MuiTypographyProps } from '@material-ui/core';
 import styled, { css } from 'styled-components';
 
 type TextColors = 'white' | 'green' | 'red'
 
-export const Typography = styled(MuiTypography)<{color?: TextColors}>`
+type TypographyProps = MuiTypographyProps & { color?: TextColors };
+
+export const Typography = styled(({color, ...props}) => <MuiTypography {...props} />)<TypographyProps>`
   &&.MuiTypography-subtitle2 {
     font-size: 0.8rem;
     font-family: ${props => props.theme.fonts.radioGrotesk};

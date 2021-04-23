@@ -15,7 +15,7 @@ type ButtonColors = 'green' | 'black' | 'red'
 
 export type ButtonProps = Omit< MuiButtonProps, 'color'> & {color: ButtonColors};
 
-export const Button: FC<ButtonProps> = styled(MuiButton)<ButtonProps>`
+export const Button: FC<ButtonProps> = styled(({color, ...props}) => <MuiButton {...props} />)<ButtonProps>`
   && {
     font-family: "Space Mono";
     text-transform: none;
