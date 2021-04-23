@@ -18,16 +18,10 @@ import { Common } from './Common';
 import { Fonts } from './fonts/Fonts';
 import { DefaultTheme } from "styled-components/native";
 
+export type ColorName = 'dark800' | 'dark700' | 'gray200' | 'green' | 'greenHover' | 'greenHover2' | 'white' | 'red';
+
 export interface Theme {
-  colors: {
-    dark800: string,
-    dark700: string,
-    gray200: string,
-    green: string,
-    greenHover: string,
-    white: string,
-    red: string
-  },
+  colors: {[key in ColorName]: string},
   fonts: {
     spaceMono: string,
     radioGrotesk: string
@@ -44,8 +38,9 @@ const theme: Theme = {
     gray200: '#f4f4f4',
     green: '#01D662',
     greenHover: '#19EB79',
+    greenHover2: '#27AE60',
     white: '#fff',
-    red: '#D9614C',
+    red: '#D9614C'
   },
   fonts: {
     spaceMono: 'Space Mono',

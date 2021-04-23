@@ -7,10 +7,13 @@
  * @license: MIT
  */
 
-import MuiLink from '@material-ui/core/Link';
+import MuiLink, {LinkProps as MuiLinkProps} from '@material-ui/core/Link';
 import styled, {css} from 'styled-components';
+import { ColorName } from '@academeez/az/styles';
 
-export const Link = styled(MuiLink)<{ outline?: boolean, color?: string } >`
+type LinkProps = MuiLinkProps & { outline?: boolean, color?: ColorName }
+
+export const Link = styled(MuiLink)<LinkProps>`
   && {
     font-family: ${ props => props.theme.fonts.spaceMono};
     font-size: 0.95rem;
@@ -18,6 +21,10 @@ export const Link = styled(MuiLink)<{ outline?: boolean, color?: string } >`
     cursor: pointer;
     font-weight: 400;
     line-height: 20px;
+
+    &:hover {
+      text-decoration: none;
+    }
 
     ${props => props.outline && css`
       border: 1px solid;
@@ -32,5 +39,24 @@ export const Link = styled(MuiLink)<{ outline?: boolean, color?: string } >`
       border-color: ${props.theme.colors[props.color]};
       color: ${props.theme.colors[props.color]};
     `}
+
+    ${props => {
+      switch(props.color) {
+        case 'green':
+          return css`
+            &:hover {
+              color: ${props.theme.colors['greenHover2']};
+              border-color: ${props.theme.colors['greenHover2']}
+            }
+          `
+        default:
+          return css`
+            &:hover {
+              color: ${props.theme.colors['green']}
+            }
+          `
+      }
+
+    }}
   }
 `

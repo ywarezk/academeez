@@ -41,3 +41,7 @@ Thumbs.db
 .vscode/extensions.json
 
 .env
+
+cobertura-coverage.xml
+result.xml
+
