@@ -7,17 +7,20 @@
  * @license: MIT
  */
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import Head from 'next/head';
 import { Header } from '../';
 import { Grid } from "@material-ui/core";
 import { HeroSection, HeroBgImg } from './HomePage.markup';
 import { LogoLineAnim } from './LogoLineAnim/LogoLineAnim';
-import { Button, PlayButton } from '@academeez/az/material';
+import { Button, PlayButton, Dialog } from '@academeez/az/material';
 import { Typography } from '@academeez/az/material';
 import { ScrollLine } from './ScrollLine/ScrollLine';
+import DialogContent from '@material-ui/core/DialogContent';
 
 export const HomePage: FC = () => {
+  const [isIntroDialogOpen, setIntroDialogOpen] = useState(false);
+
   return (
     <div className="home-page">
       <Head>
@@ -43,9 +46,25 @@ export const HomePage: FC = () => {
               &nbsp;video coding courses
             </Typography>
             <div className="d-flex justify-content-center mt-6">
-              <PlayButton className="mr-3">
+              <PlayButton
+                onClick={() => setIntroDialogOpen(true)}
+                className="mr-3">
                 About us
               </PlayButton>
+              <Dialog
+                open={isIntroDialogOpen}
+                fullScreen
+                isCloseButton
+                maxWidth="xl"
+                fullWidth
+                onClose={() => setIntroDialogOpen(false)}
+              >
+                <DialogContent>
+                  <h1>
+                    Video will be here
+                  </h1>
+                </DialogContent>
+              </Dialog>
               <Button variant="contained" color="green">
                 Start Learning
               </Button>
