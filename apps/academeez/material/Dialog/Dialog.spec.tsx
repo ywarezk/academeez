@@ -42,8 +42,7 @@ const Dialogwrapper = () => {
 }
 
 describe('<Dialog />', () => {
-  it.only('sanity', function(done) {
-    this.timeout(0);
+  it('sanity', function() {
     render(
       <Dialogwrapper />
     )

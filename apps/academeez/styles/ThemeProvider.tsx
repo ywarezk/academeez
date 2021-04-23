@@ -16,6 +16,7 @@ import { Paddings } from './Paddings';
 import { Text } from './TextColors';
 import { Common } from './Common';
 import { Fonts } from './fonts/Fonts';
+import { Video } from './Video';
 import { DefaultTheme } from "styled-components/native";
 
 export type ColorName = 'dark800' | 'dark700' | 'gray200' | 'green' | 'greenHover' | 'greenHover2' | 'white' | 'red';
@@ -65,6 +66,7 @@ export const ThemeProvider: FC = ({ children }) => {
       <Text />
       <Common />
       <Fonts />
+      <Video />
 
       { children }
     </SCThemeProvider>
