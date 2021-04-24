@@ -12,7 +12,7 @@ import { render } from "@testing-library/react"
 import { Typography } from './Typography';
 
 describe('<Typography />', () => {
-  it('sanity', () => {
+  it('sanity', function() {
     render(
       <ThemeProvider>
         <div style={ {paddingTop: '100px', paddingLeft: '100px', backgroundColor: '#2d2d2d'} }>
@@ -27,6 +27,13 @@ describe('<Typography />', () => {
           <div>
             <Typography variant="h1">
               Free &amp; Open Source coding courses
+            </Typography>
+          </div>
+
+          {/* courses text */}
+          <div>
+            <Typography variant="h2">
+              Our Courses
             </Typography>
           </div>
 

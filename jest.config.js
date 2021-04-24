@@ -7,5 +7,6 @@ module.exports = {
     '<rootDir>/libs/blog',
     '<rootDir>/libs/courses',
     '<rootDir>/libs/prd',
+    '<rootDir>/libs/entities',
   ],
 };

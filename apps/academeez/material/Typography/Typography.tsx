@@ -8,13 +8,14 @@
  */
 
 import { Typography as MuiTypography, TypographyProps as MuiTypographyProps } from '@material-ui/core';
+import { FC } from 'react';
 import styled, { css } from 'styled-components';
 
 type TextColors = 'white' | 'green' | 'red'
 
 type TypographyProps = MuiTypographyProps & { color?: TextColors };
 
-export const Typography = styled(({color, ...props}) => <MuiTypography {...props} />)<TypographyProps>`
+export const Typography: FC<TypographyProps> = styled(({color, ...props}) => <MuiTypography {...props} />)<TypographyProps>`
   &&.MuiTypography-subtitle2 {
     font-size: 0.8rem;
     font-family: ${props => props.theme.fonts.radioGrotesk};
@@ -27,6 +28,12 @@ export const Typography = styled(({color, ...props}) => <MuiTypography {...props
     font-size: 4.4rem;
   }
 
+  &&.MuiTypography-h2 {
+    font-family: ${props => props.theme.fonts.radioGrotesk};
+    font-weight: 700;
+    font-size: 3.4rem;
+  }
+
   ${props => {
       return css`
         && {
@@ -34,4 +41,4 @@ export const Typography = styled(({color, ...props}) => <MuiTypography {...props
         }
       `
   }}
-`
+` as any

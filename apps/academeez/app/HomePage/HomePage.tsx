@@ -75,9 +75,11 @@ export const HomePage: FC = () => {
 
       {/* begin courses */}
       <section className="bg-gray200 pt-4">
-        <Typography variant="h3" className="text-dark800 text-center">
-          Video Coding Courses
+        <Typography variant="h2" className="text-dark800 text-center">
+          Our <Typography variant="h2" component="span" color="green">FREE</Typography> video courses
         </Typography>
+
+
       </section>
       {/* end courses */}
 

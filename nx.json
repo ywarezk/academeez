@@ -16,13 +16,14 @@
     }
   },
   "projects": {
-    "courses-api": { "tags": [] },
+    "github-api": { "tags": [] },
     "lessons": { "tags": [] },
     "academeez": { "tags": [] },
     "academeez-e2e": { "tags": [], "implicitDependencies": ["academeez"] },
     "designs": { "tags": [] },
     "blog": { "tags": [] },
     "courses": { "tags": [] },
-    "prd": { "tags": [] }
+    "prd": { "tags": [] },
+    "entities": { "tags": [] }
   }
 }

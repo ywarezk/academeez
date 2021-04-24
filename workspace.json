@@ -1,7 +1,7 @@
 {
   "version": 2,
   "cli": { "defaultCollection": "@nrwl/express" },
-  "defaultProject": "courses-api",
+  "defaultProject": "github-api",
   "generators": {
     "@nrwl/react": { "application": { "babel": true } },
     "@nrwl/next": {
@@ -9,19 +9,19 @@
     }
   },
   "projects": {
-    "courses-api": {
-      "root": "apps/courses-api",
-      "sourceRoot": "apps/courses-api/src",
+    "github-api": {
+      "root": "apps/github-api",
+      "sourceRoot": "apps/github-api/src",
       "projectType": "application",
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
           "outputs": ["{options.outputPath}"],
           "options": {
-            "outputPath": "dist/apps/courses-api",
-            "main": "apps/courses-api/src/main.ts",
-            "tsConfig": "apps/courses-api/tsconfig.app.json",
-            "assets": ["apps/courses-api/src/assets"]
+            "outputPath": "dist/apps/github-api",
+            "main": "apps/github-api/src/main.ts",
+            "tsConfig": "apps/github-api/tsconfig.app.json",
+            "assets": ["apps/github-api/src/assets"]
           },
           "configurations": {
             "production": {
@@ -30,8 +30,8 @@
               "inspect": false,
               "fileReplacements": [
                 {
-                  "replace": "apps/courses-api/src/environments/environment.ts",
-                  "with": "apps/courses-api/src/environments/environment.prod.ts"
+                  "replace": "apps/github-api/src/environments/environment.ts",
+                  "with": "apps/github-api/src/environments/environment.prod.ts"
                 }
               ]
             }
@@ -39,17 +39,17 @@
         },
         "serve": {
           "executor": "@nrwl/node:execute",
-          "options": { "buildTarget": "courses-api:build" }
+          "options": { "buildTarget": "github-api:build" }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["apps/courses-api/**/*.ts"] }
+          "options": { "lintFilePatterns": ["apps/github-api/**/*.ts"] }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/courses-api"],
+          "outputs": ["coverage/apps/github-api"],
           "options": {
-            "jestConfig": "apps/courses-api/jest.config.js",
+            "jestConfig": "apps/github-api/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -279,6 +279,36 @@
             "packageJson": "libs/prd/package.json",
             "main": "libs/prd/src/index.ts",
             "assets": ["libs/prd/*.md"]
+          }
+        }
+      }
+    },
+    "entities": {
+      "root": "libs/entities",
+      "sourceRoot": "libs/entities/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": { "lintFilePatterns": ["libs/entities/**/*.ts"] }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/entities"],
+          "options": {
+            "jestConfig": "libs/entities/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/entities",
+            "tsConfig": "libs/entities/tsconfig.lib.json",
+            "packageJson": "libs/entities/package.json",
+            "main": "libs/entities/src/index.ts",
+            "assets": ["libs/entities/*.md"]
           }
         }
       }
