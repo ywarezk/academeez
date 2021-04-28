@@ -8,7 +8,7 @@
  */
 
 import styled from 'styled-components';
-import bg from './bg.jpg';
+import bg from './bg.png';
 import { Dialog } from '@academeez/az/material';
 
 export const HeroSection = styled.section`
@@ -27,6 +27,7 @@ export const HeroSection = styled.section`
     height: 100%;
     justify-content: center;
     align-items: center;
+    z-index: 1;
   }
 `
 
@@ -38,11 +39,11 @@ export const HeroBgImg = styled.div`
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  opacity: 0.05;
   height: 100%;
   width: 100%;
   position: absolute;
   background-image: url(${bg});
+  z-index: 0;
 `
 
 export const StyledDialog = styled(Dialog)`
