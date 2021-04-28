@@ -36,6 +36,17 @@
       // private env vars here
       "envFile": "${workspaceFolder}/apps/github-api/.env",
       "cwd": "${workspaceFolder}/apps/github-api"
+    },
+
+    {
+      "name": "serve api",
+      "request": "attach",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node",
+      "cwd": "${workspaceFolder}",
+      "port": 7777
     }
 	]
 }

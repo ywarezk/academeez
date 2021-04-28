@@ -39,7 +39,11 @@
         },
         "serve": {
           "executor": "@nrwl/node:execute",
-          "options": { "buildTarget": "github-api:build" }
+          "options": {
+            "buildTarget": "github-api:build",
+            "inspect": true,
+            "port": 7777
+          }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",

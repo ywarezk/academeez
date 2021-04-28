@@ -35,7 +35,6 @@ export class CoursesResolver {
                 entries {
                   type
                   name
-                  oid
                 }
             }
           }
@@ -49,7 +48,7 @@ export class CoursesResolver {
     // create the query string to grab all the courses
     let query = courseEntries.reduce((accumulator, course) => {
       return accumulator + `
-        ${course.oid}: object(expression: "main:libs/courses/${course.name}/README.md") {
+        ${this._sanitizeName(course.name)}: object(expression: "main:libs/courses/${course.name}/README.md") {
           ... on Blob {
             text
           }
@@ -68,9 +67,25 @@ export class CoursesResolver {
 
     // convert the data to courses
     return courseEntries.map((course) => {
-      const courseReadme = coursesData.repository[course.oid].text;
+      const courseReadme = coursesData.repository[this._sanitizeName(course.name)].text;
       const result = metadataParser(courseReadme);
       return result.metadata;
     })
   }
+
+  /**************
+   * Private
+   **************/
+
+  /**
+   * given the name of the folder
+   * i need to remove the underscore and the dash
+   * to add it to the graphql query
+   * @param originalName - example 02_html-css
+   */
+  private _sanitizeName(originalName: string): string {
+    const noNum = originalName.split('_')[1];
+    return noNum.split('-').join('_');
+  }
+
 }

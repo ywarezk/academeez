@@ -9,7 +9,7 @@
 
 import axios from 'axios';
 
-export async function queryGithub(query: string) {
+export async function queryGithub<T = any>(query: string) {
   const response = await axios.post(
     'https://api.github.com/graphql',
     {
@@ -21,5 +21,5 @@ export async function queryGithub(query: string) {
       }
     }
   )
-  return response.data.data;
+  return response.data.data as T;
 }
