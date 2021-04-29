@@ -103,14 +103,27 @@
           },
           "configurations": { "production": {} }
         },
-        "serve": {
+        "serve-standalone": {
           "executor": "@nrwl/next:server",
-          "options": { "buildTarget": "academeez:build", "dev": true },
+          "options": {
+            "buildTarget": "academeez:build",
+            "dev": true,
+            "proxyConfig": "apps/academeez/proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "buildTarget": "academeez:build:production",
               "dev": false
             }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              "npx nx run academeez:serve-standalone",
+              "npx nx serve github-api"
+            ]
           }
         },
         "export": {
