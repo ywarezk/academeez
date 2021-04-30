@@ -7,13 +7,13 @@
  * @license: MIT
  */
 
+import { ColorName } from '@academeez/az/styles';
 import { Typography as MuiTypography, TypographyProps as MuiTypographyProps } from '@material-ui/core';
 import { FC } from 'react';
 import styled, { css } from 'styled-components';
 
-type TextColors = 'white' | 'green' | 'red'
 
-type TypographyProps = MuiTypographyProps & { color?: TextColors };
+type TypographyProps = MuiTypographyProps & { color?: ColorName };
 
 export const Typography: FC<TypographyProps> = styled(({color, ...props}) => <MuiTypography {...props} />)<TypographyProps>`
   &&.MuiTypography-subtitle2 {
@@ -32,6 +32,12 @@ export const Typography: FC<TypographyProps> = styled(({color, ...props}) => <Mu
     font-family: ${props => props.theme.fonts.radioGrotesk};
     font-weight: 700;
     font-size: 3.4rem;
+  }
+
+  &&.MuiTypography-h4 {
+    font-family: ${props => props.theme.fonts.radioGrotesk};
+    font-weight: 700;
+    font-size: 1.5rem;
   }
 
   ${props => {

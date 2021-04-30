@@ -37,6 +37,13 @@ describe('<Typography />', () => {
             </Typography>
           </div>
 
+          {/* card title */}
+          <div>
+            <Typography variant="h4" component="h3">
+              React
+            </Typography>
+          </div>
+
         </div>
       </ThemeProvider>
     )

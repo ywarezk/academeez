@@ -7,7 +7,6 @@
  * @license: MIT
  */
 
-import { gql, useQuery } from "@apollo/client";
 import { FC } from "react";
 import { useCourses } from '../courses.hook';
 

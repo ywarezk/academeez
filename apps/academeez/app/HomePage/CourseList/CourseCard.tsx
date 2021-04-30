@@ -9,11 +9,14 @@
 
 import { EducationItem } from "@academeez/entities";
 import { FC } from "react";
+import { Card, CardContent } from './CourseCard.markup';
 
 export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
   return (
-    <h1>
-      Course card: { course.title }
-    </h1>
+    <Card>
+      <CardContent>
+        Course card: {course.title}
+      </CardContent>
+    </Card>
   )
 }
