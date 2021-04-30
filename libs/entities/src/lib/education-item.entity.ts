@@ -16,4 +16,7 @@ export class EducationItem {
 
   @Field()
   title: string;
+
+  @Field()
+  description: string;
 }
