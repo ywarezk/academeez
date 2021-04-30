@@ -17,6 +17,7 @@ import { Button, PlayButton } from '@academeez/az/material';
 import { Typography } from '@academeez/az/material';
 import { ScrollLine } from './ScrollLine/ScrollLine';
 import { IntroVideo } from './IntroVideo/IntroVideo';
+import { CourseList } from "./CourseList/CourseList";
 
 export const HomePage: FC = () => {
   const [isIntroDialogOpen, setIntroDialogOpen] = useState(false);
@@ -79,7 +80,7 @@ export const HomePage: FC = () => {
           Our <Typography variant="h2" component="span" color="green">FREE</Typography> video courses
         </Typography>
 
-
+        <CourseList />
       </section>
       {/* end courses */}
 

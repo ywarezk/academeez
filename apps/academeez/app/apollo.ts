@@ -7,17 +7,35 @@
  * @license: MIT
  */
 
-import { ApolloClient, createHttpLink } from '@apollo/client';
+import { ApolloClient, createHttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { isServer } from '@nz/lodash';
 
 // TODO: add declaration of the cache shape
 type Cache = any;
 
-export function createApolloClient(): ApolloClient<Cache> {
+export function createApolloClient(
+  initialCache = null
+): ApolloClient<Cache> {
+  const cache: InMemoryCache = new InMemoryCache().restore(initialCache);
 
   // 'same-origin' in production cause we are in the same domain
-  // 'include' if in different domain
-  const link = createHttpLink({
-    uri: '/graphql',
+  const httpLink = createHttpLink({
+    uri: process.env.NEXT_PUBLIC_API_URL || '/graphql',
     credentials: 'same-origin'
+  });
+
+  const authLink = setContext((_, { headers }) => {
+    return {
+      headers: {
+        ...headers,
+      }
+    }
+  });
+
+  return new ApolloClient<NormalizedCacheObject>({
+    ssrMode: isServer(),
+    link: authLink.concat(httpLink),
+    cache
   });
 }

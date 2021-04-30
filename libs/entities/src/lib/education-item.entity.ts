@@ -7,10 +7,13 @@
  * @license: MIT
  */
 
-import { ObjectType, Field } from 'type-graphql';
+import { ObjectType, Field, ID } from 'type-graphql';
 
 @ObjectType()
 export class EducationItem {
+  @Field(() => ID)
+  id: string;
+
   @Field()
   title: string;
 }

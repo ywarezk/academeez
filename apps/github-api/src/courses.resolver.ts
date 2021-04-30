@@ -35,6 +35,7 @@ export class CoursesResolver {
                 entries {
                   type
                   name
+                  oid
                 }
             }
           }
@@ -69,6 +70,7 @@ export class CoursesResolver {
     return courseEntries.map((course) => {
       const courseReadme = coursesData.repository[this._sanitizeName(course.name)].text;
       const result = metadataParser(courseReadme);
+      result.metadata.id = course.oid;
       return result.metadata;
     })
   }

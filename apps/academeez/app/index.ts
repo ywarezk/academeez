@@ -10,3 +10,4 @@
 export * from './AppPage/AppPage';
 export * from './HomePage/HomePage';
 export * from './AppPage/Header/Header';
+export * from './HomePage/Homepage.static-props';

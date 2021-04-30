@@ -21,6 +21,9 @@
       "@academeez/courses": ["libs/courses/src/index.ts"],
       "@academeez/az/styles": ["apps/academeez/styles/index.ts"],
       "@academeez/az/material": ["apps/academeez/material/index.ts"],
+      "@academeez/az/app": [
+        "apps/academeez/app/index.ts"
+      ],
       "@academeez/prd": ["libs/prd/src/index.ts"],
       "@academeez/entities": ["libs/entities/src/index.ts"]
     },
