@@ -17,7 +17,7 @@ export const CourseList: FC = () => {
   return (
     <ul>
       {
-        data.courses.map(course => (
+        data?.courses.map(course => (
           <li key={course.id}>
             { course.title }
           </li>

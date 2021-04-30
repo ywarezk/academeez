@@ -7,8 +7,26 @@
  * @license: MIT
  */
 
+import { CourseList } from './CourseList';
+import { render } from '@testing-library/react';
+import { MockedProvider } from '@apollo/client/testing';
+import { mockCourses } from '../courses.hook';
+import { ThemeProvider } from '@academeez/az/styles';
+
 describe('<CourseList />', () => {
+  beforeEach(() => {
+    render(
+      (
+        <ThemeProvider>
+          <MockedProvider mocks={[mockCourses]}>
+            <CourseList />
+          </MockedProvider>
+        </ThemeProvider>
+      )
+    )
+  });
 
+  it.only('sanity', (done) => {
 
-
+  })
 })

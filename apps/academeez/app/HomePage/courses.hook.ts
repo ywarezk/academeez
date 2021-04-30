@@ -9,6 +9,7 @@
 
 import { gql, useQuery } from "@apollo/client";
 import { EducationItem } from '@academeez/entities';
+import { MockedResponse } from '@apollo/client/testing';
 
 export const coursesQuery = gql`
   query {
@@ -18,6 +19,26 @@ export const coursesQuery = gql`
     }
   }
 `
+
+export const mockCourses: MockedResponse = {
+  request: {
+    query: coursesQuery
+  },
+  result: {
+    data: {
+      courses: [
+        {
+          "id": "f1f8236b2c6b4a2b15bd847311251e712064239f",
+          "title": "React"
+        },
+        {
+          "id": "1942a5a5e2b8ea593ab6561fd2ad5a7e9f2b318b",
+          "title": "HTML and CSS"
+        }
+      ]
+    }
+  }
+}
 
 export function useCourses() {
   return useQuery<{courses: EducationItem[]}>(coursesQuery);
