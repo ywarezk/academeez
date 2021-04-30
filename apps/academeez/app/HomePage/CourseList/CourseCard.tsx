@@ -19,7 +19,9 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
         <Typography variant="h4" component="h3" color="dark800">
           {course.title}
         </Typography>
-
+        <Typography variant="subtitle1" color="dark800">
+          {course.description}
+        </Typography>
       </CardContent>
     </Card>
   )

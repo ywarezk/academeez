@@ -16,6 +16,7 @@ export const coursesQuery = gql`
     courses {
       id
       title
+      description
     }
   }
 `
@@ -29,11 +30,13 @@ export const mockCourses: MockedResponse = {
       courses: [
         {
           "id": "f1f8236b2c6b4a2b15bd847311251e712064239f",
-          "title": "React"
+          "title": "React",
+          "description": "Build web applications using React"
         },
         {
           "id": "1942a5a5e2b8ea593ab6561fd2ad5a7e9f2b318b",
-          "title": "HTML and CSS"
+          "title": "HTML and CSS",
+          "description": "Learn to build and design web pages"
         }
       ]
     }
