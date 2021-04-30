@@ -7,6 +7,7 @@
  * @license: MIT
  */
 
+import { Typography } from "@academeez/az/material";
 import { EducationItem } from "@academeez/entities";
 import { FC } from "react";
 import { Card, CardContent } from './CourseCard.markup';
@@ -15,7 +16,10 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
   return (
     <Card>
       <CardContent>
-        Course card: {course.title}
+        <Typography variant="h4" component="h3" color="dark800">
+          {course.title}
+        </Typography>
+
       </CardContent>
     </Card>
   )
