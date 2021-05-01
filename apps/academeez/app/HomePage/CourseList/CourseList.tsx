@@ -19,7 +19,9 @@ export const CourseList: FC = () => {
     <Grid container xs={12}>
       {
         data?.courses.map(course => (
-          <Grid key={course.id} item xs={12} sm={6} md={4} lg={3} >
+          <Grid
+            className="pr-1 pl-1"
+            key={course.id} item xs={12} sm={6} md={4} lg={3} xl={2} >
             <CourseCard course={course} />
           </Grid>
         ))

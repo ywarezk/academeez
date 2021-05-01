@@ -5,7 +5,7 @@ duration: 66
 description: "Build web applications using React"
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
-img: https://en.wikipedia.org/wiki/React_(JavaScript_library)#/media/File:React-icon.svg
+logo: https://en.wikipedia.org/wiki/React_(JavaScript_library)#/media/File:React-icon.svg
 ---
 
 # React Course

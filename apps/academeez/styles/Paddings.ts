@@ -26,6 +26,22 @@ export const Paddings = createGlobalStyle`
     padding-bottom: 0.75rem !important;
   }
 
+  .pr-2 {
+    padding-right: 0.75rem !important;
+  }
+
+  .pl-2 {
+    padding-left: 0.75rem !important;
+  }
+
+  .pr-1 {
+    padding-right: 0.5rem !important;
+  }
+
+  .pl-1 {
+    padding-left: 0.5rem !important;
+  }
+
   .p-0 {
     padding: 0;
   }
