@@ -44,6 +44,13 @@ describe('<Typography />', () => {
             </Typography>
           </div>
 
+          {/* prerequisites */}
+          <div>
+            <Typography variant="h6">
+              Prerequisites
+            </Typography>
+          </div>
+
         </div>
       </ThemeProvider>
     )

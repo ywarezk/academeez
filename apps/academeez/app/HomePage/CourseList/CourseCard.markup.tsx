@@ -21,3 +21,16 @@ export const Card = styled(MuiCard)`
 export const CardContent = styled(MuiCardContent)`
 
 `
+
+export const CardMedia = styled(MuiCardMedia)`
+  && {
+    height: 170px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+`
+
+export const CardActionArea = styled(MuiCardActionArea)`
+
+`

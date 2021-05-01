@@ -34,6 +34,12 @@ export const Typography: FC<TypographyProps> = styled(({color, ...props}) => <Mu
     font-size: 4.4rem;
   }
 
+  &&.MuiTypography-h6 {
+    font-family: ${props => props.theme.fonts.spaceMono};
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
   &&.MuiTypography-h2 {
     font-family: ${props => props.theme.fonts.radioGrotesk};
     font-weight: 700;

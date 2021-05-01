@@ -54,6 +54,10 @@ export const Paddings = createGlobalStyle`
     margin-top: 1rem !important;
   }
 
+  .mt-1 {
+    margin-top: 0.5rem !important;
+  }
+
   .mr-3 {
     margin-right: 1rem !important;
   }
