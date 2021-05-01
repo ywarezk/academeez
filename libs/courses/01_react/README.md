@@ -6,6 +6,7 @@ description: "Build web applications using React"
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
 logo: https://en.wikipedia.org/wiki/React_(JavaScript_library)#/media/File:React-icon.svg
+bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/01_react/bg.png
 ---
 
 # React Course

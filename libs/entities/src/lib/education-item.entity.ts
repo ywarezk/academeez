@@ -19,4 +19,10 @@ export class EducationItem {
 
   @Field()
   description: string;
+
+  @Field()
+  logo: string;
+
+  @Field()
+  bgImg: string;
 }
