@@ -5,6 +5,6 @@ duration: 66
 description: "Learn to build and design web pages"
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
-logo: https://en.wikipedia.org/wiki/HTML#/media/File:HTML5_logo_and_wordmark.svg
+logo: https://github.com/ywarezk/academeez/raw/main/libs/courses/02_html-css/logo.png
 bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/02_html-css/bg.png
 ---
