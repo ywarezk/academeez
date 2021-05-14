@@ -11,6 +11,7 @@ linkedin: https://il.linkedin.com/in/yariv-katz
 logo: https://github.com/ywarezk/academeez/raw/main/libs/courses/01_react/logo.png
 bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/01_react/bg.png
 slug: react
+prerequisites:
   - html-css
   - javascript
 ---
