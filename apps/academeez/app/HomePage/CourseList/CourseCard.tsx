@@ -11,6 +11,7 @@ import { Typography } from "@academeez/az/material";
 import { EducationItem } from "@academeez/entities";
 import { FC } from "react";
 import { Card, CardContent, CardMedia, CardActionArea } from './CourseCard.markup';
+import { isEmpty } from 'lodash';
 
 export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
   return (
@@ -28,9 +29,16 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
           <Typography className="mt-1" variant="subtitle1" component="p" color="dark800">
             {course.description}
           </Typography>
-          <Typography className="mt-1" variant="h6" color="dark800">
-            Prerequisites
-          </Typography>
+          {
+            !isEmpty(course.prerequisites) && (
+              <>
+                <Typography className="mt-1" variant="h6" color="dark800">
+                  Prerequisites
+                </Typography>
+              </>
+            )
+          }
+
         </CardContent>
       </CardActionArea>
     </Card>

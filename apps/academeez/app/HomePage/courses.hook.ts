@@ -19,6 +19,7 @@ export const coursesQuery = gql`
       description
       logo
       bgImg
+      prerequisites
     }
   }
 `
@@ -47,6 +48,15 @@ export const mockCourses: MockedResponse = {
           "bgImg": "https://github.com/ywarezk/academeez/raw/main/libs/courses/02_html-css/bg.png",
           "slug": "html-css",
           "prerequisites": []
+        },
+        {
+          "id": "53506e84a219b6ccf22e9df78fc46540b535d7ae",
+          "title": "Javascript",
+          "description": "Javascript began as the scripting language of web browsers, but today it is used for much more. We can use Javascript to build high performent, dynamic, web applications. We can use Javascript to build desktop apps, and fast backend server applications that interact with a database. Much more is available for you to create after harvesting the power of Javascript. And the best things about Javascript is the fact that it is pretty easy to learn.",
+          "logo": "https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/logo.png",
+          "bgImg": "https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/bg.png",
+          "slug": "javascript",
+          "prerequisites": ["html-css"]
         }
       ]
     }
@@ -54,5 +64,5 @@ export const mockCourses: MockedResponse = {
 }
 
 export function useCourses() {
-  return useQuery<{courses: EducationItem[]}>(coursesQuery);
+  return useQuery<{ courses: EducationItem[] }>(coursesQuery);
 }
