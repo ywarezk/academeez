@@ -7,7 +7,7 @@
  * @license: MIT
  */
 
-import { ObjectType, Field, ID } from 'type-graphql';
+import { ObjectType, Field, ID, Directive } from 'type-graphql';
 
 @ObjectType()
 export class EducationItem {
@@ -25,4 +25,11 @@ export class EducationItem {
 
   @Field()
   bgImg: string;
+
+  @Field()
+  slug: string;
+
+  @Directive('@provides(fields: "title,slug,logo")')
+  @Field(() => [EducationItem])
+  prerequisites: EducationItem[]
 }

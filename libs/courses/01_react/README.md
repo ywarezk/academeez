@@ -10,6 +10,9 @@ author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
 logo: https://github.com/ywarezk/academeez/raw/main/libs/courses/01_react/logo.png
 bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/01_react/bg.png
+slug: react
+  - html-css
+  - javascript
 ---
 
 **React** is a library that helps you build user interface components for frontend apps.  

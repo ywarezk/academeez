@@ -14,4 +14,5 @@ author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
 logo: https://github.com/ywarezk/academeez/raw/main/libs/courses/02_html-css/logo.png
 bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/02_html-css/bg.png
+slug: html-css
 ---
