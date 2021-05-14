@@ -65,10 +65,7 @@ describe('courses api', () => {
           query {
             courses {
               title,
-              prerequisites {
-                title
-                slug
-              }
+              prerequisites
             }
           }
         `
