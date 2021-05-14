@@ -35,14 +35,18 @@ export const mockCourses: MockedResponse = {
           "title": "React",
           "description": "Build web applications using React",
           "logo": "https://github.com/ywarezk/academeez/raw/main/libs/courses/01_react/logo.png",
-          "bgImg": "https://github.com/ywarezk/academeez/raw/main/libs/courses/01_react/bg.png"
+          "bgImg": "https://github.com/ywarezk/academeez/raw/main/libs/courses/01_react/bg.png",
+          "slug": "react",
+          "prerequisites": ["html-css", "javascript"]
         },
         {
           "id": "1942a5a5e2b8ea593ab6561fd2ad5a7e9f2b318b",
           "title": "HTML and CSS",
           "description": "Learn to build and design web pages",
           "logo": "https://github.com/ywarezk/academeez/raw/main/libs/courses/02_html-css/logo.png",
-          "bgImg": "https://github.com/ywarezk/academeez/raw/main/libs/courses/02_html-css/bg.png"
+          "bgImg": "https://github.com/ywarezk/academeez/raw/main/libs/courses/02_html-css/bg.png",
+          "slug": "html-css",
+          "prerequisites": []
         }
       ]
     }
