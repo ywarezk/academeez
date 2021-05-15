@@ -14,6 +14,7 @@ slug: react
 prerequisites:
   - html-css
   - javascript
+  - npm
 ---
 
 **React** is a library that helps you build user interface components for frontend apps.  
