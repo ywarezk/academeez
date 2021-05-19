@@ -27,7 +27,7 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
             {course.title}
           </Typography>
           <Typography className="mt-1" variant="subtitle1" component="p" color="dark800">
-            {course.description}
+            {course.shortDescription}
           </Typography>
           {
             !isEmpty(course.prerequisites) && (
@@ -35,6 +35,11 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
                 <Typography className="mt-1" variant="h6" color="dark800">
                   Prerequisites
                 </Typography>
+                <ul>
+                  {
+                    
+                  }
+                </ul>
               </>
             )
           }

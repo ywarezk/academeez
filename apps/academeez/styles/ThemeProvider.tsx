@@ -19,7 +19,7 @@ import { Fonts } from './fonts/Fonts';
 import { Video } from './Video';
 import { DefaultTheme } from "styled-components/native";
 
-export type ColorName = 'dark800' | 'dark700' | 'gray200' | 'green' | 'greenHover' | 'greenHover2' | 'white' | 'red';
+export type ColorName = 'dark800' | 'dark700' | 'gray200' | 'green' | 'greenHover' | 'greenHover2' | 'white' | 'red' | 'gray300';
 
 export interface Theme {
   colors: {[key in ColorName]: string},
@@ -36,6 +36,7 @@ const theme: Theme = {
   colors: {
     dark800: '#2d2d2d',
     dark700: '#444444',
+    gray300: '#e5e5e5',
     gray200: '#f4f4f4',
     green: '#01D662',
     greenHover: '#19EB79',

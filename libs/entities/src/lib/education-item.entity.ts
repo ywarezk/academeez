@@ -21,6 +21,9 @@ export class EducationItem {
   description: string;
 
   @Field()
+  shortDescription: string;
+
+  @Field()
   logo: string;
 
   @Field()

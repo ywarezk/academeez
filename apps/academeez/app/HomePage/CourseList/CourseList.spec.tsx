@@ -31,7 +31,7 @@ describe('<CourseList />', () => {
     )
   });
 
-  it.only('sanity', (done) => {
+  it('sanity', (done) => {
 
   })
 })

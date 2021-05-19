@@ -28,6 +28,10 @@ export const CardMedia = styled(MuiCardMedia)`
     justify-content: center;
     align-items: center;
     display: flex;
+
+    img {
+      height: 80px;
+    }
   }
 `
 
