@@ -58,6 +58,14 @@ export const Paddings = createGlobalStyle`
     margin-top: 0.5rem !important;
   }
 
+  .mb-1 {
+    margin-bottom: 0.5rem !important;
+  }
+
+  .mb-2 {
+    margin-bottom: 0.75rem !important;
+  }
+
   .mr-3 {
     margin-right: 1rem !important;
   }

@@ -53,7 +53,12 @@ export const mockCourses: MockedResponse = {
               "title": "Javascript",
               "slug": "javascript",
               "logo": "https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/logo.png"
-            }
+            },
+            {
+              "title": "Angular",
+              "slug": "angular",
+              "logo": "https://github.com/ywarezk/academeez/raw/main/libs/courses/05_angular/logo.svg"
+            },
           ],
           "shortDescription": "Build amazing fast web applications using React."
         },
@@ -70,7 +75,7 @@ export const mockCourses: MockedResponse = {
         {
           "id": "53506e84a219b6ccf22e9df78fc46540b535d7ae",
           "title": "Javascript",
-          "description": "Javascript began as the scripting language of web browsers, but today it is used for much more. We can use Javascript to build high performent, dynamic, web applications. We can use Javascript to build desktop apps, and fast backend server applications that interact with a database. Much more is available for you to create after harvesting the power of Javascript. And the best things about Javascript is the fact that it is pretty easy to learn.",
+          "description": "Javascript is the most popular programming language according to github. Using Javascript you can build web applications, mobile apps, backend server apps and more.",
           "logo": "https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/logo.png",
           "bgImg": "https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/bg.png",
           "slug": "javascript",

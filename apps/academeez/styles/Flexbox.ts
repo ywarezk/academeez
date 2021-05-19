@@ -25,4 +25,9 @@ export const Flexbox = createGlobalStyle`
   .flex-row-reverse {
     flex-direction: row-reverse!important;
   }
+
+  .flex-wrap {
+      -ms-flex-wrap: wrap!important;
+      flex-wrap: wrap!important;
+  }
 `

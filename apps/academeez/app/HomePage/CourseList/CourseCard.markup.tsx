@@ -15,7 +15,27 @@ import MuiCard from '@material-ui/core/Card';
 import styled from 'styled-components';
 
 export const Card = styled(MuiCard)`
+  && {
+    height: 100%;
+    transition: transform 500ms;
+    position: relative;
 
+    .description {
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    &:hover {
+      transform: scaleY(1.25) scaleX(1.4);
+      z-index: 1;
+
+      .description {
+        -webkit-line-clamp: initial;
+      }
+    }
+  }
 `
 
 export const CardContent = styled(MuiCardContent)`

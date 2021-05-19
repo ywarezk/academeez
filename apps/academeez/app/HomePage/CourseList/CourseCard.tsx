@@ -15,43 +15,48 @@ import { isEmpty } from 'lodash';
 
 export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
   return (
-    <Card>
-      <CardActionArea>
-        <CardMedia
-          image={course.bgImg}
-        >
-          <img src={course.logo} alt="Learn React" />
-        </CardMedia>
-        <CardContent>
-          <Typography variant="h4" component="h3" color="dark800">
-            {course.title}
-          </Typography>
-          <Typography className="mt-1" variant="subtitle1" component="p" color="dark800">
-            {course.shortDescription}
-          </Typography>
-          {
-            !isEmpty(course.prerequisites) && (
-              <>
-                <Typography className="mt-1" variant="h6" color="dark800">
-                  Prerequisites
-                </Typography>
-                <ul className="d-flex p-0">
+    <div className="mb-2 h-100 pb-2">
+      <Card>
+        <CardActionArea>
+          <CardMedia
+            image={course.bgImg}
+          >
+            <img src={course.logo} alt="Learn React" />
+          </CardMedia>
+          <CardContent>
+            <Typography variant="h4" component="h3" color="dark800">
+              {course.title}
+            </Typography>
+            <Typography className="mt-1 description" variant="subtitle1" component="p" color="dark800">
+              {course.shortDescription}
+            </Typography>
+            <Typography className="mt-1" variant="h6" color="dark800">
+              Prerequisites
+            </Typography>
+            {
+              !isEmpty(course.prerequisites) ? (
+                <ul className="d-flex p-0 flex-wrap">
                   {
                     course.prerequisites.map(prerequisite => (
                       <Chip
-                        className="mr-1"
+                        className="mr-1 mb-1"
                         label={prerequisite.title}
                         icon={<img src={prerequisite.logo} />}
-                        key={prerequisite.slug}  />
+                        key={prerequisite.slug} />
                     ))
                   }
                 </ul>
-              </>
-            )
-          }
+              ) : (
+                <Typography className="mt-1" variant="subtitle1" component="p" color="dark800">
+                  None
+                </Typography>
+              )
+            }
 
-        </CardContent>
-      </CardActionArea>
-    </Card>
+
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    </div>
   )
 }
