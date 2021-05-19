@@ -7,24 +7,43 @@
  * @license: MIT
  */
 
-import MuiCardActionArea from '@material-ui/core/CardActionArea';
-import MuiCardActions from '@material-ui/core/CardActions';
-import MuiCardContent from '@material-ui/core/CardContent';
-import MuiCardMedia from '@material-ui/core/CardMedia';
 import MuiCard from '@material-ui/core/Card';
 import styled from 'styled-components';
 
 export const Card = styled(MuiCard)`
   && {
-    height: 100%;
     transition: transform 500ms;
     position: relative;
+
+    .course-intro-player {
+      display: none;
+    }
+
+    .logo {
+      display: block;
+      height: 80px;
+    }
+
+    &.showVideo {
+      .course-intro-player {
+        display: block;
+      }
+
+      .logo {
+        display: none;
+      }
+    }
 
     .description {
       overflow: hidden;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
+      min-height: 46px;
+    }
+
+    .video-react-control-bar, .video-react-big-play-button {
+      display: none;
     }
 
     &:hover {
@@ -35,26 +54,12 @@ export const Card = styled(MuiCard)`
         -webkit-line-clamp: initial;
       }
     }
-  }
-`
 
-export const CardContent = styled(MuiCardContent)`
-
-`
-
-export const CardMedia = styled(MuiCardMedia)`
-  && {
-    height: 170px;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-
-    img {
-      height: 80px;
+    .MuiCardMedia-root {
+      min-height: 170px;
+      justify-content: center;
+      align-items: center;
+      display: flex;
     }
   }
-`
-
-export const CardActionArea = styled(MuiCardActionArea)`
-
 `

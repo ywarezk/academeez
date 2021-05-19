@@ -9,19 +9,57 @@
 
 import { Typography, Chip } from "@academeez/az/material";
 import { EducationItem } from "@academeez/entities";
-import { FC } from "react";
-import { Card, CardContent, CardMedia, CardActionArea } from './CourseCard.markup';
+import { FC, useEffect, useRef, useState } from "react";
+import { Card } from './CourseCard.markup';
 import { isEmpty } from 'lodash';
+import { Player } from 'video-react';
+import { HLSSource } from '@nz/video/react';
+import classnames from 'classnames';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
 
 export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
+  const [isVideo, setIsVideo] = useState(false);
+  const player = useRef(null);
+
+  useEffect(() => {
+    if (!player.current) return;
+    if (!isVideo) {
+      player.current.pause();
+    } else {
+      // setTimeout(() => {
+        player.current.play();
+      // }, 1000)
+    }
+  }, [isVideo])
+
   return (
-    <div className="mb-2 h-100 pb-2">
-      <Card>
-        <CardActionArea>
+    <div
+      className="mb-2 h-100 pb-2"
+    >
+      <Card
+        className={classnames({ "showVideo": isVideo })}
+        onMouseEnter={() => setIsVideo(true)}
+        onMouseLeave={() => setIsVideo(false)}
+      >
           <CardMedia
             image={course.bgImg}
           >
-            <img src={course.logo} alt="Learn React" />
+            {
+              isVideo ? (
+                <Player
+                  className="course-intro-player"
+                  ref={player}
+                >
+                  <HLSSource
+                    isVideoChild
+                    src={course.videoUrl}
+                  />
+                </Player>
+              ) : (
+                <img className="logo" src={course.logo} alt={course.title} />
+              )
+            }
           </CardMedia>
           <CardContent>
             <Typography variant="h4" component="h3" color="dark800">
@@ -55,7 +93,6 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
 
 
           </CardContent>
-        </CardActionArea>
       </Card>
     </div>
   )

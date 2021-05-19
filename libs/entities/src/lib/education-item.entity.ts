@@ -32,6 +32,9 @@ export class EducationItem {
   @Field()
   slug: string;
 
+  @Field()
+  videoUrl: string;
+
   @Directive('@provides(fields: "title,slug,logo")')
   @Field(() => [EducationItem], {defaultValue: []})
   prerequisites: EducationItem[]

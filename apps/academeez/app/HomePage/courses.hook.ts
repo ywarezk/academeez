@@ -19,6 +19,7 @@ export const coursesQuery = gql`
       description
       logo
       bgImg
+      videoUrl
       prerequisites {
         title
         slug
@@ -43,6 +44,7 @@ export const mockCourses: MockedResponse = {
           "logo": "https://github.com/ywarezk/academeez/raw/main/libs/courses/01_react/logo.png",
           "bgImg": "https://github.com/ywarezk/academeez/raw/main/libs/courses/01_react/bg.png",
           "slug": "react",
+          "videoUrl": "https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8",
           "prerequisites": [
             {
               "title": "HTML and CSS",
@@ -69,6 +71,7 @@ export const mockCourses: MockedResponse = {
           "logo": "https://github.com/ywarezk/academeez/raw/main/libs/courses/02_html-css/logo.png",
           "bgImg": "https://github.com/ywarezk/academeez/raw/main/libs/courses/02_html-css/bg.png",
           "slug": "html-css",
+          "videoUrl": "https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8",
           "prerequisites": [],
           "shortDescription": "Learn to build web sites using HTML."
         },
@@ -79,6 +82,7 @@ export const mockCourses: MockedResponse = {
           "logo": "https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/logo.png",
           "bgImg": "https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/bg.png",
           "slug": "javascript",
+          "videoUrl": "https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8",
           "prerequisites": [
             {
               "title": "HTML and CSS",
