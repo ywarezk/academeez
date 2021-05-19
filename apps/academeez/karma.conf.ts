@@ -16,9 +16,9 @@ module.exports = function(config) {
   });
 
   config.set({
-    captureTimeout: 1000 * 60 * 60, // it was already there
-    browserDisconnectTimeout: 1000 * 60 * 60,
+    captureTimeout: 10000 * 60 * 60, // it was already there
+    browserDisconnectTimeout: 10000 * 60 * 60,
     browserDisconnectTolerance: 1,
-    browserNoActivityTimeout: 1000 * 60 * 60, //by default 10000
+    browserNoActivityTimeout: 10000 * 60 * 60, //by default 10000
   });
 }

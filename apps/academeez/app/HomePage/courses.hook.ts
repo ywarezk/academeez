@@ -19,7 +19,11 @@ export const coursesQuery = gql`
       description
       logo
       bgImg
-      prerequisites
+      prerequisites {
+        title
+        slug
+        logo
+      }
       shortDescription
     }
   }
@@ -39,7 +43,18 @@ export const mockCourses: MockedResponse = {
           "logo": "https://github.com/ywarezk/academeez/raw/main/libs/courses/01_react/logo.png",
           "bgImg": "https://github.com/ywarezk/academeez/raw/main/libs/courses/01_react/bg.png",
           "slug": "react",
-          "prerequisites": ["html-css", "javascript"],
+          "prerequisites": [
+            {
+              "title": "HTML and CSS",
+              "slug": "html-css",
+              "logo": "https://github.com/ywarezk/academeez/raw/main/libs/courses/02_html-css/logo.png"
+            },
+            {
+              "title": "Javascript",
+              "slug": "javascript",
+              "logo": "https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/logo.png"
+            }
+          ],
           "shortDescription": "Build amazing fast web applications using React."
         },
         {
@@ -59,7 +74,13 @@ export const mockCourses: MockedResponse = {
           "logo": "https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/logo.png",
           "bgImg": "https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/bg.png",
           "slug": "javascript",
-          "prerequisites": ["html-css"],
+          "prerequisites": [
+            {
+              "title": "HTML and CSS",
+              "slug": "html-css",
+              "logo": "https://github.com/ywarezk/academeez/raw/main/libs/courses/02_html-css/logo.png"
+            }
+          ],
           "shortDescription": "Javascript is a dynamic programming language. What began as the scripting language of the web, is now used for building dynamic websites, server applications, desktop apps, mobile apps and more."
         }
       ]

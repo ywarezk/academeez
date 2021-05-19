@@ -7,7 +7,7 @@
  * @license: MIT
  */
 
-import { Typography } from "@academeez/az/material";
+import { Typography, Chip } from "@academeez/az/material";
 import { EducationItem } from "@academeez/entities";
 import { FC } from "react";
 import { Card, CardContent, CardMedia, CardActionArea } from './CourseCard.markup';
@@ -35,9 +35,15 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
                 <Typography className="mt-1" variant="h6" color="dark800">
                   Prerequisites
                 </Typography>
-                <ul>
+                <ul className="d-flex p-0">
                   {
-                    
+                    course.prerequisites.map(prerequisite => (
+                      <Chip
+                        className="mr-1"
+                        label={prerequisite.title}
+                        icon={<img src={prerequisite.logo} />}
+                        key={prerequisite.slug}  />
+                    ))
                   }
                 </ul>
               </>

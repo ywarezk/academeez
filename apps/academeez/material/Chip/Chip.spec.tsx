@@ -12,10 +12,14 @@ import { Chip } from './Chip';
 import { ThemeProvider } from '@academeez/az/styles';
 
 describe('chip', () => {
-  it.only('sanity', (done) => {
+  it('sanity', (done) => {
     render(
       <ThemeProvider>
-        <Chip label="Javascript" />
+        <div style={ { marginTop: 40, marginLeft: 40} }>
+          <Chip
+            label="Javascript"
+            icon={<img src="https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/logo.png" />} />
+        </div>
       </ThemeProvider>
     )
   })

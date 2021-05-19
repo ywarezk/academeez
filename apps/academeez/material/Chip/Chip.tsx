@@ -27,6 +27,12 @@ export const Chip = styled(MuiChip)`
       font-family: ${ ({theme}) => theme.fonts.radioGrotesk};
       font-weight: 400;
     }
+
+    .MuiChip-icon {
+      height: 1.2rem;
+      margin-left: 0;
+      margin-right: 0.313rem;
+    }
   }
 `
 
