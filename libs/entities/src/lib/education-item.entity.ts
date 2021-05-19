@@ -33,6 +33,6 @@ export class EducationItem {
   slug: string;
 
   @Directive('@provides(fields: "title,slug,logo")')
-  @Field(() => [String], {defaultValue: []})
-  prerequisites: string[]
+  @Field(() => [EducationItem], {defaultValue: []})
+  prerequisites: EducationItem[]
 }

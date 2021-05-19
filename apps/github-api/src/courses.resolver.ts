@@ -10,7 +10,6 @@
 import { Query } from 'type-graphql';
 import { EducationItem } from '@academeez/entities';
 import { queryGithub } from './github'
-import MarkdownIt from 'markdown-it';
 import metadataParser from 'markdown-yaml-metadata-parser'
 
 export class CoursesResolver {
@@ -67,11 +66,22 @@ export class CoursesResolver {
     `)
 
     // convert the data to courses
-    return courseEntries.map((course) => {
+    const courses = courseEntries.map((course) => {
       const courseReadme = coursesData.repository[this._sanitizeName(course.name)].text;
       const result = metadataParser(courseReadme);
       result.metadata.id = course.oid;
+
       return result.metadata;
+    })
+
+
+    // prerequisites
+    return courses.map((course) => {
+      course.prerequisites = course.prerequisites ?? [];
+      course.prerequisites = course.prerequisites.map((slug: string) => {
+        return courses.find(course => course.slug === slug);
+      });
+      return course;
     })
   }
 

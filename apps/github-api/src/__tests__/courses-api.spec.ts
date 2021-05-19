@@ -70,7 +70,11 @@ describe('courses api', () => {
               logo
               bgImg
               slug
-              prerequisites
+              prerequisites {
+                title
+                slug
+                logo
+              }
             }
           }
         `
