@@ -16,12 +16,12 @@ export const CourseList: FC = () => {
   const { data } = useCourses();
 
   return (
-    <Grid container xs={12}>
+    <Grid container>
       {
         data?.courses.map(course => (
           <Grid
             className="pr-1 pl-1"
-            key={course.id} item xs={12} sm={6} md={4} lg={3} xl={2} >
+            key={course.id} item xs={12} sm={6} md={4} lg={3} xl={3} >
             <CourseCard course={course} />
           </Grid>
         ))

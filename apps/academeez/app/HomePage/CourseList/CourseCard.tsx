@@ -17,6 +17,8 @@ import { HLSSource } from '@nz/video/react';
 import classnames from 'classnames';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
+import Block from '@material-ui/icons/Block';
+
 
 export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
   const [isVideo, setIsVideo] = useState(false);
@@ -73,21 +75,27 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
             </Typography>
             {
               !isEmpty(course.prerequisites) ? (
-                <ul className="d-flex p-0 flex-wrap">
+                <ul className="d-flex p-0 flex-wrap list-unstyled">
                   {
                     course.prerequisites.map(prerequisite => (
-                      <Chip
-                        className="mr-1 mb-1"
-                        label={prerequisite.title}
-                        icon={<img src={prerequisite.logo} />}
-                        key={prerequisite.slug} />
+                      <li key={prerequisite.slug}>
+                        <Chip
+                          className="mr-1 mb-1"
+                          label={prerequisite.title}
+                          icon={<img src={prerequisite.logo} />}
+                        />
+                      </li>
                     ))
                   }
                 </ul>
               ) : (
-                <Typography className="mt-1" variant="subtitle1" component="p" color="dark800">
-                  None
-                </Typography>
+                <ul className="d-flex p-0 flex-wrap list-unstyled">
+                  <Chip
+                    className="mr-1 mb-1"
+                    label="None"
+                    icon={<Block />}
+                  />
+                </ul>
               )
             }
 

@@ -22,4 +22,8 @@ export const Common = createGlobalStyle`
   *, ::after, ::before {
       box-sizing: border-box;
   }
+
+  .list-unstyled {
+    list-style: none;
+  }
 `

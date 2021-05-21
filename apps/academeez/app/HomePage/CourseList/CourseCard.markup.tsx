@@ -12,6 +12,7 @@ import styled from 'styled-components';
 
 export const Card = styled(MuiCard)`
   && {
+    height: 100%;
     transition: transform 500ms;
     position: relative;
 
