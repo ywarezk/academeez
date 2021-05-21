@@ -13,7 +13,7 @@ import { ThemeProvider } from '@academeez/az/styles';
 import { PlayButton } from './PlayButton/PlayButton';
 
 describe('buttons', () => {
-  it('display all buttons', () => {
+  it('display all buttons', function() {
     render(
       <ThemeProvider>
         <div style={ {marginTop: '100px', marginLeft: '100px'} }>
@@ -26,6 +26,11 @@ describe('buttons', () => {
             <PlayButton>
               About academeez
             </PlayButton>
+          </div>
+          <div style={{ marginTop: '30px' }}>
+            <Button variant="outlined" color="green">
+              start_learning
+            </Button>
           </div>
         </div>
       </ThemeProvider>

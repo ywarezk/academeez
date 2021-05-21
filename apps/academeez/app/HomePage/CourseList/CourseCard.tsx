@@ -7,7 +7,7 @@
  * @license: MIT
  */
 
-import { Typography, Chip } from "@academeez/az/material";
+import { Typography, Chip, Button } from "@academeez/az/material";
 import { EducationItem } from "@academeez/entities";
 import { FC, useEffect, useRef, useState } from "react";
 import { Card } from './CourseCard.markup';
@@ -18,6 +18,8 @@ import classnames from 'classnames';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Block from '@material-ui/icons/Block';
+import CardActions from '@material-ui/core/CardActions';
+
 
 
 export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
@@ -101,6 +103,11 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
 
 
           </CardContent>
+          <CardActions>
+            <Button variant="outlined" color="green">
+              start_learning
+            </Button>
+          </CardActions>
       </Card>
     </div>
   )

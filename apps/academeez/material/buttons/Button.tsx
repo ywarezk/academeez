@@ -7,13 +7,12 @@
  * @license: MIT
  */
 
+import { ColorName } from '@academeez/az/styles';
 import MuiButton, { ButtonProps as MuiButtonProps } from '@material-ui/core/Button';
 import { FC } from 'react';
 import styled, {StyledProps, css} from 'styled-components';
 
-type ButtonColors = 'green' | 'black' | 'red'
-
-export type ButtonProps = Omit< MuiButtonProps, 'color'> & {color: ButtonColors};
+export type ButtonProps = Omit< MuiButtonProps, 'color'> & {color: ColorName};
 
 export const Button: FC<ButtonProps> = styled(({color, ...props}) => <MuiButton {...props} />)<ButtonProps>`
   && {
@@ -36,24 +35,34 @@ export const Button: FC<ButtonProps> = styled(({color, ...props}) => <MuiButton 
 
   ${(props: StyledProps<ButtonProps>) => {
     switch (props.color) {
-      case 'black':
+      case 'dark800':
         return css`
-          && {
+          &&:not(.MuiButton-outlined) {
             color: ${props.theme.colors.gray200};
             background-color: ${props.theme.colors.dark800};
             &:hover {
               background-color: ${props.theme.colors.dark700};
             }
           }
+
+          &&.MuiButton-outlined {
+            color: ${props.theme.colors.dark800};
+            border-color: ${props.theme.colors.dark800};
+          }
         `
       default:
         return css`
-          && {
+          &&:not(.MuiButton-outlined) {
             color: ${props.theme.colors.dark800};
             background-color: ${props.theme.colors.green};
             &:hover {
               background-color: ${props.theme.colors.greenHover};
             }
+          }
+
+          &&.MuiButton-outlined {
+            color: ${props.theme.colors.green};
+            border-color: ${props.theme.colors.green};
           }
         `
     }
