@@ -19,6 +19,10 @@ export const Common = createGlobalStyle`
     height: 100%;
   }
 
+  .w-100 {
+    width: 100%;
+  }
+
   *, ::after, ::before {
       box-sizing: border-box;
   }

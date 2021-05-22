@@ -19,7 +19,9 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Block from '@material-ui/icons/Block';
 import CardActions from '@material-ui/core/CardActions';
-
+import Link from "next/link";
+import { Grid } from "@material-ui/core";
+import { PlayArrow } from "@material-ui/icons";
 
 
 export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
@@ -104,9 +106,29 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
 
           </CardContent>
           <CardActions>
-            <Button variant="outlined" color="green">
-              start_learning
-            </Button>
+            <Grid container>
+            <Grid item xs={12} lg={6} className="pr-1">
+                <Button
+                  className="mr-1 w-100"
+                  startIcon={<PlayArrow />}
+                  variant="outlined"
+                  color="dark800"
+                >
+                  Intro
+                </Button>
+              </Grid>
+              <Grid item xs={12} lg={6} className="pl-1">
+                <Link href={`/courses/${course.slug}`} passHref>
+                  <Button
+                    variant={isVideo ? "contained" : "outlined"}
+                    color="green"
+                    className="w-100"
+                  >
+                    start_learning
+                  </Button>
+                </Link>
+              </Grid>
+            </Grid>
           </CardActions>
       </Card>
     </div>

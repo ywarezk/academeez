@@ -11,6 +11,7 @@ import { render } from '@testing-library/react'
 import { Button } from './Button';
 import { ThemeProvider } from '@academeez/az/styles';
 import { PlayButton } from './PlayButton/PlayButton';
+import PlayArrow from '@material-ui/icons/PlayArrow';
 
 describe('buttons', () => {
   it('display all buttons', function() {
@@ -30,6 +31,13 @@ describe('buttons', () => {
           <div style={{ marginTop: '30px' }}>
             <Button variant="outlined" color="green">
               start_learning
+            </Button>
+          </div>
+          <div style={{ marginTop: '30px' }}>
+            <Button
+              startIcon={<PlayArrow />}
+              color="dark800">
+              Intro
             </Button>
           </div>
         </div>

@@ -37,7 +37,7 @@ export const Button: FC<ButtonProps> = styled(({color, ...props}) => <MuiButton 
     switch (props.color) {
       case 'dark800':
         return css`
-          &&:not(.MuiButton-outlined) {
+          &&.MuiButton-contained:not(.MuiButton-outlined) {
             color: ${props.theme.colors.gray200};
             background-color: ${props.theme.colors.dark800};
             &:hover {
@@ -52,7 +52,7 @@ export const Button: FC<ButtonProps> = styled(({color, ...props}) => <MuiButton 
         `
       default:
         return css`
-          &&:not(.MuiButton-outlined) {
+          &&.MuiButton-contained:not(.MuiButton-outlined) {
             color: ${props.theme.colors.dark800};
             background-color: ${props.theme.colors.green};
             &:hover {

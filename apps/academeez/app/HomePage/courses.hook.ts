@@ -20,6 +20,7 @@ export const coursesQuery = gql`
       logo
       bgImg
       videoUrl
+      slug
       prerequisites {
         title
         slug

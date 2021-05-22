@@ -62,5 +62,9 @@ export const Card = styled(MuiCard)`
       align-items: center;
       display: flex;
     }
+
+    .MuiCardContent-root {
+      padding-bottom: 0;
+    }
   }
 `
