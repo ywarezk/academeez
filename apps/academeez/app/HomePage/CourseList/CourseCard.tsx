@@ -44,7 +44,7 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
       className="mb-2 h-100 pb-2"
     >
       <Card
-        className={classnames({ "showVideo": isVideo })}
+        className={`pb-2 ${classnames({ "showVideo": isVideo })}`}
         onMouseEnter={() => setIsVideo(true)}
         onMouseLeave={() => setIsVideo(false)}
       >
@@ -107,7 +107,7 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
           </CardContent>
           <CardActions>
             <Grid container>
-            <Grid item xs={12} lg={6} className="pr-1">
+            <Grid item xs={12} lg={6} className="pr-1 pl-1 mb-1">
                 <Button
                   className="mr-1 w-100"
                   startIcon={<PlayArrow />}
@@ -117,7 +117,7 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
                   Intro
                 </Button>
               </Grid>
-              <Grid item xs={12} lg={6} className="pl-1">
+              <Grid item xs={12} lg={6} className="pl-1 pr-1">
                 <Link href={`/courses/${course.slug}`} passHref>
                   <Button
                     variant={isVideo ? "contained" : "outlined"}

@@ -14,7 +14,8 @@ export const Card = styled(MuiCard)`
   && {
     height: 100%;
     transition: transform 500ms;
-    position: relative;
+    display: flex;
+    flex-direction: column;
 
     .course-intro-player {
       display: none;
@@ -65,6 +66,7 @@ export const Card = styled(MuiCard)`
 
     .MuiCardContent-root {
       padding-bottom: 0;
+      flex-grow: 1;
     }
   }
 `
