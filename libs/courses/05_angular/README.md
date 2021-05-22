@@ -14,5 +14,6 @@ bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/05_angular/bg.
 slug: angular
 prerequisites:
   - javascript
-  - typescript  
+  - typescript
+  - npm  
 ---

@@ -34,6 +34,7 @@
     "@nz/express-utils": "^0.1.1",
     "@nz/video": "^0.2.1",
     "axios": "^0.21.1",
+    "camelcase-keys": "^6.2.2",
     "classnames": "^2.3.1",
     "core-js": "^3.6.5",
     "document-register-element": "1.13.1",

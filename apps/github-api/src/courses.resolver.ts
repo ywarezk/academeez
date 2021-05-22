@@ -10,7 +10,8 @@
 import { Query } from 'type-graphql';
 import { EducationItem } from '@academeez/entities';
 import { queryGithub } from './github'
-import metadataParser from 'markdown-yaml-metadata-parser'
+import metadataParser from 'markdown-yaml-metadata-parser';
+import camelcaseKeys from 'camelcase-keys';
 
 export class CoursesResolver {
 
@@ -81,7 +82,8 @@ export class CoursesResolver {
       course.prerequisites = course.prerequisites.map((slug: string) => {
         return courses.find(course => course.slug === slug);
       });
-      return course;
+
+      return camelcaseKeys(course);
     })
   }
 

@@ -31,7 +31,7 @@ describe('<CourseList />', () => {
     )
   });
 
-  it.only('sanity', function(done) {
-    this.timeout(10000000);
+  it('sanity', function() {
+
   })
 })

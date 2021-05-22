@@ -14,5 +14,6 @@ logo: https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/l
 bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/bg.png
 slug: javascript
 prerequisites:
-  - html-css  
+  - html-css
+  - npm
 ---

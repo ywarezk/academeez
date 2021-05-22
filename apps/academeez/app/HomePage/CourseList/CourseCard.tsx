@@ -22,7 +22,6 @@ import CardActions from '@material-ui/core/CardActions';
 import Link from "next/link";
 import { DialogContent, Grid } from "@material-ui/core";
 import { PlayArrow } from "@material-ui/icons";
-import { Player } from 'video-react';
 
 export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
   const [isVideo, setIsVideo] = useState(false);
