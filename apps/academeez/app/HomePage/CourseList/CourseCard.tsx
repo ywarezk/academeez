@@ -7,7 +7,7 @@
  * @license: MIT
  */
 
-import { Typography, Chip, Button } from "@academeez/az/material";
+import { Typography, Chip, Button, Dialog } from "@academeez/az/material";
 import { EducationItem } from "@academeez/entities";
 import { FC, useEffect, useRef, useState } from "react";
 import { Card } from './CourseCard.markup';
@@ -20,12 +20,13 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Block from '@material-ui/icons/Block';
 import CardActions from '@material-ui/core/CardActions';
 import Link from "next/link";
-import { Grid } from "@material-ui/core";
+import { DialogContent, Grid } from "@material-ui/core";
 import { PlayArrow } from "@material-ui/icons";
-
+import { Player } from 'video-react';
 
 export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
   const [isVideo, setIsVideo] = useState(false);
+  const [isIntro, setIsIntro] = useState(false);
   const player = useRef(null);
 
   useEffect(() => {
@@ -113,6 +114,7 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
                   startIcon={<PlayArrow />}
                   variant="outlined"
                   color="dark800"
+                  onClick={() => setIsIntro(true)}
                 >
                   Intro
                 </Button>
@@ -131,6 +133,29 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
             </Grid>
           </CardActions>
       </Card>
+
+      <Dialog
+        open={isIntro}
+        fullScreen
+        isCloseButton
+        maxWidth="xl"
+        fullWidth
+        className="transparent"
+        onClose={() => setIsIntro(false)}
+      >
+        <DialogContent>
+          <Player
+            height="100%"
+            fluid={false}
+            autoPlay
+          >
+            <HLSSource
+              isVideoChild
+              src={course.videoUrl}
+            />
+          </Player>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

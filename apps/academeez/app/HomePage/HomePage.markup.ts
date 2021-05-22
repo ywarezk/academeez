@@ -9,7 +9,6 @@
 
 import styled from 'styled-components';
 import bg from './bg.png';
-import { Dialog } from '@academeez/az/material';
 
 export const HeroSection = styled.section`
   & {
@@ -44,11 +43,4 @@ export const HeroBgImg = styled.div`
   position: absolute;
   background-image: url(${bg});
   z-index: 0;
-`
-
-export const StyledDialog = styled(Dialog)`
-  && .MuiDialog-paper {
-    background-color: transparent;
-    box-shadow: none;
-  }
 `

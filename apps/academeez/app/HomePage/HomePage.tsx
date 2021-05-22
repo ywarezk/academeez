@@ -11,13 +11,14 @@ import { FC, useState } from "react";
 import Head from 'next/head';
 import { Header } from '../';
 import { DialogContent, Grid } from "@material-ui/core";
-import { HeroSection, HeroBgImg, StyledDialog } from './HomePage.markup';
+import { HeroSection, HeroBgImg } from './HomePage.markup';
 import { LogoLineAnim } from './LogoLineAnim/LogoLineAnim';
 import { Button, PlayButton } from '@academeez/az/material';
 import { Typography } from '@academeez/az/material';
 import { ScrollLine } from './ScrollLine/ScrollLine';
 import { IntroVideo } from './IntroVideo/IntroVideo';
 import { CourseList } from "./CourseList/CourseList";
+import { Dialog } from '@academeez/az/material';
 
 export const HomePage: FC = () => {
   const [isIntroDialogOpen, setIntroDialogOpen] = useState(false);
@@ -52,18 +53,19 @@ export const HomePage: FC = () => {
                 className="mr-3">
                 About us
               </PlayButton>
-              <StyledDialog
+              <Dialog
                 open={isIntroDialogOpen}
                 fullScreen
                 isCloseButton
                 maxWidth="xl"
                 fullWidth
+                className="transparent"
                 onClose={() => setIntroDialogOpen(false)}
               >
                 <DialogContent>
                   <IntroVideo height="100%" fluid={false} />
                 </DialogContent>
-              </StyledDialog>
+              </Dialog>
               <Button variant="contained" color="green">
                 Start Learning
               </Button>

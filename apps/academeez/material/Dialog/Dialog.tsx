@@ -38,6 +38,11 @@ const StyledDialog = styled(({fullScreen, ...props}) => <MuiDialog {...props} />
     .MuiDialogContent-root {
     }
   }
+
+  &&.transparent .MuiDialog-paper {
+    background-color: transparent;
+    box-shadow: none;
+  }
 `
 
 type DialogProps = MuiDialogProps & { isCloseButton? : boolean}
