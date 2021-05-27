@@ -20,8 +20,9 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Block from '@material-ui/icons/Block';
 import CardActions from '@material-ui/core/CardActions';
 import Link from "next/link";
-import { DialogContent, Grid } from "@material-ui/core";
+import { DialogContent } from "@material-ui/core";
 import { PlayArrow } from "@material-ui/icons";
+import Hidden from '@material-ui/core/Hidden';
 
 export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
   const [isVideo, setIsVideo] = useState(false);
@@ -33,18 +34,15 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
     if (!isVideo) {
       player.current.pause();
     } else {
-      // setTimeout(() => {
-        player.current.play();
-      // }, 1000)
+      player.current.play();
     }
   }, [isVideo])
 
   return (
-    <div
-      className="mb-2 h-100 pb-2"
-    >
+    <>
       <Card
-        className={`pb-2 ${classnames({ "showVideo": isVideo })}`}
+        elevation={0}
+        className={`${classnames({ "showVideo": isVideo })}`}
         onMouseEnter={() => setIsVideo(true)}
         onMouseLeave={() => setIsVideo(false)}
       >
@@ -106,30 +104,41 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
 
           </CardContent>
           <CardActions>
-            <Grid container>
-            <Grid item xs={12} lg={6} className="pr-1 pl-1 mb-1">
+            <div className="d-flex w-100">
+              <Hidden only={['xs', 'sm', 'md']}>
                 <Button
-                  className="mr-1 w-100"
+                  className="mr-1"
                   startIcon={<PlayArrow />}
-                  variant="outlined"
                   color="dark800"
+                  variant="outlined"
                   onClick={() => setIsIntro(true)}
                 >
                   Intro
                 </Button>
-              </Grid>
-              <Grid item xs={12} lg={6} className="pl-1 pr-1">
-                <Link href={`/courses/${course.slug}`} passHref>
-                  <Button
-                    variant={isVideo ? "contained" : "outlined"}
-                    color="green"
-                    className="w-100"
-                  >
-                    start_learning
-                  </Button>
-                </Link>
-              </Grid>
-            </Grid>
+              </Hidden>
+              <Link href={`/courses/${course.slug}`} passHref>
+                <Button
+                  variant={isVideo ? "contained" : "outlined"}
+                  color="green"
+                className="flex-grow-1"
+                >
+                  start_learning
+                </Button>
+              </Link>
+            </div>
+            <Hidden only={['lg', 'xl']}>
+              <div className="mt-2 w-100 ml-0">
+                <Button
+                  className="mr-1 w-100"
+                  startIcon={<PlayArrow />}
+                  color="dark800"
+                  variant="outlined"
+                  onClick={() => setIsIntro(true)}
+                >
+                Intro
+                </Button>
+              </div>
+            </Hidden>
           </CardActions>
       </Card>
 
@@ -155,6 +164,6 @@ export const CourseCard: FC<{ course: EducationItem }> = ({ course }) => {
           </Player>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   )
 }

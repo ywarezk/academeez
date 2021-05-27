@@ -40,8 +40,8 @@ describe('<Header />', () => {
     await waitFor(() => expect(document.getElementsByTagName('header').length > 0).to.equal(true))
   })
 
-  it('hello', () => {
-    expect(true).to.equal(true);
+  it.only('hello', function(done) {
+    this.timeout(60000000);
   })
 
 })

@@ -47,7 +47,7 @@ export const HomePage: FC = () => {
               </Typography>
               &nbsp;video coding courses
             </Typography>
-            <div className="d-flex justify-content-center mt-6">
+            <div className="d-flex justify-content-center mt-5">
               <PlayButton
                 onClick={() => setIntroDialogOpen(true)}
                 className="mr-3">
@@ -77,12 +77,17 @@ export const HomePage: FC = () => {
       {/* end hero */}
 
       {/* begin courses */}
-      <section className="bg-gray200 pt-4">
+      <section className="pt-6">
         <Typography variant="h2" className="text-dark800 text-center">
           Our <Typography variant="h2" component="span" color="green">FREE</Typography> video courses
         </Typography>
 
-        <CourseList />
+        <Grid container className="justify-content-center mt-5">
+          <Grid item xs={12} md={9} >
+            <CourseList />
+          </Grid>
+        </Grid>
+
       </section>
       {/* end courses */}
 

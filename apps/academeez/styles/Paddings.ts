@@ -22,6 +22,14 @@ export const Paddings = createGlobalStyle`
     padding-top: 2.5rem !important;
   }
 
+  .pt-5 {
+    padding-top: 4rem !important;
+  }
+
+  .pt-6 {
+    padding-top: 5rem !important;
+  }
+
   .pb-2 {
     padding-bottom: 0.75rem !important;
   }
@@ -54,6 +62,10 @@ export const Paddings = createGlobalStyle`
     margin-top: 1rem !important;
   }
 
+  .mt-5 {
+    margin-top: 4rem !important;
+  }
+
   .mt-1 {
     margin-top: 0.5rem !important;
   }
@@ -66,6 +78,10 @@ export const Paddings = createGlobalStyle`
     margin-bottom: 0.75rem !important;
   }
 
+  .mb-4 {
+    margin-bottom: 3rem !important;
+  }
+
   .mr-3 {
     margin-right: 1rem !important;
   }
@@ -74,11 +90,19 @@ export const Paddings = createGlobalStyle`
     margin-right: 0.5rem !important;
   }
 
+  .ml-0 {
+    margin-left: 0 !important;
+  }
+
   .ml-1 {
     margin-left: 0.5rem !important;
   }
 
-  .mt-6 {
-    margin-top: 3rem !important;
+  .mt-2 {
+    margin-top: 0.75rem !important;
+  }
+
+  .mt-5 {
+    margin-top: 4rem !important;
   }
 `

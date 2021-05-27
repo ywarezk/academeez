@@ -20,7 +20,7 @@ import Typography from '@material-ui/core/Typography';
 import GithubIcon from '@material-ui/icons/GitHub';
 import YoutubeIcon from '@material-ui/icons/YouTube';
 import logo from './logo.png';
-import { Grid } from '@material-ui/core';
+import { Box, Grid } from '@material-ui/core';
 import { MuiAppBar, LogoImage, ListItem } from './Header.markup';
 import { Link as AzMuiLink } from '@academeez/az/material';
 
@@ -36,7 +36,7 @@ export const Header: FC<HeaderProps> = ( props ) => {
     (
       <MuiAppBar {...props} className="pt-2 pb-2">
         <Grid container className="justify-content-center">
-          <Grid item xs={10}>
+          <Grid item xs={12} lg={10}>
             <Toolbar>
               <Link href="/">
                 <a>
@@ -46,23 +46,16 @@ export const Header: FC<HeaderProps> = ( props ) => {
                   />
                 </a>
               </Link>
-              <List className="d-flex flex-grow-1 flex-row-reverse">
+              <Box component={List} display={ {xs: 'none', md: 'flex'} } className="flex-grow-1 flex-row-reverse" >
                 <ListItem>
-                  <a href="https://github.com/ywarezk/academeez">
+                  <a className="d-flex" href="https://github.com/ywarezk/academeez">
                     <GithubIcon className="hover-green" />
                   </a>
                 </ListItem>
                 <ListItem>
-                  <a href="https://www.youtube.com/channel/UCmnTSM4hGDJin7g5PyXa9pQ">
+                  <a className="d-flex" href="https://www.youtube.com/channel/UCmnTSM4hGDJin7g5PyXa9pQ">
                     <YoutubeIcon className="hover-green" />
                   </a>
-                </ListItem>
-                <ListItem>
-                  <Link href="/donate">
-                    <AzMuiLink>
-                      Donate
-                    </AzMuiLink>
-                  </Link>
                 </ListItem>
                 <ListItem>
                   <Link href="/blog">
@@ -72,13 +65,13 @@ export const Header: FC<HeaderProps> = ( props ) => {
                   </Link>
                 </ListItem>
                 <ListItem>
-                  <Link href="/courses">
+                  <Link href="/courses" passHref>
                     <AzMuiLink outline color="green">
-                      Start Learning
+                      start_learning
                     </AzMuiLink>
                   </Link>
                 </ListItem>
-              </List>
+              </Box>
             </Toolbar>
           </Grid>
         </Grid>

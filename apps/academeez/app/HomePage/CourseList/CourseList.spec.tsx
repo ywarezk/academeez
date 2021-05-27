@@ -20,7 +20,7 @@ describe('<CourseList />', () => {
       (
         <ThemeProvider>
           <MockedProvider mocks={[mockCourses]}>
-            <Grid container className="justify-content-center mt-6">
+            <Grid container className="justify-content-center mt-5">
               <Grid item xs={10}>
                 <CourseList />
               </Grid>
