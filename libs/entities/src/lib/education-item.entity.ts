@@ -9,7 +9,6 @@
 
 import { ObjectType, Field, ID, Directive } from 'type-graphql';
 
-@ObjectType()
 export class EducationItem {
   @Field(() => ID)
   id: string;
@@ -24,9 +23,6 @@ export class EducationItem {
   shortDescription: string;
 
   @Field()
-  logo: string;
-
-  @Field()
   bgImg: string;
 
   @Field()
@@ -35,7 +31,6 @@ export class EducationItem {
   @Field()
   videoUrl: string;
 
-  @Directive('@provides(fields: "title,slug,logo")')
-  @Field(() => [EducationItem], {defaultValue: []})
-  prerequisites: EducationItem[]
+  @Field()
+  link: string;
 }
