@@ -11,7 +11,7 @@ import { FC, useState } from "react";
 import Head from 'next/head';
 import { Header } from '../';
 import { DialogContent, Grid } from "@material-ui/core";
-import { HeroSection, HeroBgImg } from './HomePage.markup';
+import { HeroSection, HeroBgImg, TopChaptersSection } from './HomePage.markup';
 import { LogoLineAnim } from './LogoLineAnim/LogoLineAnim';
 import { Button, PlayButton } from '@academeez/az/material';
 import { Typography } from '@academeez/az/material';
@@ -19,6 +19,7 @@ import { ScrollLine } from './ScrollLine/ScrollLine';
 import { IntroVideo } from './IntroVideo/IntroVideo';
 import { CourseList } from "./CourseList/CourseList";
 import { Dialog } from '@academeez/az/material';
+import { Favorite } from '@material-ui/icons';
 
 export const HomePage: FC = () => {
   const [isIntroDialogOpen, setIntroDialogOpen] = useState(false);
@@ -77,7 +78,7 @@ export const HomePage: FC = () => {
       {/* end hero */}
 
       {/* begin courses */}
-      <section className="pt-6">
+      <section className="pt-6 pb-6">
         <Typography variant="h2" className="text-dark800 text-center">
           Our <Typography variant="h2" component="span" color="green">FREE</Typography> video courses
         </Typography>
@@ -90,6 +91,14 @@ export const HomePage: FC = () => {
 
       </section>
       {/* end courses */}
+
+      {/* begin chapters */}
+      <TopChaptersSection className="pt-6 pb-6 bg-dark800">
+        <Typography variant="h2" className="text-white text-center">
+          Start watching our top viewed <Favorite /> lessons
+        </Typography>
+      </TopChaptersSection>
+      {/* end chapters */}
 
     </div>
   )

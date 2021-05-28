@@ -30,6 +30,10 @@ export const Paddings = createGlobalStyle`
     padding-top: 5rem !important;
   }
 
+  .pb-6 {
+    padding-bottom: 5rem !important;
+  }
+
   .pb-2 {
     padding-bottom: 0.75rem !important;
   }

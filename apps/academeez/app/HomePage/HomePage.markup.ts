@@ -44,3 +44,14 @@ export const HeroBgImg = styled.div`
   background-image: url(${bg});
   z-index: 0;
 `
+
+export const TopChaptersSection = styled.section`
+  && {
+    .MuiSvgIcon-root {
+      fill: ${prop => prop.theme.colors.red};
+      font-size: 3.5rem;
+      position: relative;
+      top: 11px;
+    }
+  }
+`
