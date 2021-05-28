@@ -75,6 +75,14 @@ describe('courses api', () => {
                 slug
                 logo
               }
+              chapters {
+                order
+                id
+                title
+                shortDescription
+                bgImg
+                link
+              }
             }
           }
         `

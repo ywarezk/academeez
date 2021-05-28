@@ -7,6 +7,7 @@
  */
 
 import { Directive, Field, ObjectType } from "type-graphql";
+import { Chapter } from "./chapter.entity";
 import { EducationItem } from './education-item.entity';
 
 @ObjectType()
@@ -16,5 +17,8 @@ export class Course extends EducationItem {
 
   @Directive('@provides(fields: "title,slug,logo")')
   @Field(() => [EducationItem], { defaultValue: [] })
-  prerequisites: EducationItem[]
+  prerequisites: EducationItem[];
+
+  @Field(() => [Chapter])
+  chapters: Chapter[];
 }
