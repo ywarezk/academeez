@@ -6,6 +6,7 @@ author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
 img: https://en.wikipedia.org/wiki/React_(JavaScript_library)#/media/File:React-icon.svg
 code: https://codesandbox.io/s/html-css-flexbox-layout-exercise-eo3th?file=/index.html:2397-2414
+link: /courses/html-css/flexbox/layout-ex
 ---
 
 Writing code is the only way to properly learn.  

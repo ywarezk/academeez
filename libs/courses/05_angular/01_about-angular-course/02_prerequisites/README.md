@@ -13,6 +13,7 @@ prerequisites:
   - javascript  
   - typescript
   - npm
+link: /courses/angular/about-angular-course/prerequisites
 ---
 
 These are the things you should know before starting this course.

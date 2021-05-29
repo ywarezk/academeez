@@ -13,6 +13,7 @@ prerequisites:
   - javascript  
   - typescript
   - npm
+link: /courses/angular/about-angular-course/why-learn-angular
 ---
 
 Let's go over few reasons why you should learn Angular and take this angular course.

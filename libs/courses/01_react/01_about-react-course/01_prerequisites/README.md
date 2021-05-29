@@ -6,6 +6,7 @@ sub_title: "Things I need to know before starting this course"
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
 img: https://en.wikipedia.org/wiki/React_(JavaScript_library)#/media/File:React-icon.svg
+link: /courses/react/about-react-course/prerequisites
 ---
 
 # Prerequisites

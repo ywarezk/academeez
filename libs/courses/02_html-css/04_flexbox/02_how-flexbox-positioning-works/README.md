@@ -6,6 +6,7 @@ author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
 img: https://en.wikipedia.org/wiki/React_(JavaScript_library)#/media/File:React-icon.svg
 code: https://codesandbox.io/s/html-cssflexboxhow-flexbox-positioning-works-brie8?file=/index.html
+link: /courses/html-css/flexbox/how-flexbox-positioning-works
 ---
 
 Let's try and examine how `Flexbox` position elements

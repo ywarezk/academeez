@@ -13,6 +13,7 @@ prerequisites:
   - javascript  
   - typescript
   - npm
+link: /courses/angular/about-angular-course/installations
 ---
 
 Please install the following software.

@@ -6,6 +6,7 @@ author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
 img: https://en.wikipedia.org/wiki/React_(JavaScript_library)#/media/File:React-icon.svg
 code: https://codesandbox.io/s/html-cssflexboxhow-flexbox-positioning-works-brie8?file=/index.html
+link: /courses/html-css/flexbox/main-axis
 ---
 
 `Flexbox` will arrange the **Flex Items** on a row from left to right, but what actually happens the items are arranged on the **Main Axis** (by default is horizontal row) from the `flex-direction` (by default from left to right)

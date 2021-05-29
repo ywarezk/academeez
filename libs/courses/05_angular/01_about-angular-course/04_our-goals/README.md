@@ -13,6 +13,7 @@ prerequisites:
   - javascript  
   - typescript
   - npm
+link: /courses/angular/about-angular-course/our-goals
 ---
 
 After this course you will be able to create the following.

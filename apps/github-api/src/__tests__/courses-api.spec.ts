@@ -58,13 +58,13 @@ describe('courses api', () => {
   });
 
   it.only('grab all courses', async () => {
-    const response = await axios.post(
-      'http://localhost:3333/graphql',
-      {
-        query: `
+    try {
+      const response = await axios.post(
+        'http://localhost:3333/graphql',
+        {
+          query: `
           query {
-            courses {
-              id
+            lessons {
               title,
               description
               logo
@@ -75,8 +75,12 @@ describe('courses api', () => {
             }
           }
         `
-      }
-    )
-    expect(response.data.data.courses.length > 0).to.equal(true);
+        }
+      )
+      expect(response.data.data.courses.length > 0).to.equal(true);
+    } catch(err) {
+      console.log(err);
+    }
+
   })
 })

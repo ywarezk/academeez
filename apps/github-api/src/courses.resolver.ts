@@ -7,13 +7,14 @@
  * @license: MIT
  */
 
-import { Query } from 'type-graphql';
+import { Query, Resolver } from 'type-graphql';
 import { EducationItem } from '@academeez/entities';
 import { queryGithub } from './github'
 import metadataParser from 'markdown-yaml-metadata-parser';
 import camelcaseKeys from 'camelcase-keys';
-import { includes, isEmpty } from 'lodash';
+import { includes, isEmpty, difference } from 'lodash';
 
+@Resolver()
 export class CoursesResolver {
 
   @Query(() => String)
@@ -22,13 +23,25 @@ export class CoursesResolver {
   }
 
   /**
-   * Get a list of all the courses
+   * Get a list of all the education items
    */
   @Query(() => [EducationItem])
-  async courses() {
-    const temp = await this._getAllEducationItems(['libs/courses/']);
+  async lessons() {
+    const educationItems = await this._getAllEducationItems(['libs/courses/']);
 
+    // calculate the children
+    for (const lesson of educationItems) {
+      const pathArray = lesson.link.split('/');
+      lesson.children = educationItems
+        .filter(l => {
+          const childPathArray = l.link.split('/');
+          if (childPathArray.length !== (pathArray.length + 1)) return false;
+          return difference(pathArray, childPathArray).length === 0;
+        })
+        .map(l => l.link)
+    }
 
+    return educationItems;
   }
 
   /**************
@@ -121,6 +134,12 @@ export class CoursesResolver {
       } else {
         const trees = item.entries
                           .filter(entry => entry.type === 'tree')
+                          .filter(entry => {
+                            const { name } = entry;
+                            const numStr = name.split('_')[0];
+                            const num = parseFloat(numStr);
+                            return !isNaN(num);
+                          })
                           .map(entry => entry.path);
         newPaths.push(...trees);
       }

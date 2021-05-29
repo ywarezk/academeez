@@ -6,6 +6,7 @@ author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
 img: https://en.wikipedia.org/wiki/React_(JavaScript_library)#/media/File:React-icon.svg
 code: https://codesandbox.io/s/html-css-flexbox-how-flex-items-arranged-9h61d
+link: /courses/html-css/flexbox/how-elements-arranged-on-axis
 ---
 
 `Flexbox` will arrange the **Flex Items** according to the `flex-direction` css property.  

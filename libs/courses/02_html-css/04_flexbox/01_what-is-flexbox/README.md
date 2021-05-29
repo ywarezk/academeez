@@ -6,6 +6,7 @@ author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
 img: https://en.wikipedia.org/wiki/React_(JavaScript_library)#/media/File:React-icon.svg
 code: https://codesandbox.io/s/html-css-flexbox-what-is-flexbox-p8kws?file=/style.css
+link: /courses/html-css/flexbox/what-is-flexbox
 ---
 
 `Flexbox` is the most popular way to structure the website you are building and position the elements on the screen.

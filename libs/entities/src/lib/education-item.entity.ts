@@ -50,4 +50,8 @@ export class EducationItem {
    */
   @Field({ nullable: true })
   order: number;
+
+  prerequisitesItems: EducationItem[];
+
+  childrenItems: EducationItem[];
 }
