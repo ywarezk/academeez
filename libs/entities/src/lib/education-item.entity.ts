@@ -7,7 +7,7 @@
  * @license: MIT
  */
 
-import { ObjectType, Field, ID } from 'type-graphql';
+import { ObjectType, Field, ID, Directive } from 'type-graphql';
 
 @ObjectType()
 export class EducationItem {
@@ -34,4 +34,23 @@ export class EducationItem {
 
   @Field()
   link: string;
+
+  @Field({ nullable: true })
+  logo: string;
+
+  @Field(() => [ID], { nullable: true })
+  prerequisites: string[];
+
+  /**
+   * this will hold the id of the children
+   * I will flatten the tree so all items will return
+   */
+  @Field(() => [ID])
+  children: string[];
+
+  /**
+   * used for additional order to promote a chapter
+   */
+  @Field({ nullable: true })
+  order: number;
 }

@@ -13,7 +13,13 @@ export async function queryGithub<T = any>(query: string) {
   const response = await axios.post(
     'https://api.github.com/graphql',
     {
-      query
+      query: `
+        query {
+          repository(name: "academeez", owner: "ywarezk") {
+            ${query}
+          }
+        }
+      `
     },
     {
       headers: {

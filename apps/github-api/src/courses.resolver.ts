@@ -12,6 +12,7 @@ import { EducationItem } from '@academeez/entities';
 import { queryGithub } from './github'
 import metadataParser from 'markdown-yaml-metadata-parser';
 import camelcaseKeys from 'camelcase-keys';
+import { includes, isEmpty } from 'lodash';
 
 export class CoursesResolver {
 
@@ -25,46 +26,22 @@ export class CoursesResolver {
    */
   @Query(() => [EducationItem])
   async courses() {
+    const temp = await this._getAllEducationItems(['libs/courses']);
+
     // get all the courses
-    const data = await queryGithub(`
-      query {
-        repository(name: "academeez", owner: "ywarezk") {
-
-          object(expression: "main:libs/courses") {
-            ... on Tree {
-                entries {
-                  type
-                  name
-                  oid
-                }
-            }
-          }
-
-        }
-      }
-    `);
+    const data = await queryGithub(this._queryLsFolder('courses'));
 
     const courseEntries = data.repository.object.entries.filter(singleEntry => singleEntry.type === 'tree');
 
     // create the query string to grab all the courses
     let query = courseEntries.reduce((accumulator, course) => {
       return accumulator + `
-        ${this._sanitizeName(course.name)}: object(expression: "main:libs/courses/${course.name}/README.md") {
-          ... on Blob {
-            text
-          }
-        }
+        ${this._queryParseReadme(course.name)}
       `
     }, '')
 
     // grab all the data about the courses
-    const coursesData = await queryGithub(`
-      query {
-        repository(name: "academeez", owner: "ywarezk") {
-          ${query}
-        }
-      }
-    `)
+    const coursesData = await queryGithub(query)
 
     // convert the data to courses
     const courses = courseEntries.map((course) => {
@@ -98,8 +75,84 @@ export class CoursesResolver {
    * @param originalName - example 02_html-css
    */
   private _sanitizeName(originalName: string): string {
-    const noNum = originalName.split('_')[1];
-    return noNum.split('-').join('_');
+    if (includes(originalName, '/')) {
+      const arr = originalName.split('/');
+      originalName = arr[arr.length - 1];
+    }
+    if (includes(originalName, '_')) {
+      originalName = originalName.split('_')[1];
+    }
+    if (includes(originalName, '-')) {
+      originalName = originalName.split('-').join('_');
+    }
+    return originalName;
+  }
+
+  private _queryLsFolder(path: string): string {
+    return `
+      ${this._sanitizeName(path)}: object(expression: "main:${path}") {
+        ... on Tree {
+            entries {
+              type
+              name
+              oid
+              path
+            }
+        }
+      }
+    `
+  }
+
+  private _queryParseReadme(folderName: string, alias?): string {
+    return `
+      ${alias || this._sanitizeName(folderName)}: object(expression: "main:${folderName}/README.md") {
+        ... on Blob {
+          text
+          oid
+        }
+      }
+    `
+  }
+
+  /**
+   * recursivly get all the education items of a folder
+   * @param folderName
+   * @returns
+   */
+  private async _getAllEducationItems(paths: string[]): Promise<EducationItem[]> {
+    if (isEmpty(paths)) return [];
+
+    // For all the paths create a big query to read all the folders and files
+    let query = paths.reduce((accumulator, path) => {
+      return `
+        ${accumulator}
+        ${this._queryLsFolder(path)}
+        ${this._queryParseReadme(path, `${this._sanitizeName(path)}_readme`)}
+      `
+    }, '')
+
+    const data = await queryGithub(query);
+
+    const keys = Object.keys(data.repository);
+    const newPaths = [];
+    const newEducationItems = [];
+    for(const key of keys) {
+      const item = data.repository[key];
+      if (includes(key, '_readme')) {
+        const result = metadataParser(item.text);
+        result.metadata.id = item.oid;
+        newEducationItems.push(camelcaseKeys(result.metadata))
+      } else {
+        const trees = item.entries
+                          .filter(entry => entry.type === 'tree')
+                          .map(entry => entry.path);
+        newPaths.push(...trees);
+      }
+    }
+
+    const recResults = await this._getAllEducationItems(newPaths)
+
+    return [...newEducationItems, ...recResults];
   }
 
 }

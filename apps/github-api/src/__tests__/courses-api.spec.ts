@@ -57,7 +57,7 @@ describe('courses api', () => {
     expect(response.data.data).is.ok;
   });
 
-  it('grab all courses', async () => {
+  it.only('grab all courses', async () => {
     const response = await axios.post(
       'http://localhost:3333/graphql',
       {
@@ -70,19 +70,8 @@ describe('courses api', () => {
               logo
               bgImg
               slug
-              prerequisites {
-                title
-                slug
-                logo
-              }
-              chapters {
-                order
-                id
-                title
-                shortDescription
-                bgImg
-                link
-              }
+              prerequisites
+              children
             }
           }
         `
