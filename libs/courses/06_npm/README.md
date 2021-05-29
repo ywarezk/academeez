@@ -10,4 +10,5 @@ linkedin: https://il.linkedin.com/in/yariv-katz
 logo: https://github.com/ywarezk/academeez/raw/main/libs/courses/06_npm/logo.svg
 bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/04_typescript/bg.png
 slug: npm
+link: /courses/npm
 ---

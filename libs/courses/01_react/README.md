@@ -13,9 +13,10 @@ logo: https://github.com/ywarezk/academeez/raw/main/libs/courses/01_react/logo.p
 bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/01_react/bg.png
 slug: react
 prerequisites:
-  - html-css
-  - javascript
-  - npm
+  - /courses/html-css
+  - /courses/javascript
+  - /courses/npm
+link: /courses/react
 ---
 
 **React** is a library that helps you build user interface components for frontend apps.  

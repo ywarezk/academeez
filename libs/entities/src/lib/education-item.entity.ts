@@ -7,13 +7,10 @@
  * @license: MIT
  */
 
-import { ObjectType, Field, ID, Directive } from 'type-graphql';
+import { ObjectType, Field, ID } from 'type-graphql';
 
 @ObjectType()
 export class EducationItem {
-  @Field(() => ID)
-  id: string;
-
   @Field()
   title: string;
 
@@ -32,7 +29,7 @@ export class EducationItem {
   @Field()
   videoUrl: string;
 
-  @Field()
+  @Field(() => ID)
   link: string;
 
   @Field({ nullable: true })

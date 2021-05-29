@@ -13,7 +13,8 @@ linkedin: https://il.linkedin.com/in/yariv-katz
 logo: https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/logo.png
 bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/bg.png
 slug: javascript
+link: /courses/javascript
 prerequisites:
-  - html-css
-  - npm
+  - /courses/html-css
+  - /courses/npm
 ---

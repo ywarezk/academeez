@@ -13,7 +13,7 @@ logo: https://github.com/ywarezk/academeez/raw/main/libs/courses/05_angular/logo
 bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/05_angular/bg.png
 slug: angular
 prerequisites:
-  - javascript
-  - typescript
-  - npm  
+  - /courses/javascript
+  - /courses/typescript
+  - /courses/npm  
 ---

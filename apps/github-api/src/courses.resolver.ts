@@ -28,40 +28,7 @@ export class CoursesResolver {
   async courses() {
     const temp = await this._getAllEducationItems(['libs/courses/']);
 
-    // get all the courses
-    const data = await queryGithub(this._queryLsFolder('courses'));
 
-    const courseEntries = data.repository.object.entries.filter(singleEntry => singleEntry.type === 'tree');
-
-    // create the query string to grab all the courses
-    let query = courseEntries.reduce((accumulator, course) => {
-      return accumulator + `
-        ${this._queryParseReadme(course.name)}
-      `
-    }, '')
-
-    // grab all the data about the courses
-    const coursesData = await queryGithub(query)
-
-    // convert the data to courses
-    const courses = courseEntries.map((course) => {
-      const courseReadme = coursesData.repository[this._sanitizeName(course.name)].text;
-      const result = metadataParser(courseReadme);
-      result.metadata.id = course.oid;
-
-      return result.metadata;
-    })
-
-
-    // prerequisites
-    return courses.map((course) => {
-      course.prerequisites = course.prerequisites ?? [];
-      course.prerequisites = course.prerequisites.map((slug: string) => {
-        return courses.find(course => course.slug === slug);
-      });
-
-      return camelcaseKeys(course);
-    })
   }
 
   /**************
@@ -102,7 +69,6 @@ export class CoursesResolver {
             entries {
               type
               name
-              oid
               path
             }
         }
@@ -115,7 +81,6 @@ export class CoursesResolver {
       ${alias || this._sanitizeName(folderName)}: object(expression: "main:${folderName}/README.md") {
         ... on Blob {
           text
-          oid
         }
       }
     `
@@ -149,7 +114,6 @@ export class CoursesResolver {
       if (includes(key, '_readme')) {
         try {
           const result = metadataParser(item.text);
-          result.metadata.id = item.oid;
           newEducationItems.push(camelcaseKeys(result.metadata))
         } catch(err) {
           throw new Error(`Failed while parsing the README of ${key}`)
