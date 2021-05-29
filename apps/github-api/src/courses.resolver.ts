@@ -26,7 +26,7 @@ export class CoursesResolver {
    */
   @Query(() => [EducationItem])
   async courses() {
-    const temp = await this._getAllEducationItems(['libs/courses']);
+    const temp = await this._getAllEducationItems(['libs/courses/']);
 
     // get all the courses
     const data = await queryGithub(this._queryLsFolder('courses'));
@@ -74,23 +74,30 @@ export class CoursesResolver {
    * to add it to the graphql query
    * @param originalName - example 02_html-css
    */
-  private _sanitizeName(originalName: string): string {
-    if (includes(originalName, '/')) {
-      const arr = originalName.split('/');
-      originalName = arr[arr.length - 1];
+  private _sanitizeName(path: string): string {
+    path = path.replace('libs/courses/', '');
+
+    if (includes(path, '/')) {
+      path = path.split('/').join('_');
     }
-    if (includes(originalName, '_')) {
-      originalName = originalName.split('_')[1];
+    if (includes(path, '_')) {
+      const arr = path.split('_');
+      const [first] = arr.splice(0, 1);
+      if (!isNaN(parseFloat(first))) {
+        path = arr.join('_');
+      }
+
     }
-    if (includes(originalName, '-')) {
-      originalName = originalName.split('-').join('_');
+    if (includes(path, '-')) {
+      path = path.split('-').join('_');
     }
-    return originalName;
+    // if (!path) return '_';
+    return path;
   }
 
-  private _queryLsFolder(path: string): string {
+  private _queryLsFolder(path: string, alias?): string {
     return `
-      ${this._sanitizeName(path)}: object(expression: "main:${path}") {
+      ${alias || this._sanitizeName(path)}: object(expression: "main:${path}") {
         ... on Tree {
             entries {
               type
@@ -126,7 +133,7 @@ export class CoursesResolver {
     let query = paths.reduce((accumulator, path) => {
       return `
         ${accumulator}
-        ${this._queryLsFolder(path)}
+        ${this._queryLsFolder(path, this._sanitizeName(path) || '_' )}
         ${this._queryParseReadme(path, `${this._sanitizeName(path)}_readme`)}
       `
     }, '')
@@ -138,10 +145,15 @@ export class CoursesResolver {
     const newEducationItems = [];
     for(const key of keys) {
       const item = data.repository[key];
+      if (key === '_readme') continue;
       if (includes(key, '_readme')) {
-        const result = metadataParser(item.text);
-        result.metadata.id = item.oid;
-        newEducationItems.push(camelcaseKeys(result.metadata))
+        try {
+          const result = metadataParser(item.text);
+          result.metadata.id = item.oid;
+          newEducationItems.push(camelcaseKeys(result.metadata))
+        } catch(err) {
+          throw new Error(`Failed while parsing the README of ${key}`)
+        }
       } else {
         const trees = item.entries
                           .filter(entry => entry.type === 'tree')
