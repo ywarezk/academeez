@@ -9,5 +9,5 @@ linkedin: https://il.linkedin.com/in/yariv-katz
 bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/bg.png
 slug: about-javascript
 link: /courses/javascript/about-javascript
-order: 2
+order: 3
 ---
