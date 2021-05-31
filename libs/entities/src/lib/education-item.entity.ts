@@ -29,6 +29,10 @@ export class EducationItem {
   @Field()
   videoUrl: string;
 
+  // the length of the video
+  @Field()
+  duration: number;
+
   @Field(() => ID)
   link: string;
 
