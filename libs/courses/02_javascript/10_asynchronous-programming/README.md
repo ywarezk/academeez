@@ -10,7 +10,7 @@ description:
   Learn how to work properly with async code in Javascript.
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
-bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/bg.png
+bg_img: https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/bg.png
 slug: asynchronous-programming
 link: /courses/javascript/asynchronous-programming
 order: 2
