@@ -1,11 +1,20 @@
 {
   "version": 2,
-  "cli": { "defaultCollection": "@nrwl/express" },
+  "cli": {
+    "defaultCollection": "@nrwl/express"
+  },
   "defaultProject": "github-api",
   "generators": {
-    "@nrwl/react": { "application": { "babel": true } },
+    "@nrwl/react": {
+      "application": {
+        "babel": true
+      }
+    },
     "@nrwl/next": {
-      "application": { "style": "styled-components", "linter": "eslint" }
+      "application": {
+        "style": "styled-components",
+        "linter": "eslint"
+      }
     }
   },
   "projects": {
@@ -47,7 +56,9 @@
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["apps/github-api/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": ["apps/github-api/**/*.ts"]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -66,7 +77,9 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["libs/lessons/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": ["libs/lessons/**/*.ts"]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -101,7 +114,9 @@
             "root": "apps/academeez",
             "outputPath": "dist/apps/academeez"
           },
-          "configurations": { "production": {} }
+          "configurations": {
+            "production": {}
+          }
         },
         "serve-standalone": {
           "executor": "@nrwl/next:server",
@@ -118,7 +133,7 @@
           }
         },
         "serve": {
-          "builder": "@nrwl/workspace:run-commands",
+          "executor": "@nrwl/workspace:run-commands",
           "options": {
             "commands": [
               "npx nx run academeez:serve-standalone",
@@ -128,7 +143,9 @@
         },
         "export": {
           "executor": "@nrwl/next:export",
-          "options": { "buildTarget": "academeez:build:production" }
+          "options": {
+            "buildTarget": "academeez:build:production"
+          }
         },
         "test": {
           "executor": "@nrwl/workspace:run-commands",
@@ -171,12 +188,16 @@
             "devServerTarget": "academeez:serve"
           },
           "configurations": {
-            "production": { "devServerTarget": "academeez:serve:production" }
+            "production": {
+              "devServerTarget": "academeez:serve:production"
+            }
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["apps/academeez-e2e/**/*.{js,ts}"] }
+          "options": {
+            "lintFilePatterns": ["apps/academeez-e2e/**/*.{js,ts}"]
+          }
         }
       }
     },
@@ -187,7 +208,9 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["libs/designs/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": ["libs/designs/**/*.ts"]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -217,7 +240,9 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["libs/blog/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": ["libs/blog/**/*.ts"]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -247,7 +272,9 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["libs/courses/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": ["libs/courses/**/*.ts"]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -277,7 +304,9 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["libs/prd/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": ["libs/prd/**/*.ts"]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -307,7 +336,9 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["libs/entities/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": ["libs/entities/**/*.ts"]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -326,6 +357,56 @@
             "packageJson": "libs/entities/package.json",
             "main": "libs/entities/src/index.ts",
             "assets": ["libs/entities/*.md"]
+          }
+        }
+      }
+    },
+    "mongo": {
+      "root": "apps/mongo",
+      "sourceRoot": "apps/mongo/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/mongo",
+            "main": "apps/mongo/src/main.ts",
+            "tsConfig": "apps/mongo/tsconfig.app.json",
+            "assets": ["apps/mongo/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/mongo/src/environments/environment.ts",
+                  "with": "apps/mongo/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "mongo:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/mongo/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/mongo"],
+          "options": {
+            "jestConfig": "apps/mongo/jest.config.js",
+            "passWithNoTests": true
           }
         }
       }

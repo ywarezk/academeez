@@ -8,5 +8,6 @@ module.exports = {
     '<rootDir>/libs/courses',
     '<rootDir>/libs/prd',
     '<rootDir>/libs/entities',
+    '<rootDir>/apps/mongo',
   ],
 };

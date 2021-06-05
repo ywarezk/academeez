@@ -24,6 +24,7 @@
     "blog": { "tags": [] },
     "courses": { "tags": [] },
     "prd": { "tags": [] },
-    "entities": { "tags": [] }
+    "entities": { "tags": [] },
+    "mongo": { "tags": [] }
   }
 }
