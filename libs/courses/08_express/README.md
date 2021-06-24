@@ -7,8 +7,12 @@ description:
   Using Express we can create web applications, REST Servers, GraphQL servers, communicate with database and more
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
-logo: https://github.com/ywarezk/academeez/raw/main/libs/courses/06_npm/logo.svg
+logo: https://github.com/ywarezk/academeez/raw/main/libs/courses/08_express/logo.png
 bg_img: https://github.com/ywarezk/academeez/raw/main/libs/courses/04_typescript/bg.png
 slug: express
 link: /courses/express
+prerequisites:
+  - /courses/javascript
+  - /courses/node
+  - /courses/npm
 ---

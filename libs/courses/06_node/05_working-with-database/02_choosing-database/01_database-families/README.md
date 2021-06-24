@@ -28,3 +28,13 @@ Our data is stored in tables in the database, those tables are strictly structur
 
 ## NoSQL Databases
 
+Among this family the popular ones are:  
+[MongoDB](https://www.mongodb.com/), [CouchDB](https://couchdb.apache.org/), [DynamoDB](https://aws.amazon.com/dynamodb/)  
+
+Those databases store the data in documents where each document is sort of json structure object with key and values. The documents are placed in collections, you can think of collection being equivalent to tables in relational databases and document is equivalent to row in a table. Each document has a dynamic structure and there is no schema you have to follow in your documents like in relational databases. The query language is not based on SQL, hence the name NoSQL and in most cases the query language is Javascript based and easy to learn and understand.
+
+## Other families
+
+The world of database has a few other families which we will not focus in the following lesson. Among them we have the Memory based storage where the popular ones are: [Redis](https://redis.io/), and [Memcached](https://memcached.org/) which have specific usage of holding in memory some data for fast retrieval.  
+Also we have another family of Graph databases, which are relatively new and not so popular, among them the popular one is [Neo4J](https://neo4j.com/).  
+We will have a lesson on memory databases and we will not focus on them in the following lesson, their usage is for specific cases and usually they come in addition to relational or non relational databases.
