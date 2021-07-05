@@ -1,10 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
+import { hello } from './libs/utils';
 
 function App() {
   const num = _.add(10, 10);
   console.log(num);
+  hello();
 
   return (
     <div className="App">
