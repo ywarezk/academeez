@@ -8,6 +8,7 @@ description:
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
 img: https://en.wikipedia.org/wiki/React_(JavaScript_library)#/media/File:React-icon.svg
+slug: prerequisites
 link: /courses/react/about-react-course/prerequisites
 ---
 
