@@ -1,0 +1,17 @@
+/**
+ * CSS Sizing units
+ */
+
+section {
+  height: 100vh;
+  width: 50vh;
+}
+
+.absolute-size {
+  height: 100px;
+  width: 200px;
+}
+
+.relative-size {
+  border-width: 10%;
+}

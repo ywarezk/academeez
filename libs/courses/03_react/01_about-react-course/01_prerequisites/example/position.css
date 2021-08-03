@@ -1,0 +1,13 @@
+/**
+ * position elements
+ */
+
+.parent {
+  position: relative;
+}
+
+.parent .child {
+  position: absolute;
+  left: 20%;
+  top: 100px;
+}

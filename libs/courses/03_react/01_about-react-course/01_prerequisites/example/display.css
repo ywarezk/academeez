@@ -1,0 +1,11 @@
+/**
+ * Css display property
+ */
+
+li:first-child {
+  display: none;
+}
+
+li:last-child {
+  display: block;
+}

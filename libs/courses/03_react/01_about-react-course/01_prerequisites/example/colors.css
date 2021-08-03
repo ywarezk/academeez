@@ -1,0 +1,11 @@
+/**
+ * Color values
+ */
+
+.red-header {
+  color: red;
+}
+
+.border-black {
+  border-color: #000000;
+}

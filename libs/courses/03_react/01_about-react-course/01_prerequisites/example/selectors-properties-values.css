@@ -1,0 +1,11 @@
+/**
+ * Css selectors, properties and values
+ */
+
+.some-selector {
+  color: black;
+}
+
+#id-selector {
+  background-color: red;
+}
