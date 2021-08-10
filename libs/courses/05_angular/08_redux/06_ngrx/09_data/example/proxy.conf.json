@@ -1,0 +1,6 @@
+{
+  "/api/": {
+    "target": "https://nztodo.herokuapp.com/api",
+    "secure": false
+  }
+}
