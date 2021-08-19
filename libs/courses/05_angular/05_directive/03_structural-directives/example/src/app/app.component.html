@@ -1,0 +1,13 @@
+
+
+<h1 (appRepeatingEvent)="whenClick();">
+  Directive can be used for events
+</h1>
+
+<button (click)="login()">
+  Login
+</button>
+
+<div *appUser="let user">
+ You are logged in hello {{ user.name }}
+</div>

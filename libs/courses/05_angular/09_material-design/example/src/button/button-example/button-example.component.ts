@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-button-example',
+  selector: 'academeez-button-example',
   inputs: ['hello', 'world', 'foo', 'bar'],
   template: `
     <h1>
