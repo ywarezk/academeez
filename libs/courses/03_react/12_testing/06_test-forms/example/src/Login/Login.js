@@ -29,6 +29,7 @@ export const Login = () => {
         setUser(user);
         setErrorMessage('');
       } catch (err) {
+        debugger;
         setErrorMessage(err.message);
         setUser(null);
       }
@@ -78,14 +79,14 @@ export const Login = () => {
         </CardActions>
         {
           user && (
-            <Alert severity="success">
+            <Alert severity="success" data-testid="successMessage">
               Hello {user.firstName} {user.lastName}
             </Alert>
           )
         }
         {
           errorMessage && (
-            <Alert severity="error">
+            <Alert severity="error" data-testid="errorMessage">
               {errorMessage}
             </Alert>
           )
