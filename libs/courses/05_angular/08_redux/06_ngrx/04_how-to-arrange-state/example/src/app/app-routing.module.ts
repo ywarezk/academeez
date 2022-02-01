@@ -7,14 +7,14 @@ import { RouterModule } from '@angular/router';
       {
         path: 'settings',
         loadChildren: async () => {
-          const { SettingsModule } = await import('../settings/settings.module');
-          return SettingsModule
-        }
-      }
-    ])
+          const { SettingsModule } = await import(
+            '../settings/settings.module'
+          );
+          return SettingsModule;
+        },
+      },
+    ]),
   ],
-  exports: [
-    RouterModule
-  ]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

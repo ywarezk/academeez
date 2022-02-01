@@ -7,7 +7,6 @@
 // import { TodoState } from './todo.state';
 // import { Task } from './task.model';
 
-
 // export const selectTodo = (state: AppState) => state.todo;
 
 // export const selectTasks = createSelector<AppState, TodoState, Task[]>(
@@ -20,6 +19,6 @@ import { TodoState } from './todo.state';
 import { Task } from './task.model';
 import { AppState } from '../app.state';
 
-export const {
-  selectAll
-} = todoAdapter.getSelectors((state: AppState) => state.todo);
+export const { selectAll } = todoAdapter.getSelectors(
+  (state: AppState) => state.todo
+);

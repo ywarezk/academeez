@@ -1,6 +1,6 @@
 # Donation Page
 
-In this page the user will be able to donate for academeez.  
+In this page the user will be able to donate for academeez.
 
 It's important to emphasize here that we are not greedy cunts - donation can be done in various ways money is just one way.  
 Also that it is a non profit organization and donation will be focused on platform growth.
@@ -34,9 +34,9 @@ Click here to write and teach academeez users.
 ## Contribute code
 
 academeez is an open source project, which means you can help us code the next features.  
-Click here to view our roadmap, ask to join the team, and help us develop the upcoming academeez features. 
+Click here to view our roadmap, ask to join the team, and help us develop the upcoming academeez features.
 
 ## Donate money
 
 academeez is a non profit, donation based, education platform.  
-If you like what you see, and want to help us grow, a small donation will help us push the platform to the next level.  
+If you like what you see, and want to help us grow, a small donation will help us push the platform to the next level.

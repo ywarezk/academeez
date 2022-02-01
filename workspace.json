@@ -1,107 +1,6 @@
 {
   "version": 2,
-  "cli": {
-    "defaultCollection": "@nrwl/express"
-  },
-  "defaultProject": "github-api",
-  "generators": {
-    "@nrwl/react": {
-      "application": {
-        "babel": true
-      }
-    },
-    "@nrwl/next": {
-      "application": {
-        "style": "styled-components",
-        "linter": "eslint"
-      }
-    }
-  },
   "projects": {
-    "github-api": {
-      "root": "apps/github-api",
-      "sourceRoot": "apps/github-api/src",
-      "projectType": "application",
-      "targets": {
-        "build": {
-          "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/apps/github-api",
-            "main": "apps/github-api/src/main.ts",
-            "tsConfig": "apps/github-api/tsconfig.app.json",
-            "assets": ["apps/github-api/src/assets"]
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/github-api/src/environments/environment.ts",
-                  "with": "apps/github-api/src/environments/environment.prod.ts"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "executor": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "github-api:build",
-            "inspect": true,
-            "port": 7777
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/github-api/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/github-api"],
-          "options": {
-            "jestConfig": "apps/github-api/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "lessons": {
-      "root": "libs/lessons",
-      "sourceRoot": "libs/lessons/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/lessons/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/lessons"],
-          "options": {
-            "jestConfig": "libs/lessons/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "build": {
-          "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/libs/lessons",
-            "tsConfig": "libs/lessons/tsconfig.lib.json",
-            "packageJson": "libs/lessons/package.json",
-            "main": "libs/lessons/src/index.ts",
-            "assets": ["libs/lessons/*.md"]
-          }
-        }
-      }
-    },
     "academeez": {
       "root": "apps/academeez",
       "sourceRoot": "apps/academeez",
@@ -171,9 +70,11 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/academeez/**/*.{ts,tsx,js,jsx}"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         }
-      }
+      },
+      "tags": []
     },
     "academeez-e2e": {
       "root": "apps/academeez-e2e",
@@ -197,41 +98,12 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/academeez-e2e/**/*.{js,ts}"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         }
-      }
-    },
-    "designs": {
-      "root": "libs/designs",
-      "sourceRoot": "libs/designs/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/designs/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/designs"],
-          "options": {
-            "jestConfig": "libs/designs/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "build": {
-          "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/libs/designs",
-            "tsConfig": "libs/designs/tsconfig.lib.json",
-            "packageJson": "libs/designs/package.json",
-            "main": "libs/designs/src/index.ts",
-            "assets": ["libs/designs/*.md"]
-          }
-        }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": ["academeez"]
     },
     "blog": {
       "root": "libs/blog",
@@ -242,7 +114,8 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/blog/**/*.ts"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -263,7 +136,8 @@
             "assets": ["libs/blog/*.md"]
           }
         }
-      }
+      },
+      "tags": []
     },
     "courses": {
       "root": "libs/courses",
@@ -274,7 +148,8 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/courses/**/*.ts"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -295,24 +170,26 @@
             "assets": ["libs/courses/*.md"]
           }
         }
-      }
+      },
+      "tags": []
     },
-    "prd": {
-      "root": "libs/prd",
-      "sourceRoot": "libs/prd/src",
+    "designs": {
+      "root": "libs/designs",
+      "sourceRoot": "libs/designs/src",
       "projectType": "library",
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/prd/**/*.ts"]
-          }
+            "lintFilePatterns": ["libs/designs/**/*.ts"]
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/prd"],
+          "outputs": ["coverage/libs/designs"],
           "options": {
-            "jestConfig": "libs/prd/jest.config.js",
+            "jestConfig": "libs/designs/jest.config.js",
             "passWithNoTests": true
           }
         },
@@ -320,14 +197,15 @@
           "executor": "@nrwl/node:package",
           "outputs": ["{options.outputPath}"],
           "options": {
-            "outputPath": "dist/libs/prd",
-            "tsConfig": "libs/prd/tsconfig.lib.json",
-            "packageJson": "libs/prd/package.json",
-            "main": "libs/prd/src/index.ts",
-            "assets": ["libs/prd/*.md"]
+            "outputPath": "dist/libs/designs",
+            "tsConfig": "libs/designs/tsconfig.lib.json",
+            "packageJson": "libs/designs/package.json",
+            "main": "libs/designs/src/index.ts",
+            "assets": ["libs/designs/*.md"]
           }
         }
-      }
+      },
+      "tags": []
     },
     "entities": {
       "root": "libs/entities",
@@ -338,7 +216,8 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/entities/**/*.ts"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -359,7 +238,96 @@
             "assets": ["libs/entities/*.md"]
           }
         }
-      }
+      },
+      "tags": []
+    },
+    "github-api": {
+      "root": "apps/github-api",
+      "sourceRoot": "apps/github-api/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/github-api",
+            "main": "apps/github-api/src/main.ts",
+            "tsConfig": "apps/github-api/tsconfig.app.json",
+            "assets": ["apps/github-api/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/github-api/src/environments/environment.ts",
+                  "with": "apps/github-api/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "github-api:build",
+            "inspect": true,
+            "port": 7777
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/github-api/**/*.ts"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/github-api"],
+          "options": {
+            "jestConfig": "apps/github-api/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
+    "lessons": {
+      "root": "libs/lessons",
+      "sourceRoot": "libs/lessons/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/lessons/**/*.ts"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/lessons"],
+          "options": {
+            "jestConfig": "libs/lessons/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/lessons",
+            "tsConfig": "libs/lessons/tsconfig.lib.json",
+            "packageJson": "libs/lessons/package.json",
+            "main": "libs/lessons/src/index.ts",
+            "assets": ["libs/lessons/*.md"]
+          }
+        }
+      },
+      "tags": []
     },
     "mongo": {
       "root": "apps/mongo",
@@ -399,7 +367,8 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/mongo/**/*.ts"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -409,7 +378,42 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
+    },
+    "prd": {
+      "root": "libs/prd",
+      "sourceRoot": "libs/prd/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/prd/**/*.ts"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/prd"],
+          "options": {
+            "jestConfig": "libs/prd/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/prd",
+            "tsConfig": "libs/prd/tsconfig.lib.json",
+            "packageJson": "libs/prd/package.json",
+            "main": "libs/prd/src/index.ts",
+            "assets": ["libs/prd/*.md"]
+          }
+        }
+      },
+      "tags": []
     }
   }
 }

@@ -4,19 +4,23 @@
  */
 
 import { NgModule } from '@angular/core';
-import { MultipleCenterDirective, MultipleFooterDirective, MultipleNgContentComponent } from './multiple-ng-content.component';
+import {
+  MultipleCenterDirective,
+  MultipleFooterDirective,
+  MultipleNgContentComponent,
+} from './multiple-ng-content.component';
 
 @NgModule({
   declarations: [
     MultipleNgContentComponent,
     MultipleCenterDirective,
-    MultipleFooterDirective
+    MultipleFooterDirective,
   ],
-  imports: [  ],
+  imports: [],
   exports: [
     MultipleNgContentComponent,
     MultipleCenterDirective,
-    MultipleFooterDirective
+    MultipleFooterDirective,
   ],
   providers: [],
 })

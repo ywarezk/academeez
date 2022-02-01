@@ -1,5 +1,5 @@
 /**
- * This file will contain a model for interacting with the 
+ * This file will contain a model for interacting with the
  * users collection
  */
 

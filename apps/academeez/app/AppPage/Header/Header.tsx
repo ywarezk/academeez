@@ -24,59 +24,61 @@ import { Box, Grid } from '@material-ui/core';
 import { MuiAppBar, LogoImage, ListItem } from './Header.markup';
 import { Link as AzMuiLink } from '@academeez/az/material';
 
+type HeaderProps = { isTransparent?: boolean };
 
-type HeaderProps = { isTransparent? : boolean }
-
-export const Header: FC<HeaderProps> = ( props ) => {
-  const { header } = useContext( LayoutContext );
+export const Header: FC<HeaderProps> = (props) => {
+  const { header } = useContext(LayoutContext);
 
   if (!header.current) return null;
 
   return createPortal(
-    (
-      <MuiAppBar {...props} className="pt-2 pb-2">
-        <Grid container className="justify-content-center">
-          <Grid item xs={12} lg={10}>
-            <Toolbar>
-              <Link href="/">
-                <a>
-                  <LogoImage
-                    src={logo}
-                    alt="Academeez - coding courses"
-                  />
+    <MuiAppBar {...props} className="pt-2 pb-2">
+      <Grid container className="justify-content-center">
+        <Grid item xs={12} lg={10}>
+          <Toolbar>
+            <Link href="/">
+              <a>
+                <LogoImage src={logo} alt="Academeez - coding courses" />
+              </a>
+            </Link>
+            <Box
+              component={List}
+              display={{ xs: 'none', md: 'flex' }}
+              className="flex-grow-1 flex-row-reverse"
+            >
+              <ListItem>
+                <a
+                  className="d-flex"
+                  href="https://github.com/ywarezk/academeez"
+                >
+                  <GithubIcon className="hover-green" />
                 </a>
-              </Link>
-              <Box component={List} display={ {xs: 'none', md: 'flex'} } className="flex-grow-1 flex-row-reverse" >
-                <ListItem>
-                  <a className="d-flex" href="https://github.com/ywarezk/academeez">
-                    <GithubIcon className="hover-green" />
-                  </a>
-                </ListItem>
-                <ListItem>
-                  <a className="d-flex" href="https://www.youtube.com/channel/UCmnTSM4hGDJin7g5PyXa9pQ">
-                    <YoutubeIcon className="hover-green" />
-                  </a>
-                </ListItem>
-                <ListItem>
-                  <Link href="/blog">
-                    <AzMuiLink>
-                      Blog
-                    </AzMuiLink>
-                  </Link>
-                </ListItem>
-                <ListItem>
-                  <Link href="/courses" passHref>
-                    <AzMuiLink outline color="green">
-                      start_learning
-                    </AzMuiLink>
-                  </Link>
-                </ListItem>
-              </Box>
-            </Toolbar>
-          </Grid>
+              </ListItem>
+              <ListItem>
+                <a
+                  className="d-flex"
+                  href="https://www.youtube.com/channel/UCmnTSM4hGDJin7g5PyXa9pQ"
+                >
+                  <YoutubeIcon className="hover-green" />
+                </a>
+              </ListItem>
+              <ListItem>
+                <Link href="/blog">
+                  <AzMuiLink>Blog</AzMuiLink>
+                </Link>
+              </ListItem>
+              <ListItem>
+                <Link href="/courses" passHref>
+                  <AzMuiLink outline color="green">
+                    start_learning
+                  </AzMuiLink>
+                </Link>
+              </ListItem>
+            </Box>
+          </Toolbar>
         </Grid>
-      </MuiAppBar>
-    ),
+      </Grid>
+    </MuiAppBar>,
     header.current
-  )
-}
+  );
+};

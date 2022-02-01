@@ -11,8 +11,8 @@ describe('marble example', () => {
   beforeEach(() => {
     scheduler = new TestScheduler((actual, expected) => {
       expect(actual).toEqual(expected);
-    })
-  })
+    });
+  });
 
   it('cold observable example', () => {
     scheduler.run(({ cold, flush }) => {
@@ -22,37 +22,35 @@ describe('marble example', () => {
       let isFail = false;
       let isComplete = false;
       obs.subscribe((value) => {
-        expect(value).toEqual('a')
+        expect(value).toEqual('a');
       });
       fail.subscribe(
         (value) => {
-          expect(value).toEqual('a')
+          expect(value).toEqual('a');
         },
         () => {
           isFail = true;
         }
-      )
-      complete.subscribe(
-        {
-          next: (value) => {
-            expect(value).toEqual('a')
-          },
-          complete: () => {
-            isComplete = true;
-          }
-        }
-      )
+      );
+      complete.subscribe({
+        next: (value) => {
+          expect(value).toEqual('a');
+        },
+        complete: () => {
+          isComplete = true;
+        },
+      });
       flush();
       expect(isFail).toEqual(true);
       expect(isComplete).toEqual(true);
-    })
+    });
   });
 
   it('hot observable example', () => {
     scheduler.run(({ hot, flush, expectObservable }) => {
       const hotExample = hot('--a--b-----c--d');
       const sub = '           ---------^---!';
-      expectObservable(hotExample, sub).toBe('-----------c--')
-    })
-  })
-})
+      expectObservable(hotExample, sub).toBe('-----------c--');
+    });
+  });
+});

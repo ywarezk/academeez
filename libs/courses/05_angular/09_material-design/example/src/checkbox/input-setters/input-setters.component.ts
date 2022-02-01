@@ -3,11 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'academeez-input-setters',
-  template: `
-    <p>
-      input-setters works!
-    </p>
-  `
+  template: ` <p>input-setters works!</p> `,
 })
 export class InputSettersComponent {
   private _url: string = '';

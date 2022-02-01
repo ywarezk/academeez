@@ -13,14 +13,10 @@ import { PortalModule, PortalHost } from '@angular/cdk/portal';
     AppComponent,
     HomePageComponent,
     AboutPageComponent,
-    TabsComponent
+    TabsComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    PortalModule
-  ],
+  imports: [BrowserModule, AppRoutingModule, PortalModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

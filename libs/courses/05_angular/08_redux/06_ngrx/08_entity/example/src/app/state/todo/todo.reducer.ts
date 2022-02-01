@@ -13,4 +13,4 @@ export const todoAdapter = createEntityAdapter<Task>();
 export const todoReducer = createReducer<TodoState>(
   todoAdapter.getInitialState(),
   on(setTasks, (state, action) => todoAdapter.setAll(action.tasks, state))
-)
+);

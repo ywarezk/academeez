@@ -7,19 +7,17 @@
  * @license: MIT
  */
 
-import { Typography } from "@academeez/az/material";
-import { FC } from "react";
+import { Typography } from '@academeez/az/material';
+import { FC } from 'react';
 import { ScrollLineWrapper } from './ScrollLine.markup';
 
 export const ScrollLine: FC = () => {
   return (
     <ScrollLineWrapper>
       <div>
-        <Typography variant="subtitle2">
-          Scroll
-        </Typography>
+        <Typography variant="subtitle2">Scroll</Typography>
       </div>
       <div className="line" />
     </ScrollLineWrapper>
-  )
-}
+  );
+};

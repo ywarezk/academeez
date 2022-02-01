@@ -10,6 +10,4 @@
 import styled from 'styled-components';
 import { Player } from 'video-react';
 
-export const AzPlayer = styled(Player)`
-
-`
+export const AzPlayer = styled(Player)``;

@@ -1,13 +1,14 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
 
 @Component({
   selector: 'app-grand',
-  template: `
-    <p>
-      grand works! {{ log() }} {{counter}}
-    </p>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  template: ` <p>grand works! {{ log() }} {{ counter }}</p> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GrandComponent implements OnInit {
   @Input()
@@ -17,9 +18,7 @@ export class GrandComponent implements OnInit {
     console.log('running cd on GrandComponent');
   }
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

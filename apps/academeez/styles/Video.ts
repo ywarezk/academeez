@@ -1059,4 +1059,4 @@ body.video-react-full-window .video-react-fullscreen {
   -webkit-transform: translateY(-30px);
   transform: translateY(-30px);
 }
-`
+`;

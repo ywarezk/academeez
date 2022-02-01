@@ -9,17 +9,20 @@ async function main() {
 
   // create
   await usersCollection.insertMany([
-    {firstName: 'hello', lastName: 'world'},
-    {firstName: 'academeez', lastName: 'is awesome!'},
-    {firstName: 'foo', lastName: 'bar'},
-  ])
+    { firstName: 'hello', lastName: 'world' },
+    { firstName: 'academeez', lastName: 'is awesome!' },
+    { firstName: 'foo', lastName: 'bar' },
+  ]);
 
   // find
   let users = await usersCollection.find().toArray();
   console.log(users);
 
   // update
-  await usersCollection.updateMany({firstName: 'hello'}, { $set: { firstName: 'lurem ipsum'}});
+  await usersCollection.updateMany(
+    { firstName: 'hello' },
+    { $set: { firstName: 'lurem ipsum' } }
+  );
 
   users = await usersCollection.find().toArray();
   console.log(users);
@@ -29,7 +32,6 @@ async function main() {
 
   users = await usersCollection.find().toArray();
   console.log(users);
-
 }
 
 main();

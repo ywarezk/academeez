@@ -12,6 +12,6 @@ Each Technology has logo that is displayed in the course card.
 Each card will contain a title and description.  
 A play button allows to play the course video which describes what the course is about.  
 The main call for action is a button for the user to start learning this course.  
-User can also share this course on social media.  
+User can also share this course on social media.
 
 When clicking to start learning a course you are directed to the [Chapters page](chapters.md)

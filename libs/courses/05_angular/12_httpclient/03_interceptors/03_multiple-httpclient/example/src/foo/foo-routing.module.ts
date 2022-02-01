@@ -7,12 +7,10 @@ import { BarComponent } from './bar/bar.component';
     RouterModule.forChild([
       {
         path: '',
-        component: BarComponent
-      }
-    ])
+        component: BarComponent,
+      },
+    ]),
   ],
-  exports: [
-    RouterModule
-  ]
+  exports: [RouterModule],
 })
 export class FooRoutingModule {}

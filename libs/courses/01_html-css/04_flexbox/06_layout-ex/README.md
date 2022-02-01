@@ -2,7 +2,7 @@
 title: Flexbox Layout Exercise
 short_description: Time to write some good and practice positioning elements with Flexbox.
 description: Time to write some good and practice positioning elements with Flexbox.
-video_url: "https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8"
+video_url: 'https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8'
 duration: 66
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
@@ -13,7 +13,7 @@ link: /courses/html-css/flexbox/layout-ex
 
 Writing code is the only way to properly learn.  
 Time for you coders to practice flexbox.  
-The goal of this exercise is for you to build and entire layout using `Flexbox`.  
+The goal of this exercise is for you to build and entire layout using `Flexbox`.
 
 ## What we will create
 
@@ -22,7 +22,7 @@ In this exercise we will create the following layout:
 ![Flexbox layout exercise](layout.png)
 
 You will need to create an `index.html` and a `style.css` files.  
-You will need to build a full login page.  
+You will need to build a full login page.
 
 ### Header
 
@@ -34,7 +34,7 @@ use `Flexbox` and `justify-content` to position the logo on one side and the nav
 
 The login page contains a login form with an email input, a password input, and a submit button.  
 Notice that the login form is centered vertically and horizontally.  
-You will have to use `justify-content` and `align-items` to achieve that.  
+You will have to use `justify-content` and `align-items` to achieve that.
 
 ### Footer
 

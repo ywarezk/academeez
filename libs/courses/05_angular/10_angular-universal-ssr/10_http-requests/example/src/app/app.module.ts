@@ -1,6 +1,9 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
+import {
+  BrowserModule,
+  BrowserTransferStateModule,
+} from '@angular/platform-browser';
 // import {  } from '@angular/platform-server';
 
 import { AppComponent } from './app.component';
@@ -9,17 +12,13 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CacheInterceptorService } from './cache-interceptor.service';
 import { TransferHttpCacheModule } from '@nguniversal/common';
 
-
 @NgModule({
-  declarations: [
-    AppComponent,
-    TodoListComponent
-  ],
+  declarations: [AppComponent, TodoListComponent],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     HttpClientModule,
     BrowserTransferStateModule,
-    TransferHttpCacheModule
+    TransferHttpCacheModule,
   ],
   providers: [
     // {
@@ -28,6 +27,6 @@ import { TransferHttpCacheModule } from '@nguniversal/common';
     //   useClass: CacheInterceptorService
     // }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

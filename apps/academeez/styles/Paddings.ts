@@ -109,4 +109,4 @@ export const Paddings = createGlobalStyle`
   .mt-5 {
     margin-top: 4rem !important;
   }
-`
+`;

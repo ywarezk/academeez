@@ -9,19 +9,17 @@ export default function Todo() {
 
   useEffect(() => {
     fetch('https://nztodo.herokuapp.com/api/tasks/?format=json')
-      .then(response => response.json())
-      .then(json => setTasks(json));
-  }, [])
+      .then((response) => response.json())
+      .then((json) => setTasks(json));
+  }, []);
 
   return (
     <List>
-      {
-        tasks.map((task: any) => (
-          <ListItem key={task.id}>
-            <ListItemText primary={task.title} secondary={task.description} />
-          </ListItem>
-        ))
-      }
+      {tasks.map((task: any) => (
+        <ListItem key={task.id}>
+          <ListItemText primary={task.title} secondary={task.description} />
+        </ListItem>
+      ))}
     </List>
-  )
+  );
 }

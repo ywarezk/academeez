@@ -4,16 +4,14 @@ import { MessageModule } from 'src/message/message.module';
 import { AppComponent } from './app.component';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     MessageModule.forRoot({
-      message: 'hello world'
-    })
+      message: 'hello world',
+    }),
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

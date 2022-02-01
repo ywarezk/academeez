@@ -7,26 +7,24 @@
  * @license: MIT
  */
 
-import { render } from '@testing-library/react'
+import { render } from '@testing-library/react';
 import { Button } from './Button';
 import { ThemeProvider } from '@academeez/az/styles';
 import { PlayButton } from './PlayButton/PlayButton';
 import PlayArrow from '@material-ui/icons/PlayArrow';
 
 describe('buttons', () => {
-  it('display all buttons', function() {
+  it('display all buttons', function () {
     render(
       <ThemeProvider>
-        <div style={ {marginTop: '100px', marginLeft: '100px'} }>
+        <div style={{ marginTop: '100px', marginLeft: '100px' }}>
           <div>
             <Button variant="contained" color="green">
-                Start Learning
+              Start Learning
             </Button>
           </div>
-          <div style={ { marginTop: '30px'} }>
-            <PlayButton>
-              About academeez
-            </PlayButton>
+          <div style={{ marginTop: '30px' }}>
+            <PlayButton>About academeez</PlayButton>
           </div>
           <div style={{ marginTop: '30px' }}>
             <Button variant="outlined" color="green">
@@ -34,15 +32,12 @@ describe('buttons', () => {
             </Button>
           </div>
           <div style={{ marginTop: '30px' }}>
-            <Button
-              startIcon={<PlayArrow />}
-              color="dark800">
+            <Button startIcon={<PlayArrow />} color="dark800">
               Intro
             </Button>
           </div>
         </div>
       </ThemeProvider>
-    )
-
-  })
+    );
+  });
 });

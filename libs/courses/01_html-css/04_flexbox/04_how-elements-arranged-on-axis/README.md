@@ -2,7 +2,7 @@
 title: How the flex items arranged on the axis
 short_description: different ways you can arrange elements on the main axis
 description: different ways you can arrange elements on the main axis
-video_url: "https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8"
+video_url: 'https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8'
 duration: 66
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
@@ -55,7 +55,7 @@ This is the result:
 
 ![justify-content: space-between distribution](justify-content-space-between.png)
 
-The `space-between` will distribute the  `.flex-item`'s evenly across the `.flex-container`.
+The `space-between` will distribute the `.flex-item`'s evenly across the `.flex-container`.
 
 You can view the code example [here]()
 
@@ -64,7 +64,7 @@ So the `justify-content` css property, defines how the browser distribute the sp
 Here are a few more examples of the values you can set `justify-content`:
 
 - `justify-content: left/right` - Will behave differently on firefox and on chrome.  
-On Firefox these options will disregard the `flex-direction` and will arrange them on the left/right/center of the flex container regardless of the `flex-direction` value. While it will behave similar to `flex-start/flex-end` on Chrome (at the time of writing it is recommended to use `flex-start/flex-end`).
+  On Firefox these options will disregard the `flex-direction` and will arrange them on the left/right/center of the flex container regardless of the `flex-direction` value. While it will behave similar to `flex-start/flex-end` on Chrome (at the time of writing it is recommended to use `flex-start/flex-end`).
 
 - `justify-content: center` - will arrange the **Flex Items** on the center of the container.
 
@@ -126,7 +126,7 @@ With `Flexbox` `justify-content` and `align-items` we can now center elements ve
 Other `align-items` options are:
 
 - `align-items: start/end/flex-start/flex-end` - due to a change in the [W3 Flexbox module 1](https://www.w3.org/TR/css-flexbox-1/) at the time of writing it's recommended to use `flex-start/flex-end` the other have different behaviour on Chrome/Firefox.  
-It will arrange the items at the top or bottom of the cross axis
+  It will arrange the items at the top or bottom of the cross axis
 
 ## Summary
 
@@ -134,4 +134,3 @@ It will arrange the items at the top or bottom of the cross axis
 We can decide how those elements will be distributed across the **Main Axis** and **Cross Axis**.  
 Using the `justify-content` we can set how elements are distributed across the **Main Axis**.  
 Using the `align-items` we can set how elements are distributed in the **Cross Axis**
-

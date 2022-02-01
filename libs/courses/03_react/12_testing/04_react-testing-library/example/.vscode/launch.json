@@ -1,29 +1,29 @@
 {
-	// Use IntelliSense to learn about possible attributes.
-	// Hover to view descriptions of existing attributes.
-	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-	"version": "0.2.0",
-	"configurations": [
-		{
-			"type": "node",
-			"name": "vscode-jest-tests",
-			"request": "launch",
-			"args": [
-				"test",
-				"--runInBand",
-				"--watchAll=false",
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "name": "vscode-jest-tests",
+      "request": "launch",
+      "args": [
+        "test",
+        "--runInBand",
+        "--watchAll=false",
         "/src/04-wait-for/WaitForExample.test.js"
-			],
+      ],
       "env": {
         "SKIP_PREFLIGHT_CHECK": "true",
         "DEBUG_PRINT_LIMIT": "1000"
       },
-			"cwd": "${workspaceFolder}",
-			"console": "integratedTerminal",
-			"internalConsoleOptions": "neverOpen",
-			"disableOptimisticBPs": true,
-			"runtimeExecutable": "${workspaceFolder}/node_modules/.bin/react-scripts",
-			"protocol": "inspector"
-		}
-	]
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/react-scripts",
+      "protocol": "inspector"
+    }
+  ]
 }

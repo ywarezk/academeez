@@ -14,17 +14,15 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { helloReducer } from './hello/hello.reducer';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     StoreModule.forRoot({
-      hello: helloReducer
+      hello: helloReducer,
     }),
-    StoreDevtoolsModule.instrument()
+    StoreDevtoolsModule.instrument(),
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

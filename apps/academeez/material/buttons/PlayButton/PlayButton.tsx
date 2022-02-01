@@ -20,7 +20,5 @@ export const PlayButton: FC<Omit<ButtonProps, 'color'>> = (props) => {
       startIcon={<PlayArrow />}
       {...props}
     />
-  )
-}
-
-
+  );
+};

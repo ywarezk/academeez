@@ -16,9 +16,8 @@ different buttons we have along with their hover state
 
 ## Forms
 
-text input, password input, text area, 
+text input, password input, text area,
 
 ## Colors
 
 our color pallete
-

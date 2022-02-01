@@ -19,8 +19,6 @@ process.on('exit', (code) => {
 
 setTimeout(() => {
   console.log('this will run now although the crash');
-}, 2000)
+}, 2000);
 
 throw new Error('something happened');
-
-

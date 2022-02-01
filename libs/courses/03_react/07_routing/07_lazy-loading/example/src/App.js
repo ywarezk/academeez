@@ -5,7 +5,7 @@ import { Suspense, lazy } from 'react';
 // import About from './pages/About';
 
 const Home = lazy(() => import('./pages/Home'));
-const About = lazy(() => import('./pages/About'))
+const About = lazy(() => import('./pages/About'));
 
 function App() {
   return (
@@ -13,14 +13,10 @@ function App() {
       <nav>
         <ul>
           <li>
-            <Link to="/">
-              Home
-            </Link>
+            <Link to="/">Home</Link>
           </li>
           <li>
-            <Link to="/about">
-              About
-            </Link>
+            <Link to="/about">About</Link>
           </li>
         </ul>
       </nav>
@@ -35,7 +31,6 @@ function App() {
             </Route>
           </Switch>
         </Suspense>
-
       </div>
     </div>
   );

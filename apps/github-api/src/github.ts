@@ -19,13 +19,13 @@ export async function queryGithub<T = any>(query: string) {
             ${query}
           }
         }
-      `
+      `,
     },
     {
       headers: {
-        "Authorization": `bearer ${process.env.GITHUB_TOKEN}`
-      }
+        Authorization: `bearer ${process.env.GITHUB_TOKEN}`,
+      },
     }
-  )
+  );
   return response.data.data as T;
 }

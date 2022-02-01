@@ -1,16 +1,15 @@
 ---
 title: Why should I learn Angular
-video_url: "https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8"
+video_url: 'https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8'
 duration: 66
-description: 
-  Let's go over the reasons why you should take this angular course
+description: Let's go over the reasons why you should take this angular course
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
 logo: https://github.com/ywarezk/academeez/raw/main/libs/courses/05_angular/logo.svg
 bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/05_angular/bg.png
 slug: why-learn-angular
 prerequisites:
-  - javascript  
+  - javascript
   - typescript
   - npm
 link: /courses/angular/about-angular-course/why-learn-angular
@@ -58,6 +57,3 @@ In academeez we teach the basics, but also the advanced, recommended patterns, a
 Are courses are aimed for beginners and advanced, so learning from here will not only teach you the basics but we also want to turn you into an expert angular developer.
 
 Now that all your doubts are gone, let's start this course and become and expert angular developer.
-
-
-

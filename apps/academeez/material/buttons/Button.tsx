@@ -8,15 +8,19 @@
  */
 
 import { ColorName } from '@academeez/az/styles';
-import MuiButton, { ButtonProps as MuiButtonProps } from '@material-ui/core/Button';
+import MuiButton, {
+  ButtonProps as MuiButtonProps,
+} from '@material-ui/core/Button';
 import { FC } from 'react';
-import styled, {StyledProps, css} from 'styled-components';
+import styled, { StyledProps, css } from 'styled-components';
 
-export type ButtonProps = Omit< MuiButtonProps, 'color'> & {color: ColorName};
+export type ButtonProps = Omit<MuiButtonProps, 'color'> & { color: ColorName };
 
-export const Button: FC<ButtonProps> = styled(({color, ...props}) => <MuiButton {...props} />)<ButtonProps>`
+export const Button: FC<ButtonProps> = styled(({ color, ...props }) => (
+  <MuiButton {...props} />
+))<ButtonProps>`
   && {
-    font-family: "Space Mono";
+    font-family: 'Space Mono';
     text-transform: none;
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
@@ -49,7 +53,7 @@ export const Button: FC<ButtonProps> = styled(({color, ...props}) => <MuiButton 
             color: ${props.theme.colors.dark800};
             border-color: ${props.theme.colors.dark800};
           }
-        `
+        `;
       default:
         return css`
           &&.MuiButton-contained:not(.MuiButton-outlined) {
@@ -64,7 +68,7 @@ export const Button: FC<ButtonProps> = styled(({color, ...props}) => <MuiButton 
             color: ${props.theme.colors.green};
             border-color: ${props.theme.colors.green};
           }
-        `
+        `;
     }
   }};
-` as any
+` as any;

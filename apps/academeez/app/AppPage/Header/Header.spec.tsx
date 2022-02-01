@@ -20,7 +20,7 @@ const HeaderWrapper = () => {
 
   useEffect(() => {
     setCounter(1);
-  }, [])
+  }, []);
 
   return (
     <ThemeProvider>
@@ -29,19 +29,18 @@ const HeaderWrapper = () => {
         <Header />
       </LayoutContext.Provider>
     </ThemeProvider>
-  )
-}
+  );
+};
 
 describe('<Header />', () => {
   beforeEach(async () => {
-    render(
-      <HeaderWrapper />
-    )
-    await waitFor(() => expect(document.getElementsByTagName('header').length > 0).to.equal(true))
-  })
+    render(<HeaderWrapper />);
+    await waitFor(() =>
+      expect(document.getElementsByTagName('header').length > 0).to.equal(true)
+    );
+  });
 
-  it('hello', function(done) {
+  it('hello', function (done) {
     this.timeout(60000000);
-  })
-
-})
+  });
+});

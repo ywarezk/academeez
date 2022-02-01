@@ -13,18 +13,19 @@ import { createApolloClient } from '../apollo';
 import { coursesQuery } from './courses.hook';
 
 export const getHomePageStaticProps: GetStaticProps = async () => {
-  if (!process.env.NEXT_PUBLIC_API_URL) throw new Error('Missing environment variable NEXT_PUBLIC_API_URL');
+  if (!process.env.NEXT_PUBLIC_API_URL)
+    throw new Error('Missing environment variable NEXT_PUBLIC_API_URL');
 
   const client = createApolloClient();
 
   // get a list of all the courses
   await client.query({
-    query: coursesQuery
-  })
+    query: coursesQuery,
+  });
 
   return {
     props: {
-      cache: client.cache.extract()
-    }
-  }
-}
+      cache: client.cache.extract(),
+    },
+  };
+};

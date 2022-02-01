@@ -1,4 +1,4 @@
-import { InjectionToken } from "@angular/core";
+import { InjectionToken } from '@angular/core';
 
 export interface MessageModuleConfig {
   message: string;
@@ -7,5 +7,3 @@ export interface MessageModuleConfig {
 export const CONFIG = new InjectionToken<MessageModuleConfig>(
   'Used to configure the message module'
 );
-
-

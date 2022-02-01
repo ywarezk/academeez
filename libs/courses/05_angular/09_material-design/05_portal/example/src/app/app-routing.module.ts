@@ -13,17 +13,15 @@ import { HomePageComponent } from './home-page/home-page.component';
     RouterModule.forRoot([
       {
         path: '',
-        component: HomePageComponent
+        component: HomePageComponent,
       },
       {
         path: 'about',
-        component: AboutPageComponent
-      }
-    ])
+        component: AboutPageComponent,
+      },
+    ]),
   ],
-  exports: [
-    RouterModule
-  ],
+  exports: [RouterModule],
   providers: [],
 })
 export class AppRoutingModule {}

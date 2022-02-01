@@ -1,10 +1,9 @@
 ---
 title: Prerequisites
-video_url: "https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8"
+video_url: 'https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8'
 duration: 66
-short_description: "Things I need to know before starting this course"
-description: 
-  What this course is all about, prerequisites, why should you learn React and more.
+short_description: 'Things I need to know before starting this course'
+description: What this course is all about, prerequisites, why should you learn React and more.
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
 img: https://en.wikipedia.org/wiki/React_(JavaScript_library)#/media/File:React-icon.svg
@@ -32,7 +31,7 @@ Being more specific you should know how to create the following using HTML
 ## CSS
 
 Basic knowledge of CSS.  
-Including the following.  
+Including the following.
 
 - position
 - display
@@ -53,4 +52,3 @@ You need to know the following:
 - oop
 - destructuring
 - spread operator
-

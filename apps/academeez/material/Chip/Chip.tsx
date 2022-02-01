@@ -11,9 +11,8 @@ import MuiChip from '@material-ui/core/Chip';
 import styled from 'styled-components';
 
 export const Chip = styled(MuiChip)`
-
   && {
-    background-color: ${ ({theme}) => theme.colors.gray300 };
+    background-color: ${({ theme }) => theme.colors.gray300};
     border-radius: 4px;
     padding-left: 0.313rem;
     padding-right: 0.313rem;
@@ -24,7 +23,7 @@ export const Chip = styled(MuiChip)`
     .MuiChip-label {
       padding: 0;
       font-size: 0.75rem;
-      font-family: ${ ({theme}) => theme.fonts.radioGrotesk};
+      font-family: ${({ theme }) => theme.fonts.radioGrotesk};
       font-weight: 400;
     }
 
@@ -34,5 +33,4 @@ export const Chip = styled(MuiChip)`
       margin-right: 0.313rem;
     }
   }
-`
-
+`;

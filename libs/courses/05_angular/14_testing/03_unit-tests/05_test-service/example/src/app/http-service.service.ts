@@ -4,15 +4,14 @@ import { Observable } from 'rxjs';
 import { Task } from './task';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HttpServiceService {
-
-  constructor(
-    private _http: HttpClient
-  ) { }
+  constructor(private _http: HttpClient) {}
 
   getTasks(): Observable<Task[]> {
-    return this._http.get<Task[]>('nztodo.herokuapp.com/api/tasks/?format=json');
+    return this._http.get<Task[]>(
+      'nztodo.herokuapp.com/api/tasks/?format=json'
+    );
   }
 }

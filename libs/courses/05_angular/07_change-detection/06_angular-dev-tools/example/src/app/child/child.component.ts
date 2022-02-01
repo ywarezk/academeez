@@ -9,20 +9,15 @@ interface ListItem {
   selector: 'app-child',
   template: `
     <h1>Long List</h1>
-    <p>
-      Let's optimize this list
-    </p>
-    <button (click)="refreshList()">
-      Create a new list
-    </button>
+    <p>Let's optimize this list</p>
+    <button (click)="refreshList()">Create a new list</button>
     <ul>
-      <li *ngFor="let item of list"> {{ item.title }} </li>
+      <li *ngFor="let item of list">{{ item.title }}</li>
     </ul>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChildComponent implements OnInit {
-
   list: ListItem[] = [];
 
   ngOnInit() {
@@ -37,11 +32,10 @@ export class ChildComponent implements OnInit {
   }
 
   refreshList() {
-    this._generateList()
+    this._generateList();
   }
 
   trackById(index: number, item: ListItem) {
     return item.id;
   }
-
 }

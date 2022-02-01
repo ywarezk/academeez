@@ -5,10 +5,9 @@
 import EventsExample from './EventsExample';
 import { render, fireEvent } from '@testing-library/react';
 
-
 describe('EventsExample - trigger events', () => {
   it('validate h1 is visible at first', () => {
-    const { container } = render(<EventsExample />)
+    const { container } = render(<EventsExample />);
     const h1 = container.querySelector('h1');
     expect(h1).not.toBeNull();
   });
@@ -19,5 +18,5 @@ describe('EventsExample - trigger events', () => {
     fireEvent.click(button);
     const h1 = container.querySelector('h1');
     expect(h1).toBeNull();
-  })
-})
+  });
+});

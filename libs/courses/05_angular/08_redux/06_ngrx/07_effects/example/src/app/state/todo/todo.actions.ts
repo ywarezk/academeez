@@ -6,11 +6,9 @@
 import { createAction, props } from '@ngrx/store';
 import { Task } from './task.model';
 
-export const fetchTasks = createAction(
-  '[todo] FETCH TASKS'
-);
+export const fetchTasks = createAction('[todo] FETCH TASKS');
 
 export const setTasks = createAction(
   '[todo] SET TASKS',
-  props<{tasks: Task[]}>()
+  props<{ tasks: Task[] }>()
 );

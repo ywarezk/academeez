@@ -5,11 +5,7 @@ import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-show-mail',
-  template: `
-    <p>
-      show-mail works! {{ email$ | async }}
-    </p>
-  `
+  template: ` <p>show-mail works! {{ email$ | async }}</p> `,
 })
 export class ShowMailComponent {
   email$: Observable<string> = this._store.pipe(
@@ -17,7 +13,7 @@ export class ShowMailComponent {
       console.log(state);
       return state.settings.email.email;
     })
-  )
+  );
 
-  constructor(private _store: Store) { }
+  constructor(private _store: Store) {}
 }

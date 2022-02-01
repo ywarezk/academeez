@@ -14,6 +14,4 @@ import { Component } from '@angular/core';
     </mat-card>
   `,
 })
-export class CardExampleComponent {
-
-}
+export class CardExampleComponent {}

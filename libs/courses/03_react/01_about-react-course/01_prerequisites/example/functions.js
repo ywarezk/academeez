@@ -12,6 +12,6 @@ sayHello('hello world');
 // lambda function
 const fooBar = (msg) => {
   console.log(msg);
-}
+};
 // call the function
 fooBar('foo bar');

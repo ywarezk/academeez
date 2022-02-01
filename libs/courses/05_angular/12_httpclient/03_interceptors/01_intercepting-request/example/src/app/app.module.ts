@@ -5,20 +5,15 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ContentTypeInterceptor } from './content-type.interceptor';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    HttpClientModule
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule, HttpClientModule],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       multi: true,
-      useClass: ContentTypeInterceptor
-    }
+      useClass: ContentTypeInterceptor,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

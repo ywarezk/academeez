@@ -6,12 +6,8 @@ import { AppState, selectGreeting } from '../state';
 
 @Component({
   selector: 'academeez-read-state',
-  template: `
-    <p>
-      read-state works! {{ greeting$ | async }}
-    </p>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  template: ` <p>read-state works! {{ greeting$ | async }}</p> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReadStateComponent {
   // this will render the component on every change of state

@@ -4,14 +4,14 @@ metadata:
   name: nginx-config
   namespace: default
 data:
-    stream-snippets: |
-      server {
-        listen  27017;
-        proxy_connect_timeout 1s;
-        proxy_timeout 3s;
-        proxy_pass    stream_mongo_backend;
-      }
+  stream-snippets: |
+    server {
+      listen  27017;
+      proxy_connect_timeout 1s;
+      proxy_timeout 3s;
+      proxy_pass    stream_mongo_backend;
+    }
 
-      upstream stream_mongo_backend {
-        server localhost:27017;
-      }
+    upstream stream_mongo_backend {
+      server localhost:27017;
+    }

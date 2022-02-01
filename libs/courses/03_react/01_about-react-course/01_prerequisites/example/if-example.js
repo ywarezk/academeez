@@ -2,14 +2,10 @@
  * if condition and single line if in javascript
  */
 
-
 // if-else
 if (someCondition) {
-
-} else if(anotherCondition) {
-
+} else if (anotherCondition) {
 } else {
-
 }
 
 // single line if

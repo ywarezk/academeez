@@ -8,12 +8,8 @@
  * @version: 0.0.1
  */
 
-import { FC } from "react";
+import { FC } from 'react';
 
 export const ChapterList: FC = () => {
-  return (
-    <h1>
-      Chapter list
-    </h1>
-  )
-}
+  return <h1>Chapter list</h1>;
+};

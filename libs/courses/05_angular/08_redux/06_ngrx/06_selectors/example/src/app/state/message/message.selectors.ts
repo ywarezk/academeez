@@ -11,4 +11,4 @@ export const selectMessage = (state: AppState) => state.message;
 export const selectGreeting = createSelector(
   selectMessage,
   (state: MessageState) => state.greeting
-)
+);

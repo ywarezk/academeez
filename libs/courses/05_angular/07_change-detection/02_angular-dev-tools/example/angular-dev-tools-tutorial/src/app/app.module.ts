@@ -17,10 +17,8 @@ import { CdLogDirective } from './cd-log.directive';
     Grand2Component,
     CdLogDirective,
   ],
-  imports: [
-    BrowserModule
-  ],
+  imports: [BrowserModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -10,14 +10,14 @@ const { resolve } = require('path');
 
 // success - file exists
 readFile(resolve(__dirname, 'README.md'), (err, fileContent) => {
-  console.log(err) // will be  null on success
+  console.log(err); // will be  null on success
   console.log(fileContent.toString());
-})
+});
 
 // Fail - file does not exist
 readFile(resolve(__dirname, 'README1.md'), (err, fileContent) => {
   if (err) {
-    console.log(err) // will contain an error
+    console.log(err); // will contain an error
   } else {
     console.log(fileContent.toString());
   }
@@ -28,12 +28,12 @@ readFile(resolve(__dirname, 'README1.md'), (err, fileContent) => {
 try {
   readFile(resolve(__dirname, 'README1.md'), (err, fileContent) => {
     if (err) {
-      throw err // will crash the process
+      throw err; // will crash the process
     } else {
       console.log(fileContent.toString());
     }
   });
-} catch(err) {
+} catch (err) {
   console.log(err.message); // this will not catch the error
 }
 

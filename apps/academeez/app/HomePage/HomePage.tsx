@@ -7,17 +7,17 @@
  * @license: MIT
  */
 
-import { FC, useState } from "react";
+import { FC, useState } from 'react';
 import Head from 'next/head';
 import { Header } from '../';
-import { DialogContent, Grid } from "@material-ui/core";
+import { DialogContent, Grid } from '@material-ui/core';
 import { HeroSection, HeroBgImg, TopChaptersSection } from './HomePage.markup';
 import { LogoLineAnim } from './LogoLineAnim/LogoLineAnim';
 import { Button, PlayButton } from '@academeez/az/material';
 import { Typography } from '@academeez/az/material';
 import { ScrollLine } from './ScrollLine/ScrollLine';
 import { IntroVideo } from './IntroVideo/IntroVideo';
-import { CourseList } from "./CourseList/CourseList";
+import { CourseList } from './CourseList/CourseList';
 import { Dialog } from '@academeez/az/material';
 import { Favorite } from '@material-ui/icons';
 
@@ -27,10 +27,11 @@ export const HomePage: FC = () => {
   return (
     <div className="home-page">
       <Head>
-        <title>
-          academeez | Free coding video courses
-        </title>
-        <meta name="description" content="academeez - Free video  courses. Learn React, Angular, NodeJS for free. Free professional courses for beginners and experts" />
+        <title>academeez | Free coding video courses</title>
+        <meta
+          name="description"
+          content="academeez - Free video  courses. Learn React, Angular, NodeJS for free. Free professional courses for beginners and experts"
+        />
       </Head>
       <Header isTransparent />
 
@@ -43,7 +44,9 @@ export const HomePage: FC = () => {
             <Typography variant="h1" className="text-center" color="white">
               <Typography variant="h1" component="span" color="green">
                 Free
-              </Typography> &amp; <Typography variant="h1" component="span" color="red">
+              </Typography>{' '}
+              &amp;{' '}
+              <Typography variant="h1" component="span" color="red">
                 Open Source
               </Typography>
               &nbsp;video coding courses
@@ -51,7 +54,8 @@ export const HomePage: FC = () => {
             <div className="d-flex justify-content-center mt-5">
               <PlayButton
                 onClick={() => setIntroDialogOpen(true)}
-                className="mr-3">
+                className="mr-3"
+              >
                 About us
               </PlayButton>
               <Dialog
@@ -80,15 +84,18 @@ export const HomePage: FC = () => {
       {/* begin courses */}
       <section className="pt-6 pb-6">
         <Typography variant="h2" className="text-dark800 text-center">
-          Our <Typography variant="h2" component="span" color="green">FREE</Typography> video courses
+          Our{' '}
+          <Typography variant="h2" component="span" color="green">
+            FREE
+          </Typography>{' '}
+          video courses
         </Typography>
 
         <Grid container className="justify-content-center mt-5">
-          <Grid item xs={12} md={9} >
+          <Grid item xs={12} md={9}>
             <CourseList />
           </Grid>
         </Grid>
-
       </section>
       {/* end courses */}
 
@@ -99,7 +106,6 @@ export const HomePage: FC = () => {
         </Typography>
       </TopChaptersSection>
       {/* end chapters */}
-
     </div>
-  )
-}
+  );
+};

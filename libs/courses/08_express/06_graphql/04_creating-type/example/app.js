@@ -11,12 +11,11 @@ const app = express();
 
 const apollo = new ApolloServer({
   typeDefs,
-  resolvers: helloResolver
+  resolvers: helloResolver,
 });
 
-apollo.applyMiddleware( { app } );
-
+apollo.applyMiddleware({ app });
 
 app.listen(3000, () => {
   console.log('We are now listening on port 3000...');
-})
+});

@@ -7,12 +7,8 @@
  * @version: 0.0.1
  */
 
-import { FC } from "react";
+import { FC } from 'react';
 
 export const ChapterCard: FC = () => {
-  return (
-    <h1>
-      Chapter card
-    </h1>
-  )
-}
+  return <h1>Chapter card</h1>;
+};

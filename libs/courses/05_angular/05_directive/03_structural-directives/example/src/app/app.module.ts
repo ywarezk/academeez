@@ -6,15 +6,9 @@ import { RepeatingEventDirective } from './repeating-event.directive';
 import { UserDirective } from './user.directive';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    RepeatingEventDirective,
-    UserDirective
-  ],
-  imports: [
-    BrowserModule
-  ],
+  declarations: [AppComponent, RepeatingEventDirective, UserDirective],
+  imports: [BrowserModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

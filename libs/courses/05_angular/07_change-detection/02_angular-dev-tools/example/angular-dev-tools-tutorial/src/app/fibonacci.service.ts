@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FibonacciService {
-
   /**
    * calculate the fibonacci number of n using recursion
    * @param n
@@ -13,8 +12,8 @@ export class FibonacciService {
     if (n <= 1) {
       return n;
     }
-    return this.fibonacci(n-1) + this.fibonacci(n-2);
+    return this.fibonacci(n - 1) + this.fibonacci(n - 2);
   }
 
-  constructor() { }
+  constructor() {}
 }

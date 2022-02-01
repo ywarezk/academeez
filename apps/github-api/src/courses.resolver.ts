@@ -9,14 +9,13 @@
 
 import { Query, Resolver } from 'type-graphql';
 import { EducationItem } from '@academeez/entities';
-import { queryGithub } from './github'
+import { queryGithub } from './github';
 import metadataParser from 'markdown-yaml-metadata-parser';
 import camelcaseKeys from 'camelcase-keys';
 import { includes, isEmpty, difference } from 'lodash';
 
 @Resolver()
 export class CoursesResolver {
-
   @Query(() => String)
   version() {
     return '@academeez/courses-api V0.0.1';
@@ -33,12 +32,12 @@ export class CoursesResolver {
     for (const lesson of educationItems) {
       const pathArray = lesson.link.split('/');
       lesson.children = educationItems
-        .filter(l => {
+        .filter((l) => {
           const childPathArray = l.link.split('/');
-          if (childPathArray.length !== (pathArray.length + 1)) return false;
+          if (childPathArray.length !== pathArray.length + 1) return false;
           return difference(pathArray, childPathArray).length === 0;
         })
-        .map(l => l.link)
+        .map((l) => l.link);
     }
 
     return educationItems;
@@ -66,7 +65,6 @@ export class CoursesResolver {
       if (!isNaN(parseFloat(first))) {
         path = arr.join('_');
       }
-
     }
     if (includes(path, '-')) {
       path = path.split('-').join('_');
@@ -86,17 +84,19 @@ export class CoursesResolver {
             }
         }
       }
-    `
+    `;
   }
 
   private _queryParseReadme(folderName: string, alias?): string {
     return `
-      ${alias || this._sanitizeName(folderName)}: object(expression: "main:${folderName}/README.md") {
+      ${
+        alias || this._sanitizeName(folderName)
+      }: object(expression: "main:${folderName}/README.md") {
         ... on Blob {
           text
         }
       }
-    `
+    `;
   }
 
   /**
@@ -104,50 +104,51 @@ export class CoursesResolver {
    * @param folderName
    * @returns
    */
-  private async _getAllEducationItems(paths: string[]): Promise<EducationItem[]> {
+  private async _getAllEducationItems(
+    paths: string[]
+  ): Promise<EducationItem[]> {
     if (isEmpty(paths)) return [];
 
     // For all the paths create a big query to read all the folders and files
     let query = paths.reduce((accumulator, path) => {
       return `
         ${accumulator}
-        ${this._queryLsFolder(path, this._sanitizeName(path) || '_' )}
+        ${this._queryLsFolder(path, this._sanitizeName(path) || '_')}
         ${this._queryParseReadme(path, `${this._sanitizeName(path)}_readme`)}
-      `
-    }, '')
+      `;
+    }, '');
 
     const data = await queryGithub(query);
 
     const keys = Object.keys(data.repository);
     const newPaths = [];
     const newEducationItems = [];
-    for(const key of keys) {
+    for (const key of keys) {
       const item = data.repository[key];
       if (key === '_readme') continue;
       if (includes(key, '_readme')) {
         try {
           const result = metadataParser(item.text);
-          newEducationItems.push(camelcaseKeys(result.metadata))
-        } catch(err) {
-          throw new Error(`Failed while parsing the README of ${key}`)
+          newEducationItems.push(camelcaseKeys(result.metadata));
+        } catch (err) {
+          throw new Error(`Failed while parsing the README of ${key}`);
         }
       } else {
         const trees = item.entries
-                          .filter(entry => entry.type === 'tree')
-                          .filter(entry => {
-                            const { name } = entry;
-                            const numStr = name.split('_')[0];
-                            const num = parseFloat(numStr);
-                            return !isNaN(num);
-                          })
-                          .map(entry => entry.path);
+          .filter((entry) => entry.type === 'tree')
+          .filter((entry) => {
+            const { name } = entry;
+            const numStr = name.split('_')[0];
+            const num = parseFloat(numStr);
+            return !isNaN(num);
+          })
+          .map((entry) => entry.path);
         newPaths.push(...trees);
       }
     }
 
-    const recResults = await this._getAllEducationItems(newPaths)
+    const recResults = await this._getAllEducationItems(newPaths);
 
     return [...newEducationItems, ...recResults];
   }
-
 }

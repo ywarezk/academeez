@@ -10,14 +10,16 @@ async function main() {
     // const stats = await db.stats();
     // console.log(stats);
     const users = db.collection('users');
-    const stats = await users.stats()
-    console.time('fetch')
-    const foundUsers = await users.find({
-      age: {
-        $gt: 50
-      }
-    }).toArray()
-    console.timeEnd('fetch')
+    const stats = await users.stats();
+    console.time('fetch');
+    const foundUsers = await users
+      .find({
+        age: {
+          $gt: 50,
+        },
+      })
+      .toArray();
+    console.timeEnd('fetch');
     // console.log(stats);
     // const data = [];
     // for (let i = 0; i < 100000; i++) {
@@ -28,10 +30,9 @@ async function main() {
     // }
     // await users.insertMany(data);
     // console.log('successfully insert 100000 users');
-  } catch(err) {
+  } catch (err) {
     console.log(err);
   }
-
 }
 
 main();

@@ -4,8 +4,4 @@
 
 import { createAction, props } from '@ngrx/store';
 
-export const setNum = createAction(
-  'setTime',
-  props<{num: number}>()
-);
-
+export const setNum = createAction('setTime', props<{ num: number }>());

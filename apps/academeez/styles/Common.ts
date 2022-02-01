@@ -30,4 +30,4 @@ export const Common = createGlobalStyle`
   .list-unstyled {
     list-style: none;
   }
-`
+`;

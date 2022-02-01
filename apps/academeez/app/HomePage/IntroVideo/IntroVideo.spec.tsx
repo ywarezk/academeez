@@ -12,11 +12,11 @@ import { render } from '@testing-library/react';
 import { IntroVideo } from './IntroVideo';
 
 describe('<IntroVideo />', () => {
-  it('sanity', function() {
+  it('sanity', function () {
     render(
       <ThemeProvider>
         <IntroVideo />
       </ThemeProvider>
-    )
-  })
-})
+    );
+  });
+});

@@ -3,9 +3,5 @@
  */
 
 export default function Child() {
-  return (
-    <h1>
-      This will load only when needed
-    </h1>
-  )
+  return <h1>This will load only when needed</h1>;
 }

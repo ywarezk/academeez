@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { interval, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CounterService {
   getCounter(): Observable<number> {

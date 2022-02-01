@@ -14,11 +14,9 @@ import { Component } from '@angular/core';
       </ul>
     </nav>
 
-    <div id="tabs-container">
-    </div>
+    <div id="tabs-container"></div>
 
     <router-outlet></router-outlet>
   `,
 })
-export class AppComponent {
-}
+export class AppComponent {}

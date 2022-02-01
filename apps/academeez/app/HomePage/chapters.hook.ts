@@ -6,7 +6,7 @@
  * @version: 0.0.1
  */
 
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const chaptersQuery = gql`
   query {
@@ -24,5 +24,4 @@ export const chaptersQuery = gql`
       }
     }
   }
-`
-
+`;

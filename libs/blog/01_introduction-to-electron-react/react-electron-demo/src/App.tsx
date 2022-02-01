@@ -4,12 +4,12 @@ import './App.global.css';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import Todo from './Todo';
-import { ipcRenderer } from 'electron'
+import { ipcRenderer } from 'electron';
 
 const Hello = () => {
   const sendMessage = () => {
     ipcRenderer.send('send-message', 'hello world');
-  }
+  };
 
   ipcRenderer.on('recieve-message', (_event, msg) => {
     console.log(msg);
@@ -17,11 +17,7 @@ const Hello = () => {
 
   return (
     <div className="hello">
-      <Button
-        onClick={sendMessage}
-        color="primary"
-        variant="contained"
-      >
+      <Button onClick={sendMessage} color="primary" variant="contained">
         Send hello
       </Button>
     </div>
@@ -31,9 +27,7 @@ const Hello = () => {
 export default function App() {
   return (
     <Router>
-      <Link to="/todo">
-        Todo
-      </Link>
+      <Link to="/todo">Todo</Link>
 
       <Switch>
         <Route path="/todo" component={Todo} />

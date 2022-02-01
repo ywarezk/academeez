@@ -17,4 +17,4 @@ export const AnimWrapper = styled.div`
     display: flex;
     justify-content: center;
   }
-`
+`;

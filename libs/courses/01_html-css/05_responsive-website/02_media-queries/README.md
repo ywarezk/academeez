@@ -1,6 +1,6 @@
 ---
 title: Media Queries
-video_url: "https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8"
+video_url: 'https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8'
 duration: 66
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
@@ -8,7 +8,6 @@ img: https://en.wikipedia.org/wiki/React_(JavaScript_library)#/media/File:React-
 code: https://codesandbox.io/s/html-css-responsive-media-queries-vq646?file=/index.html
 link: /courses/html-css/responsive/media-queries
 ---
-
 
 With **Media Queries** we can apply css rules on devices that match certain characteristics.  
 A popular use case will be to give different styles for different screen size, for example I want to make a font bigger or smaller on smarphone devices.
@@ -52,11 +51,11 @@ Our CSS
 
 In this example we set the `font-size: 72px` for large screens.  
 For mobile screens with screen width up to `600px` the font size will be `36px`.  
-For tablets with screen width greater then `600px` and smaller then `1200px` we set the `font-size: 52px`.  
+For tablets with screen width greater then `600px` and smaller then `1200px` we set the `font-size: 52px`.
 
 With media queries we create conditions on the device.  
 A condition can be device screen size, device type, orientation, etc.  
-Conditions can also be combined with logical operators like `and, or, not`. 
+Conditions can also be combined with logical operators like `and, or, not`.
 
 You can view this example [here](https://codesandbox.io/s/html-css-responsive-media-queries-vq646?file=/style.css)
 

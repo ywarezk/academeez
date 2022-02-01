@@ -30,4 +30,4 @@ export const Flexbox = createGlobalStyle`
       -ms-flex-wrap: wrap!important;
       flex-wrap: wrap!important;
   }
-`
+`;

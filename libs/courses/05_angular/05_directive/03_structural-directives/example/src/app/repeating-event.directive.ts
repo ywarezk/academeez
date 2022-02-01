@@ -1,20 +1,17 @@
 import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
 
 @Directive({
-  selector: '[appRepeatingEvent]'
+  selector: '[appRepeatingEvent]',
 })
 export class RepeatingEventDirective {
-
   @Output('appRepeatingEvent')
-  clickWithLog: EventEmitter<Event> = new EventEmitter()
+  clickWithLog: EventEmitter<Event> = new EventEmitter();
 
-  constructor() { }
+  constructor() {}
 
   @HostListener('click', ['$event'])
   clickWithExtra(event: Event) {
     console.log('extra logic');
     this.clickWithLog.emit(event);
   }
-
-
 }

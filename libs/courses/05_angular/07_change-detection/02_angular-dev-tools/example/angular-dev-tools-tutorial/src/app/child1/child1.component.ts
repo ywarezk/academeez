@@ -9,13 +9,10 @@ import { FibonacciService } from '../fibonacci.service';
     </h2>
     <app-grand1></app-grand1>
   `,
-  styles: [
-  ]
+  styles: [],
 })
 export class Child1Component implements OnInit {
+  constructor(public fibonacciService: FibonacciService) {}
 
-  constructor(public fibonacciService : FibonacciService) { }
-
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 }

@@ -4,15 +4,10 @@
  * We can test that functionality
  */
 
-import { useSelector } from "react-redux"
-
+import { useSelector } from 'react-redux';
 
 export const ReadFromRedux = () => {
-  const user = useSelector(state => state.user);
+  const user = useSelector((state) => state.user);
 
-  return (
-    <h1>
-      Hello { user ? user.firstName : 'Guest'}
-    </h1>
-  )
-}
+  return <h1>Hello {user ? user.firstName : 'Guest'}</h1>;
+};

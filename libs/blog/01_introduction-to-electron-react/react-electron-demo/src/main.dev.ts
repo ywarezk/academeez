@@ -134,4 +134,4 @@ app.on('activate', () => {
 ipcMain.on('send-message', (event, msg) => {
   console.log(msg);
   event.reply('recieve-message', 'foo bar');
-})
+});

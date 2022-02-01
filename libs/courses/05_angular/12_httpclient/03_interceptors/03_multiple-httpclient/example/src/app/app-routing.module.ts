@@ -6,12 +6,11 @@ import { RouterModule } from '@angular/router';
     RouterModule.forRoot([
       {
         path: 'foo',
-        loadChildren: () => import('../foo/foo.module').then(m => m.FooModule)
-      }
-    ])
+        loadChildren: () =>
+          import('../foo/foo.module').then((m) => m.FooModule),
+      },
+    ]),
   ],
-  exports: [
-    RouterModule
-  ]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

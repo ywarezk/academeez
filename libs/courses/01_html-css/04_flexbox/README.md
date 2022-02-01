@@ -14,5 +14,4 @@ link: /courses/html-css/flexbox
 order: 1
 ---
 
-Using `Flexbox` we can structure our web page and position elements on the screen according to our page layout.  
-
+Using `Flexbox` we can structure our web page and position elements on the screen according to our page layout.

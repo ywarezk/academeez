@@ -1,6 +1,6 @@
 ---
 title: Building desktop apps using Electron and React
-video_url: "https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8"
+video_url: 'https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8'
 duration: 66
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
@@ -21,12 +21,12 @@ In this article I wanted to go over the process of developing a desktop applicat
 
 ## Electron showcase
 
-So you want to create a desktop app, and one of the questions that pops in your head is probably: "Should I choose Electron for building my desktop app".    
+So you want to create a desktop app, and one of the questions that pops in your head is probably: "Should I choose Electron for building my desktop app".  
 There Are many technologies you can use for building a desktop app, choosing one that is open sourced and built with Javascript like electron has the strong advantage of popularity, which means the community has a lot of libraries for Electron and for [Node.js](https://nodejs.org/) that you can use.
 
 Another thing that is really a huge advantage of choosing **Electron** is the impressive showcase.  
 Alot of big organizations, and many popular apps are built with **Electron** which means a lot of organizations have strong intrest in the technology being pushed forward.  
-If you are afraid a technology might be deprecated in the future - just follow the money - Examine the amount of apps and how complex and popular they are, if a company is investing a lot of money in an app that is built with a technology, that company has strong intrest to push it forward which means less chance of that technology being deprecated.  
+If you are afraid a technology might be deprecated in the future - just follow the money - Examine the amount of apps and how complex and popular they are, if a company is investing a lot of money in an app that is built with a technology, that company has strong intrest to push it forward which means less chance of that technology being deprecated.
 
 Here are a bunch of popular apps that are built using **Electron**
 
@@ -47,7 +47,7 @@ Electron is an open source project that is maintained by **github** so a large o
 Electron allows the development of desktop applications using web technologies.  
 When started to look at **Electron** the concept kind of reminded me of [Cordova](https://cordova.apache.org/) or [ionic](https://ionicframework.com/) which allows us to build mobile apps using web technologies.  
 Basically we have a shell which can spawn a browser window with a web page loaded to that browser window.  
-The browser window is just the screen without the url and controls, so the user cannot really notice that it is a browser window and for all intent and purpose he sees a regular screen.  
+The browser window is just the screen without the url and controls, so the user cannot really notice that it is a browser window and for all intent and purpose he sees a regular screen.
 
 Electron does the same.  
 The shell is the [main process](https://www.electronjs.org/docs/glossary#main-process).  
@@ -66,7 +66,7 @@ We will start by clonning the starter kit:
 ```
 
 Next step will be to install all the packages.  
-CD into the created directory and install all the packages.  
+CD into the created directory and install all the packages.
 
 ```bash
 > cd react-electron-demo
@@ -86,7 +86,7 @@ To start developing the app run:
 We already have some fancy building tools already configured for us.
 
 [Webpack](https://webpack.js.org/) is used to bundle our project together.  
-The **Webpack** configuration files are located in the `.erb` folder.  
+The **Webpack** configuration files are located in the `.erb` folder.
 
 [Babel](https://babeljs.io/) is configured for us so we can write ES6+ code along with JSX.
 
@@ -151,14 +151,14 @@ const subMenuViewProd: MenuItemConstructorOptions = {
 
 ### React part
 
-As mentioned before the `main.dev.ts` opens a renderer process and the `src/index.html` is loaded to that renderer process.  
+As mentioned before the `main.dev.ts` opens a renderer process and the `src/index.html` is loaded to that renderer process.
 
 The `index.html` file is the entry point of our renderer process, and it will load the Javascript entry point located in the file `src/index.tsx` which will use `react-dom` to render the root component located in the file `App.tsx`.
 
 ### App.tsx
 
 Our root component `App` is defined in this file.  
-Notice that routing is already defined for us using the `react-router-dom` package.  
+Notice that routing is already defined for us using the `react-router-dom` package.
 
 ```typescript
 export default function App() {
@@ -175,6 +175,7 @@ export default function App() {
 We have one route in the root which place the `Hello` component, that is located in the same file.
 
 Few things to notice here
+
 - we use import images to place images in our app, they can be placed in the `assets` folder or in your `src` folder.
 
 ```typescript
@@ -199,21 +200,21 @@ To start our app in development mode, you run in the terminal the following comm
 > yarn start
 ```
 
-This will open the app along with with the developer tools web developers are used to work with.  
+This will open the app along with with the developer tools web developers are used to work with.
 
-So you use the developer tools, same way you do in the browser, to inspect the dom, debug the source code and more.  
+So you use the developer tools, same way you do in the browser, to inspect the dom, debug the source code and more.
 
 [Hot module replacement](https://webpack.js.org/concepts/hot-module-replacement/) is configured so the moment you change your source code, the app is updated without the need to recompile your code.
 
 One of the killer features in working with **Electron** is the fact that you design the screen in the same way we design the screen on a website.  
-We are working with `HTML` and `JSX`, we can use the developer tools to change appearance on the developer tools and examine how the changes will look like live.  
+We are working with `HTML` and `JSX`, we can use the developer tools to change appearance on the developer tools and examine how the changes will look like live.
 
 Designing the screen I would say take developers the majority of their time when building an app with other desktop apps technologies, the fact that we are using web technologies along with instant view of our changes is kind of a killer feature in my opinion and saves the developer tons of development time.
 
 ## Material Design
 
 React is the most popular ui library out there.  
-The fact that it is open sourced and highly adopted, created an amazing community that creates tons of quality libraries that we can use.  
+The fact that it is open sourced and highly adopted, created an amazing community that creates tons of quality libraries that we can use.
 
 Nothing is stopping us from using them in our react electron app.
 
@@ -239,9 +240,9 @@ import Button from '@material-ui/core/Button';
 ```
 
 You have the entire material ui package at your disposal.  
-Other technologies for creating desktop apps usually provide component libraries as well but they come with a price and not MIT licensed.  
+Other technologies for creating desktop apps usually provide component libraries as well but they come with a price and not MIT licensed.
 
-Using Javascript gives us amazing community power in our app, much more than other technologies which means amazing app on short time, which is another big advantage with **Electron** 
+Using Javascript gives us amazing community power in our app, much more than other technologies which means amazing app on short time, which is another big advantage with **Electron**
 
 ## Server communication
 
@@ -271,9 +272,7 @@ Modifying our `App.tsx` we will add a route that will point to the page that dis
 export default function App() {
   return (
     <Router>
-      <Link to="/todo">
-        Todo
-      </Link>
+      <Link to="/todo">Todo</Link>
 
       <Switch>
         <Route path="/todo" component={Todo} />
@@ -299,23 +298,20 @@ export default function Todo() {
 
   useEffect(() => {
     fetch('https://nztodo.herokuapp.com/api/tasks/?format=json')
-      .then(response => response.json())
-      .then(json => setTasks(json));
-  }, [])
+      .then((response) => response.json())
+      .then((json) => setTasks(json));
+  }, []);
 
   return (
     <List>
-      {
-        tasks.map((task: any) => (
-          <ListItem key={task.id}>
-            <ListItemText primary={task.title} secondary={task.description} />
-          </ListItem>
-        ))
-      }
+      {tasks.map((task: any) => (
+        <ListItem key={task.id}>
+          <ListItemText primary={task.title} secondary={task.description} />
+        </ListItem>
+      ))}
     </List>
-  )
+  );
 }
-
 ```
 
 We have the same rules apply to backend frontend communication.  
@@ -324,19 +320,19 @@ So web development and **Electron** development are pretty similar in that aspec
 ## IPC
 
 The main process can talk with the renderer process.  
-We would want this communication if we want the renderer to access restricted things that a web browser cannot do, like the file system, or OS related things.  
+We would want this communication if we want the renderer to access restricted things that a web browser cannot do, like the file system, or OS related things.
 
 First let's start with a simple message sending from the renderer to the main process.
 
 Modify the `App.tsx` the `Home` component:
 
 ```typescript
-import { ipcRenderer } from 'electron'
+import { ipcRenderer } from 'electron';
 
 const Hello = () => {
   const sendMessage = () => {
     ipcRenderer.send('send-message', 'hello world');
-  }
+  };
 
   ipcRenderer.on('recieve-message', (_event, msg) => {
     console.log(msg);
@@ -344,11 +340,7 @@ const Hello = () => {
 
   return (
     <div className="hello">
-      <Button
-        onClick={sendMessage}
-        color="primary"
-        variant="contained"
-      >
+      <Button onClick={sendMessage} color="primary" variant="contained">
         Send hello
       </Button>
     </div>
@@ -398,6 +390,3 @@ After the packaging is finished you can view the app in `release/mac` (if your c
 Using **Electron** for building a desktop apps has many advantages.  
 The fact that we can use **React** with it's many libraries along with web development tools for building our app and designing our screen means a faster development experience.  
 **Electron** is highly adopted among popular organizations, and it allows us to easily create cross platform desktop apps.
-
-
-

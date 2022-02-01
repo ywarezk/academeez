@@ -5,19 +5,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MultipleNgContentComponent } from './multiple-ng-content/multiple-ng-content.component';
 import { MultipleNgContentModule } from './multiple-ng-content/multiple-ng-content.module';
 
-
 @NgModule({
-  declarations: [
-    CardExampleComponent
-  ],
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MultipleNgContentModule
-  ],
-  exports: [
-    CardExampleComponent,
-    MultipleNgContentModule
-  ]
+  declarations: [CardExampleComponent],
+  imports: [CommonModule, MatCardModule, MultipleNgContentModule],
+  exports: [CardExampleComponent, MultipleNgContentModule],
 })
-export class CardModule { }
+export class CardModule {}

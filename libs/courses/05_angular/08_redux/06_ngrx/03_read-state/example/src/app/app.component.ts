@@ -8,15 +8,15 @@ import { Observable } from 'rxjs';
   template: `
     <h1>Read From Store</h1>
     <p>
-      {{ message$ | async}}
+      {{ message$ | async }}
     </p>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   message$: Observable<string> = this._store.pipe(
     map((state: any) => state.hello.message)
-  )
+  );
 
   constructor(private _store: Store) {}
 }

@@ -18,9 +18,9 @@ export const ScrollLineWrapper = styled.div`
     align-items: center;
   }
 
-  & .line{
+  & .line {
     border-left: 2px solid white;
     height: 5rem;
     margin-top: 2rem;
   }
-`
+`;

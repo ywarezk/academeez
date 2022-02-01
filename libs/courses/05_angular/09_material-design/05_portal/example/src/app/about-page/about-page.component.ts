@@ -4,18 +4,12 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-about-page',
   template: `
     <app-tabs [tabs]="['hello', 'world']"></app-tabs>
-    <p>
-      about-page works!
-    </p>
+    <p>about-page works!</p>
   `,
-  styles: [
-  ]
+  styles: [],
 })
 export class AboutPageComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

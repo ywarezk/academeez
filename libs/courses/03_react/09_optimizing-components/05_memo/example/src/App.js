@@ -7,12 +7,8 @@ function App() {
 
   return (
     <div className="App">
-      <h1>
-        { counter }
-      </h1>
-      <button onClick={() => setCounter(counter + 1)}>
-        Increment
-      </button>
+      <h1>{counter}</h1>
+      <button onClick={() => setCounter(counter + 1)}>Increment</button>
 
       <Child calc1={10} />
     </div>

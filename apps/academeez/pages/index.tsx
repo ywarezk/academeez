@@ -7,4 +7,7 @@
  * @license: MIT
  */
 
-export { HomePage as default, getHomePageStaticProps as getStaticProps } from '@academeez/az/app';
+export {
+  HomePage as default,
+  getHomePageStaticProps as getStaticProps,
+} from '@academeez/az/app';

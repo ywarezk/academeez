@@ -7,15 +7,17 @@
  * @copyright: Nerdeez Ltd
  */
 
-import Router from "next/router";
+import Router from 'next/router';
 
-declare let require: {context: (path: string, recursive: boolean, files: RegExp) => void};
+declare let require: {
+  context: (path: string, recursive: boolean, files: RegExp) => void;
+};
 
 const mockedRouter = { push: () => null, prefetch: () => null };
 Router.router = mockedRouter as never;
 
 function importAll(r) {
-    r.keys().forEach(r);
+  r.keys().forEach(r);
 }
 
-importAll(require.context("./", true, /\.spec\.(tsx|ts)$/));
+importAll(require.context('./', true, /\.spec\.(tsx|ts)$/));

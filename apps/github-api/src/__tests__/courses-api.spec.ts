@@ -16,17 +16,16 @@ describe('courses api', () => {
   beforeAfterBootstrap(coursesBootstrap);
 
   it('sanity', async () => {
-    const response = await axios.post(
-      'http://localhost:3333/graphql',
-      {
-        query: `
+    const response = await axios.post('http://localhost:3333/graphql', {
+      query: `
           query {
             version
           }
-        `
-      }
-    )
-    expect(response.data.data.version).to.equal('@academeez/courses-api V0.0.1');
+        `,
+    });
+    expect(response.data.data.version).to.equal(
+      '@academeez/courses-api V0.0.1'
+    );
   });
 
   it('github api', async () => {
@@ -46,23 +45,21 @@ describe('courses api', () => {
               }
             }
           }
-        `
+        `,
       },
       {
         headers: {
-          "Authorization": `bearer ${process.env.GITHUB_TOKEN}`
-        }
+          Authorization: `bearer ${process.env.GITHUB_TOKEN}`,
+        },
       }
-    )
+    );
     expect(response.data.data).is.ok;
   });
 
   it.only('grab all courses', async () => {
     try {
-      const response = await axios.post(
-        'http://localhost:3333/graphql',
-        {
-          query: `
+      const response = await axios.post('http://localhost:3333/graphql', {
+        query: `
           query {
             lessons {
               title,
@@ -74,13 +71,11 @@ describe('courses api', () => {
               children
             }
           }
-        `
-        }
-      )
+        `,
+      });
       expect(response.data.data.courses.length > 0).to.equal(true);
-    } catch(err) {
+    } catch (err) {
       console.log(err);
     }
-
-  })
-})
+  });
+});

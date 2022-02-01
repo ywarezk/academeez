@@ -1,6 +1,6 @@
 ---
 title: What we can Build with React
-video_url: "https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8"
+video_url: 'https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8'
 duration: 66
 short_description: The applications we can build with React
 description: The applications we can build with React
@@ -27,17 +27,16 @@ How is it possible for React to serve so many different frontend apps.
 ## Platform Agnostic
 
 Platform is whomever is running our application:
+
 - iOS
 - Android
 - Desktop
 - Browser
 - Node.js
 
-React is platform agnostic meaning it can run on different platforms that can run Javascript.  
+React is platform agnostic meaning it can run on different platforms that can run Javascript.
 
 ## React by itself does not draw the UI
-
-
 
 ## Different apps we can build with React
 
@@ -76,4 +75,3 @@ To build those apps we will have to combine `React` with `react-dom` and work wi
 This course will focus on creating a website using `React`.  
 We will combine `React` with a library called `react-dom`.  
 We will work on the browser platform and browser api
-

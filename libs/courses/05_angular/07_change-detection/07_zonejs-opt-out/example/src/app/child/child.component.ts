@@ -4,12 +4,10 @@ import { Observable, interval } from 'rxjs';
 @Component({
   selector: 'app-child',
   template: `
-    <p>
-      child works! {{ log() }} {{ counter$ | ngrxPush }}
-    </p>
+    <p>child works! {{ log() }} {{ counter$ | ngrxPush }}</p>
     <app-grand [counter]="counter$ | ngrxPush"></app-grand>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChildComponent implements OnInit {
   counter$: Observable<number> = interval(1000);
@@ -18,10 +16,7 @@ export class ChildComponent implements OnInit {
     console.log('running cd on ChildComponent');
   }
 
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

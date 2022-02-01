@@ -4,11 +4,11 @@
 
 describe('hooks example', () => {
   beforeAll(() => {
-    console.log('run once for a group')
+    console.log('run once for a group');
   });
 
   beforeEach(() => {
-    console.log('run before each test in a group')
+    console.log('run before each test in a group');
   });
 
   afterAll(() => {

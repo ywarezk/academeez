@@ -9,17 +9,13 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { reducers } from './state';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ChangeStateComponent,
-    ReadStateComponent
-  ],
+  declarations: [AppComponent, ChangeStateComponent, ReadStateComponent],
   imports: [
     BrowserModule,
     StoreModule.forRoot(reducers),
-    StoreDevtoolsModule.instrument()
+    StoreDevtoolsModule.instrument(),
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

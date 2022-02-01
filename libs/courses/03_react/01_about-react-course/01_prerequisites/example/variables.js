@@ -16,5 +16,3 @@ const myArray = [];
 // myArray = 'hello' //ERROR!
 // number of const assignment is 1
 // scope of const is in the block
-
-

@@ -4,21 +4,19 @@
 
 const { MongoClient } = require('mongodb');
 
-
 async function main() {
   const client = new MongoClient('mongodb://yariv:12345678@localhost:27017');
   await client.connect();
   const validationExample = client.db('validation-example');
   const users = validationExample.collection('users');
 
-  await users.updateOne({ name: 'Yariv' }, { $push: {images: 'image2'}})
-  await users.updateOne({ name: 'Yariv' }, { $push: {images: 'image3'}})
+  await users.updateOne({ name: 'Yariv' }, { $push: { images: 'image2' } });
+  await users.updateOne({ name: 'Yariv' }, { $push: { images: 'image3' } });
   try {
-    await users.updateOne({ name: 'Yariv' }, { $push: {images: 'image3'}})
-  } catch(err) {
+    await users.updateOne({ name: 'Yariv' }, { $push: { images: 'image3' } });
+  } catch (err) {
     console.log(err.message);
   }
-
 
   // await users.drop();
   // const users = await validationExample.createCollection('users', {
@@ -53,8 +51,6 @@ async function main() {
   //   images: ['image1']
   // });
 
-
-
   // try {
   //   await users.insertOne(
   //     {
@@ -66,7 +62,7 @@ async function main() {
   //   console.log(err);
   // }
 
-  console.log('all done')
+  console.log('all done');
 }
 
 main();

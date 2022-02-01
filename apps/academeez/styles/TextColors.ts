@@ -19,14 +19,14 @@ export const Text = createGlobalStyle`
   }
 
   .text-dark800 {
-    color: ${ props => props.theme.colors.dark800 } !important;
+    color: ${(props) => props.theme.colors.dark800} !important;
   }
 
   .hover-green {
     &:hover {
-      color: ${ props => props.theme.colors.green } !important;
-      fill: ${ props => props.theme.colors.green } !important;
+      color: ${(props) => props.theme.colors.green} !important;
+      fill: ${(props) => props.theme.colors.green} !important;
     }
   }
 
-`
+`;

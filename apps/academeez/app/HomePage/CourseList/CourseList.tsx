@@ -7,8 +7,8 @@
  * @license: MIT
  */
 
-import { Grid } from "@material-ui/core";
-import { FC } from "react";
+import { Grid } from '@material-ui/core';
+import { FC } from 'react';
 import { useCourses } from '../courses.hook';
 import { CourseCard } from './CourseCard';
 
@@ -17,15 +17,20 @@ export const CourseList: FC = () => {
 
   return (
     <Grid container>
-      {
-        data?.courses.map(course => (
-          <Grid
-            className="pr-1 pl-1 mb-4"
-            key={course.id} item xs={12} sm={6} md={4} lg={3} xl={3} >
-            <CourseCard course={course} />
-          </Grid>
-        ))
-      }
+      {data?.courses.map((course) => (
+        <Grid
+          className="pr-1 pl-1 mb-4"
+          key={course.id}
+          item
+          xs={12}
+          sm={6}
+          md={4}
+          lg={3}
+          xl={3}
+        >
+          <CourseCard course={course} />
+        </Grid>
+      ))}
     </Grid>
-  )
-}
+  );
+};

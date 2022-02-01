@@ -4,7 +4,7 @@ import { UserService } from './user.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
   user$ = this._userService.user$;
@@ -14,6 +14,6 @@ export class AppComponent {
   whenClick() {}
 
   login() {
-    this._userService.user$.next({name: 'Yariv'});
+    this._userService.user$.next({ name: 'Yariv' });
   }
 }

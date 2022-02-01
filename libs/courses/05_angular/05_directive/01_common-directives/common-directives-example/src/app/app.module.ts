@@ -6,15 +6,9 @@ import { NgIfExampleComponent } from './ng-if-example/ng-if-example.component';
 import { NgForExampleComponent } from './ng-for-example/ng-for-example.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NgIfExampleComponent,
-    NgForExampleComponent
-  ],
-  imports: [
-    BrowserModule
-  ],
+  declarations: [AppComponent, NgIfExampleComponent, NgForExampleComponent],
+  imports: [BrowserModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

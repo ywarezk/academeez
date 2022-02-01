@@ -13,8 +13,8 @@ import { CoursesResolver } from './courses.resolver';
 
 @Graphql({
   schemaOptions: {
-    resolvers: [ CoursesResolver ]
-  }
+    resolvers: [CoursesResolver],
+  },
 })
 class CoursesBootstrap extends Bootstrap {}
 

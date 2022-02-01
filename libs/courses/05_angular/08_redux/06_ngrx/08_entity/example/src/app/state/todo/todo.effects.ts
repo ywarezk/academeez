@@ -15,10 +15,9 @@ import { TodoService } from './todo.service';
 import { interval } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TodoEffects implements OnInitEffects {
-
   /**
    * When effect is added fetch all the tasks from the server
    * @returns
@@ -30,25 +29,20 @@ export class TodoEffects implements OnInitEffects {
   /**
    * fetch the tasks from the server
    */
-  fetchTasks$ = createEffect(
-    () => this._actions$.pipe(
+  fetchTasks$ = createEffect(() =>
+    this._actions$.pipe(
       ofType(fetchTasks),
       mergeMap(() => this._todoService.getTasks()),
-      map(tasks => setTasks({tasks}))
+      map((tasks) => setTasks({ tasks }))
     )
-  )
+  );
 
   /**
    * refresh the list every second
    */
-  refreshTasks$ = createEffect(
-    () => interval(60000).pipe(
-      map(() => fetchTasks())
-    )
-  )
+  refreshTasks$ = createEffect(() =>
+    interval(60000).pipe(map(() => fetchTasks()))
+  );
 
-  constructor(
-    private _actions$: Actions,
-    private _todoService: TodoService
-  ) {}
+  constructor(private _actions$: Actions, private _todoService: TodoService) {}
 }

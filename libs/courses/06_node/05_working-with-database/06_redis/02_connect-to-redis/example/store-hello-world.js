@@ -2,13 +2,13 @@
  * Connecting to Redis and storing key and value
  */
 
-const redis = require("redis");
+const redis = require('redis');
 const { promisify } = require('util');
 const client = redis.createClient();
 
 client.on('error', (err) => {
   console.log(`Failed to connect: ${err.message}`);
-})
+});
 
 async function main() {
   try {
@@ -23,11 +23,10 @@ async function main() {
     // console.log(hello);
 
     // await set('hello', 'world');
-    client.set('hello', {foo: 'bar'}, (err, temp) => {
+    client.set('hello', { foo: 'bar' }, (err, temp) => {
       debugger;
-    })
-
-  } catch(err) {
+    });
+  } catch (err) {
     console.log(err);
   }
 }

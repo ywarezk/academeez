@@ -8,10 +8,10 @@ import { HelloWithProps } from './HelloWithProps';
 
 describe('HelloWithProps', () => {
   it('Test component with different props', () => {
-    const { rerender, container } = render(<HelloWithProps />)
+    const { rerender, container } = render(<HelloWithProps />);
     const h1 = container.getElementsByTagName('h1');
     expect(h1[0].textContent).toEqual('Hello John Doe');
     rerender(<HelloWithProps name="academeez" />);
     expect(h1[0].textContent).toEqual('Hello academeez');
-  })
-})
+  });
+});

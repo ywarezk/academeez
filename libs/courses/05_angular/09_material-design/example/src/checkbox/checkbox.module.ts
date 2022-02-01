@@ -7,25 +7,19 @@ import { ControlValueAccessorExampleComponent } from './control-value-accessor-e
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MixinsExampleComponent } from './mixins-example/mixins-example.component';
 
-
 @NgModule({
   declarations: [
     CheckboxExampleComponent,
     InputSettersComponent,
     ControlValueAccessorExampleComponent,
-    MixinsExampleComponent
+    MixinsExampleComponent,
   ],
-  imports: [
-    CommonModule,
-    MatCheckboxModule,
-    FormsModule,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, MatCheckboxModule, FormsModule, ReactiveFormsModule],
   exports: [
     CheckboxExampleComponent,
     InputSettersComponent,
     ControlValueAccessorExampleComponent,
-    MixinsExampleComponent
-  ]
+    MixinsExampleComponent,
+  ],
 })
-export class CheckboxModule { }
+export class CheckboxModule {}

@@ -7,7 +7,7 @@
  * @license: MIT
  */
 
-import {Button} from '../Button';
+import { Button } from '../Button';
 import styled from 'styled-components';
 
 export const IconButton = styled(Button)`
@@ -16,4 +16,4 @@ export const IconButton = styled(Button)`
       font-size: 1.5rem;
     }
   }
-`
+`;

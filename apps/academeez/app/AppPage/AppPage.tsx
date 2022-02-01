@@ -22,7 +22,7 @@ export function AppPage({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     setIsMounted(true);
-  }, [])
+  }, []);
 
   return (
     <ApolloProvider client={client}>
@@ -32,7 +32,6 @@ export function AppPage({ Component, pageProps }: AppProps) {
             <title>academeez - learn coding</title>
           </Head>
           <div className="app">
-
             {/* header portal will be placed here */}
             <div ref={headerRef} />
 

@@ -17,16 +17,25 @@ import { Text } from './TextColors';
 import { Common } from './Common';
 import { Fonts } from './fonts/Fonts';
 import { Video } from './Video';
-import { DefaultTheme } from "styled-components/native";
+import { DefaultTheme } from 'styled-components/native';
 
-export type ColorName = 'dark800' | 'dark700' | 'gray200' | 'green' | 'greenHover' | 'greenHover2' | 'white' | 'red' | 'gray300';
+export type ColorName =
+  | 'dark800'
+  | 'dark700'
+  | 'gray200'
+  | 'green'
+  | 'greenHover'
+  | 'greenHover2'
+  | 'white'
+  | 'red'
+  | 'gray300';
 
 export interface Theme {
-  colors: {[key in ColorName]: string},
+  colors: { [key in ColorName]: string };
   fonts: {
-    spaceMono: string,
-    radioGrotesk: string
-  }
+    spaceMono: string;
+    radioGrotesk: string;
+  };
 }
 
 /**
@@ -42,15 +51,15 @@ const theme: Theme = {
     greenHover: '#19EB79',
     greenHover2: '#27AE60',
     white: '#fff',
-    red: '#D9614C'
+    red: '#D9614C',
   },
   fonts: {
     spaceMono: 'Space Mono',
-    radioGrotesk: 'Radio Grotesk'
-  }
-}
+    radioGrotesk: 'Radio Grotesk',
+  },
+};
 
-declare module "styled-components" {
+declare module 'styled-components' {
   export interface DefaultTheme extends Theme {}
 }
 
@@ -69,7 +78,7 @@ export const ThemeProvider: FC = ({ children }) => {
       <Fonts />
       <Video />
 
-      { children }
+      {children}
     </SCThemeProvider>
-  )
-}
+  );
+};

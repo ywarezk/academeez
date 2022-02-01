@@ -9,8 +9,8 @@ import ScreenExample from './ScreenExample';
 describe('screen', () => {
   it('grab the p', () => {
     render(<ScreenExample />);
-    const p = screen.getByText('screen will help', {exact: false});
+    const p = screen.getByText('screen will help', { exact: false });
     const p2 = screen.getByTestId('description');
     expect(p).toBe(p2);
-  })
-})
+  });
+});

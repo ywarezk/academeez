@@ -5,5 +5,5 @@
 import { createReducer } from '@ngrx/store';
 
 export const helloReducer = createReducer({
-  message: 'hello world'
-})
+  message: 'hello world',
+});

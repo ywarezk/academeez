@@ -11,4 +11,3 @@ author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
 bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/05_angular/bg.png
 ---
-

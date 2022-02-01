@@ -6,5 +6,5 @@ import { createReducer } from '@ngrx/store';
 
 export const userReducer = createReducer({
   firstName: 'Yariv',
-  lastName: 'Katz'
-})
+  lastName: 'Katz',
+});

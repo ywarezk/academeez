@@ -1,8 +1,8 @@
 ---
 title: How Flexbox Positioning Works
-short_description: "Basically this is how Flexbox works..."
-description: "Basically this is how Flexbox works..."
-video_url: "https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8"
+short_description: 'Basically this is how Flexbox works...'
+description: 'Basically this is how Flexbox works...'
+video_url: 'https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8'
 duration: 66
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
@@ -25,7 +25,7 @@ we have a div element that we set as our `flex container` by placing the followi
 
 ```css
 .flexbox-container {
-  display: flex;  
+  display: flex;
 }
 ```
 
@@ -34,8 +34,7 @@ The above rule will make all elements with the class `flexbox-container` to posi
 In our `index.html` we created the following `div`.
 
 ```html
-<div class="flexbox-container">
-</div>
+<div class="flexbox-container"></div>
 ```
 
 ## Flex Items
@@ -85,7 +84,7 @@ The result we got is this:
 To make things simple for now...  
 `Flexbox` is a fancy way to say: `"Arranging item in a row"`  
 Although that sentence is not 100% accurate, the **default** behaviour of `Flexbox` is arranging items in a row.  
-That row is called the `Main Axis` and `Flexbox` will arrange the items along the `Main Axis` is a certain direction which by default is from left to right.  
+That row is called the `Main Axis` and `Flexbox` will arrange the items along the `Main Axis` is a certain direction which by default is from left to right.
 
 By default Flexbox will fill the main axis from left to right, giving each item the same width.  
 The width is set to `200px` but when the row is filled it will give each `Flex Item` and equal lower width so they can all fit in one row.
@@ -93,4 +92,3 @@ The width is set to `200px` but when the row is filled it will give each `Flex I
 Let's dig a bit deeper on the **Main Axis** that is used to arrange the **Flex Items**
 
 The full source code of the lesson is available [here](https://codesandbox.io/s/html-cssflexboxhow-flexbox-positioning-works-brie8?file=/index.html)
-

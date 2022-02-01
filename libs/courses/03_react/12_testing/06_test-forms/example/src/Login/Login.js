@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   TextField,
   Button,
@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardContent,
   CardActions,
-  Alert
+  Alert,
 } from '@mui/material';
 import styles from './Login.module.scss';
 import { useFormik } from 'formik';
@@ -15,13 +15,13 @@ import { userService } from './user.service';
 
 export const Login = () => {
   const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('');
 
   const formik = useFormik({
     validationSchema: loginSchema,
     initialValues: {
       email: '',
-      password: ''
+      password: '',
     },
     onSubmit: async (values) => {
       try {
@@ -33,8 +33,8 @@ export const Login = () => {
         setErrorMessage(err.message);
         setUser(null);
       }
-    }
-  })
+    },
+  });
 
   return (
     <Card className={styles.card}>
@@ -47,7 +47,8 @@ export const Login = () => {
               className={styles.textField}
               type="email"
               name="email"
-              placeholder="johndoe@ncr.com" label="Enter your email"
+              placeholder="johndoe@ncr.com"
+              label="Enter your email"
               value={formik.values.email}
               onChange={formik.handleChange}
               error={formik.touched.email && Boolean(formik.errors.email)}
@@ -75,23 +76,21 @@ export const Login = () => {
             color="primary"
             variant="contained"
             type="submit"
-          >Login</Button>
+          >
+            Login
+          </Button>
         </CardActions>
-        {
-          user && (
-            <Alert severity="success" data-testid="successMessage">
-              Hello {user.firstName} {user.lastName}
-            </Alert>
-          )
-        }
-        {
-          errorMessage && (
-            <Alert severity="error" data-testid="errorMessage">
-              {errorMessage}
-            </Alert>
-          )
-        }
+        {user && (
+          <Alert severity="success" data-testid="successMessage">
+            Hello {user.firstName} {user.lastName}
+          </Alert>
+        )}
+        {errorMessage && (
+          <Alert severity="error" data-testid="errorMessage">
+            {errorMessage}
+          </Alert>
+        )}
       </form>
     </Card>
-  )
-}
+  );
+};

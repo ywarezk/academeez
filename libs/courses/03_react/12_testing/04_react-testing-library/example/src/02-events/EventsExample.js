@@ -1,17 +1,11 @@
 import { useState } from 'react';
 
 const EventsExample = () => {
-  const [ isVisible, setIsVisible ] = useState(true);
+  const [isVisible, setIsVisible] = useState(true);
 
   return (
     <div>
-      {
-        isVisible && (
-          <h1>
-            Events
-          </h1>
-        )
-      }
+      {isVisible && <h1>Events</h1>}
 
       <p>
         <code>@testing-library/react</code> can help us trigger events.
@@ -21,7 +15,7 @@ const EventsExample = () => {
         Toggle visibility
       </button>
     </div>
-  )
-}
+  );
+};
 
 export default EventsExample;

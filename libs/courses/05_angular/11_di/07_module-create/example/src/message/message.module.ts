@@ -5,23 +5,21 @@ import { HelloService } from './hello.service';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule
-  ],
-  providers: [
-    HelloService
-  ]
+  imports: [CommonModule],
+  providers: [HelloService],
 })
 export class MessageModule {
-  static forRoot(config: MessageModuleConfig): ModuleWithProviders<MessageModule> {
+  static forRoot(
+    config: MessageModuleConfig
+  ): ModuleWithProviders<MessageModule> {
     return {
       ngModule: MessageModule,
       providers: [
         {
           provide: CONFIG,
-          useValue: config
-        }
-      ]
-    }
+          useValue: config,
+        },
+      ],
+    };
   }
 }

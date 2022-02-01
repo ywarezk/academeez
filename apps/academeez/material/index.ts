@@ -7,7 +7,7 @@
  * @license: MIT
  */
 
-export * from './buttons/Button'
+export * from './buttons/Button';
 export * from './Link/Link';
 export * from './buttons/PlayButton/PlayButton';
 export * from './Typography/Typography';

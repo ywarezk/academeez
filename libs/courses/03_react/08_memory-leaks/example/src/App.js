@@ -9,9 +9,7 @@ function App() {
     <div className="App">
       {isChild && <Child />}
 
-      <button onClick={() => setIsChild(false)}>
-        Remove child
-      </button>
+      <button onClick={() => setIsChild(false)}>Remove child</button>
     </div>
   );
 }

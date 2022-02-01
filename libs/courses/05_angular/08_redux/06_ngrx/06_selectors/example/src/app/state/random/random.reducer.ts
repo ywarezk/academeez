@@ -8,7 +8,7 @@ import { setNum } from './random.actions';
 
 export const randomReducer = createReducer<RandomState>(
   {
-    num: Math.random()
+    num: Math.random(),
   },
-  on(setNum, (state: RandomState, action) => ({...state, num: action.num}))
+  on(setNum, (state: RandomState, action) => ({ ...state, num: action.num }))
 );

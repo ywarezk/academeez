@@ -2,7 +2,7 @@
 title: Main Axis
 short_description: Flexbox will arrange elements along the Main Axis.
 description: Flexbox will arrange elements along the Main Axis.
-video_url: "https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8"
+video_url: 'https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8'
 duration: 66
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
@@ -22,7 +22,7 @@ But the horizontal direction is just the default **Main Axis** and can be change
 
 Let's try to set the **Main Axis** to be vertical.  
 The **Main Axis** can be controlled by setting in the css the  
-`flex-direction: column;`  
+`flex-direction: column;`
 
 The following HTML:
 
@@ -57,7 +57,7 @@ You can view the full example [here](https://codesandbox.io/s/html-cssflexboxhow
 
 ## Flex Direction
 
-In the `flex-direction` property you can also set the direction of which the **Flex Items** will be arranged.  
+In the `flex-direction` property you can also set the direction of which the **Flex Items** will be arranged.
 
 Try and change the CSS to this:
 

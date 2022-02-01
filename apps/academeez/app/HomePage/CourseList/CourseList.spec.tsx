@@ -17,21 +17,17 @@ import { Grid } from '@material-ui/core';
 describe('<CourseList />', () => {
   beforeEach(() => {
     render(
-      (
-        <ThemeProvider>
-          <MockedProvider mocks={[mockCourses]}>
-            <Grid container className="justify-content-center mt-5">
-              <Grid item xs={10}>
-                <CourseList />
-              </Grid>
+      <ThemeProvider>
+        <MockedProvider mocks={[mockCourses]}>
+          <Grid container className="justify-content-center mt-5">
+            <Grid item xs={10}>
+              <CourseList />
             </Grid>
-          </MockedProvider>
-        </ThemeProvider>
-      )
-    )
+          </Grid>
+        </MockedProvider>
+      </ThemeProvider>
+    );
   });
 
-  it('sanity', function() {
-
-  })
-})
+  it('sanity', function () {});
+});

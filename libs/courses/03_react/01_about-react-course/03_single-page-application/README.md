@@ -4,7 +4,7 @@ short_description: What kind of websites are we going to build with React
 description: What kind of websites are we going to build with React
 slug: single-page-application
 link: /courses/react/about-react-course/single-page-application
-video_url: "https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8"
+video_url: 'https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8'
 duration: 66
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
@@ -15,25 +15,24 @@ Our main focus in this course is building a fast responsive website or web appli
 Using React we can develop a kind of website that is called [Single Page Application](https://en.wikipedia.org/wiki/Single-page_application)  
 Before we really understand what a Single Page Application website is, we have to take a brief look on the history of websites.
 
-
 ## React can be a team player
 
 React can be embedded in other sites as well
 
 ## Looking on history
 
-The web really started to become popular among the average users, when the graphical interface browsers emerged.  
+The web really started to become popular among the average users, when the graphical interface browsers emerged.
 
 1993 was the turning point for the web with the first Graphical web browser called `Mosaic`.  
 Influenced from `Mosaic` a new popular browser was born in 1994 called `Netscape`.  
-Another key player that joined the race of web browsers was Microsoft's Internet Explorer that was first released on 1995 and soon after became the most popular browser on the market, mostly due to the fact that it was shipped with the popular microsoft OS `windows`.  
+Another key player that joined the race of web browsers was Microsoft's Internet Explorer that was first released on 1995 and soon after became the most popular browser on the market, mostly due to the fact that it was shipped with the popular microsoft OS `windows`.
 
 The first versions of the Graphical browsers could only display static pages.  
 Which means they could get an HTML file from a server and transform that HTML to a static screen.  
 At first the screen remained static and the way to change the screen is to press a link to a different screen.  
-Once the HTML was loaded the screen was static.  
+Once the HTML was loaded the screen was static.
 
-But when we look at this example of a post from Seinfeld group we can see that without reloading the page the post is changing to inform us of someone that is typing and also to push new comments.  
+But when we look at this example of a post from Seinfeld group we can see that without reloading the page the post is changing to inform us of someone that is typing and also to push new comments.
 
 Netscape wanted to support changes in the screen without reloading a fully new screen.  
 So they invented a scripting language called `JavaScript` that we can use to change the page without the reload.
@@ -52,6 +51,3 @@ After the site was initially loaded all the changes including navigating to diff
 This gave the website a look and feel like a desktop app where every transition is immediate, and those site were coined `Single Page Applications`, Single Page cause there was one HTML loaded at the initial load (single page), and application cause those sites behaved like a desktop application
 
 ## The problem
-
-
-

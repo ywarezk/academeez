@@ -16,25 +16,24 @@ class FileReader extends EventEmitter {
         this.fileContent = content.toString();
         this.emit('ready', this.fileContent);
       }
-    })
+    });
   }
 }
 
 // success
-const fileReader = new FileReader( resolve(__dirname, 'README.md') );
-fileReader.on('ready', function(content) {
+const fileReader = new FileReader(resolve(__dirname, 'README.md'));
+fileReader.on('ready', function (content) {
   console.log(content);
 });
 
 // error
-const fileReader2 = new FileReader( resolve(__dirname, 'README1.md') );
+const fileReader2 = new FileReader(resolve(__dirname, 'README1.md'));
 
 // not catching the error will crash the process
-fileReader2.on('error', function(err) {
+fileReader2.on('error', function (err) {
   console.log(err.message);
 });
 
 setTimeout(() => {
   console.log('this will not run unless you implement the error');
 }, 5000);
-

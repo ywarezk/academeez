@@ -7,19 +7,25 @@
  * @license: MIT
  */
 
-import { ThemeProvider } from "@academeez/az/styles"
-import { render } from "@testing-library/react"
+import { ThemeProvider } from '@academeez/az/styles';
+import { render } from '@testing-library/react';
 import { Typography } from './Typography';
 
 describe('<Typography />', () => {
-  it('sanity', function() {
+  it('sanity', function () {
     render(
       <ThemeProvider>
-        <div style={ {paddingTop: '100px', paddingLeft: '100px', backgroundColor: '#2d2d2d'} }>
+        <div
+          style={{
+            paddingTop: '100px',
+            paddingLeft: '100px',
+            backgroundColor: '#2d2d2d',
+          }}
+        >
           {/* scroll text */}
           <div>
             <Typography variant="subtitle2" color="white">
-                Scroll
+              Scroll
             </Typography>
           </div>
 
@@ -32,9 +38,7 @@ describe('<Typography />', () => {
 
           {/* courses text */}
           <div>
-            <Typography variant="h2">
-              Our Courses
-            </Typography>
+            <Typography variant="h2">Our Courses</Typography>
           </div>
 
           {/* card title */}
@@ -46,13 +50,10 @@ describe('<Typography />', () => {
 
           {/* prerequisites */}
           <div>
-            <Typography variant="h6">
-              Prerequisites
-            </Typography>
+            <Typography variant="h6">Prerequisites</Typography>
           </div>
-
         </div>
       </ThemeProvider>
-    )
-  })
-})
+    );
+  });
+});

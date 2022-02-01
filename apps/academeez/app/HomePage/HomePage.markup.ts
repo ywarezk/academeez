@@ -28,7 +28,7 @@ export const HeroSection = styled.section`
     align-items: center;
     z-index: 1;
   }
-`
+`;
 
 export const HeroBgImg = styled.div`
   background-repeat: no-repeat;
@@ -43,15 +43,15 @@ export const HeroBgImg = styled.div`
   position: absolute;
   background-image: url(${bg});
   z-index: 0;
-`
+`;
 
 export const TopChaptersSection = styled.section`
   && {
     .MuiSvgIcon-root {
-      fill: ${prop => prop.theme.colors.red};
+      fill: ${(prop) => prop.theme.colors.red};
       font-size: 3.5rem;
       position: relative;
       top: 11px;
     }
   }
-`
+`;

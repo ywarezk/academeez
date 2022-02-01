@@ -4,11 +4,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'app-root',
   template: `
     <h1>Random number {{ randNumber }}</h1>
-    <button (click)="regenerateNumber()"> generate number </button>
+    <button (click)="regenerateNumber()">generate number</button>
 
     <app-child></app-child>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   randNumber = Math.random();

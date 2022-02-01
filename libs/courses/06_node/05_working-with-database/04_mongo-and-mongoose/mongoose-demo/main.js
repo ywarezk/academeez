@@ -13,73 +13,76 @@ const { isError } = require('util');
  * it will be easier to understand if we use async/await
  */
 async function main() {
-    // before interacting with the database we have to connect to it
-    // usually the connection string is saved in environment variable
-    const mongoose = await connect(`mongodb://${process.env.username}:${process.env.password}@mongo.academeez.com:80/usersDb`, { useUnifiedTopology: true, useNewUrlParser: true });
+  // before interacting with the database we have to connect to it
+  // usually the connection string is saved in environment variable
+  const mongoose = await connect(
+    `mongodb://${process.env.username}:${process.env.password}@mongo.academeez.com:80/usersDb`,
+    { useUnifiedTopology: true, useNewUrlParser: true }
+  );
 
-    // delete all the users in the collection
-    await User.remove();
+  // delete all the users in the collection
+  await User.remove();
 
-    // create a user
-    const firstUser = new User({
-        firstName: 'Yariv',
-        lastName: 'Katz',
+  // create a user
+  const firstUser = new User({
+    firstName: 'Yariv',
+    lastName: 'Katz',
+    password: '12345678',
+    email: 'noreply@academeez.com',
+  });
+  await firstUser.save();
+
+  // another way to create a user
+  await User.create({
+    firstName: 'Piglet',
+    lastName: 'Chaitovsky',
+    password: '1234567',
+    email: 'piglet@academeez.com',
+  });
+
+  // another way to create a user
+  // this should fail validation
+  try {
+    await User.insertMany([
+      {
+        firstName: 'Sweetness',
+        lastName: 'Bobi',
         password: '12345678',
-        email: 'noreply@academeez.com'
-    });
-    await firstUser.save();
+        email: 'bad email format',
+      },
+      {
+        firstName: 'Foo',
+        lastName: 'Bar',
+        email: 'password@is.required',
+      },
+    ]);
+  } catch (err) {
+    console.log(err.message);
+  }
 
-    // another way to create a user
-    await User.create({
-        firstName: 'Piglet',
-        lastName: 'Chaitovsky',
-        password: '1234567',
-        email: 'piglet@academeez.com'
-    });
+  // find user with email
+  const user = await User.findOne({
+    email: 'noreply@academeez.com',
+  });
 
-    // another way to create a user
-    // this should fail validation
-    try {
-        await User.insertMany([
-            {
-                firstName: 'Sweetness',
-                lastName: 'Bobi',
-                password: '12345678',
-                email: 'bad email format'
-            },
-            {
-                firstName: 'Foo',
-                lastName: 'Bar',
-                email: 'password@is.required'
-            }
-        ]);
-    } catch(err) {
-        console.log(err.message);
-    }
+  // update the user i found
+  await user.update({
+    firstName: 'Changed',
+  });
 
-    // find user with email
-    const user = await User.findOne({
-        email: 'noreply@academeez.com'
-    });
+  // delete the user
+  await User.deleteOne({
+    firstName: 'Changed',
+  });
 
-    // update the user i found
-    await user.update({
-        firstName: 'Changed'
-    });
+  // find all the users and display their names
+  const users = await User.find();
+  for (const user of users) {
+    console.log(user.firstName);
+  }
 
-    // delete the user
-    await User.deleteOne({
-        firstName: 'Changed'
-    });
-
-    // find all the users and display their names
-    const users = await User.find();
-    for (const user of users) {
-        console.log(user.firstName);
-    }
-
-    // close the connection
-    mongoose.disconnect()
+  // close the connection
+  mongoose.disconnect();
 }
 
 main();

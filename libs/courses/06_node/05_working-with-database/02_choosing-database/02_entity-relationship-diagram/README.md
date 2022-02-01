@@ -1,15 +1,15 @@
 ---
 title: Entity Relationship Diagram - ERD
-short_description: 
+short_description:
   Before we choose which db we should use, we need to understand how our data will be arranged.
   Entity Relationship Diagram will help us arrange the data and by doing so we can better choose our database
-description: 
+description:
   Before we choose which db we should use, we need to understand how our data will be arranged.
   Entity Relationship Diagram will help us arrange the data and by doing so we can better choose our database
 bg_img: https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/bg.png
 slug: entity-relationship-diagram
 link: /courses/node/working-with-databases/choosing-database/entity-relationship-diagram
-video_url: "https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8"
+video_url: 'https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8'
 duration: 66
 ---
 
@@ -83,21 +83,20 @@ Let's say we can place tags in each comment.
 
 a comment can have many tags, and each tag can refer to many comments.
 
-In an SQL database, this kind of relationship is achieved by creating two tables, one for `Comment` and one for `Tag`, and also creating a third table that are connecting the tags and the comments, we can call that table `CommentTag`.  
-
+In an SQL database, this kind of relationship is achieved by creating two tables, one for `Comment` and one for `Tag`, and also creating a third table that are connecting the tags and the comments, we can call that table `CommentTag`.
 
 Let's say we have a tag called `Lessons`, and the `primary key` (`pk`) of that tag is `1`, and we have 2 comments this tag is associated with, comment with `pk` `2` and `3`, than the `CommentTag` table will have a column for `pk` of tags and a column for `pk` of comments, and the `CommentTag` will have these rows:
 
-| id            | commentId     | tagId |
-| ------------- |:-------------:| -----:|
-| 1             | 2             | 1     |
-| 2             | 3             | 1     |
+| id  | commentId | tagId |
+| --- | :-------: | ----: |
+| 1   |     2     |     1 |
+| 2   |     3     |     1 |
 
 This is how this relationship is achieved in a SQL table, with another table connecting the two tables.
 
 In a NoSQL db there is yet again infinite amounts of ways to achieve this relationship.
 One of these ways can say we are placing in the comments array of pk of the tags they are connected to.  
-Like so:  
+Like so:
 
 ```javascript
 {
@@ -125,4 +124,3 @@ and the tags can also hold array of the comments they are connected to:
 
 So the first step I take before starting to deal with the database is understanding the table (or collections) I have, and understanding the relationships between those entities.  
 After doing that I need to try to figure out the queries I have...
-

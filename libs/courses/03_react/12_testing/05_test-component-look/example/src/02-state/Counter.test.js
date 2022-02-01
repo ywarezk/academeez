@@ -11,9 +11,9 @@ describe('Counter', () => {
   it('check the text after button click', () => {
     const { container } = render(<Counter />);
     const [h1] = container.getElementsByTagName('h1');
-    expect(h1.textContent).toEqual('0')
-    const [ button ] = container.getElementsByTagName('button');
+    expect(h1.textContent).toEqual('0');
+    const [button] = container.getElementsByTagName('button');
     fireEvent.click(button);
-    expect(h1.textContent).toEqual('1')
-  })
-})
+    expect(h1.textContent).toEqual('1');
+  });
+});

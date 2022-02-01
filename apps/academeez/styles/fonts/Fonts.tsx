@@ -33,4 +33,4 @@ export const Fonts = createGlobalStyle`
     font-display: swap;
     src: url(https://academeez.s3-eu-west-1.amazonaws.com/fonts/RadioGrotesk-Light.woff2) format('woff2');
   }
-`
+`;

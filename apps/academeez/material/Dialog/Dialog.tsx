@@ -8,20 +8,24 @@
  */
 
 import styled, { css } from 'styled-components';
-import MuiDialog, { DialogProps as MuiDialogProps} from '@material-ui/core/Dialog';
+import MuiDialog, {
+  DialogProps as MuiDialogProps,
+} from '@material-ui/core/Dialog';
 import { FC } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
-const StyledDialog = styled(({fullScreen, ...props}) => <MuiDialog {...props} />)`
+const StyledDialog = styled(({ fullScreen, ...props }) => (
+  <MuiDialog {...props} />
+))`
   && {
     .MuiDialog-paper {
       overflow: visible;
-      ${props => {
+      ${(props) => {
         if (props.fullScreen) {
           return css`
             height: calc(100% - 64px);
-          `
+          `;
         }
       }}
     }
@@ -43,30 +47,29 @@ const StyledDialog = styled(({fullScreen, ...props}) => <MuiDialog {...props} />
     background-color: transparent;
     box-shadow: none;
   }
-`
+`;
 
-type DialogProps = MuiDialogProps & { isCloseButton? : boolean}
+type DialogProps = MuiDialogProps & { isCloseButton?: boolean };
 
 export const Dialog: FC<DialogProps> = ({
   isCloseButton = false,
   children,
   ...props
 }) => {
-
   return (
-    <StyledDialog  {...props}>
-      {
-        isCloseButton && (
-            <div className="close-wrapper">
-            <IconButton onClick={(event) => props.onClose && props.onClose(event, 'backdropClick')}>
-                <CloseIcon />
-              </IconButton>
-            </div>
-        )
-      }
-      {
-        children
-      }
+    <StyledDialog {...props}>
+      {isCloseButton && (
+        <div className="close-wrapper">
+          <IconButton
+            onClick={(event) =>
+              props.onClose && props.onClose(event, 'backdropClick')
+            }
+          >
+            <CloseIcon />
+          </IconButton>
+        </div>
+      )}
+      {children}
     </StyledDialog>
-  )
-}
+  );
+};

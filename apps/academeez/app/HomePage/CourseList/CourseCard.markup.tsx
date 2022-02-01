@@ -45,7 +45,8 @@ export const Card = styled(MuiCard)`
       min-height: 46px;
     }
 
-    .video-react-control-bar, .video-react-big-play-button {
+    .video-react-control-bar,
+    .video-react-big-play-button {
       display: none;
     }
 
@@ -75,4 +76,4 @@ export const Card = styled(MuiCard)`
       padding-top: 0;
     }
   }
-`
+`;

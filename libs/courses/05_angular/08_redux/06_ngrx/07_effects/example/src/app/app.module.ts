@@ -8,21 +8,17 @@ import { todoReducer, TodoEffects } from './state';
 import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
     StoreModule.forRoot({
-      todo: todoReducer
+      todo: todoReducer,
     }),
     StoreDevtoolsModule.instrument(),
-    EffectsModule.forRoot([
-      TodoEffects
-    ])
+    EffectsModule.forRoot([TodoEffects]),
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

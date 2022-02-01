@@ -21,14 +21,16 @@ There should be a sliding/typewriting text with the following key message:
 3. `Learn to be an expert frontend, backend, devops`
 
 Bellow the text we have 2 call for actions:
+
 - Primary CFA: Start learning button that will direct him to the courses page  
-if the user already start learning before this button should be `Continue learning React` which will restore the user to the same spot he left.
+  if the user already start learning before this button should be `Continue learning React` which will restore the user to the same spot he left.
 - Secondery CFA: Play button of a video explaining about the site
 
 ## 2. Courses section
 
 Display a gridded list of our courses.  
 Each course ticket should have the following:
+
 - Play button - there is a video explaining about every course
 - title
 - description
@@ -43,9 +45,10 @@ Secondery call for action will be to play the video on the card that explains wh
 academeez (like wikipedia), is a non profit organization.  
 Enjoying academeez you can donate to keep us alive.  
 `DONATION IS NOT NECESSARILY MONEY!`  
-There are different  ways a user can donate and it's important to emphasize this fact in this section.  
+There are different ways a user can donate and it's important to emphasize this fact in this section.  
 Donation can be with `money` or with `time`  
 For the user that wants to donate but do not have the time:
+
 - Write a blog post
 - Submit an issue
 - Submit a feature request
@@ -54,4 +57,4 @@ For the user that wants to donate but do not have the time:
 
 ## 4. Latest blog articles
 
-Shows the recent articles that are posted in our blog with an option for the user to add an article of his own. 
+Shows the recent articles that are posted in our blog with an option for the user to add an article of his own.

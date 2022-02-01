@@ -9,7 +9,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
     <academeez-read-state></academeez-read-state>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
-}
+export class AppComponent {}

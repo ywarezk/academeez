@@ -8,5 +8,5 @@ test('toBe - Object.is', () => {
 });
 
 test('toEqual - deep comparison', () => {
-  expect({a: 'hello'}).toEqual({a: 'hello'})
-})
+  expect({ a: 'hello' }).toEqual({ a: 'hello' });
+});

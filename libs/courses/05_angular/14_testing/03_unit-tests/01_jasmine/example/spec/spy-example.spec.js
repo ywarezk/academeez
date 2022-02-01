@@ -9,8 +9,6 @@ class SomeService {
 }
 
 describe('Spy Example', () => {
-
-
   it('spyOn', () => {
     const testService = new SomeService();
     spyOn(testService, 'hello').and.returnValue('foo bar');
@@ -18,8 +16,10 @@ describe('Spy Example', () => {
   });
 
   it('createSpyObj', () => {
-    const spiedTestService = jasmine.createSpyObj('spiedTestService', ['hello']);
+    const spiedTestService = jasmine.createSpyObj('spiedTestService', [
+      'hello',
+    ]);
     spiedTestService.hello();
     expect(spiedTestService.hello).toHaveBeenCalled();
-  })
-})
+  });
+});

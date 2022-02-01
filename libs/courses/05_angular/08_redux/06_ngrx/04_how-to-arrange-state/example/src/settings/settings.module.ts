@@ -5,17 +5,14 @@ import { emailReducer } from './email/email.reducer';
 import { ShowMailComponent } from './show-mail/show-mail.component';
 import { SettingsRoutingModule } from './settings-routing.module';
 
-
 @NgModule({
-  declarations: [
-    ShowMailComponent
-  ],
+  declarations: [ShowMailComponent],
   imports: [
     CommonModule,
     StoreModule.forFeature('settings', {
-      email: emailReducer
+      email: emailReducer,
     }),
-    SettingsRoutingModule
-  ]
+    SettingsRoutingModule,
+  ],
 })
-export class SettingsModule { }
+export class SettingsModule {}

@@ -7,12 +7,10 @@ import { ShowMailComponent } from './show-mail/show-mail.component';
     RouterModule.forChild([
       {
         path: '',
-        component: ShowMailComponent
-      }
-    ])
+        component: ShowMailComponent,
+      },
+    ]),
   ],
-  exports: [
-    RouterModule
-  ]
+  exports: [RouterModule],
 })
 export class SettingsRoutingModule {}

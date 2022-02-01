@@ -9,33 +9,29 @@ import { EffectsModule } from '@ngrx/effects';
 import { EntityDataModule, DefaultDataServiceConfig } from '@ngrx/data';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
     StoreModule.forRoot({
-      todo: todoReducer
+      todo: todoReducer,
     }),
     StoreDevtoolsModule.instrument(),
-    EffectsModule.forRoot([
-      TodoEffects
-    ]),
+    EffectsModule.forRoot([TodoEffects]),
     EntityDataModule.forRoot({
       entityMetadata: {
-        'Task': {}
-      }
-    })
+        Task: {},
+      },
+    }),
   ],
   providers: [
     {
       provide: DefaultDataServiceConfig,
       useValue: {
-        root: 'http://nztodo.herokuapp.com/api/'
-      }
-    }
+        root: 'http://nztodo.herokuapp.com/api/',
+      },
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

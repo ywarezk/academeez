@@ -5,9 +5,7 @@ import { Component } from '@angular/core';
   template: `
     <az-ng-if-example></az-ng-if-example>
 
-
     <az-ng-for-example></az-ng-for-example>
   `,
 })
-export class AppComponent {
-}
+export class AppComponent {}

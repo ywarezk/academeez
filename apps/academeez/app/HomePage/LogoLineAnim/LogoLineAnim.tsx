@@ -34,7 +34,7 @@ export const LogoLineAnim: FC = () => {
     logoWidth = canvas.current.width * 0.4;
     if (logoWidth > 200) logoWidth = 200;
     draw();
-  }
+  };
 
   const draw = () => {
     if (!canvas.current?.getContext) return;
@@ -48,18 +48,16 @@ export const LogoLineAnim: FC = () => {
     let opacityRed, opacityGreen, opacityBlue;
     if (opacity > 0 && opacity <= 15) {
       opacityRed = opacity / 100;
-      opacityBlue = 0.15 - (opacity / 100);
+      opacityBlue = 0.15 - opacity / 100;
       opacityGreen = 0;
-    }
-    else if (opacity > 15 && opacity <= 30) {
+    } else if (opacity > 15 && opacity <= 30) {
       opacityBlue = 0;
-      opacityRed = 0.15 - ((opacity - 15) / 100);
+      opacityRed = 0.15 - (opacity - 15) / 100;
       opacityGreen = (opacity - 15) / 100;
-    }
-    else if (opacity > 30 || opacity === 0) {
+    } else if (opacity > 30 || opacity === 0) {
       opacityBlue = opacity === 0 ? 0 : (opacity - 30) / 100;
-      opacityRed = 0
-      opacityGreen = opacity === 0 ? 0.15 : 0.15 - ((opacity - 30) / 100);
+      opacityRed = 0;
+      opacityGreen = opacity === 0 ? 0.15 : 0.15 - (opacity - 30) / 100;
     }
 
     ctx.clearRect(0, 0, width, height);
@@ -94,20 +92,20 @@ export const LogoLineAnim: FC = () => {
     ctx.fill();
 
     requestAnimationFrame(draw);
-  }
+  };
 
   useEffect(() => {
     canvasFillParent();
     canvas.current.addEventListener('resize', canvasFillParent);
 
-    return () => canvas?.current.removeEventListener('resize', canvasFillParent)
+    return () =>
+      canvas?.current.removeEventListener('resize', canvasFillParent);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   return (
     <AnimWrapper ref={parent}>
       <canvas ref={canvas} width={600} />
     </AnimWrapper>
-
-  )
-}
+  );
+};

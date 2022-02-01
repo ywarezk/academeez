@@ -3,29 +3,25 @@ import { Component, Directive } from '@angular/core';
 @Directive({
   selector: 'academeez-multiple-center',
   host: {
-    class: 'az-center'
-  }
+    class: 'az-center',
+  },
 })
 export class MultipleCenterDirective {}
 
 @Directive({
   selector: 'academeez-multiple-footer',
   host: {
-    class: 'az-footer'
-  }
+    class: 'az-footer',
+  },
 })
-export class MultipleFooterDirective { }
-
+export class MultipleFooterDirective {}
 
 @Component({
   selector: 'academeez-multiple-ng-content',
   template: `
-    <p>
-      multiple-ng-content works!
-    </p>
+    <p>multiple-ng-content works!</p>
     <ng-content select="academeez-multiple-center"></ng-content>
     <ng-content select="academeez-multiple-footer"></ng-content>
   `,
 })
-export class MultipleNgContentComponent {
-}
+export class MultipleNgContentComponent {}

@@ -1,17 +1,15 @@
 ---
 title: Database Families
-short_description: 
-  To properly choose a database we will first need to familiarize ourselves with the different types and families of the databases
-description: 
-  To properly choose a database we will first need to familiarize ourselves with the different types and families of the databases
+short_description: To properly choose a database we will first need to familiarize ourselves with the different types and families of the databases
+description: To properly choose a database we will first need to familiarize ourselves with the different types and families of the databases
 bg_img: https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/bg.png
 slug: database-families
 link: /courses/node/working-with-databases/choosing-database/database-families
-video_url: "https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8"
+video_url: 'https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8'
 duration: 66
 ---
 
-When you create your backend app, there will be a moment where you will say:   
+When you create your backend app, there will be a moment where you will say:  
 "I need to store data and query that data, should probably use a database".  
 After thinking that, the next thought will probably be:  
 "What database should I choose?"  
@@ -29,7 +27,7 @@ Our data is stored in tables in the database, those tables are strictly structur
 ## NoSQL Databases
 
 Among this family the popular ones are:  
-[MongoDB](https://www.mongodb.com/), [CouchDB](https://couchdb.apache.org/), [DynamoDB](https://aws.amazon.com/dynamodb/)  
+[MongoDB](https://www.mongodb.com/), [CouchDB](https://couchdb.apache.org/), [DynamoDB](https://aws.amazon.com/dynamodb/)
 
 Those databases store the data in documents where each document is sort of json structure object with key and values. The documents are placed in collections, you can think of collection being equivalent to tables in relational databases and document is equivalent to row in a table. Each document has a dynamic structure and there is no schema you have to follow in your documents like in relational databases. The query language is not based on SQL, hence the name NoSQL and in most cases the query language is Javascript based and easy to learn and understand.
 

@@ -4,16 +4,8 @@ import { BarComponent } from './bar/bar.component';
 import { FooRoutingModule } from './foo-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 
-
-
 @NgModule({
-  declarations: [
-    BarComponent
-  ],
-  imports: [
-    CommonModule,
-    FooRoutingModule,
-    HttpClientModule
-  ]
+  declarations: [BarComponent],
+  imports: [CommonModule, FooRoutingModule, HttpClientModule],
 })
-export class FooModule { }
+export class FooModule {}

@@ -8,17 +8,13 @@ import { ChildComponent } from './child/child.component';
 import { GrandComponent } from './grand/grand.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ChildComponent,
-    GrandComponent
-  ],
+  declarations: [AppComponent, ChildComponent, GrandComponent],
   imports: [
     BrowserModule,
-    ReactiveComponentModule
+    ReactiveComponentModule,
     // PushModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

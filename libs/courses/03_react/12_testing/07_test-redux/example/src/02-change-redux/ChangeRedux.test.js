@@ -12,16 +12,16 @@ describe('ChangeRedux', () => {
   it('clicking the button should modify redux state', () => {
     const store = createStore();
     const { container } = render(
-      <Provider store={store} >
+      <Provider store={store}>
         <ChangeRedux />
       </Provider>
-    )
+    );
     expect(store.getState().user).toBeNull();
-    const button = container.getElementsByTagName('button')[0]
+    const button = container.getElementsByTagName('button')[0];
     fireEvent.click(button);
     expect(store.getState().user).toEqual({
       firstName: 'Yariv',
-      lastName: 'Katz'
+      lastName: 'Katz',
     });
-  })
-})
+  });
+});

@@ -8,7 +8,7 @@ import { setTasks } from './todo.actions';
 
 export const todoReducer = createReducer<TodoState>(
   {
-    tasks: []
+    tasks: [],
   },
-  on(setTasks, (state, action) => ({...state, tasks: action.tasks}))
-)
+  on(setTasks, (state, action) => ({ ...state, tasks: action.tasks }))
+);
