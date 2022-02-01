@@ -35,8 +35,7 @@
           "executor": "@nrwl/workspace:run-commands",
           "options": {
             "commands": [
-              "npx nx run academeez:serve-standalone",
-              "npx nx serve github-api"
+              "npx nx run academeez:serve-standalone"
             ]
           }
         },
@@ -207,94 +206,6 @@
       },
       "tags": []
     },
-    "entities": {
-      "root": "libs/entities",
-      "sourceRoot": "libs/entities/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/entities/**/*.ts"]
-          },
-          "outputs": ["{options.outputFile}"]
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/entities"],
-          "options": {
-            "jestConfig": "libs/entities/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "build": {
-          "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/libs/entities",
-            "tsConfig": "libs/entities/tsconfig.lib.json",
-            "packageJson": "libs/entities/package.json",
-            "main": "libs/entities/src/index.ts",
-            "assets": ["libs/entities/*.md"]
-          }
-        }
-      },
-      "tags": []
-    },
-    "github-api": {
-      "root": "apps/github-api",
-      "sourceRoot": "apps/github-api/src",
-      "projectType": "application",
-      "targets": {
-        "build": {
-          "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/apps/github-api",
-            "main": "apps/github-api/src/main.ts",
-            "tsConfig": "apps/github-api/tsconfig.app.json",
-            "assets": ["apps/github-api/src/assets"]
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/github-api/src/environments/environment.ts",
-                  "with": "apps/github-api/src/environments/environment.prod.ts"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "executor": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "github-api:build",
-            "inspect": true,
-            "port": 7777
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/github-api/**/*.ts"]
-          },
-          "outputs": ["{options.outputFile}"]
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/github-api"],
-          "options": {
-            "jestConfig": "apps/github-api/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      },
-      "tags": []
-    },
     "lessons": {
       "root": "libs/lessons",
       "sourceRoot": "libs/lessons/src",
@@ -324,58 +235,6 @@
             "packageJson": "libs/lessons/package.json",
             "main": "libs/lessons/src/index.ts",
             "assets": ["libs/lessons/*.md"]
-          }
-        }
-      },
-      "tags": []
-    },
-    "mongo": {
-      "root": "apps/mongo",
-      "sourceRoot": "apps/mongo/src",
-      "projectType": "application",
-      "targets": {
-        "build": {
-          "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/apps/mongo",
-            "main": "apps/mongo/src/main.ts",
-            "tsConfig": "apps/mongo/tsconfig.app.json",
-            "assets": ["apps/mongo/src/assets"]
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/mongo/src/environments/environment.ts",
-                  "with": "apps/mongo/src/environments/environment.prod.ts"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "executor": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "mongo:build"
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/mongo/**/*.ts"]
-          },
-          "outputs": ["{options.outputFile}"]
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/mongo"],
-          "options": {
-            "jestConfig": "apps/mongo/jest.config.js",
-            "passWithNoTests": true
           }
         }
       },
