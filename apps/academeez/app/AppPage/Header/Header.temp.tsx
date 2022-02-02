@@ -10,7 +10,9 @@
  * @license: MIT
  */
 
-import { FC } from 'react';
+import { FC, useContext } from 'react';
+import { createPortal } from 'react-dom';
+import { LayoutContext } from '../layout.context';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import Link from 'next/link';
@@ -24,8 +26,11 @@ import { Link as AzMuiLink } from '@academeez/az/material';
 type HeaderProps = { isTransparent?: boolean };
 
 export const Header: FC<HeaderProps> = (props) => {
+  const { header } = useContext(LayoutContext);
 
-  return (
+  if (!header.current) return null;
+
+  return createPortal(
     <MuiAppBar {...props} className="pt-2 pb-2">
       <Grid container className="justify-content-center">
         <Grid item xs={12} lg={10}>
@@ -72,6 +77,7 @@ export const Header: FC<HeaderProps> = (props) => {
           </Toolbar>
         </Grid>
       </Grid>
-    </MuiAppBar>
-  )
+    </MuiAppBar>,
+    header.current
+  );
 };
