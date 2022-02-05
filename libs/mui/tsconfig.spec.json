@@ -3,6 +3,8 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "module": "commonjs",
+    "noEmit": false,
+    "noImplicitAny": false,
     "types": ["mocha", "node"]
   },
   "include": [
