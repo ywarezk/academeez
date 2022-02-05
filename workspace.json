@@ -34,35 +34,13 @@
         "serve": {
           "executor": "@nrwl/workspace:run-commands",
           "options": {
-            "commands": [
-              "npx nx run academeez:serve-standalone"
-            ]
+            "commands": ["npx nx run academeez:serve-standalone"]
           }
         },
         "export": {
           "executor": "@nrwl/next:export",
           "options": {
             "buildTarget": "academeez:build:production"
-          }
-        },
-        "test": {
-          "executor": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              {
-                "command": "npx ts-node -r tsconfig-paths/register --project apps/academeez/tsconfig.spec.json node_modules/.bin/karma start apps/academeez/karma.conf.ts --single-run true --browsers ChromeHeadlessNoSandbox"
-              }
-            ]
-          }
-        },
-        "test-dev": {
-          "executor": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              {
-                "command": "npx ts-node -r tsconfig-paths/register --project apps/academeez/tsconfig.spec.json node_modules/.bin/karma start apps/academeez/karma.conf.ts --single-run false --browsers Chrome"
-              }
-            ]
           }
         },
         "lint": {
@@ -116,14 +94,6 @@
           },
           "outputs": ["{options.outputFile}"]
         },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/blog"],
-          "options": {
-            "jestConfig": "libs/blog/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
         "build": {
           "executor": "@nrwl/node:package",
           "outputs": ["{options.outputPath}"],
@@ -149,14 +119,6 @@
             "lintFilePatterns": ["libs/courses/**/*.ts"]
           },
           "outputs": ["{options.outputFile}"]
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/courses"],
-          "options": {
-            "jestConfig": "libs/courses/jest.config.js",
-            "passWithNoTests": true
-          }
         },
         "build": {
           "executor": "@nrwl/node:package",
@@ -184,14 +146,6 @@
           },
           "outputs": ["{options.outputFile}"]
         },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/designs"],
-          "options": {
-            "jestConfig": "libs/designs/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
         "build": {
           "executor": "@nrwl/node:package",
           "outputs": ["{options.outputPath}"],
@@ -206,39 +160,48 @@
       },
       "tags": []
     },
-    "lessons": {
-      "root": "libs/lessons",
-      "sourceRoot": "libs/lessons/src",
+    "mui": {
+      "root": "libs/mui",
+      "sourceRoot": "libs/mui/src",
       "projectType": "library",
+      "tags": [],
       "targets": {
+        "build": {
+          "executor": "@nrwl/web:rollup",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/mui",
+            "tsConfig": "libs/mui/tsconfig.lib.json",
+            "project": "libs/mui/package.json",
+            "entryFile": "libs/mui/src/index.ts",
+            "external": ["react/jsx-runtime"],
+            "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
+            "compiler": "babel",
+            "assets": [
+              {
+                "glob": "libs/mui/README.md",
+                "input": ".",
+                "output": "."
+              }
+            ]
+          }
+        },
         "lint": {
           "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
           "options": {
-            "lintFilePatterns": ["libs/lessons/**/*.ts"]
-          },
-          "outputs": ["{options.outputFile}"]
+            "lintFilePatterns": ["libs/mui/**/*.{ts,tsx,js,jsx}"]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/lessons"],
+          "outputs": ["coverage/libs/mui"],
           "options": {
-            "jestConfig": "libs/lessons/jest.config.js",
+            "jestConfig": "libs/mui/jest.config.js",
             "passWithNoTests": true
           }
-        },
-        "build": {
-          "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/libs/lessons",
-            "tsConfig": "libs/lessons/tsconfig.lib.json",
-            "packageJson": "libs/lessons/package.json",
-            "main": "libs/lessons/src/index.ts",
-            "assets": ["libs/lessons/*.md"]
-          }
         }
-      },
-      "tags": []
+      }
     },
     "prd": {
       "root": "libs/prd",
@@ -251,14 +214,6 @@
             "lintFilePatterns": ["libs/prd/**/*.ts"]
           },
           "outputs": ["{options.outputFile}"]
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/prd"],
-          "options": {
-            "jestConfig": "libs/prd/jest.config.js",
-            "passWithNoTests": true
-          }
         },
         "build": {
           "executor": "@nrwl/node:package",

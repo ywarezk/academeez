@@ -23,7 +23,8 @@
       "@academeez/designs": ["libs/designs/src/index.ts"],
       "@academeez/entities": ["libs/entities/src/index.ts"],
       "@academeez/lessons": ["libs/lessons/src/index.ts"],
-      "@academeez/prd": ["libs/prd/src/index.ts"]
+      "@academeez/prd": ["libs/prd/src/index.ts"],
+      "@az/mui": ["libs/mui/src/index.ts"]
     },
     "types": ["node", "express", "mocha"]
   },
