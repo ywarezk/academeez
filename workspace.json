@@ -194,11 +194,13 @@
           }
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/mui"],
+          "executor": "@nrwl/workspace:run-commands",
           "options": {
-            "jestConfig": "libs/mui/jest.config.js",
-            "passWithNoTests": true
+            "commands": [
+              {
+                "command": "npm run test:package -- libs/mui {args.dev}"
+              }
+            ]
           }
         }
       }

@@ -11,7 +11,7 @@ import { render } from '@testing-library/react';
 import { Button } from './Button';
 import { ThemeProvider } from '@academeez/az/styles';
 import { PlayButton } from './PlayButton/PlayButton';
-import PlayArrow from '@material-ui/icons/PlayArrow';
+import PlayArrow from '@mui/icons-material/PlayArrow';
 
 describe('buttons', () => {
   it('display all buttons', function () {
