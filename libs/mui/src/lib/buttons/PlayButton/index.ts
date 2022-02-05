@@ -1,5 +1,5 @@
 /**
- * Module containing all the app buttons
+ * PlayButton module
  *
  * Created February 5th, 2022
  * @author: ywarezk
@@ -7,4 +7,4 @@
  * @version: 0.0.1
  */
 
-export * from './lib/buttons';
+export * from './PlayButton';

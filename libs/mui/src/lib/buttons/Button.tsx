@@ -7,7 +7,7 @@
  * @license: MIT
  */
 
-import { ColorName } from '@academeez/az/styles';
+import { ColorName } from '@az/styles';
 import MuiButton, {
   ButtonProps as MuiButtonProps,
 } from '@mui/material/Button';

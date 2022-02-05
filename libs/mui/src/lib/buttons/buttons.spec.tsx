@@ -9,7 +9,7 @@
 
 import { render } from '@testing-library/react';
 import { Button } from './Button';
-import { ThemeProvider } from '@academeez/az/styles';
+import { ThemeProvider } from '@az/styles';
 import { PlayButton } from './PlayButton/PlayButton';
 import PlayArrow from '@mui/icons-material/PlayArrow';
 

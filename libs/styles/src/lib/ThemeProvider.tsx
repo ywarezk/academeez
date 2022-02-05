@@ -17,7 +17,7 @@ import { Text } from './TextColors';
 import { Common } from './Common';
 import { Fonts } from './fonts/Fonts';
 import { Video } from './Video';
-// import { DefaultTheme } from 'styled-components/native';
+import { DefaultTheme } from 'styled-components/native';
 
 export type ColorName =
   | 'dark800'

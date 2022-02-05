@@ -2,16 +2,13 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "types": ["node"],
-    "target": "es2015",
-    "module": "esnext"
+    "types": ["node"]
   },
   "files": [
     "../../node_modules/@nrwl/react/typings/cssmodule.d.ts",
     "../../node_modules/@nrwl/react/typings/image.d.ts"
   ],
   "exclude": [
-    "./karma.conf.ts",
     "**/*.spec.ts",
     "**/*.test.ts",
     "**/*.spec.tsx",

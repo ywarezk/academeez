@@ -15,16 +15,13 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@academeez/az/app": ["apps/academeez/app/index.ts"],
-      "@academeez/az/material": ["apps/academeez/material/index.ts"],
-      "@academeez/az/styles": ["apps/academeez/styles/index.ts"],
-      "@academeez/blog": ["libs/blog/src/index.ts"],
-      "@academeez/courses": ["libs/courses/src/index.ts"],
-      "@academeez/designs": ["libs/designs/src/index.ts"],
-      "@academeez/entities": ["libs/entities/src/index.ts"],
-      "@academeez/lessons": ["libs/lessons/src/index.ts"],
-      "@academeez/prd": ["libs/prd/src/index.ts"],
-      "@az/mui": ["libs/mui/src/index.ts"]
+      "@az/academeez/app": ["apps/academeez/app/index.ts"],
+      "@az/blog": ["libs/blog/src/index.ts"],
+      "@az/courses": ["libs/courses/src/index.ts"],
+      "@az/designs": ["libs/designs/src/index.ts"],
+      "@az/prd": ["libs/prd/src/index.ts"],
+      "@az/mui": ["libs/mui/src/index.ts"],
+      "@az/styles": ["libs/styles/src/index.ts"]
     },
     "types": ["node", "express", "mocha"]
   },
