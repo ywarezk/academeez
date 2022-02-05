@@ -8,3 +8,8 @@
  */
 
 export * from './ThemeProvider';
+export * from './background.styles';
+export * from './flexbox.styles';
+export * from './padding.styles';
+export * from './text-color.styles';
+export * from './theme.types';

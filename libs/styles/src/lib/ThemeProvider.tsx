@@ -9,33 +9,11 @@
  */
 
 import { FC } from 'react';
-import { ThemeProvider as SCThemeProvider } from 'styled-components';
-import { Flexbox } from './Flexbox';
-import { Background } from './Backgrounds';
-import { Paddings } from './Paddings';
-import { Text } from './TextColors';
 import { Common } from './Common';
 import { Fonts } from './fonts/Fonts';
 import { Video } from './Video';
-
-export type ColorName =
-  | 'dark800'
-  | 'dark700'
-  | 'gray200'
-  | 'green'
-  | 'greenHover'
-  | 'greenHover2'
-  | 'white'
-  | 'red'
-  | 'gray300';
-
-export interface Theme {
-  colors: { [key in ColorName]: string };
-  fonts: {
-    spaceMono: string;
-    radioGrotesk: string;
-  };
-}
+import { Theme } from './theme.types';
+import { ThemeProvider as EmotionThemeProvider } from '@emotion/react';
 
 /**
  * Academeez theme will be placed here
@@ -55,29 +33,21 @@ const theme: Theme = {
   fonts: {
     spaceMono: 'Space Mono',
     radioGrotesk: 'Radio Grotesk',
-  },
+  }
 };
-
-declare module 'styled-components' {
-  export interface DefaultTheme extends Theme {}
-}
 
 /**
  * Our entire app will be wrapped with this theme
  */
 export const ThemeProvider: FC = ({ children }) => {
   return (
-    <SCThemeProvider theme={theme}>
+    <EmotionThemeProvider theme={theme}>
       {/* <Fonts /> */}
-      <Flexbox />
-      <Background />
-      <Paddings />
-      <Text />
       <Common />
       <Fonts />
       <Video />
 
       {children}
-    </SCThemeProvider>
+    </EmotionThemeProvider>
   );
 };
