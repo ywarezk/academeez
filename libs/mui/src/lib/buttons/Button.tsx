@@ -12,11 +12,26 @@ import MuiButton, {
   ButtonProps as MuiButtonProps,
 } from '@mui/material/Button';
 import { FC } from 'react';
-import styled, { StyledProps, css } from 'styled-components';
+// import { css, jsx } from '@emotion/react';
+import { styled } from '@mui/system';
 
 export type ButtonProps = Omit<MuiButtonProps, 'color'> & { color: ColorName };
 
-export const Button: FC<ButtonProps> = styled(({ color, ...props }) => (
+
+export const Button = styled(MuiButton)({});
+
+
+// export const Button: FC<ButtonProps> = ({color, ...props}) => {
+//   return (
+//     <MuiButton css={css`
+//       fontFamily: Space Mono
+//     `} {...props} />
+//   )
+// }
+
+
+/*
+styled(({ color, ...props }) => (
   <MuiButton {...props} />
 ))<ButtonProps>`
   && {
@@ -72,3 +87,4 @@ export const Button: FC<ButtonProps> = styled(({ color, ...props }) => (
     }
   }};
 ` as any;
+*/
