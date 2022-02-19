@@ -7,18 +7,24 @@
  * @license: MIT
  */
 
-import { ColorName } from '@az/styles';
+// import { ColorName } from '@az/styles';
 import MuiButton, {
   ButtonProps as MuiButtonProps,
 } from '@mui/material/Button';
 import { FC } from 'react';
 // import { css, jsx } from '@emotion/react';
-import { styled } from '@mui/system';
+// import { styled } from '@mui/system';
 
-export type ButtonProps = Omit<MuiButtonProps, 'color'> & { color: ColorName };
+export const Button: FC<MuiButtonProps> = (props) => {
+  return (
+    <MuiButton {...props} />
+  )
+}
+
+// export type ButtonProps = Omit<MuiButtonProps, 'color'> & { color: ColorName };
 
 
-export const Button = styled(MuiButton)({});
+// export const Button = styled(MuiButton)({});
 
 
 // export const Button: FC<ButtonProps> = ({color, ...props}) => {

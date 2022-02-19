@@ -77,7 +77,7 @@
     "@nrwl/tao": "13.7.1",
     "@nrwl/web": "13.7.1",
     "@nrwl/workspace": "13.7.1",
-    "@nz/test": "^3.0.4",
+    "@nz/test": "^3.1.4",
     "@testing-library/react": "12.1.2",
     "@testing-library/react-hooks": "7.0.2",
     "@types/chai": "^4.2.16",
