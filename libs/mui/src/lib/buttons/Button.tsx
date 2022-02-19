@@ -1,19 +1,18 @@
 /**
- * Designing the button
+ * This is the base button, All buttons will extend this
  *
  * Created April 19th, 2021
+ * Updated February 19th, 2022
+ *
  * @author: ywarezk
  * @version: 0.0.1
  * @license: MIT
  */
 
-// import { ColorName } from '@az/styles';
 import MuiButton, {
   ButtonProps as MuiButtonProps,
 } from '@mui/material/Button';
 import { FC } from 'react';
-// import { css, jsx } from '@emotion/react';
-// import { styled } from '@mui/system';
 
 export const Button: FC<MuiButtonProps> = (props) => {
   return (

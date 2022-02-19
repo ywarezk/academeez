@@ -7,5 +7,4 @@
  * @version: 0.0.1
  */
 
-export {Button, ButtonProps} from './Button';
-export { PlayButton } from './PlayButton';
+export { Button } from './Button';
