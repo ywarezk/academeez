@@ -8,7 +8,7 @@
  */
 
 import { css } from '@emotion/react';
-import { ColorName, Theme } from './theme.types';
+import { ColorName, Theme } from './theme.types.delete';
 
 export const textCenter = css`
   text-align: center;

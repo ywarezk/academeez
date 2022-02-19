@@ -9,10 +9,10 @@
  */
 
 import { FC } from 'react';
-import { Common } from './Common';
-import { Fonts } from './fonts/Fonts';
-import { Video } from './Video';
-import { Theme } from './theme.types';
+import { Common } from './Common.delete';
+import { Fonts } from './fonts/Fonts.delete';
+import { Video } from './Video.delete';
+import { Theme } from './theme.types.delete';
 import { ThemeProvider as EmotionThemeProvider } from '@emotion/react';
 
 /**

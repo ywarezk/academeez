@@ -8,7 +8,7 @@
  */
 
 import { css } from '@emotion/react';
-import { Direction, Paddings, PaddingMargin } from './theme.types';
+import { Direction, Paddings, PaddingMargin } from './theme.types.delete';
 
 export const padding = (paddingOrMargin: PaddingMargin, direction: Direction, padding: Paddings) => css`
   ${paddingOrMargin + direction}: ${padding};
