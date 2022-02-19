@@ -14,7 +14,9 @@
     "noImplicitAny": false
   },
   "files": [],
-  "include": [],
+  "include": [
+    "./src/lib/fonts/fonts.d.ts"
+  ],
   "references": [
     {
       "path": "./tsconfig.lib.json"

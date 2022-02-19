@@ -8,6 +8,8 @@
  */
 
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
+import RadioGroteskRegular from './fonts/radio-grotesk/RadioGrotesk-Regular.woff2';
+import RadioGroteskBold from './fonts/radio-grotesk/RadioGrotesk-Bold.woff2';
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -41,6 +43,30 @@ export let theme = createTheme({
       "300": '#D7D7D7',
       light: '#F9F9F9',
     }
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: `
+        @font-face {
+          font-family: 'Radio Grotesk';
+          font-style: normal;
+          font-weight: 400;
+          font-display: swap;
+          src: url(${RadioGroteskRegular}) format('woff2');
+        }
+
+        @font-face {
+          font-family: 'Radio Grotesk';
+          font-style: normal;
+          font-weight: 700;
+          font-display: swap;
+          src: url(${RadioGroteskBold}) format('woff2');
+        }
+      `
+    }
+  },
+  typography: {
+    fontFamily: 'Radio Grotesk'
   }
 });
 

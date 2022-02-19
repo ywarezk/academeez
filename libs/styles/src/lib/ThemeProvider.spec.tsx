@@ -13,7 +13,8 @@ import Button from '@mui/material/Button';
 import { expect } from 'chai';
 
 describe('<ThemeProvider />', () => {
-  it('sanity', function() {
+  it('sanity', function(done) {
+    this.timeout(60000000);
     render(
       (
         <ThemeProvider>
@@ -23,6 +24,5 @@ describe('<ThemeProvider />', () => {
         </ThemeProvider>
       )
     );
-    expect(true).to.equal(true);
   });
 });
