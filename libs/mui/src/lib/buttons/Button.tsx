@@ -18,18 +18,61 @@ import { FC } from 'react';
 
 export const Button: FC<MuiButtonProps> = ({
   sx = [],
+  variant = 'contained',
+  color = 'primary',
   ...props
 }) => {
 
-  let outlinedGreen: SystemStyleObject = {};
-  if (props.variant === 'outlined' && (!props.color || props.color === 'primary')) {
-    outlinedGreen = {
-      "&:hover": {
-        bgcolor: 'background.paper',
+  let dynamicStyles: SystemStyleObject = {}
+  if (color === 'primary' && variant === 'contained') {
+    dynamicStyles = {
+      color: 'grey.50',
+      bgColor: 'primary.main',
+      '&:hover': { bgcolor: 'primary.500', boxShadow: 0 },
+    }
+  }
+
+  if (variant === 'outlined' && color === 'primary') {
+    dynamicStyles = {
+      color: 'primary.main',
+      borderColor: 'primary.main',
+      '&:hover': {
         color: 'primary.dark',
-        borderColor: 'primary.dark'
+        borderColor: 'primary.dark',
+        bgcolor: 'transparent',
+        boxShadow: 0
       }
     }
+  }
+
+  if (color === 'secondary' && variant === 'contained') {
+    dynamicStyles = {
+      bgcolor: 'secondary.main',
+      color: 'grey.500',
+      '&:hover': {
+        bgcolor: 'grey.200',
+        boxShadow: 0
+      }
+    }
+  }
+
+  if (color === 'secondary' && variant === 'outlined') {
+    dynamicStyles = {
+      bgcolor: 'transparent',
+      color: 'grey.100',
+      borderColor: 'grey.100',
+      '&:hover': {
+        color: 'grey.200',
+        bgcolor: 'transparent',
+        borderColor: 'grey.200',
+        boxShadow: 0
+      }
+    }
+  }
+
+  if ( variant === 'outlined' ) {
+    (dynamicStyles as any)['bgcolor'] = 'transparent';
+    (dynamicStyles as any)['border'] = 1;
   }
 
   return (
@@ -40,86 +83,11 @@ export const Button: FC<MuiButtonProps> = ({
           textTransform: 'none',
           px: 2,
           py: 1.75,
-          '&:hover': {bgcolor: 'primary.500', boxShadow: 0}
         },
-        outlinedGreen,
+        dynamicStyles,
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
-      {...props}
+      { ...props }
     />
   )
 }
-
-// export type ButtonProps = Omit<MuiButtonProps, 'color'> & { color: ColorName };
-
-
-// export const Button = styled(MuiButton)({});
-
-
-// export const Button: FC<ButtonProps> = ({color, ...props}) => {
-//   return (
-//     <MuiButton css={css`
-//       fontFamily: Space Mono
-//     `} {...props} />
-//   )
-// }
-
-
-/*
-styled(({ color, ...props }) => (
-  <MuiButton {...props} />
-))<ButtonProps>`
-  && {
-    font-family: 'Space Mono';
-    text-transform: none;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-    font-weight: 400;
-    font-size: 15px;
-    line-height: 20px;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
-    border-radius: 4px;
-    box-shadow: unset;
-
-    &:hover {
-      box-shadow: none;
-    }
-  }
-
-  ${(props: StyledProps<ButtonProps>) => {
-    switch (props.color) {
-      case 'dark800':
-        return css`
-          &&.MuiButton-contained:not(.MuiButton-outlined) {
-            color: ${props.theme.colors.gray200};
-            background-color: ${props.theme.colors.dark800};
-            &:hover {
-              background-color: ${props.theme.colors.dark700};
-            }
-          }
-
-          &&.MuiButton-outlined {
-            color: ${props.theme.colors.dark800};
-            border-color: ${props.theme.colors.dark800};
-          }
-        `;
-      default:
-        return css`
-          &&.MuiButton-contained:not(.MuiButton-outlined) {
-            color: ${props.theme.colors.dark800};
-            background-color: ${props.theme.colors.green};
-            &:hover {
-              background-color: ${props.theme.colors.greenHover};
-            }
-          }
-
-          &&.MuiButton-outlined {
-            color: ${props.theme.colors.green};
-            border-color: ${props.theme.colors.green};
-          }
-        `;
-    }
-  }};
-` as any;
-*/

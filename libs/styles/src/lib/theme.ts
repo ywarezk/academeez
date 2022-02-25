@@ -33,6 +33,9 @@ export let theme = createTheme({
       "400": '#D7D7D7',
       "500": '#F9F9F9',
     },
+    secondary: {
+      main: '#292929',
+    },
     primary: {
       main: '#01D662',
       "500": '#19EB79',

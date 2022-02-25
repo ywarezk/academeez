@@ -32,6 +32,17 @@ describe('buttons', () => {
               start_learning
             </Button>
           </div>
+          <div style={{ marginTop: '20px' }}>
+            <Button variant='outlined' color='secondary'>
+              start_learning
+            </Button>
+          </div>
+
+          <div style={{ marginTop: '20px' }}>
+            <Button color='secondary'>
+              start_learning
+            </Button>
+          </div>
         </div>
       </ThemeProvider>
     );
