@@ -9,14 +9,44 @@
  * @license: MIT
  */
 
+import { SxProps } from '@mui/material';
 import MuiButton, {
   ButtonProps as MuiButtonProps,
 } from '@mui/material/Button';
+import { SystemStyleObject } from '@mui/system';
 import { FC } from 'react';
 
-export const Button: FC<MuiButtonProps> = (props) => {
+export const Button: FC<MuiButtonProps> = ({
+  sx = [],
+  ...props
+}) => {
+
+  let outlinedGreen: SystemStyleObject = {};
+  if (props.variant === 'outlined' && (!props.color || props.color === 'primary')) {
+    outlinedGreen = {
+      "&:hover": {
+        bgcolor: 'background.paper',
+        color: 'primary.dark',
+        borderColor: 'primary.dark'
+      }
+    }
+  }
+
   return (
-    <MuiButton {...props} />
+    <MuiButton
+      sx={[
+        {
+          boxShadow: 0,
+          textTransform: 'none',
+          px: 2,
+          py: 1.75,
+          '&:hover': {bgcolor: 'primary.500', boxShadow: 0}
+        },
+        outlinedGreen,
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
+      {...props}
+    />
   )
 }
 

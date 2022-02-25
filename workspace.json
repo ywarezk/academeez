@@ -195,12 +195,13 @@
         },
         "test": {
           "executor": "@nrwl/workspace:run-commands",
+          "configurations": {
+            "development": {
+              "commands": [ "npx nz test libs/mui" ]
+            }
+          },
           "options": {
-            "commands": [
-              {
-                "command": "npm run test:package -- libs/mui {args.dev}"
-              }
-            ]
+            "commands": [ "npx nz test libs/mui --prod" ]
           }
         }
       }

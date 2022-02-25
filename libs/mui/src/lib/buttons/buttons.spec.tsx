@@ -18,8 +18,18 @@ describe('buttons', () => {
       <ThemeProvider>
         <div style={{ marginTop: '100px', marginLeft: '100px' }}>
           <div>
-            <Button variant='outlined'>
+            <Button>
               Start Learning
+            </Button>
+          </div>
+          <div style={{ marginTop: '20px'}}>
+            <Button disabled>
+              Button
+            </Button>
+          </div>
+          <div style={{ marginTop: '20px' }}>
+            <Button variant='outlined'>
+              start_learning
             </Button>
           </div>
         </div>

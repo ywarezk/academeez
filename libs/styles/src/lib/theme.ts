@@ -12,21 +12,32 @@ import RadioGroteskRegular from './fonts/radio-grotesk/RadioGrotesk-Regular.woff
 import RadioGroteskBold from './fonts/radio-grotesk/RadioGrotesk-Bold.woff2';
 import SpaceMonoRegular from './fonts/space-mono/SpaceMono-Regular.ttf';
 import SpaceMonoBold from './fonts/space-mono/SpaceMono-Bold.ttf';
+import { Palette  } from '@mui/material/styles/createPalette';
+import { Color } from '@mui/material';
 
-declare module '@mui/material/styles' {
-  interface Palette {
-    neutral: Palette['primary'];
-  }
-  interface PaletteOptions {
-    neutral: PaletteOptions['primary'];
+declare module '@mui/material/styles/createPalette' {
+  interface TypeBackground {
+    dark: string;
+    light: string;
+    green: string
   }
 }
 
 export let theme = createTheme({
   palette: {
+    grey: {
+      "50": '#2D2D2D',
+      "100": '#292929',
+      "200": '#4D4D4D',
+      "300": '#E5E5E5',
+      "400": '#D7D7D7',
+      "500": '#F9F9F9',
+    },
     primary: {
       main: '#01D662',
-      light: '#A0EAC1'
+      "500": '#19EB79',
+      light: '#A0EAC1',
+      dark: '#27AE60'
     },
     error: {
       main: '#FF5E4A'
@@ -38,15 +49,18 @@ export let theme = createTheme({
       main: '#5C95FF',
       light: '#61DAFB'
     },
-    neutral: {
-      dark: '#292929',
-      "100": '#4D4D4D',
-      "200": '#E5E5E5',
-      "300": '#D7D7D7',
-      light: '#F9F9F9',
+    background: {
+      paper: '#FFFFFF',
+      dark: 'rgba(0, 0, 0, 0.9)',
+      green: '#01D662'
     }
   },
   components: {
+    MuiButton: {
+      defaultProps: {
+        variant: 'contained',
+      }
+    },
     MuiCssBaseline: {
       styleOverrides: `
         @font-face {
@@ -88,49 +102,49 @@ export let theme = createTheme({
     h1: {
       fontFamily: 'Radio Grotesk',
       fontWeight: 700,
-      lineHeight: '4.6rem',
+      lineHeight: 4.6,
       fontSize: '4.375rem'
     },
     h2: {
       fontFamily: 'Radio Grotesk',
       fontWeight: 700,
-      lineHeight: '3.438rem',
+      lineHeight: 3.438,
       fontSize: '3.438rem'
     },
     h5: {
       fontFamily: 'Radio Grotesk',
       fontWeight: 700,
-      lineHeight: '1.75rem',
+      lineHeight: 1.75,
       fontSize: '1.5rem'
     },
     h6: {
       fontFamily: 'Radio Grotesk',
       fontWeight: 400,
-      lineHeight: '1.5rem',
+      lineHeight: 1.2,
       fontSize: '1.25rem'
     },
     body1: {
       fontFamily: 'Space Mono',
       fontWeight: 400,
-      lineHeight: '1.25rem',
+      lineHeight: 1.537,
       fontSize: '0.813rem'
     },
     body2: {
       fontFamily: 'Space Mono',
       fontWeight: 700,
-      lineHeight: '1.25rem',
+      lineHeight: 1.537,
       fontSize: '0.813rem'
     },
     button: {
       fontFamily: 'Space Mono',
       fontWeight: 400,
-      lineHeight: '1.25rem',
+      lineHeight: 1.42,
       fontSize: '0.875rem',
     },
     caption: {
       fontFamily: 'Radio Grotesk',
       fontWeight: 400,
-      lineHeight: '1rem',
+      lineHeight: 1.333,
       fontSize: '0.75rem'
     }
   }
