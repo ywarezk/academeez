@@ -1,18 +1,10 @@
-import { AppProps } from 'next/app';
-import Head from 'next/head';
-import './styles.css';
+/**
+ * Good place to place the layout here
+ *
+ * Created February 27th, 2022
+ * @author: ywarezk
+ * @version: 0.0.1
+ * @license: MIT
+ */
 
-function CustomApp({ Component, pageProps }: AppProps) {
-  return (
-    <>
-      <Head>
-        <title>Welcome to az!</title>
-      </Head>
-      <main className="app">
-        <Component {...pageProps} />
-      </main>
-    </>
-  );
-}
-
-export default CustomApp;
+export { AppPage as default } from '../common';
