@@ -26,56 +26,83 @@ export const Button: FC<ButtonProps> = ({
   ...props
 }) => {
 
-  let dynamicStyles: SystemStyleObject = {}
+  let dynamicStyles: SystemStyleObject = {
+    '&:hover': {
+
+    }
+  }
+
+  if (variant === 'outlined') {
+    dynamicStyles = {
+      ...dynamicStyles,
+      bgcolor: 'transparent',
+      border: 1
+    }
+  }
+
   if (color === 'primary' && variant === 'contained') {
     dynamicStyles = {
+      ...dynamicStyles,
       color: 'grey.50',
       bgColor: 'primary.main',
-      '&:hover': { bgcolor: 'primary.500', boxShadow: 0 },
+      '&:hover': { bgcolor: 'primary.500', boxShadow: 0},
     }
   }
 
   if (variant === 'outlined' && color === 'primary') {
     dynamicStyles = {
+      ...dynamicStyles,
       color: 'primary.main',
       borderColor: 'primary.main',
       '&:hover': {
+        boxShadow: 0,
         color: 'primary.dark',
         borderColor: 'primary.dark',
         bgcolor: 'transparent',
-        boxShadow: 0
       }
     }
   }
 
   if (color === 'dark' && variant === 'contained') {
     dynamicStyles = {
+      ...dynamicStyles,
       bgcolor: 'secondary.main',
       color: 'grey.500',
       '&:hover': {
+        boxShadow: 0,
         bgcolor: 'grey.200',
-        boxShadow: 0
       }
     }
   }
 
   if (color === 'dark' && variant === 'outlined') {
     dynamicStyles = {
+      ...dynamicStyles,
       bgcolor: 'transparent',
       color: 'grey.100',
       borderColor: 'grey.100',
       '&:hover': {
+        boxShadow: 0,
         color: 'grey.200',
         bgcolor: 'transparent',
         borderColor: 'grey.200',
-        boxShadow: 0
       }
     }
   }
 
-  if ( variant === 'outlined' ) {
-    (dynamicStyles as any)['bgcolor'] = 'transparent';
-    (dynamicStyles as any)['border'] = 1;
+  if (color === 'light' && variant === 'outlined') {
+    dynamicStyles = {
+      ...dynamicStyles,
+      bgcolor: 'transparent',
+      color: 'background.paper',
+      borderColor: 'background.paper',
+      '&:hover': {
+        boxShadow: 0,
+        color: 'grey.400',
+        bgcolor: 'transparent',
+        borderColor: 'grey.400',
+      }
+    }
   }
 
   return (

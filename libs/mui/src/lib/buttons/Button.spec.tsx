@@ -10,6 +10,7 @@
 import { render } from '@testing-library/react';
 import { Button } from './Button';
 import { ThemeProvider } from '@az/styles';
+import Box from '@mui/material/Box';
 
 describe('buttons', () => {
   it.only('display all buttons', function (done) {
@@ -43,6 +44,12 @@ describe('buttons', () => {
               start_learning
             </Button>
           </div>
+
+          <Box sx={{ marginTop: '20px', padding: 2, bgcolor: 'grey.50' }}>
+            <Button color='light' variant='outlined'>
+              start_learning
+            </Button>
+          </Box>
         </div>
       </ThemeProvider>
     );
