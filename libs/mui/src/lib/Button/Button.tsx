@@ -17,7 +17,7 @@ import { FC } from 'react';
 
 type ButtonColor = MuiButtonProps['color'] | 'dark' | 'light'
 
-type ButtonProps = Omit<MuiButtonProps, 'color'> & { color?: ButtonColor };
+export type ButtonProps = Omit<MuiButtonProps, 'color'> & { color?: ButtonColor };
 
 export const Button: FC<ButtonProps> = ({
   sx = [],
