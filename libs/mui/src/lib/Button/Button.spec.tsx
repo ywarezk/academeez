@@ -14,8 +14,7 @@ import Box from '@mui/material/Box';
 import PlayArrow from '@mui/icons-material/PlayArrow';
 
 describe('buttons', () => {
-  it.only('display all buttons', function (done) {
-    this.timeout(60000000);
+  it.only('display all buttons', function () {
     render(
       <ThemeProvider>
         <Box sx={{ mt: '100px', ml: '100px' }}>
@@ -46,9 +45,15 @@ describe('buttons', () => {
             </Button>
           </Box>
 
-          <Box sx={{ marginTop: '20px', padding: 2, bgcolor: 'grey.50' }}>
+          <Box sx={{ mt: '20px', padding: 2, bgcolor: 'grey.50' }}>
             <Button color='light' variant='outlined'>
               start_learning
+            </Button>
+          </Box>
+
+          <Box sx={{ mt: '20px', padding: 2, bgcolor: 'grey.50' }}>
+            <Button color='light' variant='outlined' startIcon={<PlayArrow />}>
+              Learn more
             </Button>
           </Box>
         </Box>

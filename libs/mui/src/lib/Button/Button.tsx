@@ -26,11 +26,7 @@ export const Button: FC<ButtonProps> = ({
   ...props
 }) => {
 
-  let dynamicStyles: SystemStyleObject = {
-    '&:hover': {
-
-    }
-  }
+  let dynamicStyles: SystemStyleObject = {}
 
   if (variant === 'outlined') {
     dynamicStyles = {
