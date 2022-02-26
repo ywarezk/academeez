@@ -33,13 +33,13 @@ describe('buttons', () => {
             </Button>
           </div>
           <div style={{ marginTop: '20px' }}>
-            <Button variant='outlined' color='secondary'>
+            <Button variant='outlined' color='dark'>
               start_learning
             </Button>
           </div>
 
           <div style={{ marginTop: '20px' }}>
-            <Button color='secondary'>
+            <Button color='dark'>
               start_learning
             </Button>
           </div>

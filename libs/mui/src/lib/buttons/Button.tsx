@@ -10,12 +10,16 @@
  */
 
 import MuiButton, {
-  ButtonProps as MuiButtonProps,
+  ButtonProps as MuiButtonProps
 } from '@mui/material/Button';
 import { SystemStyleObject } from '@mui/system';
 import { FC } from 'react';
 
-export const Button: FC<MuiButtonProps> = ({
+type ButtonColor = MuiButtonProps['color'] | 'dark' | 'light'
+
+type ButtonProps = Omit<MuiButtonProps, 'color'> & { color?: ButtonColor };
+
+export const Button: FC<ButtonProps> = ({
   sx = [],
   variant = 'contained',
   color = 'primary',
@@ -44,7 +48,7 @@ export const Button: FC<MuiButtonProps> = ({
     }
   }
 
-  if (color === 'secondary' && variant === 'contained') {
+  if (color === 'dark' && variant === 'contained') {
     dynamicStyles = {
       bgcolor: 'secondary.main',
       color: 'grey.500',
@@ -55,7 +59,7 @@ export const Button: FC<MuiButtonProps> = ({
     }
   }
 
-  if (color === 'secondary' && variant === 'outlined') {
+  if (color === 'dark' && variant === 'outlined') {
     dynamicStyles = {
       bgcolor: 'transparent',
       color: 'grey.100',
