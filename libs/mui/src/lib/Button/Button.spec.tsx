@@ -14,7 +14,7 @@ import Box from '@mui/material/Box';
 import PlayArrow from '@mui/icons-material/PlayArrow';
 
 describe('buttons', () => {
-  it.only('display all buttons', function () {
+  it('display all buttons', function () {
     render(
       <ThemeProvider>
         <Box sx={{ mt: '100px', ml: '100px' }}>
