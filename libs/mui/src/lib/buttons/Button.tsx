@@ -9,7 +9,6 @@
  * @license: MIT
  */
 
-import { SxProps } from '@mui/material';
 import MuiButton, {
   ButtonProps as MuiButtonProps,
 } from '@mui/material/Button';
