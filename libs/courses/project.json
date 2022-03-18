@@ -1,0 +1,34 @@
+{
+  "root": "libs/courses",
+  "sourceRoot": "libs/courses/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/courses/**/*.ts"
+        ]
+      },
+      "outputs": [
+        "{options.outputFile}"
+      ]
+    },
+    "build": {
+      "executor": "@nrwl/node:package",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/courses",
+        "tsConfig": "libs/courses/tsconfig.lib.json",
+        "packageJson": "libs/courses/package.json",
+        "main": "libs/courses/src/index.ts",
+        "assets": [
+          "libs/courses/*.md"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

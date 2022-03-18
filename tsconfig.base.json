@@ -20,7 +20,7 @@
       "@az/blog": ["libs/blog/src/index.ts"],
       "@az/courses": ["libs/courses/src/index.ts"],
       "@az/designs": ["libs/designs/src/index.ts"],
-      "@az/mui": ["libs/mui/src/index.ts"],
+      "@az/mui/AppBar": ["libs/mui/src/lib/AppBar/index.ts"],
       "@az/prd": ["libs/prd/src/index.ts"],
       "@az/styles": ["libs/styles/src/index.ts"],
       "@az/styles2": ["libs/styles2/src/index.ts"]

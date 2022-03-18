@@ -13,7 +13,7 @@
   "affected": {
     "defaultBase": "master"
   },
-  "npmScope": "academeez2",
+  "npmScope": "az",
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
@@ -47,5 +47,5 @@
       }
     }
   },
-  "defaultProject": "github-api"
+  "defaultProject": "az"
 }

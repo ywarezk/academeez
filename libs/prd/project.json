@@ -1,0 +1,34 @@
+{
+  "root": "libs/prd",
+  "sourceRoot": "libs/prd/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/prd/**/*.ts"
+        ]
+      },
+      "outputs": [
+        "{options.outputFile}"
+      ]
+    },
+    "build": {
+      "executor": "@nrwl/node:package",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/prd",
+        "tsConfig": "libs/prd/tsconfig.lib.json",
+        "packageJson": "libs/prd/package.json",
+        "main": "libs/prd/src/index.ts",
+        "assets": [
+          "libs/prd/*.md"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

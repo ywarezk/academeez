@@ -1,0 +1,34 @@
+{
+  "root": "libs/blog",
+  "sourceRoot": "libs/blog/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/blog/**/*.ts"
+        ]
+      },
+      "outputs": [
+        "{options.outputFile}"
+      ]
+    },
+    "build": {
+      "executor": "@nrwl/node:package",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/blog",
+        "tsConfig": "libs/blog/tsconfig.lib.json",
+        "packageJson": "libs/blog/package.json",
+        "main": "libs/blog/src/index.ts",
+        "assets": [
+          "libs/blog/*.md"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

@@ -10,6 +10,8 @@
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { FC } from "react";
+import Box from '@mui/material/Box';
+import { Nav } from './Nav';
 
 export const AppPage: FC<AppProps> = ({
   Component,
@@ -20,9 +22,10 @@ export const AppPage: FC<AppProps> = ({
       <Head>
         <title>academeez</title>
       </Head>
-      <main className="app">
+      <Box component="main">
+        <Nav />
         <Component {...pageProps} />
-      </main>
+      </Box>
     </>
   )
 }

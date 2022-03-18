@@ -1,0 +1,43 @@
+{
+  "root": "libs/styles",
+  "sourceRoot": "libs/styles/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/styles",
+        "tsConfig": "libs/styles/tsconfig.lib.json",
+        "project": "libs/styles/package.json",
+        "entryFile": "libs/styles/src/index.ts",
+        "external": [
+          "react/jsx-runtime"
+        ],
+        "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
+        "compiler": "babel",
+        "assets": [
+          {
+            "glob": "libs/styles/README.md",
+            "input": ".",
+            "output": "."
+          }
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "libs/styles/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    }
+  }
+}

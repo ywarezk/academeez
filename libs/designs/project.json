@@ -1,0 +1,34 @@
+{
+  "root": "libs/designs",
+  "sourceRoot": "libs/designs/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/designs/**/*.ts"
+        ]
+      },
+      "outputs": [
+        "{options.outputFile}"
+      ]
+    },
+    "build": {
+      "executor": "@nrwl/node:package",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/designs",
+        "tsConfig": "libs/designs/tsconfig.lib.json",
+        "packageJson": "libs/designs/package.json",
+        "main": "libs/designs/src/index.ts",
+        "assets": [
+          "libs/designs/*.md"
+        ]
+      }
+    }
+  },
+  "tags": []
+}
