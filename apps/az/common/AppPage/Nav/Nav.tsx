@@ -14,7 +14,9 @@ import Container from '@mui/material/Container';
 import { Logo } from './Logo';
 import Box from "@mui/material/Box";
 import Link from 'next/link';
+import Github from '@mui/icons-material/GitHub';
 import MuiLink from '@az/mui/Link';
+
 
 export const Nav: FC = () => {
   return (
@@ -29,7 +31,13 @@ export const Nav: FC = () => {
             </Link>
           </Box>
           <Box>
-
+            <MuiLink
+              href="https://github.com/ywarezk/academeez"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Github />
+            </MuiLink>
           </Box>
         </Toolbar>
       </Container>
