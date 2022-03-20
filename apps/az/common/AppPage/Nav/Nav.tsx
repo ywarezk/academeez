@@ -13,9 +13,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import { Logo } from './Logo';
 import Box from "@mui/material/Box";
-import Link from 'next/link';
+import NextLink from 'next/link';
 import Github from '@mui/icons-material/GitHub';
-import MuiLink from '@az/mui/Link';
+import AzLink from '@az/mui/Link';
+import Youtube from '@mui/icons-material/YouTube';
 
 
 export const Nav: FC = () => {
@@ -24,20 +25,34 @@ export const Nav: FC = () => {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box sx={{flexGrow: 1}}>
-            <Link href="/" >
+            <NextLink href="/" >
               <a>
                 <Logo />
               </a>
-            </Link>
+            </NextLink>
           </Box>
-          <Box>
-            <MuiLink
+          <Box sx={{display: 'flex'}}>
+            <NextLink href="/blog">
+              <AzLink sx={{ mr: 3 }}>
+                Blog
+              </AzLink>
+            </NextLink>
+            <AzLink
+              sx={{mr: 3, lineHeight: 0}}
+              href="https://www.youtube.com/channel/UCmnTSM4hGDJin7g5PyXa9pQ"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Youtube />
+            </AzLink>
+            <AzLink
+              sx={{ mr: 3, lineHeight: 0 }}
               href="https://github.com/ywarezk/academeez"
               target="_blank"
               rel="noopener noreferrer"
             >
               <Github />
-            </MuiLink>
+            </AzLink>
           </Box>
         </Toolbar>
       </Container>

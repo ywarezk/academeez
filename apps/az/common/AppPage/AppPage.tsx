@@ -12,6 +12,7 @@ import Head from "next/head";
 import { FC } from "react";
 import Box from '@mui/material/Box';
 import { Nav } from './Nav';
+import { ThemeProvider } from '@az/styles';
 
 export const AppPage: FC<AppProps> = ({
   Component,
@@ -22,10 +23,12 @@ export const AppPage: FC<AppProps> = ({
       <Head>
         <title>academeez</title>
       </Head>
-      <Box component="main">
-        <Nav />
-        <Component {...pageProps} />
-      </Box>
+      <ThemeProvider>
+        <Box component="main" sx={{ backgroundColor: 'grey.100' }}>
+          <Nav />
+          <Component {...pageProps} />
+        </Box>
+      </ThemeProvider>
     </>
   )
 }
