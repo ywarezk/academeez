@@ -14,8 +14,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
 describe('<AppBar />', () => {
-  it.only('sanity', function(done) {
-    this.timeout(600000000);
+  it('sanity', function() {
     render(
       <ThemeProvider>
         <AppBar color='transparent'>

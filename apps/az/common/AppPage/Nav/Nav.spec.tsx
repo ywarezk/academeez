@@ -13,11 +13,16 @@ import { ThemeProvider } from '@az/styles';
 import Box from '@mui/material/Box';
 
 describe('<Nav />', () => {
-  it.only('sanity', function(done) {
-    this.timeout(600000000);
+  it('sanity', function() {
     render(
       <ThemeProvider>
-        <Nav />
+        <Box sx={{
+          backgroundColor: 'grey.100',
+          height: '100vh',
+          // pt: 2
+        }}>
+          <Nav />
+        </Box>
       </ThemeProvider>
     )
   })

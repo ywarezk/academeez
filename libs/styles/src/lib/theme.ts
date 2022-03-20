@@ -101,6 +101,10 @@ export let theme = createTheme({
     }
   },
   typography: {
+    allVariants: {
+      fontFamily: 'Radio Grotesk',
+      fontSize: 13
+    },
     fontFamily: 'Radio Grotesk',
     h1: {
       fontFamily: 'Radio Grotesk',
@@ -150,7 +154,7 @@ export let theme = createTheme({
       lineHeight: 1.333,
       fontSize: '0.75rem'
     }
-  }
+  },
 });
 
 // add responsive font sizes

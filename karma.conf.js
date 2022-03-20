@@ -165,7 +165,7 @@ module.exports = (config) => {
       module: {
         rules: [
           {
-            loader: 'file-loader',
+            loader: 'url-loader',
             test: /\.(ttf|woff2)$/,
           },
           {

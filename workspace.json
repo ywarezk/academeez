@@ -1,6 +1,7 @@
 {
   "version": 2,
   "projects": {
-    "az": "apps/az"
+    "az": "apps/az",
+    "mui": "libs/mui"
   }
 }
