@@ -10,7 +10,17 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
-  webpack5: true
+  webpack5: true,
+  webpack: ( config ) => {
+    config.module.rules.unshift(
+      // this is used to load fonts using import
+      {
+        test: /\.(ttf|otf|woff|woff2)$/,
+        loader: 'url-loader',
+      }
+    )
+    return config
+  }
 };
 
 module.exports = withNx(nextConfig);

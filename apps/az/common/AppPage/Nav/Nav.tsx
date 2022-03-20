@@ -17,7 +17,7 @@ import NextLink from 'next/link';
 import Github from '@mui/icons-material/GitHub';
 import AzLink from '@az/mui/Link';
 import Youtube from '@mui/icons-material/YouTube';
-
+import Button from '@mui/material/Button';
 
 export const Nav: FC = () => {
   return (
@@ -31,8 +31,17 @@ export const Nav: FC = () => {
               </a>
             </NextLink>
           </Box>
-          <Box sx={{display: 'flex'}}>
-            <NextLink href="/blog">
+          <Box sx={{display: 'flex', alignItems: 'center'}}>
+            <NextLink href="/courses" passHref>
+              <Button
+                variant="outlined"
+                component={AzLink}
+                sx={{ mr: 3 }}
+              >
+                Start Learning
+              </Button>
+            </NextLink>
+            <NextLink href="/blog" passHref>
               <AzLink sx={{ mr: 3 }}>
                 Blog
               </AzLink>
