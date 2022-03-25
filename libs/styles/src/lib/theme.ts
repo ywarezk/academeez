@@ -103,55 +103,47 @@ export let theme = createTheme({
   typography: {
     allVariants: {
       fontFamily: 'Radio Grotesk',
-      fontSize: 13
+      // fontSize: 13
     },
     fontFamily: 'Radio Grotesk',
     h1: {
       fontFamily: 'Radio Grotesk',
       fontWeight: 700,
-      lineHeight: 4.6,
       fontSize: '4.375rem'
     },
     h2: {
       fontFamily: 'Radio Grotesk',
       fontWeight: 700,
-      lineHeight: 3.438,
       fontSize: '3.438rem'
     },
     h5: {
       fontFamily: 'Radio Grotesk',
       fontWeight: 700,
-      lineHeight: 1.75,
       fontSize: '1.5rem'
     },
     h6: {
       fontFamily: 'Radio Grotesk',
       fontWeight: 400,
-      lineHeight: 1.2,
       fontSize: '1.25rem'
     },
     body1: {
       fontFamily: 'Space Mono',
       fontWeight: 400,
-      lineHeight: 1.537,
       fontSize: '0.813rem'
     },
     body2: {
       fontFamily: 'Space Mono',
       fontWeight: 700,
-      lineHeight: 1.537,
       fontSize: '0.813rem'
     },
     button: {
       fontFamily: 'Space Mono',
       fontWeight: 400,
-      lineHeight: 1.42,
       fontSize: '0.875rem',
     },
     caption: {
       fontFamily: 'Radio Grotesk',
       fontWeight: 400,
-      lineHeight: 1.333,
       fontSize: '0.75rem'
     }
   },

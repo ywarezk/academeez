@@ -7,12 +7,6 @@
  * @license: MIT
  */
 
+export { HomePage as default } from '../home';
 
 
-export default function Index() {
-  return (
-    <h1>
-      Hello index
-    </h1>
-  )
-}

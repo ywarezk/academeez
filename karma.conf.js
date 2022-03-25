@@ -166,6 +166,10 @@ module.exports = (config) => {
         rules: [
           {
             loader: 'url-loader',
+            test: /\.(png)$/,
+          },
+          {
+            loader: 'url-loader',
             test: /\.(ttf|woff2)$/,
           },
           {
@@ -193,7 +197,7 @@ module.exports = (config) => {
                 })
               }
             ],
-            test: /\.(png|jpg|jpeg|gif|webp|avif|ico|bmp)$/i,
+            test: /\.(jpg|jpeg|gif|webp|avif|ico|bmp)$/i,
           },
           {
             test: /\.js$/,
