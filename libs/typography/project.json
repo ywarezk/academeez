@@ -1,0 +1,50 @@
+{
+  "root": "libs/typography",
+  "sourceRoot": "libs/typography/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/typography",
+        "tsConfig": "libs/typography/tsconfig.lib.json",
+        "project": "libs/typography/package.json",
+        "entryFile": "libs/typography/src/index.ts",
+        "external": ["react/jsx-runtime"],
+        "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
+        "compiler": "babel",
+        "assets": [
+          {
+            "glob": "libs/typography/README.md",
+            "input": ".",
+            "output": "."
+          }
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/typography/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/workspace:run-commands",
+      "configurations": {
+        "development": {
+          "commands": [
+            "npx nz test libs/typography"
+          ]
+        }
+      },
+      "options": {
+        "commands": [
+          "npx nz test libs/typography --prod"
+        ]
+      }
+    }
+  }
+}

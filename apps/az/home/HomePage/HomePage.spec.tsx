@@ -12,8 +12,7 @@ import { render } from '@testing-library/react';
 import { ThemeProvider } from '@az/styles';
 
 describe('<HomePage />', () => {
-  it.only('Sanity', function(done) {
-    this.timeout(6000000000);
+  it('Sanity', function() {
     render(
       <ThemeProvider>
         <HomePage />

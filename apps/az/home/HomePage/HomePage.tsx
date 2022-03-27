@@ -10,7 +10,6 @@
 import { FC } from "react";
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
 import { Typography } from "@mui/material";
 import bgCfa from './bg-cfa.png';
 
@@ -37,7 +36,7 @@ export const HomePage: FC = () => {
           }}
         >
           <Box>
-            <Typography variant="h1" sx={{ color: 'primary.main' }}>
+            <Typography variant="h1" sx={{ color: 'primary.main', mb: 3 }}>
               academeez
             </Typography>
             <Typography variant="h3">

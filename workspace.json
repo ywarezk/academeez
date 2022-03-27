@@ -2,6 +2,7 @@
   "version": 2,
   "projects": {
     "az": "apps/az",
-    "mui": "libs/mui"
+    "mui": "libs/mui",
+    "typography": "libs/typography"
   }
 }

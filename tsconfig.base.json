@@ -22,7 +22,8 @@
       "@az/designs": ["libs/designs/src/index.ts"],
       "@az/mui/*": ["libs/mui/src/lib/*"],
       "@az/prd": ["libs/prd/src/index.ts"],
-      "@az/styles": ["libs/styles/src/index.ts"]
+      "@az/styles": ["libs/styles/src/index.ts"],
+      "@az/typography": ["libs/typography/src/index.ts"]
     },
     "types": ["node", "express", "mocha"]
   },
