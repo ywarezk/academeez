@@ -21,6 +21,7 @@ import PlayArrow from '@mui/icons-material/PlayArrow'
 import Link from 'next/link'
 import AzLink from '@az/mui/Link';
 import Box from '@mui/material/Box';
+import ButtonPlay from '@az/mui/ButtonPlay';
 
 export const CardLesson: FC<{ lesson: Lesson }> = ({
   lesson
@@ -33,6 +34,23 @@ export const CardLesson: FC<{ lesson: Lesson }> = ({
           component="img"
           height="170"
         />
+        <Box sx={ {
+            position: 'absolute',
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            top: 0,
+            left: 0
+          } }>
+          <Link href={ lesson.link } passHref>
+            <ButtonPlay
+              fontSize={62}
+              sx={{ position: 'absolute' }}
+            />
+          </Link>
+        </Box>
       </Box>
       <CardContent>
         <Typography gutterBottom variant="h5">
@@ -52,7 +70,6 @@ export const CardLesson: FC<{ lesson: Lesson }> = ({
             sx={{ width: '100%' }}
             variant='outlined'
             startIcon={<PlayArrow />}
-            component={ AzLink }
           >
             Start Learning
           </Button>

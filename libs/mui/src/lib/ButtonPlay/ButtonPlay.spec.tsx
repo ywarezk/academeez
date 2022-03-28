@@ -3,7 +3,7 @@
  *
  * Created March 28th, 2022
  * @author: ywarezk
- * @version: 0.0.1
+ * @version: 0.5.0
  * @license: MIT
  */
 
@@ -17,7 +17,7 @@ describe('<ButtonPlay />', () => {
     render(
       <ThemeProvider>
         <Box sx={{p: 5, backgroundColor: 'grey.100'}}>
-          <ButtonPlay sx={{fontSize: 100}} />
+          <ButtonPlay fontSize={100} />
         </Box>
       </ThemeProvider>
     )
