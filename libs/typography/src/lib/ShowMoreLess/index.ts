@@ -7,3 +7,4 @@
  * @license: MIT
  */
 
+export { ShowMoreLess as default, ShowMoreLessProps } from './ShowMoreLess';

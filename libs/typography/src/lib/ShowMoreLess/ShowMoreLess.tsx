@@ -58,7 +58,7 @@ export const ShowMoreLess: FC<ShowMoreLessProps> = ({
           mt: 1
         }}>
           <Button
-            variant="outlined"
+            variant="text"
             color="secondary"
             sx={{
               width: '100%',

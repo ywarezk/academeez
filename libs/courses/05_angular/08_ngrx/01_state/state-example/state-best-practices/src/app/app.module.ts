@@ -1,9 +1,9 @@
-
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { SharedModule } from 'src/shared/shared.module';
 
 import { AppComponent } from './app.component';
-import { CommonModule } from '../common/common.module';
+import { LayoutModule } from './layout/layout.module';
 
 @NgModule({
   declarations: [
@@ -11,7 +11,8 @@ import { CommonModule } from '../common/common.module';
   ],
   imports: [
     BrowserModule,
-    CommonModule
+    LayoutModule,
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]

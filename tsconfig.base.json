@@ -16,14 +16,14 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@az/academeez/app": ["apps/academeez/app/index.ts"],
       "@az/blog": ["libs/blog/src/index.ts"],
       "@az/courses": ["libs/courses/src/index.ts"],
       "@az/designs": ["libs/designs/src/index.ts"],
       "@az/mui/*": ["libs/mui/src/lib/*"],
       "@az/prd": ["libs/prd/src/index.ts"],
       "@az/styles": ["libs/styles/src/index.ts"],
-      "@az/typography": ["libs/typography/src/index.ts"]
+      "@az/typography/*": ["libs/typography/src/lib/*"],
+      "@az/az/*": ["apps/az/*"]
     },
     "types": ["node", "express", "mocha"]
   },

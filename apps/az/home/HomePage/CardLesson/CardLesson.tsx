@@ -1,0 +1,64 @@
+/**
+ * Card displaying a lesson
+ * I want as quickly as possible to direct the user to a lesson
+ *
+ * Created March 27th, 2022
+ * @author: ywarezk
+ * @version: 0.1.0
+ * @license: MIT
+ */
+
+import { FC } from "react"
+import { Lesson } from '@az/az/common'
+import Card from '@az/mui/Card'
+import CardMedia from '@mui/material/CardMedia'
+import CardContent from '@mui/material/CardContent'
+import ShowMoreLess from '@az/typography/ShowMoreLess'
+import Typography from '@mui/material/Typography'
+import CardActions from '@mui/material/CardActions'
+import Button from '@az/mui/Button'
+import PlayArrow from '@mui/icons-material/PlayArrow'
+import Link from 'next/link'
+import AzLink from '@az/mui/Link';
+import Box from '@mui/material/Box';
+
+export const CardLesson: FC<{ lesson: Lesson }> = ({
+  lesson
+}) => {
+  return (
+    <Card sx={{ maxWidth: 294}}>
+      <Box sx={{ position: 'relative'}}>
+        <CardMedia
+          image={lesson.bgImage}
+          component="img"
+          height="170"
+        />
+      </Box>
+      <CardContent>
+        <Typography gutterBottom variant="h5">
+          { lesson.title}
+        </Typography>
+        <ShowMoreLess
+          height={60}
+        >
+          <Typography variant='body1'>
+            { lesson.description }
+          </Typography>
+        </ShowMoreLess>
+      </CardContent>
+      <CardActions>
+        <Link href={ lesson.link } passHref>
+          <Button
+            sx={{ width: '100%' }}
+            variant='outlined'
+            startIcon={<PlayArrow />}
+            component={ AzLink }
+          >
+            Start Learning
+          </Button>
+        </Link>
+
+      </CardActions>
+    </Card>
+  )
+}
