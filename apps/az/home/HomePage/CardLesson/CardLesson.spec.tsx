@@ -12,8 +12,7 @@ import { CardLesson } from './CardLesson';
 import { ThemeProvider } from '@az/styles';
 
 describe('<CardLesson />', () => {
-  it.only('Sanity', function(done) {
-    this.timeout(60000000000)
+  it('Sanity', function() {
     render(
       <ThemeProvider>
 

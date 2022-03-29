@@ -8,7 +8,8 @@
    },
    settings: {
      isEmail: true
-   }
+   },
+   books: null
  }
 
  */
