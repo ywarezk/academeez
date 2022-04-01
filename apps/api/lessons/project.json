@@ -8,21 +8,16 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/api/lessons",
-        "main": "apps/api/lessons/src/main.ts",
-        "tsConfig": "apps/api/lessons/tsconfig.app.json",
-        "assets": ["apps/api/lessons/src/assets"]
+        "main": "apps/api/lessons/index.ts",
+        "generatePackageJson": true,
+        "outputFileName": "index.js",
+        "tsConfig": "apps/api/lessons/tsconfig.app.json"
       },
       "configurations": {
         "production": {
           "optimization": true,
           "extractLicenses": true,
-          "inspect": false,
-          "fileReplacements": [
-            {
-              "replace": "apps/api/lessons/src/environments/environment.ts",
-              "with": "apps/api/lessons/src/environments/environment.prod.ts"
-            }
-          ]
+          "inspect": false
         }
       }
     },
