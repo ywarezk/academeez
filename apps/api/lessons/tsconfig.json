@@ -2,6 +2,11 @@
   "extends": "../../../tsconfig.base.json",
   "files": [],
   "include": [],
+  "compilerOptions": {
+    "moduleResolution": "Node",
+    "module": "CommonJS",
+    "esModuleInterop": true
+  },
   "references": [
     {
       "path": "./tsconfig.app.json"

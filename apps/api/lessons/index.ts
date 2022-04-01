@@ -8,15 +8,18 @@
  */
 
 import createApplication from 'express';
+import { CoursesResolver } from './courses';
 
 export const app = createApplication()
 
-app.get('/lessons', (req, res) => {
-  res.send('hello lessons')
+app.get('/lessons/version', (req, res) => {
+  res.send('0.0.1')
 })
 
-app.get('/lesson/:id', (req, res) => {
-  res.send(`Getting single lesson with id: ${req.params.id}`)
+app.get('/lessons', async (req, res) => {
+  const resolver = new CoursesResolver();
+  const lessons = await resolver.lessons();
+  res.json(lessons)
 })
 
 
