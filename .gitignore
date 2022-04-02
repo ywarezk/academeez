@@ -46,7 +46,6 @@ Thumbs.db
 cobertura-coverage.xml
 result.xml
 
-/iac
 node_modules
 
 /reports
@@ -54,3 +53,11 @@ node_modules
 .nyc_output/
 artifacts/
 /.nyc_output
+
+
+terraform.tfstate*
+.terraform/
+terraform.tfvars
+values-*.yaml
+.terraform.lock.hcl
+db.json

@@ -43,6 +43,17 @@
           "npm run test:server -- apps/api/lessons"
         ]
       }
+    },
+    "deploy": {
+      "builder": "@nrwl/workspace:run-commands",
+      "configurations": {
+        "development": {
+          "commands": [
+            "gcloud functions deploy api --runtime nodejs16 --trigger-http --project prj-academeez-dev-bdd2 --entry-point app --source dist/apps/api/lessons"
+          ]
+        }
+      }
+
     }
   },
   "tags": []
