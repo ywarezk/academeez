@@ -1,5 +1,5 @@
 ---
-title: @ngrx/entity
+title: '@ngrx/entity'
 short_description: Generic reducer utils for managing lists in our state.
 description: Generic reducer utils for managing lists in our state.
 slug: entity
