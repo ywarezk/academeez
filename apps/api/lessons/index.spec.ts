@@ -30,7 +30,6 @@ describe('api-lessons', () => {
 
   it('get all lessons', async () => {
     const response = await axios.get('http://localhost:3000/lessons')
-    debugger
     expect(response.data.length > 0).to.equal(true);
   })
 })

@@ -21,7 +21,6 @@ app.get<null, Lesson[] | ErrorResponse>('/lessons', async (_req, res) => {
   const resolver = new CoursesResolver()
   try {
     const lessons = await resolver.lessons()
-    debugger
     res.json(lessons)
   } catch(err) {
     res.status(500).json({error: err.message})

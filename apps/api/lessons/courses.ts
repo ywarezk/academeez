@@ -128,7 +128,7 @@ export class CoursesResolver {
           educationItem.children = await this._getAllEducationItems(childrenPaths)
           newEducationItems.push(educationItem)
         } else {
-          newEducationItems.push(await this._getAllEducationItems(childrenPaths))
+          newEducationItems.push(...(await this._getAllEducationItems(childrenPaths)))
         }
       } catch (err) {
         debugger
