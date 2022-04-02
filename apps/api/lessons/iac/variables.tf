@@ -11,3 +11,9 @@ variable "token_github" {
   type = string
   description = "We use this token to query github api"
 }
+
+variable "project_common" {
+  type = string
+  description = "Shared project beween environments"
+  default = "prj-academeez-common-1005"
+}

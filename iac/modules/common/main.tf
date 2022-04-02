@@ -29,7 +29,7 @@ module "common_project" {
   billing_account             = var.billing_account
   create_project_sa           = false
   activate_apis               = [
-
+    "secretmanager.googleapis.com"
   ]
   labels                      = {
     environment       = "bootstrap"
