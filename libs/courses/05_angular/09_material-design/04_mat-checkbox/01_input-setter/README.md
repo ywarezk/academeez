@@ -1,5 +1,5 @@
 ---
-title: @Input setters
+title: '@Input setters'
 short_description: Input setters are an easy way we can run some logic when a certain @Input is changed
 description: Input setters are an easy way we can run some logic when a certain @Input is changed
 slug: input-setters
