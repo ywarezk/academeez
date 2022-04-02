@@ -131,6 +131,7 @@ export class CoursesResolver {
           newEducationItems.push(await this._getAllEducationItems(childrenPaths))
         }
       } catch (err) {
+        debugger
         throw new Error(`Failed while parsing the README of ${key}`)
       }
     }
