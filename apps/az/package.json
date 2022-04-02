@@ -1,4 +1,7 @@
 {
   "name": "@az/az",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "dependencies": {
+    "@az/courses": ">=0.0.1"
+  }
 }

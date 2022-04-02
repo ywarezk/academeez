@@ -50,3 +50,7 @@ result.xml
 node_modules
 
 /reports
+
+.nyc_output/
+artifacts/
+/.nyc_output
