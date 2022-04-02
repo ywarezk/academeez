@@ -1,7 +1,7 @@
 ---
 title: this
-short_description: `this` represents the object that initiated the call
-description: `this` represents the object that initiated the call
+short_description: '`this` represents the object that initiated the call'
+description: '`this` represents the object that initiated the call'
 slug: this
 link: /courses/javascript/oop/this
 bg_img: https://github.com/ywarezk/academeez/raw/main/libs/courses/05_angular/bg.png
