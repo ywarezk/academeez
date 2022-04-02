@@ -9,6 +9,7 @@
 
 import createApplication from 'express';
 import { CoursesResolver } from './courses';
+import { ErrorResponse, Lesson } from '@az/models';
 
 export const app = createApplication()
 
@@ -16,10 +17,16 @@ app.get('/lessons/version', (req, res) => {
   res.send('0.0.1')
 })
 
-app.get('/lessons', async (req, res) => {
-  const resolver = new CoursesResolver();
-  const lessons = await resolver.lessons();
-  res.json(lessons)
+app.get<null, Lesson[] | ErrorResponse>('/lessons', async (_req, res) => {
+  const resolver = new CoursesResolver()
+  try {
+    const lessons = await resolver.lessons()
+    debugger
+    res.json(lessons)
+  } catch(err) {
+    res.status(500).json({error: err.message})
+  }
+
 })
 
 

@@ -8,11 +8,12 @@
  */
 
 import { app } from '.'
-import { Server } from 'http';
-import { expect } from 'chai';
+import { Server } from 'http'
+import { expect } from 'chai'
+import axios from 'axios'
 
 describe('api-lessons', () => {
-  let server: Server;
+  let server: Server
 
   before((done) => {
     server = app.listen(3000, () => {
@@ -27,7 +28,9 @@ describe('api-lessons', () => {
     })
   })
 
-  it('get all lessons', () => {
-    expect(true).to.equal(true);
+  it('get all lessons', async () => {
+    const response = await axios.get('http://localhost:3000/lessons')
+    debugger
+    expect(response.data.length > 0).to.equal(true);
   })
 })

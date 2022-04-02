@@ -1,8 +1,9 @@
 {
   "version": 2,
   "projects": {
-    "az": "apps/az",
     "api-lessons": "apps/api/lessons",
+    "az": "apps/az",
+    "models": "libs/models",
     "mui": "libs/mui",
     "typography": "libs/typography"
   }

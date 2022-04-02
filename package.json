@@ -75,6 +75,7 @@
     "@nrwl/eslint-plugin-nx": "13.7.1",
     "@nrwl/express": "13.7.1",
     "@nrwl/jest": "13.7.1",
+    "@nrwl/js": "13.7.1",
     "@nrwl/linter": "13.7.1",
     "@nrwl/next": "13.7.1",
     "@nrwl/node": "13.7.1",

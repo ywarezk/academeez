@@ -11,27 +11,15 @@ import { queryGithub } from './github'
 import metadataParser from 'markdown-yaml-metadata-parser';
 import camelcaseKeys from 'camelcase-keys';
 import { includes, isEmpty, difference } from 'lodash';
+import { Lesson } from '@az/models';
 
 export class CoursesResolver {
 
   /**
    * Get a list of all the education items
    */
-  async lessons() {
+  async lessons(): Promise<Lesson[]> {
     const educationItems = await this._getAllEducationItems(['libs/courses/']);
-
-    // calculate the children
-    for (const lesson of educationItems) {
-      const pathArray = lesson.link.split('/');
-      lesson.children = educationItems
-        .filter(l => {
-          const childPathArray = l.link.split('/');
-          if (childPathArray.length !== (pathArray.length + 1)) return false;
-          return difference(pathArray, childPathArray).length === 0;
-        })
-        .map(l => l.link)
-    }
-
     return educationItems;
   }
 
@@ -68,7 +56,7 @@ export class CoursesResolver {
 
   private _queryLsFolder(path: string, alias?): string {
     return `
-      ${alias || this._sanitizeName(path)}: object(expression: "main:${path}") {
+      ${alias || this._sanitizeName(path)}: object(expression: "${process.env.BRANCH}:${path}") {
         ... on Tree {
             entries {
               type
@@ -82,7 +70,7 @@ export class CoursesResolver {
 
   private _queryParseReadme(folderName: string, alias?): string {
     return `
-      ${alias || this._sanitizeName(folderName)}: object(expression: "main:${folderName}/README.md") {
+      ${alias || this._sanitizeName(folderName)}: object(expression: "${process.env.BRANCH}:${folderName}/README.md") {
         ... on Blob {
           text
         }
@@ -95,7 +83,7 @@ export class CoursesResolver {
    * @param folderName
    * @returns
    */
-  private async _getAllEducationItems(paths: string[]): Promise<any> {
+  private async _getAllEducationItems(paths: string[]): Promise<Lesson[]> {
     if (isEmpty(paths)) return [];
 
     // For all the paths create a big query to read all the folders and files
@@ -110,20 +98,23 @@ export class CoursesResolver {
     const data = await queryGithub(query);
 
     const keys = Object.keys(data.repository);
-    const newPaths = [];
     const newEducationItems = [];
     for (const key of keys) {
       const item = data.repository[key];
-      if (key === '_readme') continue;
-      if (includes(key, '_readme')) {
-        try {
+
+      // get all the eduction item
+      if (!includes(key, '_readme')) continue;
+      try {
+        let childrenKey = '_'
+        let educationItem = null
+        if (key !== '_readme') {
           const result = metadataParser(item.text);
-          newEducationItems.push(camelcaseKeys(result.metadata))
-        } catch (err) {
-          throw new Error(`Failed while parsing the README of ${key}`)
+          educationItem = camelcaseKeys(result.metadata)
+          childrenKey = key.split('_readme')[0]
         }
-      } else {
-        const trees = item.entries
+
+        // for the education item find all the children
+        const childrenPaths = data.repository[childrenKey].entries
           .filter(entry => entry.type === 'tree')
           .filter(entry => {
             const { name } = entry;
@@ -132,13 +123,18 @@ export class CoursesResolver {
             return !isNaN(num);
           })
           .map(entry => entry.path);
-        newPaths.push(...trees);
+
+        if (educationItem) {
+          educationItem.children = await this._getAllEducationItems(childrenPaths)
+          newEducationItems.push(educationItem)
+        } else {
+          newEducationItems.push(await this._getAllEducationItems(childrenPaths))
+        }
+      } catch (err) {
+        throw new Error(`Failed while parsing the README of ${key}`)
       }
     }
-
-    const recResults = await this._getAllEducationItems(newPaths)
-
-    return [...newEducationItems, ...recResults];
+    return newEducationItems;
   }
 
 }

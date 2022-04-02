@@ -1,0 +1,26 @@
+{
+  "root": "libs/models",
+  "sourceRoot": "libs/models/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/node:package",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/models",
+        "tsConfig": "libs/models/tsconfig.lib.json",
+        "packageJson": "libs/models/package.json",
+        "main": "libs/models/src/index.ts",
+        "assets": ["libs/models/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/models/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}
