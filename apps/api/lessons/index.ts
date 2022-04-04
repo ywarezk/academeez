@@ -13,8 +13,8 @@ import { ErrorResponse, Lesson } from '@az/models';
 
 export const app = createApplication()
 
-app.get('/lessons/version', (req, res) => {
-  res.send('0.0.1')
+app.get('/lessons/version', (_req, res) => {
+  res.send('0.1.0')
 })
 
 app.get<null, Lesson[] | ErrorResponse>('/lessons', async (_req, res) => {
@@ -25,7 +25,6 @@ app.get<null, Lesson[] | ErrorResponse>('/lessons', async (_req, res) => {
   } catch(err) {
     res.status(500).json({error: err.message})
   }
-
 })
 
 

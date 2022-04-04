@@ -29,7 +29,19 @@ resource "google_secret_manager_secret_version" "token_github_1" {
  * Create a service account for the cloud function
  */
 resource "google_service_account" "sa_api_lessons" {
-  project      = "prj-academeez-dev-bdd2"
+  count        = length(var.projects)
+  project      = var.projects[count.index]
   account_id   = "sa-api-lessons"
   display_name = "Service account for the lessons api"
+}
+
+/**
+ * service account can access the github token secret
+ */
+resource "google_secret_manager_secret_iam_member" "allow_read_github_token" {
+  count     = length(var.projects)
+  project   = var.projects[count.index]
+  secret_id = google_secret_manager_secret.token_github.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.sa_api_lessons[count.index].email}"
 }

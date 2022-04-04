@@ -49,7 +49,7 @@
       "configurations": {
         "development": {
           "commands": [
-            "gcloud functions deploy api --runtime nodejs16 --trigger-http --project prj-academeez-dev-bdd2 --entry-point app --source dist/apps/api/lessons --service-account=sa-api-lessons@prj-academeez-dev-bdd2.iam.gserviceaccount.com"
+            "gcloud beta functions deploy api --set-secrets 'GITHUB_TOKEN=projects/288211122591/secrets/github-token:latest' --set-env-vars BRANCH=dev --runtime nodejs16 --trigger-http --project prj-academeez-dev-bdd2 --entry-point app --source dist/apps/api/lessons --service-account=sa-api-lessons@prj-academeez-dev-bdd2.iam.gserviceaccount.com"
           ]
         }
       }

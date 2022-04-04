@@ -23,3 +23,11 @@ variable "sa_github_actions" {
   description = "Github actions service account"
   default = "sa-github-actions@prj-academeez-common-1005.iam.gserviceaccount.com"
 }
+
+variable "projects" {
+  type = list
+  description = "The list of projects according to the environments"
+  default = [
+    "prj-academeez-dev-bdd2"
+  ]
+}
