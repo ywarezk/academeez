@@ -30,16 +30,19 @@ jobs:
   effected:
     runs-on: ubuntu-latest
     steps:
-      - uses: google-github-actions/auth@v0.7.0
+      - name: Clone repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Authenticate OIDC
+        uses: google-github-actions/auth@v0.7.0
         with:
           token_format: access_token
           workload_identity_provider: ${{ secrets.WI_PROVIDER }}
           service_account: ${{ secrets.SA_GA }}
 
-      # - name: Clone repository
-      #   uses: actions/checkout@v3
-      #   with:
-      #     fetch-depth: 0
+
 
       # - name: Setup Node
       #   uses: actions/setup-node@v3
