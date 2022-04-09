@@ -30,3 +30,8 @@ variable "environments" {
     }
   }
 }
+
+variable "sa_terraform" {
+  type = string
+  description = "The service account of terraform"
+}

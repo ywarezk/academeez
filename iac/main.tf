@@ -42,6 +42,7 @@ module "academeez_common" {
   parent_folder   = module.root_folder.id
   org_id          = var.org_id
   billing_account = var.billing_account
+  sa_terraform    = var.sa_terraform
 }
 
 module "environments" {
@@ -52,8 +53,3 @@ module "environments" {
   billing_account = var.billing_account
   org_id          = var.org_id
 }
-
-# module "github_actions" {
-#   source  = "./modules/github-actions"
-#   project = module.academeez_common.project
-# }

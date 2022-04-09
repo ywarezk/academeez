@@ -21,3 +21,8 @@ variable "billing_account" {
   description = "billing account"
   type = string
 }
+
+variable "sa_terraform" {
+  description = "The service account of terraform"
+  type = string
+}

@@ -30,7 +30,9 @@ module "common_project" {
   create_project_sa           = false
   activate_apis               = [
     "secretmanager.googleapis.com",
-    "iam.googleapis.com"
+    "iam.googleapis.com",
+    "cloudidentity.googleapis.com",
+    "iamcredentials.googleapis.com"
   ]
   labels                      = {
     environment       = "bootstrap"
@@ -57,7 +59,7 @@ resource "google_storage_bucket_iam_binding" "terraform_sa_allow_bucket" {
   bucket = google_storage_bucket.tf_state_bucket.name
   role = "roles/storage.admin"
   members = [
-    "serviceAccount:sa-nerdeez-terraform@prj-nerdeez-common-d528.iam.gserviceaccount.com"
+    "serviceAccount:${var.sa_terraform}"
   ]
 }
 
