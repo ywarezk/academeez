@@ -11,14 +11,14 @@ provider "github" {
 }
 
 provider "google-beta" {
-  region          = var.region
+  region = var.region
 }
 
 /**
  * Create the root folder of the project
  */
 module "root_folder" {
-  source  = "terraform-google-modules/folders/google"
+  source = "terraform-google-modules/folders/google"
 
   parent = "organizations/${var.org_id}"
 
@@ -45,8 +45,15 @@ module "academeez_common" {
 }
 
 module "environments" {
-  for_each    = var.environments
-  source      = "./modules/env"
-  env_name    = each.key
-  env_options = each.value
+  for_each        = var.environments
+  source          = "./modules/env"
+  env_name        = each.key
+  env_options     = each.value
+  billing_account = var.billing_account
+  org_id          = var.org_id
 }
+
+# module "github_actions" {
+#   source  = "./modules/github-actions"
+#   project = module.academeez_common.project
+# }

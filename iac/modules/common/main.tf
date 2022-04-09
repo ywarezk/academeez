@@ -102,3 +102,7 @@ resource "google_service_account_iam_member" "sa_wi" {
   role               = "roles/iam.workloadIdentityUser"
   member             = "principalSet://iam.googleapis.com/projects/288211122591/locations/global/workloadIdentityPools/pool-github-actions/attribute.repository/ywarezk/academeez"
 }
+
+output "project" {
+  value = module.common_project.project_id
+}
