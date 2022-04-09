@@ -19,10 +19,18 @@ jobs:
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Setup Node
       - uses: actions/setup-node@v3
         with:
           node-version: 16.14.2
           cache: npm
       - run: npm ci
-      - run: "npx nx lint ${{ github.event.inputs.app }} "
+
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        id: setSHAs
+        uses: nrwl/nx-set-shas@v2
+
+      - run: "npx nx affected:apps --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain"
+      - run: "npx nx affected:libs --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain"
