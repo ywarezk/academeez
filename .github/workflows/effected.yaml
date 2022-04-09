@@ -11,7 +11,7 @@ name: "Effected apps/libs"
 
 # called workflow
 on:
-  workflow_dispatch:
+  workflow_call:
 
 jobs:
   effected:
@@ -22,7 +22,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup Node
-      - uses: actions/setup-node@v3
+        uses: actions/setup-node@v3
         with:
           node-version: 16.14.2
           cache: npm
@@ -32,5 +32,7 @@ jobs:
         id: setSHAs
         uses: nrwl/nx-set-shas@v2
 
-      - run: "npx nx affected:apps --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain"
-      - run: "npx nx affected:libs --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain"
+      - name: Find effected apps and libs
+        run: |
+          npx nx affected:apps --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain
+          npx nx affected:libs --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain
