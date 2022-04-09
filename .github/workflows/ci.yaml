@@ -41,14 +41,14 @@ jobs:
           workload_identity_provider: ${{ secrets.WI_PROVIDER }}
           service_account: ${{ secrets.SA_GA }}
 
-
-
-      # - name: Setup Node
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 16.14.2
-      #     cache: npm
-      # - run: npm ci
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.14.2
+          cache: npm
+      - run: |
+          npm run artifactregistry-login
+          npm ci
 
       # - name: Effected apps/libs
       #   uses: ./.github/actions/effected
