@@ -61,3 +61,4 @@ terraform.tfvars
 values-*.yaml
 .terraform.lock.hcl
 db.json
+.angular
