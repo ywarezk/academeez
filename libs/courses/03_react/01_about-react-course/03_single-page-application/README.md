@@ -17,7 +17,10 @@ Before we really understand what a Single Page Application website is, we have t
 
 ## React can be a team player
 
-React can be embedded in other sites as well
+React can be embedded in other sites as well.  
+For example if you have a wordpress site, `React` can be combined in that site to draw part of the screen.  
+But in this course we will not focus on combining React as part of another web site, rather we will use `React` to create something called `Single Page Applications`.  
+To understand what a `Single Page Applications` is we have to look back on the history of the web.
 
 ## Looking on history
 
@@ -32,7 +35,8 @@ Which means they could get an HTML file from a server and transform that HTML to
 At first the screen remained static and the way to change the screen is to press a link to a different screen.  
 Once the HTML was loaded the screen was static.
 
-But when we look at this example of a post from Seinfeld group we can see that without reloading the page the post is changing to inform us of someone that is typing and also to push new comments.
+But when we look at this example of a post from facebook we can see that, without reloading the page, the post is changing to inform us of someone that is typing ,and also to push new comments.  
+Those dynamic changes keeps the user engaged, and spend more time on the site.
 
 Netscape wanted to support changes in the screen without reloading a fully new screen.  
 So they invented a scripting language called `JavaScript` that we can use to change the page without the reload.
@@ -48,6 +52,15 @@ We still handled the navigation the old way but if you think about it, when you 
 So why navigate the user and preform an entire reload let's draw only the change.  
 This created an even better user experience where the site wasn't reloaded at all.  
 After the site was initially loaded all the changes including navigating to different pages, was done using Javascript.
-This gave the website a look and feel like a desktop app where every transition is immediate, and those site were coined `Single Page Applications`, Single Page cause there was one HTML loaded at the initial load (single page), and application cause those sites behaved like a desktop application
+This gave the website a look and feel like a desktop app where every transition is immediate, and those site were coined `Single Page Applications (SPA)`, Single Page cause there was one HTML loaded at the initial load (single page), and application cause those sites behaved like a desktop application
 
 ## The problem
+
+Drawing entire screens using Javascript is not such a simple task.  
+Javascript does give us the tools we need to change the screen via the `dom` which we could access with the `document` object.  
+But we are talking about drawing entire screens with Javascript, and using the `document` api to draw entire screens will be challenging. 
+
+## First generation single page application frameworks
+
+To help developers overcome the challenge of creating an `SPA`, `SPA` frameworks emerged, where the first one was released in 2009 by google and was called [AngularJS](https://angularjs.org/), little after more frameworks like [Ember](https://emberjs.com/), and [Backbone](https://backbonejs.org/) was released.
+

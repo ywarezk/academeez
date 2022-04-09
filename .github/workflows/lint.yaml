@@ -1,0 +1,32 @@
+#
+# Runs lint on a single app or library
+#
+# Created April 9th, 2022
+# @author: ywarezk
+# @version: 0.0.1
+# @license: MIT
+#
+
+name: Lint
+
+# called workflow
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: The app or lib to run lint on
+        required: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+      - name: Setup Node
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.14.2
+          cache: npm
+      - run: npm ci
+      - run: "npx nx lint ${{ github.event.inputs.app }} "

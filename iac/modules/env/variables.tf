@@ -15,13 +15,11 @@ variable "env_name" {
 variable "org_id" {
   description = "The id of the organization"
   type        = string
-  default     = "701515151774"
 }
 
 variable "billing_account" {
   description = "Billing accound of the infastructure"
   type        = string
-  default     = "01187F-6BAFD6-F8EE32"
 }
 
 variable "env_options" {

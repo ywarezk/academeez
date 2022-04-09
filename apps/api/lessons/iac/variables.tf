@@ -15,19 +15,14 @@ variable "token_github" {
 variable "project_common" {
   type = string
   description = "Shared project beween environments"
-  default = "prj-academeez-common-1005"
 }
 
 variable "sa_github_actions" {
   type = string
   description = "Github actions service account"
-  default = "sa-github-actions@prj-academeez-common-1005.iam.gserviceaccount.com"
 }
 
 variable "projects" {
   type = list
   description = "The list of projects according to the environments"
-  default = [
-    "prj-academeez-dev-bdd2"
-  ]
 }

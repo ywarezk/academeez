@@ -24,28 +24,7 @@ We can build the following
 
 How is it possible for React to serve so many different frontend apps.
 
-## Platform Agnostic
 
-Platform is whomever is running our application:
-
-- iOS
-- Android
-- Desktop
-- Browser
-- Node.js
-
-React is platform agnostic meaning it can run on different platforms that can run Javascript.
-
-## React by itself does not draw the UI
-
-## Different apps we can build with React
-
-Using React we can build:
-
-- Native Mobile apps
-- Hybrid Mobile apps
-- Desktop applications
-- WebSites
 
 ## Native Mobile apps
 
@@ -69,6 +48,28 @@ To build those apps we will have to combine the `React` library with `react-dom`
 
 Using React we can create websites that run on modern web browsers.  
 To build those apps we will have to combine `React` with `react-dom` and work with the browser platform environment.
+
+## Platform Agnostic
+
+Platform is whomever is running our application:
+
+- iOS
+- Android
+- Desktop
+- Browser
+- Node.js
+
+React is platform agnostic meaning it can run on different platforms that can run Javascript.
+
+## React by itself does not draw the UI
+
+You have to take react and combine it with another library in order to draw a screen.  
+For example `React` + `react-dom` can draw a web site.
+
+## Learning strategy
+
+Learning React means learning the core library which has similar api, and rules among all the platforms, and learning a platform specific rules and libraries.  
+In this course we will focus on combining React and `react-dom` and we will use react for building a website.
 
 ## Summary
 

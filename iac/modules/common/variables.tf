@@ -21,11 +21,3 @@ variable "billing_account" {
   description = "billing account"
   type = string
 }
-
-variable "terraform_admins" {
-  description = "List of developers that can modify infastructure"
-  type = list
-  default = [
-    // "yariv@nerdeez.com"
-  ]
-}

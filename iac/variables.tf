@@ -9,19 +9,16 @@
 variable "region" {
   description = "The region where the infastructure will be"
   type        = string
-  default     = "us-central1"
 }
 
 variable "org_id" {
   description = "The id of the organization"
   type        = string
-  default     = "701515151774"
 }
 
 variable "billing_account" {
   description = "Billing accound of the infastructure"
   type        = string
-  default     = "01187F-6BAFD6-F8EE32"
 }
 
 variable "environments" {
