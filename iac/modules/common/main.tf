@@ -102,7 +102,7 @@ resource "google_service_account" "sa_github_actions" {
 resource "google_service_account_iam_member" "sa_wi" {
   service_account_id = google_service_account.sa_github_actions.name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "principalSet://iam.googleapis.com/projects/288211122591/locations/global/workloadIdentityPools/pool-github-actions/attribute.repository/ywarezk/academeez"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.workload_identity_github_actions.name}/attribute.repository/ywarezk/academeez"
 }
 
 output "project" {
