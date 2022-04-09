@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Effected apps/libs
-        uses: ./.github/actions/effected.yaml
+        uses: ./.github/actions/effected
 
 
 
