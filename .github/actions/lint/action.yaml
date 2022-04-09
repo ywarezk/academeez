@@ -1,0 +1,22 @@
+#
+# Runs lint on a single app or library
+#
+# Created April 9th, 2022
+# @author: ywarezk
+# @version: 0.0.1
+# @license: MIT
+#
+
+name: Lint
+description: Runs lint on a single app or lib
+
+inputs:
+  app:
+    description: The app or lib to run lint on
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - run: "npx nx lint ${{ github.event.inputs.app }} "
+      shell: bash
