@@ -11,7 +11,7 @@ name: "Effected apps/libs"
 
 # called workflow
 on:
-  workflow_call:
+  workflow_dispatch:
 
 jobs:
   effected:
