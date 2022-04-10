@@ -52,6 +52,12 @@ jobs:
 
       - name: Effected apps/libs
         uses: ./.github/actions/effected
+        id: effected
+
+      - name: Print effected
+        run: |
+          echo "${{ steps.effected.outputs.apps }}"
+          echo "${{ steps.effected.outputs.libs }}"
 
 
 

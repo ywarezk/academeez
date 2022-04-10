@@ -10,15 +10,25 @@
 name: "Effected apps/libs"
 description: Find what are the apps and libs that are changed from the last successful build
 
+outputs:
+  apps:
+    description: The effected apps
+    value: ${{ steps.effected.outputs.apps }}
+  libs:
+    description: The effected libs
+    value: ${{ steps.effected.outputs.apps }}
+
 runs:
   using: composite
+
   steps:
     - name: Derive appropriate SHAs for base and head for `nx affected` commands
       id: setSHAs
       uses: nrwl/nx-set-shas@v2
 
     - name: Find effected apps and libs
+      id: effected
       shell: bash
       run: |
-        npx nx affected:apps --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain
-        npx nx affected:libs --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain
+        node .github/actions/effected/json-parse-effected.js "::set-output name=apps::" "$(npx nx affected:apps --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain)"
+        node .github/actions/effected/json-parse-effected.js "::set-output name=libs::" "$(npx nx affected:libs --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain)"
