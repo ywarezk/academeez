@@ -50,8 +50,8 @@ jobs:
           npm run artifactregistry-login
           npm ci
 
-      # - name: Effected apps/libs
-      #   uses: ./.github/actions/effected
+      - name: Effected apps/libs
+        uses: ./.github/actions/effected
 
 
 

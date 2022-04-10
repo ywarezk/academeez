@@ -19,4 +19,16 @@ Cookies are a way to save data which will be automatically sent by the browser o
 
 ## who can set the cookie
 
+- server
+- client
+
+## When will the browser send the cookie
+
+The scope of the cookie is determined by the `domain` and `path` which determines what URL's the cookie should be sent to.  
+
+if you set the `Domain` then subdomains are included as well.  
+If you set the `path` then it is considered the prefix path.
+
+
+
 ## who can delete the cookie
