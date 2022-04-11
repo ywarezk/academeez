@@ -11,6 +11,7 @@
 
 export COVERAGE_DIR=reports/$1
 export JUNIT_REPORT_PATH=reports/$1/unit-test.xml
+export TS_NODE_PROJECT=$1/tsconfig.app.json
 npx jenkins-mocha --cobertura --reporter mocha-jenkins-reporter --timeout 1200000 -r ts-node/register -r tsconfig-paths/register $1/**/*.spec.ts
 status=$?
 mv reports/$1/cobertura-coverage.xml reports/$1/coverage.xml

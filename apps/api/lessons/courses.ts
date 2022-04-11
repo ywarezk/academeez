@@ -56,7 +56,7 @@ export class CoursesResolver {
 
   private _queryLsFolder(path: string, alias?): string {
     return `
-      ${alias || this._sanitizeName(path)}: object(expression: "${process.env.BRANCH}:${path}") {
+      ${alias || this._sanitizeName(path)}: object(expression: "main:${path}") {
         ... on Tree {
             entries {
               type
@@ -70,7 +70,7 @@ export class CoursesResolver {
 
   private _queryParseReadme(folderName: string, alias?): string {
     return `
-      ${alias || this._sanitizeName(folderName)}: object(expression: "${process.env.BRANCH}:${folderName}/README.md") {
+      ${alias || this._sanitizeName(folderName)}: object(expression: "main:${folderName}/README.md") {
         ... on Blob {
           text
         }
