@@ -42,7 +42,8 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
         with:
-          fetch-depth: 0
+          workload_identity_provider: ${{ secrets.WI_PROVIDER }}
+          service_account: ${{ secrets.SA_GA }}
 
       - name: Affected apps/libs
         uses: ./.github/actions/affected
@@ -61,6 +62,9 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup
+        with:
+          workload_identity_provider: ${{ secrets.WI_PROVIDER }}
+          service_account: ${{ secrets.SA_GA }}
 
       - uses: ./.github/actions/lint
         with:

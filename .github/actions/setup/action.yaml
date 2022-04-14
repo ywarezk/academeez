@@ -10,14 +10,22 @@
 name: Setup
 description: Sets up a node environment
 
+inputs:
+  workload_identity_provider:
+    description: For authentication
+    required: true
+  service_account:
+    description: Github actions service account
+    required: true
+
 runs:
   using: composite
   steps:
     - name: Authenticate OIDC
       uses: google-github-actions/auth@v0.4.0
       with:
-        workload_identity_provider: ${{ secrets.WI_PROVIDER }}
-        service_account: ${{ secrets.SA_GA }}
+        workload_identity_provider: ${{ inputs.workload_identity_provider }}
+        service_account: ${{ inputs.service_account }}
 
     - name: Setup Node
       uses: actions/setup-node@v3
