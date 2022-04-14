@@ -52,7 +52,7 @@ jobs:
 
       - name: Effected apps/libs
         uses: ./.github/actions/effected
-        id: effected
+        id: effectedAppsLibs
 
   lint:
     needs: effected
@@ -60,7 +60,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        appsLibs: ${{ fromJson(steps.effected.outputs.all) }}
+        appsLibs: ${{ fromJson(needs.effected.steps.effectedAppsLibs.outputs.all) }}
     steps:
       - run: echo "running lint on ${{ matrix.appsLibs }}"
 
