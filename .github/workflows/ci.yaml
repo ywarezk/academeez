@@ -74,6 +74,9 @@ jobs:
         with:
           node-version: 16.14.2
           cache: npm
+      - run: |
+          npm run artifactregistry-login
+          npm ci
 
       - uses: ./.github/actions/lint
         with:
