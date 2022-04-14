@@ -1,0 +1,41 @@
+#
+# Prepares a node environment with the source code
+#
+# Created April 14th, 2022
+# @author: ywarezk
+# @version: 0.2.0
+# @license: MIT
+#
+
+name: Setup
+description: Sets up a node environment
+
+inputs:
+  fetch-depth:
+    description: Fetch depth to checkout, default 1
+    required: false
+    default: "1"
+
+runs:
+  using: composite
+  steps:
+    - name: Clone repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: ${{ github.event.inputs.fetch-depth }}
+
+    - name: Authenticate OIDC
+      uses: google-github-actions/auth@v0.4.0
+      with:
+        workload_identity_provider: ${{ secrets.WI_PROVIDER }}
+        service_account: ${{ secrets.SA_GA }}
+
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.14.2
+        cache: npm
+    - run: |
+        npm run artifactregistry-login
+        npm ci
+      shell: bash

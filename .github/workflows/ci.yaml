@@ -34,25 +34,10 @@ jobs:
       affectedLibs: ${{ steps.affectedAppsLibs.outputs.libs }}
       affectedAll: ${{ steps.affectedAppsLibs.outputs.all }}
     steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
+      - name: Setup
+        uses: ./.github/actions/setup
         with:
           fetch-depth: 0
-
-      - name: Authenticate OIDC
-        uses: google-github-actions/auth@v0.4.0
-        with:
-          workload_identity_provider: ${{ secrets.WI_PROVIDER }}
-          service_account: ${{ secrets.SA_GA }}
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.14.2
-          cache: npm
-      - run: |
-          npm run artifactregistry-login
-          npm ci
 
       - name: Affected apps/libs
         uses: ./.github/actions/affected
@@ -66,17 +51,8 @@ jobs:
       matrix:
         appsLibs: ${{ fromJson(needs.affected.outputs.affectedAll) }}
     steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.14.2
-          cache: npm
-      - run: |
-          npm run artifactregistry-login
-          npm ci
+      - name: Setup
+        uses: ./.github/actions/setup
 
       - uses: ./.github/actions/lint
         with:
