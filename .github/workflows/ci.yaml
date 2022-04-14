@@ -34,6 +34,11 @@ jobs:
       affectedLibs: ${{ steps.affectedAppsLibs.outputs.libs }}
       affectedAll: ${{ steps.affectedAppsLibs.outputs.all }}
     steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - name: Setup
         uses: ./.github/actions/setup
         with:
@@ -51,6 +56,9 @@ jobs:
       matrix:
         appsLibs: ${{ fromJson(needs.affected.outputs.affectedAll) }}
     steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
       - name: Setup
         uses: ./.github/actions/setup
 
