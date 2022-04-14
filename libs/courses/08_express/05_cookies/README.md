@@ -29,7 +29,5 @@ The scope of the cookie is determined by the `domain` and `path` which determine
 if you set the `Domain` then subdomains are included as well.  
 If you set the `path` then it is considered the prefix path.
 
-
-
 ## who can delete the cookie
 
