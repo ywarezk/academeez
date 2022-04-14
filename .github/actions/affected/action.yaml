@@ -1,0 +1,38 @@
+#
+# Find which apps or libs are Affected from this push
+#
+# Created April 9th, 2022
+# @author: ywarezk
+# @version: 0.2.0
+# @license: MIT
+#
+
+name: "Affected apps/libs"
+description: Find what are the apps and libs that are changed from the last successful build
+
+outputs:
+  apps:
+    description: The affected apps
+    value: ${{ steps.affected.outputs.apps }}
+  libs:
+    description: The affected libs
+    value: ${{ steps.affected.outputs.libs }}
+  all:
+    description: All the affected libs and apps
+    value: ${{ steps.affected.outputs.all}}
+
+runs:
+  using: composite
+
+  steps:
+    - name: Derive appropriate SHAs for base and head for `nx affected` commands
+      id: setSHAs
+      uses: nrwl/nx-set-shas@v2
+
+    - name: Find affected apps and libs
+      id: affected
+      shell: bash
+      run: |
+        node .github/actions/affected/json-parse-affected.js "::set-output name=apps::" "$(npx nx affected:apps --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain)"
+        node .github/actions/affected/json-parse-affected.js "::set-output name=libs::" "$(npx nx affected:libs --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain)"
+        node .github/actions/affected/json-parse-affected.js "::set-output name=all::" "$(npx nx affected:apps --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain) $(npx nx affected:libs --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain)"

@@ -26,9 +26,13 @@ on:
 permissions: write-all
 jobs:
 
-  # Find what effected apps we need to build
-  effected:
+  # Find what affected apps we need to build
+  affected:
     runs-on: ubuntu-latest
+    outputs:
+      affectedApps: ${{ steps.affectedAppsLibs.outputs.apps }}
+      affectedLibs: ${{ steps.affectedAppsLibs.outputs.libs }}
+      affectedAll: ${{ steps.affectedAppsLibs.outputs.all }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
@@ -50,17 +54,17 @@ jobs:
           npm run artifactregistry-login
           npm ci
 
-      - name: Effected apps/libs
-        uses: ./.github/actions/effected
-        id: effectedAppsLibs
+      - name: Affected apps/libs
+        uses: ./.github/actions/affected
+        id: affectedAppsLibs
 
   lint:
-    needs: effected
+    needs: affected
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        appsLibs: ${{ fromJson(needs.effected.steps.effectedAppsLibs.outputs.all) }}
+        appsLibs: ${{ fromJson(needs.affected.outputs.affectedAll) }}
     steps:
       - run: echo "running lint on ${{ matrix.appsLibs }}"
 
