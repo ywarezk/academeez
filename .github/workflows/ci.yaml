@@ -68,5 +68,9 @@ jobs:
     steps:
       - run: echo "running lint on ${{ matrix.appsLibs }}"
 
+      - uses: ./.github/actions/lint
+        with:
+          app: ${{ matrix.appsLibs }}
+
 
 
