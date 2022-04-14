@@ -1,0 +1,27 @@
+#
+# Runs lint on a single app or library
+#
+# Created April 9th, 2022
+# @author: ywarezk
+# @version: 0.0.1
+# @license: MIT
+#
+
+name: NRWL
+description: Runs NRWL on a single app or lib
+
+inputs:
+  project:
+    description: The app or lib to run NRWL on
+    required: true
+  target:
+    description: lint or test or build or etc.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - run: |
+        echo "Running ${{ inputs.target }} on: ${{ inputs.project }}"
+        npx nx run ${{ inputs.project }}:${{ inputs.target }}
+      shell: bash

@@ -39,36 +39,36 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup
-        uses: ./.github/actions/setup
-        with:
-          workload_identity_provider: ${{ secrets.WI_PROVIDER }}
-          service_account: ${{ secrets.SA_GA }}
+  #     - name: Setup
+  #       uses: ./.github/actions/setup
+  #       with:
+  #         workload_identity_provider: ${{ secrets.WI_PROVIDER }}
+  #         service_account: ${{ secrets.SA_GA }}
 
-      - name: Affected apps/libs
-        uses: ./.github/actions/affected
-        id: affectedAppsLibs
+  #     - name: Affected apps/libs
+  #       uses: ./.github/actions/affected
+  #       id: affectedAppsLibs
 
-  lint:
-    needs: affected
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        appsLibs: ${{ fromJson(needs.affected.outputs.affectedAll) }}
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
+  # lint:
+  #   needs: affected
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       appsLibs: ${{ fromJson(needs.affected.outputs.affectedAll) }}
+  #   steps:
+  #     - name: Clone repository
+  #       uses: actions/checkout@v3
 
-      - name: Setup
-        uses: ./.github/actions/setup
-        with:
-          workload_identity_provider: ${{ secrets.WI_PROVIDER }}
-          service_account: ${{ secrets.SA_GA }}
+  #     - name: Setup
+  #       uses: ./.github/actions/setup
+  #       with:
+  #         workload_identity_provider: ${{ secrets.WI_PROVIDER }}
+  #         service_account: ${{ secrets.SA_GA }}
 
-      - uses: ./.github/actions/lint
-        with:
-          app: ${{ matrix.appsLibs }}
+  #     - uses: ./.github/actions/lint
+  #       with:
+  #         app: ${{ matrix.appsLibs }}
 
 
 
