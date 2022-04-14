@@ -10,7 +10,7 @@
 import { queryGithub } from './github'
 import metadataParser from 'markdown-yaml-metadata-parser';
 import camelcaseKeys from 'camelcase-keys';
-import { includes, isEmpty, difference } from 'lodash';
+import { includes, isEmpty } from 'lodash';
 import { Lesson } from '@az/models';
 
 export class CoursesResolver {
@@ -87,7 +87,7 @@ export class CoursesResolver {
     if (isEmpty(paths)) return [];
 
     // For all the paths create a big query to read all the folders and files
-    let query = paths.reduce((accumulator, path) => {
+    const query = paths.reduce((accumulator, path) => {
       return `
         ${accumulator}
         ${this._queryLsFolder(path, this._sanitizeName(path) || '_')}
@@ -131,7 +131,7 @@ export class CoursesResolver {
           newEducationItems.push(...(await this._getAllEducationItems(childrenPaths)))
         }
       } catch (err) {
-        debugger
+        console.log(err)
         throw new Error(`Failed while parsing the README of ${key}`)
       }
     }
