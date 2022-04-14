@@ -54,11 +54,15 @@ jobs:
         uses: ./.github/actions/effected
         id: effected
 
-      - name: Print effected
-        run: |
-          echo "${{ steps.effected.outputs.apps }}"
-          echo "${{ steps.effected.outputs.libs }}"
-          echo "${{ steps.effected.outputs.all }}"
+  lint:
+    needs: effected
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        appsLibs: ${{ fromJson(steps.effected.outputs.all) }}
+    steps:
+      - run: echo "running lint on ${{ matrix.appsLibs }}"
 
 
 
