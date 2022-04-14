@@ -16,7 +16,10 @@ outputs:
     value: ${{ steps.effected.outputs.apps }}
   libs:
     description: The effected libs
-    value: ${{ steps.effected.outputs.apps }}
+    value: ${{ steps.effected.outputs.libs }}
+  all:
+    description: All the effected libs and apps
+    value: ${{ steps.effected.outputs.all}}
 
 runs:
   using: composite
