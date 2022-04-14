@@ -19,6 +19,6 @@ runs:
   using: composite
   steps:
     - run: |
-        echo "Running lint on: ${{ github.event.inputs.app }}"
-        npx nx lint ${{ github.event.inputs.app }}
+        echo "Running lint on: ${{ inputs.app }}"
+        npx nx lint ${{ inputs.app }}
       shell: bash

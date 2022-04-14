@@ -1,3 +1,4 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 /**
  * Card displaying a lesson
  * I want as quickly as possible to direct the user to a lesson
