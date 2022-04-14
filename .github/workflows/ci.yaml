@@ -54,11 +54,11 @@ jobs:
         uses: ./.github/actions/effected
         id: effected
 
-  lintApps:
-    needs: effected
-    strategy:
-      matrix:
-        effectedAppsLibs:
+      - name: Print effected
+        run: |
+          echo "${{ steps.effected.outputs.apps }}"
+          echo "${{ steps.effected.outputs.libs }}"
+          echo "${{ steps.effected.outputs.all }}"
 
 
 

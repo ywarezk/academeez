@@ -35,3 +35,4 @@ runs:
       run: |
         node .github/actions/effected/json-parse-effected.js "::set-output name=apps::" "$(npx nx affected:apps --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain)"
         node .github/actions/effected/json-parse-effected.js "::set-output name=libs::" "$(npx nx affected:libs --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain)"
+        node .github/actions/effected/json-parse-effected.js "::set-output name=all::" "$(npx nx affected:apps --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain) $(npx nx affected:libs --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain)"
