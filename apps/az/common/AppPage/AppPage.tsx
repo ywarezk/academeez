@@ -14,7 +14,7 @@ import Box from '@mui/material/Box';
 import { Nav } from './Nav';
 import { ThemeProvider } from '@az/styles';
 
-export const AppPage: FC<AppProps> = ({
+export const AppPage = ({
   Component,
   pageProps
 }) => {
@@ -26,7 +26,9 @@ export const AppPage: FC<AppProps> = ({
       <ThemeProvider>
         <Box component="main" sx={{ backgroundColor: 'grey.100' }}>
           <Nav />
-          <Component {...pageProps} />
+          <>
+            <Component {...pageProps} />
+          </>
         </Box>
       </ThemeProvider>
     </>

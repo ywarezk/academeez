@@ -90,7 +90,18 @@ jobs:
           workload_identity_provider: ${{ secrets.WI_PROVIDER }}
           service_account: ${{ secrets.SA_GA }}
 
-      - uses: ./.github/actions/nrwl
+
+      - name: Prepare api-lessons
+        if: matrix.appsLibs == 'api-lessons'
+        uses: 'google-github-actions/get-secretmanager-secrets@v0'
+        with:
+          secrets: |-
+            githubToken:${{ secrets.PROJECT_COMMON }}/github-token
+
+      - name: Test api-lessons
+
+      - if: matrix.appsLibs != 'api-lessons'
+        uses: ./.github/actions/nrwl
         with:
           project: ${{ matrix.appsLibs }}
           target: test

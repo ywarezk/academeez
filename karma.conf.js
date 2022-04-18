@@ -92,9 +92,9 @@ module.exports = (config) => {
     },
 
     captureTimeout: 600000, // it was already there
-    browserDisconnectTimeout: 600000,
+    browserDisconnectTimeout: 6000000,
     browserDisconnectTolerance: 4,
-    browserNoActivityTimeout: 600000, //by default 10000
+    browserNoActivityTimeout: 6000000, //by default 10000
 
 
     customLaunchers: {

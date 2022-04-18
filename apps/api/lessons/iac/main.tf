@@ -45,3 +45,14 @@ resource "google_secret_manager_secret_iam_member" "allow_read_github_token" {
   role      = "roles/secretmanager.secretAccessor"
   member    = "serviceAccount:${google_service_account.sa_api_lessons[count.index].email}"
 }
+
+/**
+ * service account for github actions can access the github token secret
+ */
+resource "google_secret_manager_secret_iam_member" "allow_read_ga_github_token" {
+  count     = length(var.projects)
+  project   = var.projects[count.index]
+  secret_id = google_secret_manager_secret.token_github.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${var.sa_github_actions}"
+}

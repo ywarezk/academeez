@@ -1,1 +1,1 @@
-export * from './lib/typography';
+export * from './lib/ShowMoreLess';

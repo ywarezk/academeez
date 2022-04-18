@@ -41,8 +41,7 @@
       "options": {
         "commands": [
           "npm run test:server -- apps/api/lessons"
-        ],
-        "envFile": "apps/api/lessons/.env"
+        ]
       }
     },
     "deploy": {

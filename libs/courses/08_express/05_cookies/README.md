@@ -31,3 +31,10 @@ If you set the `path` then it is considered the prefix path.
 
 ## who can delete the cookie
 
+client or server can delete a cookie by setting the Expired of the cookie to be in the past.  
+Client will not be able to delete a cookie set by a server with the flag **Http** set
+
+## CSRF
+
+Cross-Site request forgery is a form of attack where the hacker takes advantage of the fact that the browser is automatically sending the cookies that were set on a certain logged in domain.
+
