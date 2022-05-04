@@ -9,6 +9,17 @@ bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/03_javascript/
 video_url: 'https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8'
 ---
 
+We can opt out of zone.js and run angular with manual change detection.
+
+## Advantages of removing Zone.js
+
+- fine tuning of when change detection should run would prevent unnecessary and redundent runs of change detection and by doing so will improve performance.
+- Application bundle size is reduced from **188KB** to **152KB**
+
+## Cons of removing Zone.js
+
+- You will have to trigger change detection manually
+
 # build with zone.js
 
 ```

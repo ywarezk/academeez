@@ -9,10 +9,10 @@
  */
 
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import { FC } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import { theme } from './theme';
 
-export const ThemeProvider: FC = ({ children }) => {
+export const ThemeProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
   return (
     <MuiThemeProvider theme={theme}>
       { children }

@@ -11,3 +11,17 @@ linkedin: https://il.linkedin.com/in/yariv-katz
 logo: https://github.com/ywarezk/academeez/raw/main/libs/courses/05_angular/logo.svg
 bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/05_angular/bg.png
 ---
+
+In this chapter we will focus on two types of testing for your angular app:
+
+- Unit testing
+- E2E testing
+
+## Unit Testing
+
+unit testing is the process of checking small pieces of code to verify that they work properly on their own
+
+## End to End Testing
+
+E2E testing checks for working workflows on a running app.
+

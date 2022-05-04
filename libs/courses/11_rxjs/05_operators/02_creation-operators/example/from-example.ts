@@ -1,21 +1,22 @@
 /**
- * from operator helps us convert certain data types to an observable
- * from can convert a promise to an observable
- * axios -> request
- * axios returns a promise
- * http://nztodo.herokuapp.com/api/tasks/?format=json
+ * from is often used to convert Promise to Observable
  */
-
 import { from, Observable } from 'rxjs';
-import axios, { AxiosResponse } from 'axios';
 
-// Promise<AxiosResponse>
-const axiosPromise = axios.get('http://nztodo.herokuapp.com/api/tasks/?format=json');
+/**
+ * Create a promise which resolves after 1 second with an hello world message
+ */
+const timerPromise: Promise<string> = new Promise(( resolve ) => {
+  setTimeout(() => {
+    resolve('hello world');
+  }, 1000)
+});
 
-// Observable<AxiosResponse>
-const response$: Observable<AxiosResponse> = from(axiosPromise);
+/**
+ * convert promise to observable
+ */
+const timerObservable: Observable<string> = from(timerPromise);
 
-response$.subscribe((response: AxiosResponse) => {
-  console.log(response.status);
-  console.log(response.data);
+timerObservable.subscribe((msg: string) => {
+  console.log(msg); // hello world
 })
