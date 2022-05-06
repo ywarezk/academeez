@@ -1,20 +1,18 @@
 {
-  "root": "apps/az",
   "sourceRoot": "apps/az",
   "projectType": "application",
   "targets": {
     "build": {
       "executor": "@nrwl/next:build",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
         "root": "apps/az",
         "outputPath": "dist/apps/az"
       },
       "configurations": {
-        "production": {}
+        "production": {},
+        "development": {}
       }
     },
     "serve": {
@@ -27,8 +25,13 @@
         "production": {
           "buildTarget": "az:build:production",
           "dev": false
+        },
+        "development": {
+          "buildTarget": "az:build:development",
+          "dev": true
         }
-      }
+      },
+      "defaultConfiguration": "development"
     },
     "export": {
       "executor": "@nrwl/next:export",
@@ -40,26 +43,18 @@
       "executor": "@nrwl/workspace:run-commands",
       "configurations": {
         "development": {
-          "commands": [
-            "npx nz test apps/az"
-          ]
+          "commands": ["npx nz test apps/az"]
         }
       },
       "options": {
-        "commands": [
-          "npx nz test apps/az --prod"
-        ]
+        "commands": ["npx nz test apps/az --prod"]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "apps/az/**/*.{ts,tsx,js,jsx}"
-        ]
+        "lintFilePatterns": ["apps/az/**/*.{ts,tsx,js,jsx}"]
       }
     }
   },

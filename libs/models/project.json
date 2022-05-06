@@ -1,5 +1,4 @@
 {
-  "root": "libs/models",
   "sourceRoot": "libs/models/src",
   "projectType": "library",
   "targets": {

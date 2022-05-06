@@ -1,5 +1,4 @@
 {
-  "root": "apps/api/lessons",
   "sourceRoot": "apps/api/lessons/src",
   "projectType": "application",
   "targets": {
@@ -22,11 +21,9 @@
       }
     },
     "serve": {
-      "builder": "@nrwl/workspace:run-commands",
+      "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "commands": [
-          "exit 0;"
-        ]
+        "commands": ["exit 0;"]
       }
     },
     "lint": {
@@ -37,15 +34,13 @@
       }
     },
     "test": {
-      "builder": "@nrwl/workspace:run-commands",
+      "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "commands": [
-          "npm run test:server -- apps/api/lessons"
-        ]
+        "commands": ["npm run test:server -- apps/api/lessons"]
       }
     },
     "deploy": {
-      "builder": "@nrwl/workspace:run-commands",
+      "executor": "@nrwl/workspace:run-commands",
       "configurations": {
         "development": {
           "commands": [
@@ -53,7 +48,6 @@
           ]
         }
       }
-
     }
   },
   "tags": []

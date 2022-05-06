@@ -1,22 +1,17 @@
 {
-  "root": "libs/mui",
   "sourceRoot": "libs/mui/src",
   "projectType": "library",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@nrwl/web:rollup",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/mui",
         "tsConfig": "libs/mui/tsconfig.lib.json",
         "project": "libs/mui/package.json",
         "entryFile": "libs/mui/src/index.ts",
-        "external": [
-          "react/jsx-runtime"
-        ],
+        "external": ["react/jsx-runtime"],
         "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
         "compiler": "babel",
         "assets": [
@@ -30,28 +25,20 @@
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "libs/mui/**/*.{ts,tsx,js,jsx}"
-        ]
+        "lintFilePatterns": ["libs/mui/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "test": {
       "executor": "@nrwl/workspace:run-commands",
       "configurations": {
         "development": {
-          "commands": [
-            "npx nz test libs/mui"
-          ]
+          "commands": ["npx nz test libs/mui"]
         }
       },
       "options": {
-        "commands": [
-          "npx nz test libs/mui --prod"
-        ]
+        "commands": ["npx nz test libs/mui --prod"]
       }
     }
   }
