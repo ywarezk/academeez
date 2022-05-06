@@ -1,22 +1,19 @@
 "use strict";
-/**
- * from is often used to convert Promise to Observable
- */
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * from can convert a promise to an observable
+ */
 const rxjs_1 = require("rxjs");
 /**
- * Create a promise which resolves after 1 second with an hello world message
+ * create a timer promise that resolves after 1 second with an hello message
  */
-const timerPromise = new Promise((resolve) => {
+const timerPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
-        resolve('hello world');
+        resolve('hello listeners');
     }, 1000);
 });
-/**
- * convert promise to observable
- */
-const timerObservable = (0, rxjs_1.from)(timerPromise);
-timerObservable.subscribe((msg) => {
-    console.log(msg); // hello world
+const timerObservable$ = (0, rxjs_1.from)(timerPromise);
+timerObservable$.subscribe((msg) => {
+    console.log(msg);
 });
 //# sourceMappingURL=from-example.js.map

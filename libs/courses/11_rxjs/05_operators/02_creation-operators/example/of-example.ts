@@ -6,7 +6,7 @@ import { Observable, of } from 'rxjs';
 // import { map } from 'rxjs/operators';
 
 // ---1---2---3---'hello'---'foo'---true-|-->
-const myRandomValues$: Observable<number | string | boolean> = of(1, 'hello', true);
+const myRandomValues$: Observable<number | string | boolean> = of(1, 2, 3, 'hello', 'foo', true);
 
 myRandomValues$.subscribe((someValue) => {
   console.log(someValue);

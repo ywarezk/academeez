@@ -1,22 +1,22 @@
+
 /**
- * from is often used to convert Promise to Observable
+ * from can convert a promise to an observable
  */
 import { from, Observable } from 'rxjs';
 
 /**
- * Create a promise which resolves after 1 second with an hello world message
+ * create a timer promise that resolves after 1 second with an hello message
  */
-const timerPromise: Promise<string> = new Promise(( resolve ) => {
+const timerPromise: Promise<string> = new Promise((resolve, reject) => {
   setTimeout(() => {
-    resolve('hello world');
+    resolve('hello listeners');
   }, 1000)
 });
 
-/**
- * convert promise to observable
- */
-const timerObservable: Observable<string> = from(timerPromise);
+const timerObservable$ : Observable<string> = from(timerPromise);
 
-timerObservable.subscribe((msg: string) => {
-  console.log(msg); // hello world
+timerObservable$.subscribe((msg: string) => {
+  console.log(msg);
 })
+
+

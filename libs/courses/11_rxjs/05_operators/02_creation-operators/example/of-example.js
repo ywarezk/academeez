@@ -5,7 +5,7 @@ const rxjs_1 = require("rxjs");
 // pipeable operators are imported from 'rxjs/operators'
 // import { map } from 'rxjs/operators';
 // ---1---2---3---'hello'---'foo'---true-|-->
-const myRandomValues$ = (0, rxjs_1.of)(1, 'hello', true);
+const myRandomValues$ = (0, rxjs_1.of)(1, 2, 3, 'hello', 'foo', true);
 myRandomValues$.subscribe((someValue) => {
     console.log(someValue);
 });
