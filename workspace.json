@@ -1,7 +1,7 @@
 {
   "version": 2,
   "projects": {
-    "api-lessons": "apps/api/lessons",
+    "api": "apps/api",
     "az": "apps/az",
     "models": "libs/models",
     "mui": "libs/mui",

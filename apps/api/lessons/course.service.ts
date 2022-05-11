@@ -1,5 +1,5 @@
 /**
- * the courses api will be implemented here
+ * With this service we can query github api for the list of course tree
  *
  * Created April 3rd, 2021
  * @author: ywarezk
@@ -13,7 +13,7 @@ import camelcaseKeys from 'camelcase-keys';
 import { includes, isEmpty } from 'lodash';
 import { Lesson } from '@az/models';
 
-export class CoursesResolver {
+export class CourseService {
 
   /**
    * Get a list of all the education items

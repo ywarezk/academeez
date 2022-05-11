@@ -1,30 +1,10 @@
 /**
- * Entry point file for the lessons api
+ * barrel file to expose the public items of the lessons module
  *
- * Created March 30th, 2022
+ * Created May 9th, 2022
  * @author: ywarezk
- * @version: 0.0.1
+ * @version: 0.2.0
  * @license: MIT
  */
 
-import createApplication from 'express';
-import { CoursesResolver } from './courses';
-import { ErrorResponse, Lesson } from '@az/models';
-
-export const app = createApplication()
-
-app.get('/lessons/version', (_req, res) => {
-  res.send('0.1.0')
-})
-
-app.get<null, Lesson[] | ErrorResponse>('/lessons', async (_req, res) => {
-  const resolver = new CoursesResolver()
-  try {
-    const lessons = await resolver.lessons()
-    res.json(lessons)
-  } catch(err) {
-    res.status(500).json({error: err.message})
-  }
-})
-
-
+export { lessonsRouter } from './lessons.router';

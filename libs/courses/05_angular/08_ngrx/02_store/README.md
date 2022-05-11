@@ -31,4 +31,69 @@ The required argument to supply those module creator functions is an object with
 
 ## @ngrx/store-devtools
 
+The `@ngrx/store-devtools` package, allows you to inspect the state in the store, and understand exactly how the state reached it's current value.
+
+To install `@ngrx/store-devtools`:
+
+```bash
+> npx ng add @ngrx/store-devtools@latest
+```
+
+Examining the state is done with a chrome extension.  
+Install the following extension:
+
+[redux-devtools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
+
+Open the chrome developer tools and you should see a new `Redux` tab where you can examine ngrx store.
+
+
+## AppModule state
+
+`AppModule` will add the following to the state:
+
+```typescript
+{
+  user: {
+    firstName: 'academeez',
+    lastName: 'Open Source code learning'
+  }
+}
+```
+
+The `AppModule` maintains a user in the state.
+
+## LayoutModule state
+
+we will create an eagerly loaded module called `LayoutModule`, which will add the following to the state.
+
+```typescript
+{
+  layout: {
+    menu: [
+      'home',
+      'about',
+      'blog'
+    ]
+  }
+}
+```
+
+## Lazy load state data
+
+Data in the state should be lazy loaded to reduce memory consumption.  
+This lazy loaded module will only be available after route transition to the url `/lazy`.  
+It will add the following to the state:
+
+```typescript
+{
+  lazy: {
+    books: [
+      {id: 1, title: 'some book 1'},
+      {id: 2, title: 'some book 2'}
+    ]
+  }
+}
+```
+
+## Examining the Store service
 

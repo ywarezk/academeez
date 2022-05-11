@@ -43,11 +43,11 @@
       "executor": "@nrwl/workspace:run-commands",
       "configurations": {
         "development": {
-          "commands": ["npx nz test apps/az"]
+          "commands": ["npx nz test:karma apps/az"]
         }
       },
       "options": {
-        "commands": ["npx nz test apps/az --prod"]
+        "commands": ["npx nz test:karma apps/az --prod"]
       }
     },
     "lint": {

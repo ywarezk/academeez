@@ -34,11 +34,11 @@
       "executor": "@nrwl/workspace:run-commands",
       "configurations": {
         "development": {
-          "commands": ["npx nz test libs/mui"]
+          "commands": ["npx nz test:karma libs/mui"]
         }
       },
       "options": {
-        "commands": ["npx nz test libs/mui --prod"]
+        "commands": ["npx nz test:karma libs/mui --prod"]
       }
     }
   }

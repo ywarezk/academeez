@@ -34,11 +34,11 @@
       "executor": "@nrwl/workspace:run-commands",
       "configurations": {
         "development": {
-          "commands": ["npx nz test libs/typography"]
+          "commands": ["npx nz test:karma libs/typography"]
         }
       },
       "options": {
-        "commands": ["npx nz test libs/typography --prod"]
+        "commands": ["npx nz test:karma libs/typography --prod"]
       }
     }
   }

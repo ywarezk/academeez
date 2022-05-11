@@ -6,8 +6,8 @@
       "executor": "@nrwl/node:build",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/api/lessons",
-        "main": "apps/api/lessons/index.ts",
+        "outputPath": "dist/apps/api",
+        "main": "apps/api/index.ts",
         "generatePackageJson": true,
         "outputFileName": "index.js",
         "tsConfig": "apps/api/lessons/tsconfig.app.json"
@@ -36,7 +36,7 @@
     "test": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "commands": ["npm run test:server -- apps/api/lessons"]
+        "commands": ["npx nz test:mocha apps/api"]
       }
     },
     "deploy": {

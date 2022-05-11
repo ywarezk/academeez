@@ -7,26 +7,13 @@
  * @license: MIT
  */
 
-import { app } from '.'
-import { Server } from 'http'
+import { app } from '..'
 import { expect } from 'chai'
 import axios from 'axios'
+import { beforeExpressApp } from '@nz/test/express';
 
 describe('api-lessons', () => {
-  let server: Server
-
-  before((done) => {
-    server = app.listen(3000, () => {
-      console.log('listening on port 3000')
-      done()
-    })
-  })
-
-  after((done) => {
-    server.close(() => {
-      done()
-    })
-  })
+  beforeExpressApp(app);
 
   it('get all lessons', async () => {
     const response = await axios.get('http://localhost:3000/lessons')
