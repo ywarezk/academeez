@@ -69,10 +69,10 @@ jobs:
           workload_identity_provider: ${{ secrets.WI_PROVIDER }}
           service_account: ${{ secrets.SA_GA }}
 
-      # - uses: ./.github/actions/nrwl
-      #   with:
-      #     project: ${{ matrix.appsLibs }}
-      #     target: lint
+      - uses: ./.github/actions/nrwl
+        with:
+          project: ${{ matrix.appsLibs }}
+          target: lint
 
   # run the unit tests
   # test:
