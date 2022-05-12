@@ -15,10 +15,12 @@
 
 name: CI
 
+# we release to dev on regular push to main
+# we release to prod on tagged version
 on:
   push:
     branches:
-      - "main"
+      - main
   create:
     tags:
       - v*
@@ -128,6 +130,34 @@ jobs:
         with:
           project: ${{ matrix.appsLibs }}
           target: build
+
+  deploy:
+    needs:
+      - lint
+      - test
+      - build
+      - affected
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        appsLibs: ${{ fromJson(needs.affected.outputs.affectedAll) }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          workload_identity_provider: ${{ secrets.WI_PROVIDER }}
+          service_account: ${{ secrets.SA_GA }}
+
+      - uses: ./.github/actions/nrwl
+        with:
+          project: ${{ matrix.appsLibs }}
+          target: deploy
+
+
 
 
 

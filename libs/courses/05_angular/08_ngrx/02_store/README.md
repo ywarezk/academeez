@@ -68,6 +68,10 @@ we will create an eagerly loaded module called `LayoutModule`, which will add th
 
 ```typescript
 {
+  user: {
+    firstName: 'academeez',
+    lastName: 'Open Source code learning'
+  },
   layout: {
     menu: [
       'home',
@@ -86,6 +90,7 @@ It will add the following to the state:
 
 ```typescript
 {
+  ...
   lazy: {
     books: [
       {id: 1, title: 'some book 1'},
@@ -96,4 +101,41 @@ It will add the following to the state:
 ```
 
 ## Examining the Store service
+
+### Store is a singleton.  
+
+Store is a service which is added to the root module injector when you add to the `AppModule` `imports` array the line:
+
+```typescript
+@NgModule({
+  ...
+  imports: [
+    StoreModule.forRoot(...)
+  ]
+})
+export class AppModule {}
+```
+
+### Store is an Observable
+
+The `Store` service extends `Observable`
+
+```typescript
+@Injectable()
+export class Store<T = object> extends Observable<T> implements Observer<Action>
+{
+  ...
+}
+```
+
+The Store emits the `state` every time it gets a new state (remember that the state is immutable).  
+
+it also implements a few `Subject` methods `implements Observer`, like `next`, `error`, `complete`, where `next` is similar to `dispatch` and `error`, `complete` allows you to close the `Store` observable, but those methods are not often used so they will not be our main focus (not referring to `dispatch` where we will focus on upcoming lessons).  
+The fact that the `Store` is an observable means that we can utilize all of `rxjs` operators to manipulate the state and read the exact content that we desire in the component.
+
+Let's take advantage of the `Observable` fact and use what we know about operators to read the content of the state in the `Store`
+
+On the next lesson we will cover more thoroughly about the proper way to read the store content.
+
+### Summary
 
