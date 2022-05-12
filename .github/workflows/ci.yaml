@@ -109,27 +109,27 @@ jobs:
           target: test
 
   # run build
-  build:
-    needs: affected
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        appsLibs: ${{ fromJson(needs.affected.outputs.affectedAll) }}
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
+  # build:
+  #   needs: affected
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       appsLibs: ${{ fromJson(needs.affected.outputs.affectedAll) }}
+  #   steps:
+  #     - name: Clone repository
+  #       uses: actions/checkout@v3
 
-      - name: Setup
-        uses: ./.github/actions/setup
-        with:
-          workload_identity_provider: ${{ secrets.WI_PROVIDER }}
-          service_account: ${{ secrets.SA_GA }}
+  #     - name: Setup
+  #       uses: ./.github/actions/setup
+  #       with:
+  #         workload_identity_provider: ${{ secrets.WI_PROVIDER }}
+  #         service_account: ${{ secrets.SA_GA }}
 
-      - uses: ./.github/actions/nrwl
-        with:
-          project: ${{ matrix.appsLibs }}
-          target: build
+  #     - uses: ./.github/actions/nrwl
+  #       with:
+  #         project: ${{ matrix.appsLibs }}
+  #         target: build
 
   # deploy:
   #   needs:
