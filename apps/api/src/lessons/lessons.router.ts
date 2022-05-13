@@ -17,6 +17,10 @@ lessonsRouter.get('/lessons/version', (_req, res) => {
 });
 
 lessonsRouter.get<null, Lesson[] | ErrorResponse>('/lessons', async (_req, res) => {
+  if (!process.env['GITHUB_TOKEN']) {
+    console.error('Missing env variable GITHUB_TOKEN')
+    return res.status(500).json({error: 'Missing env variable GITHUB_TOKEN'})
+  }
   const resolver = new CourseService()
   try {
     const lessons = await resolver.lessons()

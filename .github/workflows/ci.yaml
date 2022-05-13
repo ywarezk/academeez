@@ -93,7 +93,7 @@ jobs:
           service_account: ${{ secrets.SA_GA }}
 
       - name: Prepare api
-        if: matrix.appsLibs == 'api'
+        id: secrets
         uses: 'google-github-actions/get-secretmanager-secrets@v0'
         with:
           secrets: |-
@@ -101,6 +101,8 @@ jobs:
 
       - name: Test
         uses: ./.github/actions/nrwl
+        env:
+          GITHUB_TOKEN: '${{ steps.secrets.outputs.githubToken }}'
         with:
           project: ${{ matrix.appsLibs }}
           target: test
