@@ -7,4 +7,5 @@
  * @version: 0.0.1
  */
 
-export { Button as default, ButtonProps} from './Button';
+export { Button as default } from './Button';
+export type { ButtonProps } from './Button';

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-declare module '*.svg' {
-  const content: any;
-  export const ReactComponent: any;
-  export default content;
-}
+declare module '*.svg';
+declare module '*.png';
+declare module '*.woff2';
+declare module '*.ttf';

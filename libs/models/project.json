@@ -1,9 +1,10 @@
 {
+  "root": "libs/models",
   "sourceRoot": "libs/models/src",
   "projectType": "library",
   "targets": {
     "build": {
-      "executor": "@nrwl/node:package",
+      "builder": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/models",
