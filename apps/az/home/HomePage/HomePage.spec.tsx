@@ -12,7 +12,7 @@ import { render } from '@testing-library/react';
 import { ThemeProvider } from '@az/styles';
 
 describe('<HomePage />', () => {
-  it.only('Sanity', function() {
+  it('Sanity', function() {
     render(
       <ThemeProvider>
         <HomePage />

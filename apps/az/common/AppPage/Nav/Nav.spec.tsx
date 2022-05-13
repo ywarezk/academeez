@@ -13,8 +13,7 @@ import { ThemeProvider } from '@az/styles';
 import Box from '@mui/material/Box';
 
 describe('<Nav />', () => {
-  it.only('sanity', function(done) {
-    this.timeout(60000000)
+  it('sanity', function() {
     render(
       <ThemeProvider>
         <Box sx={{

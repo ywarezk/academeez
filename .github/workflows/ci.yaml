@@ -93,7 +93,7 @@ jobs:
           service_account: ${{ secrets.SA_GA }}
 
       - name: Prepare api
-        if: matrix.appsLibs == 'api-lessons'
+        if: matrix.appsLibs == 'api'
         uses: 'google-github-actions/get-secretmanager-secrets@v0'
         with:
           secrets: |-
