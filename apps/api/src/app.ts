@@ -1,9 +1,9 @@
 /**
- * Entry point file for the lessons api
+ * Create the express app
  *
- * Created March 30th, 2022
+ * Created May 14th, 2022
  * @author: ywarezk
- * @version: 0.0.1
+ * @version: 0.2.1
  * @license: MIT
  */
 
@@ -12,5 +12,5 @@ import { lessonsRouter } from './lessons';
 
 export const app = createApplication()
 
-app.use(lessonsRouter);
+app.use('/api', lessonsRouter);
 

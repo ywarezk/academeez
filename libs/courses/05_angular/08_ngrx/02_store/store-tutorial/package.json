@@ -1,5 +1,5 @@
 {
-  "name": "store-example",
+  "name": "store-tutorial",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -18,15 +18,15 @@
     "@angular/platform-browser": "~13.3.0",
     "@angular/platform-browser-dynamic": "~13.3.0",
     "@angular/router": "~13.3.0",
-    "@ngrx/store": "^13.1.0",
+    "@ngrx/store": "^13.2.0",
     "@ngrx/store-devtools": "^13.2.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~13.3.4",
-    "@angular/cli": "~13.3.4",
+    "@angular-devkit/build-angular": "~13.3.5",
+    "@angular/cli": "~13.3.5",
     "@angular/compiler-cli": "~13.3.0",
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",

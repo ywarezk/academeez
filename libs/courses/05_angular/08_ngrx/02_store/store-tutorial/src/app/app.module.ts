@@ -5,7 +5,8 @@ import { AppComponent } from './app.component';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
-import { RouterModule } from '@angular/router';
+import { userReducer } from './state';
+import { layoutReducer } from './layout-module/state/layout-module.reducer';
 
 @NgModule({
   declarations: [
@@ -13,19 +14,10 @@ import { RouterModule } from '@angular/router';
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot([
-      {
-        path: 'lazy',
-        loadChildren: async () => {
-          const { SomeLazyModule } = await import('../some-lazy/some-lazy.module');
-          return SomeLazyModule
-        }
-      }
-    ]),
-    StoreModule.forRoot({user: (state = {
-      firstName: 'Yariv',
-      lastName: 'Katz'
-    }) => state}),
+    StoreModule.forRoot({
+      user: userReducer,
+      layout: layoutReducer
+    }, {}),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],
   providers: [],

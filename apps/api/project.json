@@ -8,7 +8,7 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/api",
-        "main": "apps/api/src/index.ts",
+        "main": "apps/api/src/main.ts",
         "tsConfig": "apps/api/tsconfig.app.json"
       },
       "configurations": {
@@ -20,9 +20,11 @@
       }
     },
     "serve": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "@nrwl/node:node",
       "options": {
-        "commands": ["exit 0;"]
+        "buildTarget": "api:build",
+        "inspect": true,
+        "port": 7777
       }
     },
     "lint": {

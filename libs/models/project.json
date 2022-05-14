@@ -20,6 +20,14 @@
       "options": {
         "lintFilePatterns": ["libs/models/**/*.ts"]
       }
+    },
+    "test": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "exit 0;"
+        ]
+      }
     }
   },
   "tags": []
