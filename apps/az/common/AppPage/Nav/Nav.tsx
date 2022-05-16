@@ -32,6 +32,7 @@ export const GithubLink = () => {
       sx={{ mr: 3, lineHeight: 0 }}
       href="https://github.com/ywarezk/academeez"
       target="_blank"
+      data-test="nav-link-github"
       rel="noopener noreferrer"
     >
       <Github />

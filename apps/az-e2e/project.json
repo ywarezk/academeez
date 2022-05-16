@@ -7,13 +7,7 @@
       "executor": "@nrwl/cypress:cypress",
       "options": {
         "cypressConfig": "apps/az-e2e/cypress.json",
-        "devServerTarget": "az:serve",
         "tsConfig": "apps/az-e2e/tsconfig.json"
-      },
-      "configurations": {
-        "production": {
-          "devServerTarget": "az:serve:production"
-        }
       }
     },
     "lint": {

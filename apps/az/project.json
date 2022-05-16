@@ -19,7 +19,8 @@
       "executor": "@nrwl/next:server",
       "options": {
         "buildTarget": "az:build",
-        "dev": true
+        "dev": true,
+        "proxyConfig": "apps/az/proxy.conf.js"
       },
       "configurations": {
         "production": {
