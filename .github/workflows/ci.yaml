@@ -21,9 +21,8 @@ on:
   push:
     branches:
       - main
-  create:
     tags:
-      - v*
+      - "v*"
 
 permissions: write-all
 jobs:
@@ -107,6 +106,14 @@ jobs:
           project: ${{ matrix.appsLibs }}
           target: test
 
+      - name: Archive test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-coverage
+          path: |
+            reports/${{ matrix.appsLibs }}/coverage.xml
+            reports/${{ matrix.appsLibs }}/unit-test.xml
+
   # run build
   build:
     needs: affected
@@ -154,6 +161,14 @@ jobs:
 
       - name: Start app
         run: npm start & npx nx run ${{ matrix.appsLibs }}:e2e
+
+      - name: Archive video and snapshots
+        uses: actions/upload-artifact@v3
+        with:
+          name: video-snapshots
+          path: |
+            reports/${{ matrix.appsLibs }}/e2e/videos/*.mp4
+            reports/${{ matrix.appsLibs }}/e2e/screenshots
 
 
 
