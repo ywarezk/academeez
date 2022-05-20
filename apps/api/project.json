@@ -49,6 +49,14 @@
           ]
         }
       }
+    },
+    "e2e": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "exit 0;"
+        ]
+      }
     }
   },
   "tags": []

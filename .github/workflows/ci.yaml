@@ -153,7 +153,7 @@ jobs:
           service_account: ${{ secrets.SA_GA }}
 
       - name: Start app
-        run: npm start &
+        run: npm start & npx nx run ${{ matrix.appsLibs }}:e2e
 
 
 

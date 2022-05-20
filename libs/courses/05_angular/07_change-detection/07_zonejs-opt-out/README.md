@@ -15,6 +15,7 @@ We can opt out of zone.js and run angular with manual change detection.
 
 - fine tuning of when change detection should run would prevent unnecessary and redundent runs of change detection and by doing so will improve performance.
 - Application bundle size is reduced from **188KB** to **152KB**
+- Avoid Zone.js logic as well as the need to wait for `Application.tick` will improve performance
 
 ## Cons of removing Zone.js
 

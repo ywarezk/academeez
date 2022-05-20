@@ -57,6 +57,14 @@
       "options": {
         "lintFilePatterns": ["apps/az/**/*.{ts,tsx,js,jsx}"]
       }
+    },
+    "e2e": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "npx nx run az-e2e:e2e"
+        ]
+      }
     }
   },
   "tags": []

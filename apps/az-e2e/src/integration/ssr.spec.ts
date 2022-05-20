@@ -9,6 +9,7 @@
 
 describe('SSR', () => {
   it('HomePage', () => {
-    cy.visit('/', { script: false } as any);
+    cy.visit('/', { script: false } as any)
+    cy.screenshot('SSR-HomePage')
   });
 });

@@ -1,5 +1,8 @@
 
 <a routerLink="/lazy">Navigate to lazy</a>
 
+<p>
+  {{ store$ | async | json }}
+</p>
 
 <router-outlet></router-outlet>

@@ -6,8 +6,8 @@
   "supportFile": "./src/support/index.ts",
   "pluginsFile": "./src/plugins/index",
   "video": true,
-  "videosFolder": "../../dist/cypress/apps/az-e2e/videos",
-  "screenshotsFolder": "../../dist/cypress/apps/az-e2e/screenshots",
+  "videosFolder": "../../reports/az/e2e/videos",
+  "screenshotsFolder": "../../reports/az/e2e/screenshots",
   "chromeWebSecurity": false,
   "baseUrl": "http://localhost:4200"
 }
