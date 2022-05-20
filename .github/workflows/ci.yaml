@@ -148,7 +148,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        appsLibs: ${{ fromJson(needs.affected.outputs.affectedAll) }}
+        appsLibs: ${{ fromJson(needs.affected.outputs.affectedApps) }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
