@@ -9,7 +9,7 @@
 
 terraform {
   backend "gcs" {
-    bucket = "bkt-academeez-tf-state"
+    bucket = "bkt-az-tf-state"
     prefix = "terraform/state"
   }
 }

@@ -170,33 +170,29 @@ jobs:
             reports/${{ matrix.appsLibs }}/e2e/videos/*.mp4
             reports/${{ matrix.appsLibs }}/e2e/screenshots
 
+  deploy:
+    needs:
+      - e2e
+      - affected
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        appsLibs: ${{ fromJson(needs.affected.outputs.affectedApps) }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
 
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          workload_identity_provider: ${{ secrets.WI_PROVIDER }}
+          service_account: ${{ secrets.SA_GA }}
 
-  # deploy:
-  #   needs:
-  #     - lint
-  #     - test
-  #     - build
-  #     - affected
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       appsLibs: ${{ fromJson(needs.affected.outputs.affectedAll) }}
-  #   steps:
-  #     - name: Clone repository
-  #       uses: actions/checkout@v3
-
-  #     - name: Setup
-  #       uses: ./.github/actions/setup
-  #       with:
-  #         workload_identity_provider: ${{ secrets.WI_PROVIDER }}
-  #         service_account: ${{ secrets.SA_GA }}
-
-  #     - uses: ./.github/actions/nrwl
-  #       with:
-  #         project: ${{ matrix.appsLibs }}
-  #         target: deploy
+      - uses: ./.github/actions/nrwl
+        with:
+          project: ${{ matrix.appsLibs }}
+          target: deploy
 
 
 
