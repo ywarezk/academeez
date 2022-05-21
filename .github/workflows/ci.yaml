@@ -175,6 +175,7 @@ jobs:
       - e2e
       - affected
     runs-on: ubuntu-latest
+    if: github.ref_type == 'tag'
     strategy:
       fail-fast: false
       matrix:
