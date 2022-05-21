@@ -53,7 +53,8 @@ module "prj_academeez" {
     "cloudbuild.googleapis.com",
     "secretmanager.googleapis.com",
     "iam.googleapis.com",
-    "iamcredentials.googleapis.com"
+    "iamcredentials.googleapis.com",
+    "cloudfunctions.googleapis.com"
   ]
   labels                      = {
     application_name  = "academeez"

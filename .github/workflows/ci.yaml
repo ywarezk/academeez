@@ -193,6 +193,11 @@ jobs:
       - uses: ./.github/actions/nrwl
         with:
           project: ${{ matrix.appsLibs }}
+          target: build
+
+      - uses: ./.github/actions/nrwl
+        with:
+          project: ${{ matrix.appsLibs }}
           target: deploy
 
 
