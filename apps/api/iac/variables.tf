@@ -12,17 +12,12 @@ variable "token_github" {
   description = "We use this token to query github api"
 }
 
-variable "project_common" {
+variable "project" {
   type = string
-  description = "Shared project beween environments"
+  description = "Academeez project"
 }
 
 variable "sa_github_actions" {
   type = string
   description = "Github actions service account"
-}
-
-variable "projects" {
-  type = list
-  description = "The list of projects according to the environments"
 }

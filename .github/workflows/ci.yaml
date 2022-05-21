@@ -96,7 +96,7 @@ jobs:
         uses: 'google-github-actions/get-secretmanager-secrets@v0'
         with:
           secrets: |-
-            githubToken:${{ secrets.PROJECT_COMMON }}/github-token
+            githubToken:${{ secrets.PROJECT }}/github-token
 
       - name: Test
         uses: ./.github/actions/nrwl
