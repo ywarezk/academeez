@@ -8,7 +8,7 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/api",
-        "main": "apps/api/src/main.ts",
+        "main": "apps/api/src/app.ts",
         "tsConfig": "apps/api/tsconfig.app.json"
       },
       "configurations": {
@@ -44,8 +44,10 @@
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
-          "gcloud beta functions deploy api --set-secrets 'GITHUB_TOKEN=projects/858548677058/secrets/github-token:latest' --runtime nodejs16 --trigger-http --project prj-academeez --entry-point main --source dist/apps/api --service-account=sa-api-lessons@prj-academeez.iam.gserviceaccount.com"
-        ]
+          "npx nx run api:build",
+          "gcloud beta functions deploy api --set-secrets 'GITHUB_TOKEN=projects/858548677058/secrets/github-token:latest' --runtime nodejs16 --trigger-http --project prj-academeez --entry-point main --source dist/apps/api/main.js --service-account=sa-api-lessons@prj-academeez.iam.gserviceaccount.com"
+        ],
+        "parallel": false
       }
     },
     "e2e": {

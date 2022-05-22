@@ -65,6 +65,17 @@
           "npx nx run az-e2e:e2e"
         ]
       }
+    },
+    "deploy": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "npx nx run az:build",
+          "npx nx run az:export",
+          "gsutil cp -r dist/apps/az/exported/* gs://bkt-az-cdn"
+        ],
+        "parallel": false
+      }
     }
   },
   "tags": []

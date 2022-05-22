@@ -1,13 +1,20 @@
 import { Component } from '@angular/core';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   template: `
     <h1>
-      Hello parent
+      Hello parent {{ counter$ | async }} {{ log() }}
     </h1>
+
+    <app-child></app-child>
   `,
 })
 export class AppComponent {
-  title = 'example';
+  counter$ = interval(1000);
+
+  log() {
+    console.log('cd AppComponent');
+  }
 }

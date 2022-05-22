@@ -54,7 +54,8 @@ module "prj_academeez" {
     "secretmanager.googleapis.com",
     "iam.googleapis.com",
     "iamcredentials.googleapis.com",
-    "cloudfunctions.googleapis.com"
+    "cloudfunctions.googleapis.com",
+    "dns.googleapis.com"
   ]
   labels                      = {
     application_name  = "academeez"
@@ -120,4 +121,31 @@ resource "google_service_account_iam_member" "sa_wi" {
   service_account_id = google_service_account.sa_github_actions.name
   role               = "roles/iam.workloadIdentityUser"
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.workload_identity_github_actions.name}/attribute.repository/ywarezk/academeez"
+}
+
+/**
+ * Install the cdn
+ */
+module "cdn_az" {
+  source = "./modules/cdn"
+  project = module.prj_academeez.project_id
+  sa_github_actions = google_service_account.sa_github_actions.email
+}
+
+/***************
+ * DNS
+ ***************/
+
+/**
+ * Create a dns zone
+ */
+resource "google_dns_managed_zone" "dns_az" {
+  name        = "academeez"
+  dns_name = "academeez.com."
+  force_destroy = true
+  description = "DNS for academeez"
+  labels = {
+    application = "academeez"
+  }
+  project = module.prj_academeez.project_id
 }
