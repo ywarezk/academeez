@@ -21,3 +21,8 @@ variable "sa_github_actions" {
   type = string
   description = "Github actions service account"
 }
+
+variable "region" {
+  description = "The region where the infastructure will be"
+  type        = string
+}

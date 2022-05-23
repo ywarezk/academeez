@@ -55,6 +55,17 @@ resource "google_secret_manager_secret_iam_member" "allow_read_ga_github_token" 
 }
 
 /**
+ * allow github actions to publish cloud functions
+ */
+resource "google_cloudfunctions_function_iam_member" "invoker" {
+  project        = var.project
+  cloud_function = "api"
+  region         = var.region
+  role           = "roles/cloudfunctions.developer"
+  member         = "serviceAccount:${var.sa_github_actions}"
+}
+
+/**
  * add a cname for cloud functions
  */
 resource "google_dns_record_set" "cname" {
