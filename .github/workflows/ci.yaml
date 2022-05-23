@@ -190,6 +190,12 @@ jobs:
           workload_identity_provider: ${{ secrets.WI_PROVIDER }}
           service_account: ${{ secrets.SA_GA }}
 
+      - name: 'Setup gcloud api'
+        uses: 'google-github-actions/setup-gcloud@v0'
+        if: matrix.appsLibs == 'api'
+        with:
+          project_id: secrets.PROJECT
+
       - uses: ./.github/actions/nrwl
         with:
           project: ${{ matrix.appsLibs }}
@@ -201,17 +207,3 @@ jobs:
         with:
           path: '/dist/apps/az/exported'
           destination: 'bkt-az-cdn'
-
-      - id: 'publish-api'
-        uses: 'google-github-actions/setup-gcloud@v0'
-        if: matrix.appsLibs == 'api'
-        with:
-          project_id: secrets.PROJECT
-        run: |
-          npx nx run api:publish
-
-
-
-
-
-
