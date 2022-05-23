@@ -189,13 +189,13 @@ jobs:
 
       - name: Install gcloud beta
         run: |
+          gcloud info
           gcloud components install beta
-          gcloud auth list
 
-      - uses: ./.github/actions/nrwl
-        with:
-          project: 'api'
-          target: deploy
+      # - uses: ./.github/actions/nrwl
+      #   with:
+      #     project: 'api'
+      #     target: deploy
 
       # - id: 'publish-az'
       #   uses: 'google-github-actions/upload-cloud-storage@v0'
