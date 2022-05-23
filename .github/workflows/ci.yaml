@@ -183,12 +183,10 @@ jobs:
           service_account: ${{ secrets.SA_GA }}
           project: ${{ secrets.PROJECT }}
 
-
-
-      # - uses: ./.github/actions/nrwl
-      #   with:
-      #     project: ${{ matrix.appsLibs }}
-      #     target: deploy
+      - uses: ./.github/actions/nrwl
+        with:
+          project: 'api'
+          target: deploy
 
       # - id: 'publish-az'
       #   uses: 'google-github-actions/upload-cloud-storage@v0'
