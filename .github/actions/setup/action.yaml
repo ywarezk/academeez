@@ -17,6 +17,9 @@ inputs:
   service_account:
     description: Github actions service account
     required: true
+  project:
+    description: The project to identity gcloud to
+    required: true
 
 runs:
   using: composite
@@ -36,3 +39,8 @@ runs:
         npm run artifactregistry-login
         npm ci
       shell: bash
+
+    - name: 'Setup gcloud api'
+      uses: 'google-github-actions/setup-gcloud@v0'
+      with:
+        project_id: '${{ inputs.project }}'
