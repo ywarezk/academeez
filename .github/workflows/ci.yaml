@@ -190,6 +190,7 @@ jobs:
       - name: Install gcloud beta
         run: |
           gcloud components install beta
+          gcloud auth list
 
       - uses: ./.github/actions/nrwl
         with:
