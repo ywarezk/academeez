@@ -61,7 +61,7 @@ resource "google_cloudfunctions_function_iam_member" "allow_cloud_function_githu
   project        = var.project
   cloud_function = "api"
   region         = var.region
-  role           = "roles/cloudfunctions.developer"
+  role           = "roles/cloudfunctions.admin"
   member         = "serviceAccount:${var.sa_github_actions}"
 }
 
