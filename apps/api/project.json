@@ -9,20 +9,29 @@
       "options": {
         "outputPath": "dist/apps/api",
         "main": "apps/api/src/app.ts",
+        "tsConfig": "apps/api/tsconfig.app.json",
+        "generatePackageJson": true,
+        "optimization": true,
+        "extractLicenses": true,
+        "inspect": false,
+        "sourceMap": false
+      }
+    },
+    "buildServe": {
+      "executor": "@nrwl/node:webpack",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/apps/api",
+        "main": "apps/api/src/main.ts",
         "tsConfig": "apps/api/tsconfig.app.json"
-      },
-      "configurations": {
-        "production": {
-          "optimization": true,
-          "extractLicenses": true,
-          "inspect": false
-        }
       }
     },
     "serve": {
       "executor": "@nrwl/node:node",
       "options": {
-        "buildTarget": "api:build",
+        "buildTarget": "api:buildServe",
         "inspect": true,
         "port": 7777
       }
@@ -45,7 +54,7 @@
       "options": {
         "commands": [
           "npx nx run api:build",
-          "gcloud beta functions deploy api --set-secrets 'GITHUB_TOKEN=projects/858548677058/secrets/github-token:latest' --runtime nodejs16 --trigger-http --project prj-academeez --entry-point main --source dist/apps/api/main.js --service-account=sa-api-lessons@prj-academeez.iam.gserviceaccount.com"
+          "gcloud beta functions deploy api --set-secrets 'GITHUB_TOKEN=projects/858548677058/secrets/github-token:latest' --runtime nodejs16 --trigger-http --project prj-academeez --entry-point app --source dist/apps/api --service-account=sa-api-lessons@prj-academeez.iam.gserviceaccount.com"
         ],
         "parallel": false
       }

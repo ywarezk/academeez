@@ -12,5 +12,5 @@ import { lessonsRouter } from './lessons';
 
 export const app = createApplication()
 
-app.use('/api', lessonsRouter);
+app.use(lessonsRouter);
 
