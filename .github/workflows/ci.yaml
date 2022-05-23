@@ -181,7 +181,15 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.WI_PROVIDER }}
           service_account: ${{ secrets.SA_GA }}
-          project: ${{ secrets.PROJECT }}
+
+      - name: 'Setup gcloud api'
+        uses: 'google-github-actions/setup-gcloud@v0'
+        with:
+          project_id: '${{ secrets.PROJECT }}'
+
+      - name: Install gcloud beta
+        run: |
+          gcloud components install beta
 
       - uses: ./.github/actions/nrwl
         with:
