@@ -182,12 +182,6 @@ jobs:
           workload_identity_provider: ${{ secrets.WI_PROVIDER }}
           service_account: ${{ secrets.SA_GA }}
 
-      - name: Authenticate OIDC
-        uses: google-github-actions/auth@v0
-        with:
-          workload_identity_provider: ${{ secrets.WI_PROVIDER }}
-          service_account: ${{ secrets.SA_GA }}
-
       - name: 'Setup gcloud api'
         uses: 'google-github-actions/setup-gcloud@v0'
         with:
@@ -198,10 +192,10 @@ jobs:
           gcloud info
           gcloud components install beta
 
-      # - uses: ./.github/actions/nrwl
-      #   with:
-      #     project: 'api'
-      #     target: deploy
+      - uses: ./.github/actions/nrwl
+        with:
+          project: 'api'
+          target: deploy
 
       # - id: 'publish-az'
       #   uses: 'google-github-actions/upload-cloud-storage@v0'
