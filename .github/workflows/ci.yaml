@@ -194,7 +194,7 @@ jobs:
         uses: 'google-github-actions/setup-gcloud@v0'
         if: matrix.appsLibs == 'api'
         with:
-          project_id: secrets.PROJECT
+          project_id: '${{ secrets.PROJECT }}'
 
       - uses: ./.github/actions/nrwl
         with:
