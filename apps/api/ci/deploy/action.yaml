@@ -1,20 +1,21 @@
 #
-# deploy the api app
+# Find which apps or libs are Affected from this push
 #
-# Created May 23rd, 2022
+# Created April 9th, 2022
 # @author: ywarezk
-# @version: 0.3.0
+# @version: 0.2.0
 # @license: MIT
 #
 
-name: "Deploy api"
-description: Deployment step for the api
+name: "Custom deploy for api"
+description: Deploy the api
 
 runs:
   using: composite
 
   steps:
-    - name: test
+    - name: test hello
+      id: affected
       shell: bash
       run: |
-        echo "deploying api"
+        echo "hello deploy api"

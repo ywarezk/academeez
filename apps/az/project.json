@@ -76,6 +76,15 @@
         ],
         "parallel": false
       }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "gsutil cp -r dist/apps/az/exported/* gs://bkt-az-cdn"
+        ],
+        "parallel": false
+      }
     }
   },
   "tags": []
