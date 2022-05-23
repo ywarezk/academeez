@@ -173,8 +173,9 @@ jobs:
   deploy:
     needs:
       - affected
+      # - e2e
     runs-on: ubuntu-latest
-    if: github.ref_type == 'tag'
+    # if: github.ref_type == 'tag'
     strategy:
       fail-fast: false
       matrix:
