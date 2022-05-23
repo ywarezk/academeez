@@ -190,24 +190,25 @@ jobs:
           workload_identity_provider: ${{ secrets.WI_PROVIDER }}
           service_account: ${{ secrets.SA_GA }}
 
-      - name: Test strategy
-        uses: './apps/${{ matrix.appsLibs }}/ci/deploy'
+      - uses: ./.github/actions/nrwl
+        with:
+          project: ${{ matrix.appsLibs }}
+          target: deploy
 
-      # - uses: ./.github/actions/nrwl
-      #   with:
-      #     project: ${{ matrix.appsLibs }}
-      #     target: deploy
+      - id: 'publish-az'
+        uses: 'google-github-actions/upload-cloud-storage@v0'
+        if: matrix.appsLibs == 'az'
+        with:
+          path: '/dist/apps/az/exported'
+          destination: 'bkt-az-cdn'
 
-      # - id: 'publish-az'
-      #   uses: 'google-github-actions/upload-cloud-storage@v0'
-      #   if: matrix.appsLibs == 'az'
-      #   with:
-      #     path: '/dist/apps/az/exported'
-      #     destination: 'bkt-az-cdn'
-
-      # - id: 'publish-api'
-      #   uses: ''
-      #   if: matrix.appsLibs == 'api'
+      - id: 'publish-api'
+        uses: 'google-github-actions/setup-gcloud@v0'
+        if: matrix.appsLibs == 'api'
+        with:
+          project_id: secrets.PROJECT
+        run: |
+          npx nx run api:publish
 
 
 

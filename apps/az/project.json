@@ -71,8 +71,7 @@
       "options": {
         "commands": [
           "npx nx run az:build",
-          "npx nx run az:export",
-          "gsutil cp -r dist/apps/az/exported/* gs://bkt-az-cdn"
+          "npx nx run az:export"
         ],
         "parallel": false
       }

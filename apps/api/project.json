@@ -53,8 +53,7 @@
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
-          "npx nx run api:build",
-          "gcloud beta functions deploy api --quiet --set-secrets 'GITHUB_TOKEN=projects/858548677058/secrets/github-token:latest' --runtime nodejs16 --trigger-http --project prj-academeez --entry-point app --source dist/apps/api --service-account=sa-api-lessons@prj-academeez.iam.gserviceaccount.com"
+          "npx nx run api:build"
         ],
         "parallel": false
       }
