@@ -182,6 +182,12 @@ jobs:
           workload_identity_provider: ${{ secrets.WI_PROVIDER }}
           service_account: ${{ secrets.SA_GA }}
 
+      - name: Authenticate OIDC
+        uses: google-github-actions/auth@v0
+        with:
+          workload_identity_provider: ${{ secrets.WI_PROVIDER }}
+          service_account: ${{ secrets.SA_GA }}
+
       - name: 'Setup gcloud api'
         uses: 'google-github-actions/setup-gcloud@v0'
         with:
