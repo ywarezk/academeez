@@ -1,0 +1,20 @@
+#
+# deploy the api app
+#
+# Created May 23rd, 2022
+# @author: ywarezk
+# @version: 0.3.0
+# @license: MIT
+#
+
+name: "Deploy api"
+description: Deployment step for the api
+
+runs:
+  using: composite
+
+  steps:
+    - name: test
+      shell: bash
+      run: |
+        echo "deploying api"

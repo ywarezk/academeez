@@ -190,13 +190,7 @@ jobs:
           workload_identity_provider: ${{ secrets.WI_PROVIDER }}
           service_account: ${{ secrets.SA_GA }}
 
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v0'
-
-      - uses: ./.github/actions/nrwl
-        with:
-          project: ${{ matrix.appsLibs }}
-          target: deploy
+      - uses: ./apps/${{ matrix.appsLibs }}/ci/deploy
 
 
 
