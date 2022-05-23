@@ -12,7 +12,7 @@
  */
 resource "google_secret_manager_secret" "token_github" {
   // secrets that are shared between environments will be located in the common project
-  project   = var.project
+  project = var.project
 
   secret_id = "github-token"
   replication {
@@ -21,7 +21,7 @@ resource "google_secret_manager_secret" "token_github" {
 }
 
 resource "google_secret_manager_secret_version" "token_github_1" {
-  secret = google_secret_manager_secret.token_github.id
+  secret      = google_secret_manager_secret.token_github.id
   secret_data = var.token_github
 }
 
@@ -52,4 +52,16 @@ resource "google_secret_manager_secret_iam_member" "allow_read_ga_github_token" 
   secret_id = google_secret_manager_secret.token_github.id
   role      = "roles/secretmanager.secretAccessor"
   member    = "serviceAccount:${var.sa_github_actions}"
+}
+
+/**
+ * add a cname for cloud functions
+ */
+resource "google_dns_record_set" "cname" {
+  project      = var.project
+  name         = "www.academeez.com."
+  managed_zone = "academeez"
+  type         = "CNAME"
+  ttl          = 300
+  rrdatas      = ["us-central1-prj-academeez.cloudfunctions.net."]
 }
