@@ -194,12 +194,12 @@ jobs:
 
       - uses: ./.github/actions/nrwl
         with:
-          project: 'api'
+          project: 'az'
           target: deploy
 
-      # - id: 'publish-az'
-      #   uses: 'google-github-actions/upload-cloud-storage@v0'
-      #   if: matrix.appsLibs == 'az'
-      #   with:
-      #     path: '/dist/apps/az/exported'
-      #     destination: 'bkt-az-cdn'
+      - id: 'publish-az'
+        uses: 'google-github-actions/upload-cloud-storage@v0'
+        # if: matrix.appsLibs == 'az'
+        with:
+          path: '/dist/apps/az/exported'
+          destination: 'bkt-az-cdn'
