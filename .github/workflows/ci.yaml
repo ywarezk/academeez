@@ -28,150 +28,158 @@ permissions: write-all
 jobs:
 
   # Find what affected apps we need to build
-  # affected:
-  #   runs-on: ubuntu-latest
-  #   outputs:
-  #     affectedApps: ${{ steps.affectedAppsLibs.outputs.apps }}
-  #     affectedLibs: ${{ steps.affectedAppsLibs.outputs.libs }}
-  #     affectedAll: ${{ steps.affectedAppsLibs.outputs.all }}
-  #   steps:
-  #     - name: Clone repository
-  #       uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0
+  affected:
+    runs-on: ubuntu-latest
+    outputs:
+      affectedApps: ${{ steps.affectedAppsLibs.outputs.apps }}
+      affectedLibs: ${{ steps.affectedAppsLibs.outputs.libs }}
+      affectedAll: ${{ steps.affectedAppsLibs.outputs.all }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-  #     - name: Setup
-  #       uses: ./.github/actions/setup
-  #       with:
-  #         workload_identity_provider: ${{ secrets.WI_PROVIDER }}
-  #         service_account: ${{ secrets.SA_GA }}
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          workload_identity_provider: ${{ secrets.WI_PROVIDER }}
+          service_account: ${{ secrets.SA_GA }}
 
-  #     - name: Affected apps/libs
-  #       uses: ./.github/actions/affected
-  #       id: affectedAppsLibs
+      - name: Affected apps/libs
+        uses: ./.github/actions/affected
+        id: affectedAppsLibs
 
   # lint only the effected apps and libs
-  # lint:
-  #   needs: affected
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       appsLibs: ${{ fromJson(needs.affected.outputs.affectedAll) }}
-  #   steps:
-  #     - name: Clone repository
-  #       uses: actions/checkout@v3
+  lint:
+    needs: affected
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        appsLibs: ${{ fromJson(needs.affected.outputs.affectedAll) }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
 
-  #     - name: Setup
-  #       uses: ./.github/actions/setup
-  #       with:
-  #         workload_identity_provider: ${{ secrets.WI_PROVIDER }}
-  #         service_account: ${{ secrets.SA_GA }}
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          workload_identity_provider: ${{ secrets.WI_PROVIDER }}
+          service_account: ${{ secrets.SA_GA }}
 
-  #     - uses: ./.github/actions/nrwl
-  #       with:
-  #         project: ${{ matrix.appsLibs }}
-  #         target: lint
+      - uses: ./.github/actions/nrwl
+        with:
+          project: ${{ matrix.appsLibs }}
+          target: lint
 
   # run the unit tests
-  # test:
-  #   needs: affected
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       appsLibs: ${{ fromJson(needs.affected.outputs.affectedAll) }}
-  #   steps:
-  #     - name: Clone repository
-  #       uses: actions/checkout@v3
+  test:
+    needs: affected
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        appsLibs: ${{ fromJson(needs.affected.outputs.affectedAll) }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
 
-  #     - name: Setup
-  #       uses: ./.github/actions/setup
-  #       with:
-  #         workload_identity_provider: ${{ secrets.WI_PROVIDER }}
-  #         service_account: ${{ secrets.SA_GA }}
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          workload_identity_provider: ${{ secrets.WI_PROVIDER }}
+          service_account: ${{ secrets.SA_GA }}
 
-  #     - name: Prepare api
-  #       id: secrets
-  #       uses: 'google-github-actions/get-secretmanager-secrets@v0'
-  #       with:
-  #         secrets: |-
-  #           githubToken:${{ secrets.PROJECT }}/github-token
+      - name: Prepare api
+        id: secrets
+        if: matrix.appsLibs == 'api'
+        uses: 'google-github-actions/get-secretmanager-secrets@v0'
+        with:
+          secrets: |-
+            githubToken:${{ secrets.PROJECT }}/github-token
 
-  #     - name: Test
-  #       uses: ./.github/actions/nrwl
-  #       env:
-  #         GITHUB_TOKEN: '${{ steps.secrets.outputs.githubToken }}'
-  #       with:
-  #         project: ${{ matrix.appsLibs }}
-  #         target: test
+      - name: Test
+        uses: ./.github/actions/nrwl
+        env:
+          GITHUB_TOKEN: '${{ steps.secrets.outputs.githubToken }}'
+        with:
+          project: ${{ matrix.appsLibs }}
+          target: test
 
-  #     - name: Archive test results
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: test-coverage
-  #         path: |
-  #           reports/${{ matrix.appsLibs }}/coverage.xml
-  #           reports/${{ matrix.appsLibs }}/unit-test.xml
+      - name: Archive test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-coverage
+          path: |
+            reports/${{ matrix.appsLibs }}/coverage.xml
+            reports/${{ matrix.appsLibs }}/unit-test.xml
 
-  # # run build
-  # build:
-  #   needs: affected
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       appsLibs: ${{ fromJson(needs.affected.outputs.affectedAll) }}
-  #   steps:
-  #     - name: Clone repository
-  #       uses: actions/checkout@v3
+  # run build
+  build:
+    needs: affected
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        appsLibs: ${{ fromJson(needs.affected.outputs.affectedAll) }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
 
-  #     - name: Setup
-  #       uses: ./.github/actions/setup
-  #       with:
-  #         workload_identity_provider: ${{ secrets.WI_PROVIDER }}
-  #         service_account: ${{ secrets.SA_GA }}
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          workload_identity_provider: ${{ secrets.WI_PROVIDER }}
+          service_account: ${{ secrets.SA_GA }}
 
-  #     - uses: ./.github/actions/nrwl
-  #       with:
-  #         project: ${{ matrix.appsLibs }}
-  #         target: build
+      - uses: ./.github/actions/nrwl
+        with:
+          project: ${{ matrix.appsLibs }}
+          target: build
 
-  # # run e2e tests
-  # e2e:
-  #   needs:
-  #     - build
-  #     - lint
-  #     - test
-  #     - affected
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       appsLibs: ${{ fromJson(needs.affected.outputs.affectedApps) }}
-  #   steps:
-  #     - name: Clone repository
-  #       uses: actions/checkout@v3
+  # run e2e tests
+  e2e:
+    needs:
+      - build
+      - lint
+      - test
+      - affected
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        appsLibs: ${{ fromJson(needs.affected.outputs.affectedApps) }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
 
-  #     - name: Setup
-  #       uses: ./.github/actions/setup
-  #       with:
-  #         workload_identity_provider: ${{ secrets.WI_PROVIDER }}
-  #         service_account: ${{ secrets.SA_GA }}
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          workload_identity_provider: ${{ secrets.WI_PROVIDER }}
+          service_account: ${{ secrets.SA_GA }}
 
-  #     - name: Start app
-  #       run: npm start & npx nx run ${{ matrix.appsLibs }}:e2e
+      - name: Start app
+        run: npm start & npx nx run ${{ matrix.appsLibs }}:e2e
 
-  #     - name: Archive video and snapshots
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: video-snapshots
-  #         path: |
-  #           reports/${{ matrix.appsLibs }}/e2e/videos/*.mp4
-  #           reports/${{ matrix.appsLibs }}/e2e/screenshots
+      - name: Archive video and snapshots
+        uses: actions/upload-artifact@v3
+        with:
+          name: video-snapshots
+          path: |
+            reports/${{ matrix.appsLibs }}/e2e/videos/*.mp4
+            reports/${{ matrix.appsLibs }}/e2e/screenshots
 
   deploy:
     runs-on: ubuntu-latest
+    needs:
+      - affected
+      - e2e
+    strategy:
+      fail-fast: false
+      matrix:
+        appsLibs: ${{ fromJson(needs.affected.outputs.affectedApps) }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
@@ -184,22 +192,24 @@ jobs:
 
       - name: 'Setup gcloud api'
         uses: 'google-github-actions/setup-gcloud@v0'
+        if: matrix.appsLibs == 'api'
         with:
           project_id: '${{ secrets.PROJECT }}'
 
       - name: Install gcloud beta
+        if: matrix.appsLibs == 'api'
         run: |
           gcloud info
           gcloud components install beta
 
       - uses: ./.github/actions/nrwl
         with:
-          project: 'az'
+          project: ${{ matrix.appsLibs }}
           target: deploy
 
       - id: 'publish-az'
         uses: 'google-github-actions/upload-cloud-storage@v0'
-        # if: matrix.appsLibs == 'az'
+        if: matrix.appsLibs == 'az'
         with:
           path: 'dist/apps/az/exported'
           destination: 'bkt-az-cdn/az'

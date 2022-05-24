@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { interval } from 'rxjs';
 
 @Component({
@@ -10,6 +10,7 @@ import { interval } from 'rxjs';
 
     <app-child></app-child>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
   counter$ = interval(1000);
