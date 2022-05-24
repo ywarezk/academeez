@@ -186,6 +186,8 @@ jobs:
         uses: 'google-github-actions/setup-gcloud@v0'
         with:
           project_id: '${{ secrets.PROJECT }}'
+          export_default_credentials: true
+          cleanup_credentials: false
 
       - name: Install gcloud beta
         run: |

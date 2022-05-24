@@ -65,12 +65,6 @@ resource "google_cloudfunctions_function_iam_member" "allow_cloud_function_githu
   member         = "serviceAccount:${var.sa_github_actions}"
 }
 
-resource "google_project_iam_member" "allow_cloud_function_github_actions_sa2" {
-  project = var.project
-  role    = "roles/iam.serviceAccountUser"
-  member  = "serviceAccount:${var.sa_github_actions}"
-}
-
 /**
  * add a cname for cloud functions
  */
