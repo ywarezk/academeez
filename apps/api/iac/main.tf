@@ -57,12 +57,16 @@ resource "google_secret_manager_secret_iam_member" "allow_read_ga_github_token" 
 /**
  * allow github actions to publish cloud functions
  */
-resource "google_cloudfunctions_function_iam_member" "allow_cloud_function_github_actions_sa1" {
-  project        = var.project
-  cloud_function = "api"
-  region         = var.region
-  role           = "roles/cloudfunctions.developer"
-  member         = "serviceAccount:${var.sa_github_actions}"
+resource "google_project_iam_member" "allow_cloud_function_github_actions_sa1" {
+  project = var.project
+  role    = "roles/cloudfunctions.developer"
+  member  = "serviceAccount:${var.sa_github_actions}"
+}
+
+resource "google_project_iam_member" "allow_cloud_function_github_actions_sa2" {
+  project = var.project
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:${var.sa_github_actions}"
 }
 
 /**
