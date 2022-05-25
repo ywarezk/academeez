@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { ChildComponent } from './child/child.component';
 import { GrandComponent } from './grand/grand.component';
+import { ReactiveComponentModule } from '@ngrx/component';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { GrandComponent } from './grand/grand.component';
     GrandComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    ReactiveComponentModule
   ],
   providers: [],
   bootstrap: [AppComponent]

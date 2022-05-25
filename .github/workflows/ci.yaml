@@ -171,8 +171,10 @@ jobs:
             reports/${{ matrix.appsLibs }}/e2e/videos/*.mp4
             reports/${{ matrix.appsLibs }}/e2e/screenshots
 
+  #  deploy only for tags
   deploy:
     runs-on: ubuntu-latest
+    if: github.ref_type == 'tag'
     needs:
       - affected
       - e2e

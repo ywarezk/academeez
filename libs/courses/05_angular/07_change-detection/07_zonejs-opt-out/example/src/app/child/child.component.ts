@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-child',
   template: `
     <p>
-      child works! {{ log() }}
+      child works! {{ log() }} {{ counter$ | ngrxPush }}
     </p>
 
     <button (click)="noop()">
@@ -17,6 +18,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 })
 export class ChildComponent implements OnInit {
 
+  counter$ = new BehaviorSubject(1);
+
   constructor(private _cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {
@@ -28,7 +31,9 @@ export class ChildComponent implements OnInit {
 
   noop() {
     console.log('clicked the button in child');
-	  this._cd.detectChanges();
+    this.counter$.next(this.counter$.value + 1);
+	//   this._cd.markForCheck();
+	  // this._cd.detectChanges();
   }
 
 }
