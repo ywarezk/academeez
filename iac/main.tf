@@ -202,7 +202,13 @@ resource "google_compute_url_map" "urlmap_az" {
   name            = "url-map-az"
   description     = "Main url map for academeez routes"
   project         = module.prj_academeez.project_id
-  default_service = google_compute_backend_bucket.cdn_backend_az_bucket.id
+
+  default_url_redirect {
+    https_redirect = true
+    strip_query = false
+    host_redirect = "www.academeez.com"
+    redirect_response_code = "MOVED_PERMANENTLY_DEFAULT"
+  }
 
   host_rule {
     hosts        = ["www.academeez.com"]
@@ -213,10 +219,25 @@ resource "google_compute_url_map" "urlmap_az" {
   path_matcher {
     name            = "api"
     default_service = google_compute_backend_bucket.cdn_backend_az_bucket.id
-
     path_rule {
       paths   = ["/api/*"]
       service = google_compute_backend_service.backend_lb_main.id
+
+    }
+  }
+
+  host_rule {
+    hosts        = ["academeez.com"]
+    path_matcher = "redirect"
+    description  = "Used to redirect to www"
+  }
+
+  path_matcher {
+    name = "redirect"
+    default_url_redirect {
+      host_redirect = "www.academeez.com"
+      strip_query = false
+      https_redirect = true
     }
   }
 }
@@ -242,6 +263,16 @@ resource "google_dns_record_set" "dns_az" {
   project = module.prj_academeez.project_id
 
   name         = "www.academeez.com."
+  type         = "A"
+  ttl          = 300
+  managed_zone = google_dns_managed_zone.dns_az.name
+  rrdatas      = [google_compute_global_address.ip_main_load_balancer.address]
+}
+
+resource "google_dns_record_set" "dns_az_no_www" {
+  project = module.prj_academeez.project_id
+
+  name         = "academeez.com."
   type         = "A"
   ttl          = 300
   managed_zone = google_dns_managed_zone.dns_az.name

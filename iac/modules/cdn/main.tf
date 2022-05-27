@@ -19,6 +19,10 @@ resource "google_storage_bucket" "cdn_az_bucket" {
     response_header = ["*"]
     max_age_seconds = 3600
   }
+  website {
+    main_page_suffix = "index.html"
+    not_found_page   = "index.html"
+  }
 }
 
 resource "google_compute_backend_bucket" "cdn_backend_az_bucket" {
