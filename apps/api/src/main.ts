@@ -11,7 +11,7 @@ import { app } from './app';
 import createApp from 'express';
 
 const mainApp = createApp();
-mainApp.use('/api', app);
+mainApp.use(app);
 
 const port = process.env['port'] || 3000;
 

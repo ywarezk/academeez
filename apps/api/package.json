@@ -1,6 +1,6 @@
 {
   "name": "@az/api",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "dependencies": {
     "express": "^4.17.2",
     "tslib": "^2.0.0"
