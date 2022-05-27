@@ -68,15 +68,3 @@ resource "google_project_iam_member" "allow_cloud_function_github_actions_sa2" {
   role    = "roles/iam.serviceAccountUser"
   member  = "serviceAccount:${var.sa_github_actions}"
 }
-
-/**
- * add a cname for cloud functions
- */
-resource "google_dns_record_set" "cname" {
-  project      = var.project
-  name         = "www.academeez.com."
-  managed_zone = "academeez"
-  type         = "CNAME"
-  ttl          = 300
-  rrdatas      = ["us-central1-prj-academeez.cloudfunctions.net."]
-}

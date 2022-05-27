@@ -44,7 +44,7 @@ module "prj_academeez" {
   billing_account             = var.billing_account
   budget_amount               = 1000
   create_project_sa           = false
-  activate_apis               = [
+  activate_apis = [
     "billingbudgets.googleapis.com",
     "serviceusage.googleapis.com",
     "cloudidentity.googleapis.com",
@@ -57,8 +57,8 @@ module "prj_academeez" {
     "cloudfunctions.googleapis.com",
     "dns.googleapis.com"
   ]
-  labels                      = {
-    application_name  = "academeez"
+  labels = {
+    application_name = "academeez"
   }
 }
 
@@ -66,9 +66,9 @@ module "prj_academeez" {
  * the terraform state will be placed in this private bucket
  */
 resource "google_storage_bucket" "bkt_tf_state" {
-  name          = "bkt-az-tf-state"
-  location      = "US"
-  project       = module.prj_academeez.project_id
+  name     = "bkt-az-tf-state"
+  location = "US"
+  project  = module.prj_academeez.project_id
 }
 
 /**
@@ -76,7 +76,7 @@ resource "google_storage_bucket" "bkt_tf_state" {
  */
 resource "google_storage_bucket_iam_binding" "terraform_sa_allow_bucket" {
   bucket = google_storage_bucket.bkt_tf_state.name
-  role = "roles/storage.admin"
+  role   = "roles/storage.admin"
   members = [
     "serviceAccount:${var.sa_terraform}"
   ]
@@ -86,7 +86,7 @@ resource "google_storage_bucket_iam_binding" "terraform_sa_allow_bucket" {
  * pool of external workload identity that is used by github actions
  */
 resource "google_iam_workload_identity_pool" "workload_identity_github_actions" {
-  provider                           = google-beta
+  provider                  = google-beta
   project                   = module.prj_academeez.project_id
   workload_identity_pool_id = "pool-github-actions"
   display_name              = "WI github actions"
@@ -127,9 +127,117 @@ resource "google_service_account_iam_member" "sa_wi" {
  * Install the cdn
  */
 module "cdn_az" {
-  source = "./modules/cdn"
-  project = module.prj_academeez.project_id
+  source            = "./modules/cdn"
+  project           = module.prj_academeez.project_id
   sa_github_actions = google_service_account.sa_github_actions.email
+}
+
+/******************************
+ * Serverless url map
+ ******************************/
+
+/**
+ * create an ssl certificate for the main domain
+ */
+resource "google_compute_managed_ssl_certificate" "az_certificate" {
+  project = module.prj_academeez.project_id
+
+  name = "az-managed-certificate"
+
+  managed {
+    domains = ["www.academeez.com"]
+  }
+}
+
+/**
+ * Create a static ip for load balancer which will point to cloud function
+ */
+resource "google_compute_global_address" "ip_main_load_balancer" {
+  project      = module.prj_academeez.project_id
+  name         = "ip-main-lb"
+  ip_version   = "IPV4"
+  address_type = "EXTERNAL"
+}
+
+/**
+ * This can be used for load balaner to map to the api cloud function
+ */
+resource "google_compute_region_network_endpoint_group" "neg_cloudfunction_api" {
+  project               = module.prj_academeez.project_id
+  name                  = "neg-cloudfunction-api"
+  network_endpoint_type = "SERVERLESS"
+  region                = var.region
+  cloud_function {
+    function = "api"
+    url_mask = "/"
+  }
+}
+
+/**
+ * backend service for the url map to route to cloud function
+ */
+resource "google_compute_backend_service" "backend_lb_main" {
+  name        = "backend-lb-main"
+  project     = module.prj_academeez.project_id
+  protocol    = "HTTP"
+  port_name   = "http"
+  timeout_sec = 30
+
+  backend {
+    group = google_compute_region_network_endpoint_group.neg_cloudfunction_api.id
+  }
+}
+
+/**
+ * our reverse proxy configurations
+ */
+resource "google_compute_url_map" "urlmap_az" {
+  name            = "url-map-az"
+  description     = "Main url map for academeez routes"
+  project         = module.prj_academeez.project_id
+  default_service = google_compute_backend_service.backend_lb_main.id
+
+  host_rule {
+    hosts        = ["www.academeez.com"]
+    path_matcher = "api"
+  }
+
+  path_matcher {
+    name            = "api"
+    default_service = google_compute_backend_service.backend_lb_main.id
+
+    path_rule {
+      paths   = ["/api/*"]
+      service = google_compute_backend_service.backend_lb_main.id
+    }
+  }
+}
+
+resource "google_compute_target_https_proxy" "proxy_https" {
+  project = module.prj_academeez.project_id
+  name    = "proxy-https-az"
+  url_map = google_compute_url_map.urlmap_az.name
+  ssl_certificates = [google_compute_managed_ssl_certificate.az_certificate.name]
+}
+
+resource "google_compute_global_forwarding_rule" "https_az_forward" {
+  provider   = google-beta
+  project    = module.prj_academeez.project_id
+  name       = "https-az-forward"
+  target     = google_compute_target_https_proxy.proxy_https.self_link
+  ip_address = google_compute_global_address.ip_main_load_balancer.address
+  port_range = "443"
+  depends_on = [google_compute_global_address.ip_main_load_balancer]
+}
+
+resource "google_dns_record_set" "dns_az" {
+  project = module.prj_academeez.project_id
+
+  name = "www.academeez.com."
+  type = "A"
+  ttl  = 300
+  managed_zone = google_dns_managed_zone.dns_az.name
+  rrdatas = [google_compute_global_address.ip_main_load_balancer.address]
 }
 
 /***************
@@ -140,10 +248,10 @@ module "cdn_az" {
  * Create a dns zone
  */
 resource "google_dns_managed_zone" "dns_az" {
-  name        = "academeez"
-  dns_name = "academeez.com."
+  name          = "academeez"
+  dns_name      = "academeez.com."
   force_destroy = true
-  description = "DNS for academeez"
+  description   = "DNS for academeez"
   labels = {
     application = "academeez"
   }
