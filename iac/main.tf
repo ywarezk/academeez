@@ -169,12 +169,11 @@ resource "google_compute_region_network_endpoint_group" "neg_cloudfunction_api" 
   region                = var.region
   cloud_function {
     function = "api"
-    url_mask = "/"
   }
 }
 
 /**
- * backend service for the url map to route to cloud function
+ * backend service for the url map to route to serverless cloud function
  */
 resource "google_compute_backend_service" "backend_lb_main" {
   name        = "backend-lb-main"
@@ -188,6 +187,14 @@ resource "google_compute_backend_service" "backend_lb_main" {
   }
 }
 
+resource "google_compute_backend_bucket" "cdn_backend_az_bucket" {
+  name        = "backend-az-bucket"
+  description = "Backend bucket for main routing"
+  bucket_name = "bkt-az-cdn"
+  enable_cdn  = true
+  project     = module.prj_academeez.project_id
+}
+
 /**
  * our reverse proxy configurations
  */
@@ -195,16 +202,17 @@ resource "google_compute_url_map" "urlmap_az" {
   name            = "url-map-az"
   description     = "Main url map for academeez routes"
   project         = module.prj_academeez.project_id
-  default_service = google_compute_backend_service.backend_lb_main.id
+  default_service = google_compute_backend_bucket.cdn_backend_az_bucket.id
 
   host_rule {
     hosts        = ["www.academeez.com"]
     path_matcher = "api"
+    description  = "Used to route for the api"
   }
 
   path_matcher {
     name            = "api"
-    default_service = google_compute_backend_service.backend_lb_main.id
+    default_service = google_compute_backend_bucket.cdn_backend_az_bucket.id
 
     path_rule {
       paths   = ["/api/*"]
@@ -214,9 +222,9 @@ resource "google_compute_url_map" "urlmap_az" {
 }
 
 resource "google_compute_target_https_proxy" "proxy_https" {
-  project = module.prj_academeez.project_id
-  name    = "proxy-https-az"
-  url_map = google_compute_url_map.urlmap_az.name
+  project          = module.prj_academeez.project_id
+  name             = "proxy-https-az"
+  url_map          = google_compute_url_map.urlmap_az.name
   ssl_certificates = [google_compute_managed_ssl_certificate.az_certificate.name]
 }
 
@@ -233,11 +241,11 @@ resource "google_compute_global_forwarding_rule" "https_az_forward" {
 resource "google_dns_record_set" "dns_az" {
   project = module.prj_academeez.project_id
 
-  name = "www.academeez.com."
-  type = "A"
-  ttl  = 300
+  name         = "www.academeez.com."
+  type         = "A"
+  ttl          = 300
   managed_zone = google_dns_managed_zone.dns_az.name
-  rrdatas = [google_compute_global_address.ip_main_load_balancer.address]
+  rrdatas      = [google_compute_global_address.ip_main_load_balancer.address]
 }
 
 /***************

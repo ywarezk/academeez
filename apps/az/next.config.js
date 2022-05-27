@@ -26,7 +26,7 @@ const nextConfig = {
     )
     return config
   },
-  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://cdn.academeez.com/az' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://cdn.academeez.com' : '',
 };
 
 module.exports = withPlugins([optimizedImages, withNx], nextConfig);

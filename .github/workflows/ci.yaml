@@ -214,5 +214,5 @@ jobs:
         if: matrix.appsLibs == 'az'
         with:
           path: 'dist/apps/az/exported'
-          destination: 'bkt-az-cdn/az'
+          destination: 'bkt-az-cdn'
           parent: false
