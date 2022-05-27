@@ -145,7 +145,7 @@ resource "google_compute_managed_ssl_certificate" "az_certificate" {
   name = "az-managed-certificate"
 
   managed {
-    domains = ["www.academeez.com"]
+    domains = ["www.academeez.com", "academeez.com"]
   }
 }
 
@@ -195,6 +195,18 @@ resource "google_compute_backend_bucket" "cdn_backend_az_bucket" {
   project     = module.prj_academeez.project_id
 }
 
+resource "google_compute_url_map" "urlmap_az_http" {
+  name            = "url-map-az-http"
+  description     = "Redirects to https"
+  project         = module.prj_academeez.project_id
+
+  default_url_redirect {
+    https_redirect = true
+    strip_query = false
+    redirect_response_code = "TEMPORARY_REDIRECT"
+  }
+}
+
 /**
  * our reverse proxy configurations
  */
@@ -222,7 +234,6 @@ resource "google_compute_url_map" "urlmap_az" {
     path_rule {
       paths   = ["/api/*"]
       service = google_compute_backend_service.backend_lb_main.id
-
     }
   }
 
@@ -240,6 +251,22 @@ resource "google_compute_url_map" "urlmap_az" {
       https_redirect = true
     }
   }
+}
+
+resource "google_compute_target_http_proxy" "proxy_http" {
+  project = module.prj_academeez.project_id
+  name    = "proxy-http-az"
+  url_map = google_compute_url_map.urlmap_az_http.name
+}
+
+resource "google_compute_global_forwarding_rule" "http_az_forward" {
+  provider   = google-beta
+  project    = module.prj_academeez.project_id
+  name       = "http-az-forward"
+  target     = google_compute_target_http_proxy.proxy_http.self_link
+  ip_address = google_compute_global_address.ip_main_load_balancer.address
+  port_range = "80"
+  depends_on = [google_compute_global_address.ip_main_load_balancer]
 }
 
 resource "google_compute_target_https_proxy" "proxy_https" {
