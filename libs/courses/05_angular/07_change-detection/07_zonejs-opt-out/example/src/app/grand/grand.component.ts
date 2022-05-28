@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-grand',
@@ -7,9 +7,12 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
       grand works! {{ log() }}
     </p>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GrandComponent implements OnInit {
+
+  // @Input()
+  // counter: number | null = 0
 
   constructor() { }
 
