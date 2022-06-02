@@ -12,7 +12,7 @@ resource "google_storage_bucket" "cdn_az_bucket" {
   location      = "US"
   project       = var.project
   cors {
-    origin          = [
+    origin = [
       "https://www.academeez.com"
     ]
     method          = ["GET"]
@@ -31,6 +31,11 @@ resource "google_compute_backend_bucket" "cdn_backend_az_bucket" {
   bucket_name = google_storage_bucket.cdn_az_bucket.name
   enable_cdn  = true
   project     = var.project
+  cdn_policy {
+    cache_mode  = "CACHE_ALL_STATIC"
+    default_ttl = 86400
+    client_ttl  = 86400
+  }
 }
 
 resource "google_compute_url_map" "cdn_az_url_map" {
@@ -41,7 +46,7 @@ resource "google_compute_url_map" "cdn_az_url_map" {
 }
 
 resource "google_compute_managed_ssl_certificate" "cdn_az_certificate" {
-  project  = var.project
+  project = var.project
 
   name = "cdn-az-managed-certificate"
 
@@ -92,7 +97,7 @@ resource "google_storage_bucket_iam_member" "all_users_viewers" {
  */
 resource "google_storage_bucket_iam_binding" "sa_ga_allow_upload_cdn" {
   bucket = google_storage_bucket.cdn_az_bucket.name
-  role = "roles/storage.admin"
+  role   = "roles/storage.admin"
   members = [
     "serviceAccount:${var.sa_github_actions}"
   ]

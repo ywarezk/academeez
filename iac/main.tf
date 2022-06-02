@@ -193,6 +193,11 @@ resource "google_compute_backend_bucket" "cdn_backend_az_bucket" {
   bucket_name = "bkt-az-cdn"
   enable_cdn  = true
   project     = module.prj_academeez.project_id
+  cdn_policy {
+    cache_mode  = "CACHE_ALL_STATIC"
+    default_ttl = 86400
+    client_ttl  = 86400
+  }
 }
 
 resource "google_compute_url_map" "urlmap_az_http" {

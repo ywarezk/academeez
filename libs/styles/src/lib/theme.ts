@@ -66,6 +66,10 @@ export let theme = createTheme({
     },
     MuiCssBaseline: {
       styleOverrides: `
+        body {
+          margin: 0;
+        }
+
         @font-face {
           font-family: 'Radio Grotesk';
           font-style: normal;

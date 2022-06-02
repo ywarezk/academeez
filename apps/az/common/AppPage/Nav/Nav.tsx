@@ -57,7 +57,7 @@ export const Nav: FC = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <AppBar color='transparent' position="static">
+    <AppBar color='transparent' position="absolute">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
 

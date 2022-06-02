@@ -197,8 +197,18 @@ module.exports = (config) => {
                 })
               }
             ],
-            test: /\.(jpg|jpeg|gif|webp|avif|ico|bmp)$/i,
+            test: /\.(jpg|jpeg|gif|avif|ico|bmp)$/i,
           },
+
+          {
+            use: [
+              {
+                  loader: 'url-loader',
+              }
+            ],
+            test: /\.webp$/i,
+          },
+
           {
             test: /\.js$/,
             include: projectFullPath,
