@@ -12,10 +12,14 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { Typography } from "@mui/material";
 import bgCfa from './bg-cfa.webp';
+import Head from 'next/head';
 
 export const HomePage: FC = () => {
   return (
     <>
+      <Head>
+        <meta name="description" content="Academeez open source and free programming courses for beginners and experts" />
+      </Head>
       <Box component="section" sx={{
         height: '100vh',
         width: '100vw',
