@@ -11,7 +11,7 @@ import { FC } from "react";
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { Typography } from "@mui/material";
-import bgCfa from './bg-cfa.png';
+import bgCfa from './bg-cfa.webp';
 
 export const HomePage: FC = () => {
   return (

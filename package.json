@@ -79,7 +79,6 @@
     "eslint-plugin-react": "7.29.4",
     "eslint-plugin-react-hooks": "4.5.0",
     "file-loader": "^6.2.0",
-    "imagemin-optipng": "^8.0.0",
     "jenkins-mocha": "^9.0.0",
     "karma": "^6.3.4",
     "mocha": "^8.3.2",
@@ -93,6 +92,7 @@
     "tsconfig-paths": "^3.12.0",
     "typescript": "4.3.5",
     "url-loader": "^4.1.1",
+    "webp-loader": "^0.6.0",
     "webpack": "^5.68.0"
   }
 }
