@@ -1,12 +1,12 @@
 ---
-title: Optimize performance of our components
-short_description: Let's make our React components work even faster
-description: Optimization tips for react components
-slug: optimizing-components
-link: /courses/react/optimizing-components
+title: Optimize performance of your react application
+description: In these series of lectures, we will cover best practices, tricks, and techniques to improve the performance of your React application.
+slug: optimize-performance
+link: /courses/react/optimize-performance
 video_url: 'https://c563a7c556a91cdae32025bd25037548.egress.mediapackage-vod.eu-west-1.amazonaws.com/out/v1/c981d287b93543028c69b53d164248a3/9066c336968343c59ae6119f795c7d7c/9a1daa110f12415ebc81ad4bb65d7e95/index.m3u8'
 duration: 66
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
-bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/05_angular/bg.png
+bg_img: https://github.com/ywarezk/academeez/raw/main/libs/courses/05_angular/bg.png
+is_featured: true
 ---

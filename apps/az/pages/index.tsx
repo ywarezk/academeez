@@ -7,6 +7,6 @@
  * @license: MIT
  */
 
-export { HomePage as default } from '../home';
+export { HomePage as default, getStaticProps } from '../home';
 
 

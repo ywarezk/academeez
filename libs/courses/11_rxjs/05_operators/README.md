@@ -1,6 +1,5 @@
 ---
 title: Operators
-short_description: Operators are reusable functions to create or manipulate an Observable
 description: Operators are reusable functions to create or manipulate an Observable
 slug: operators
 link: /courses/rxjs/operators

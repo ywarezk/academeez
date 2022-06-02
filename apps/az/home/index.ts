@@ -7,4 +7,4 @@
  * @license: MIT
  */
 
-export { HomePage } from './HomePage/HomePage';
+export { HomePage, getStaticProps } from './HomePage/HomePage';

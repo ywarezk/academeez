@@ -21,4 +21,6 @@ export interface Lesson {
 
   // lessons are organized in a tree structure
   children: Lesson[]
+
+  isFeatured: boolean;
 }

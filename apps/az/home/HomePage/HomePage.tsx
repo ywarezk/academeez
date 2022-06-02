@@ -13,8 +13,14 @@ import Container from '@mui/material/Container';
 import { Typography } from "@mui/material";
 import bgCfa from './bg-cfa.webp';
 import Head from 'next/head';
+import { Lesson } from "@az/models";
+import { GetStaticProps } from 'next';
 
-export const HomePage: FC = () => {
+type HomePageProps = {cfaLessons?: Lesson[]}
+
+export const HomePage: FC< HomePageProps > = ({
+  cfaLessons = []
+}) => {
   return (
     <>
       <Head>
@@ -29,6 +35,8 @@ export const HomePage: FC = () => {
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover'
       }}>
+
+        {/* begin intro text */}
         <Container
           maxWidth="xl"
           sx={{
@@ -43,12 +51,32 @@ export const HomePage: FC = () => {
             <Typography variant="h1" sx={{ color: 'primary.main', mb: 3 }}>
               academeez
             </Typography>
-            <Typography variant="h3">
+            <Typography
+              sx={{
+                fontFamily: 'Space Mono'
+              }}
+              variant="h3">
               <Box component="span" sx={{color: 'info.main'}}>Open source</Box> learning platform for <Box component="span" sx={{color: 'warning.main'}}>programmers</Box>
             </Typography>
           </Box>
         </Container>
+        {/* end intro text */}
+
+        {/* begin intro cards */}
+
+        {/* end intro cards */}
       </Box>
     </>
   )
+}
+
+/**
+ * this will run during build time to grab content from the server
+ */
+export const getStaticProps: GetStaticProps< HomePageProps > = async () => {
+  return {
+    props: {
+      cfaLessons: []
+    }
+  }
 }
