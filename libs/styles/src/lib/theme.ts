@@ -123,7 +123,7 @@ export let theme = createTheme({
     h5: {
       fontFamily: 'Radio Grotesk',
       fontWeight: 700,
-      fontSize: '1.5rem',
+      fontSize: '1.2rem',
     },
     h6: {
       fontFamily: 'Radio Grotesk',

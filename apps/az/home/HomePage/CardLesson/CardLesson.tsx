@@ -9,7 +9,7 @@
  * @license: MIT
  */
 
-import { FC } from "react"
+import { FC } from 'react'
 import Card from '@az/mui/Card'
 import CardMedia from '@mui/material/CardMedia'
 import CardContent from '@mui/material/CardContent'
@@ -19,22 +19,17 @@ import CardActions from '@mui/material/CardActions'
 import Button from '@az/mui/Button'
 import PlayArrow from '@mui/icons-material/PlayArrow'
 import Link from 'next/link'
-import Box from '@mui/material/Box';
-import ButtonPlay from '@az/mui/ButtonPlay';
-import { Lesson } from "@az/models"
+import Box from '@mui/material/Box'
+import ButtonPlay from '@az/mui/ButtonPlay'
+import { Lesson } from '@az/models'
 
-export const CardLesson: FC<{ lesson: Lesson }> = ({
-  lesson
-}) => {
+export const CardLesson: FC<{ lesson: Lesson }> = ({ lesson }) => {
   return (
-    <Card sx={{ maxWidth: 294}}>
-      <Box sx={{ position: 'relative'}}>
-        <CardMedia
-          image={lesson.bgImg}
-          component="img"
-          height="170"
-        />
-        <Box sx={ {
+    <Card sx={{ maxWidth: 294 }}>
+      <Box sx={{ position: 'relative' }}>
+        <CardMedia image={lesson.bgImg} component="img" height="170" />
+        <Box
+          sx={{
             position: 'absolute',
             height: '100%',
             width: '100%',
@@ -42,39 +37,43 @@ export const CardLesson: FC<{ lesson: Lesson }> = ({
             justifyContent: 'center',
             alignItems: 'center',
             top: 0,
-            left: 0
-          } }>
-          <Link href={ lesson.link } passHref>
-            <ButtonPlay
-              fontSize={62}
-              sx={{ position: 'absolute' }}
-            />
+            left: 0,
+          }}
+        >
+          <Link href={lesson.link} passHref>
+            <ButtonPlay fontSize={62} sx={{ position: 'absolute' }} />
           </Link>
         </Box>
       </Box>
       <CardContent>
-        <Typography gutterBottom variant="h5">
-          { lesson.title}
-        </Typography>
-        <ShowMoreLess
-          height={60}
+        <Typography
+          sx={{
+            textAlign: 'left',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+          }}
+          gutterBottom
+          variant="h5"
         >
-          <Typography variant='body1'>
-            { lesson.description }
+          {lesson.title}
+        </Typography>
+        <ShowMoreLess height={90}>
+          <Typography sx={{ textAlign: 'left' }} variant="body1">
+            {lesson.description}
           </Typography>
         </ShowMoreLess>
       </CardContent>
       <CardActions>
-        <Link href={ lesson.link } passHref>
+        <Link href={lesson.link} passHref>
           <Button
             sx={{ width: '100%' }}
-            variant='outlined'
+            variant="outlined"
             startIcon={<PlayArrow />}
           >
             Start Learning
           </Button>
         </Link>
-
       </CardActions>
     </Card>
   )
