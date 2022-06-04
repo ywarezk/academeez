@@ -7,78 +7,101 @@
  * @license: MIT
  */
 
-import { FC } from "react"
+import { FC } from 'react'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
-import { Grid, Typography } from "@mui/material"
+import { Grid, Typography } from '@mui/material'
 import bgCfa from './bg-cfa.webp'
 import Head from 'next/head'
-import { Lesson } from "@az/models"
+import { Lesson, getLessons, lessonFilter } from '@az/models'
 import { GetStaticProps } from 'next'
-import axios from 'axios'
-import { CardLesson } from "./CardLesson"
+import { CardLesson } from './CardLesson'
 
-type HomePageProps = {cfaLessons?: Lesson[]}
+type HomePageProps = { cfaLessons?: Lesson[] }
 
-export const HomePage: FC< HomePageProps > = ({
-  cfaLessons = []
-}) => {
+export const HomePage: FC<HomePageProps> = ({ cfaLessons = [] }) => {
   return (
     <>
       <Head>
-        <meta name="description" content="Academeez open source and free programming courses for beginners and experts" />
+        <meta
+          name="description"
+          content="Academeez open source and free programming courses for beginners and experts"
+        />
       </Head>
-      <Box component="section" sx={{
-        height: '100vh',
-        width: '100vw',
-        backgroundColor: 'grey.100',
-        color: 'background.paper',
-        backgroundImage: `url(${bgCfa})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover'
-      }}>
-
-        {/* begin intro text */}
+      <Box
+        component="section"
+        sx={{
+          height: '100vh',
+          width: '100vw',
+          backgroundColor: 'grey.100',
+          color: 'background.paper',
+          backgroundImage: `url(${bgCfa})`,
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+          paddingTop: 8,
+        }}
+      >
         <Container
           maxWidth="xl"
           sx={{
             display: 'flex',
-            alignItems: 'center',
-            height: '100%',
+            alignItems: 'stretch',
             textAlign: 'center',
-            justifyContent: 'center'
+            minHeight: '100%',
+            justifyContent: 'center',
+            flexDirection: 'column',
           }}
         >
+          {/* begin intro text */}
           <Box>
-            <Typography variant="h1" sx={{ color: 'primary.main', mb: 3 }}>
+            <Typography
+              variant="h1"
+              sx={{
+                color: 'primary.main',
+                mb: 3,
+                display: {
+                  xs: 'none',
+                  sm: 'block',
+                },
+              }}
+            >
               academeez
             </Typography>
             <Typography
               sx={{
-                fontFamily: 'Space Mono'
+                fontFamily: 'Space Mono',
               }}
-              variant="h3">
-              <Box component="span" sx={{color: 'info.main'}}>Open source</Box> learning platform for <Box component="span" sx={{color: 'warning.main'}}>programmers</Box>
+              variant="h3"
+            >
+              <Box component="span" sx={{ color: 'info.main' }}>
+                Open source
+              </Box>{' '}
+              learning platform for{' '}
+              <Box component="span" sx={{ color: 'warning.main' }}>
+                programmers
+              </Box>
             </Typography>
           </Box>
-        </Container>
-        {/* end intro text */}
+          {/* end intro text */}
 
-        {/* begin intro cards */}
-        <Container maxWidth="xl">
-          <Grid container>
-            {
-              cfaLessons.map(lesson => {
+          {/* begin intro cards */}
+          <Box
+            sx={{
+              paddingTop: 10,
+            }}
+          >
+            <Grid container>
+              {cfaLessons.map((lesson) => {
                 return (
                   <Grid xs={12} sm={6} md={4} lg={3} item key={lesson.link}>
                     <CardLesson lesson={lesson} />
                   </Grid>
                 )
-              })
-            }
-          </Grid>
+              })}
+            </Grid>
+          </Box>
+          {/* end intro cards */}
         </Container>
-        {/* end intro cards */}
       </Box>
     </>
   )
@@ -87,12 +110,11 @@ export const HomePage: FC< HomePageProps > = ({
 /**
  * this will run during build time to grab content from the server
  */
-export const getStaticProps: GetStaticProps< HomePageProps > = async () => {
-  const { data } = await axios.get<Lesson[]>('https://academeez.com/api/lessons')
-  console.log(data)
+export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
+  const lessons = await getLessons()
   return {
     props: {
-      cfaLessons: data.filter(l => l.isFeatured)
-    }
+      cfaLessons: lessonFilter(lessons, { isFeatured: true }),
+    },
   }
 }

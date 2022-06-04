@@ -7,18 +7,18 @@
  * @license: MIT
  */
 
-import { createTheme, responsiveFontSizes } from '@mui/material/styles';
-import RadioGroteskRegular from './fonts/radio-grotesk/RadioGrotesk-Regular.woff2';
-import RadioGroteskBold from './fonts/radio-grotesk/RadioGrotesk-Bold.woff2';
-import SpaceMonoRegular from './fonts/space-mono/SpaceMono-Regular.ttf';
-import SpaceMonoBold from './fonts/space-mono/SpaceMono-Bold.ttf';
-import { Palette  } from '@mui/material/styles/createPalette';
-import { Color } from '@mui/material';
+import { createTheme, responsiveFontSizes } from '@mui/material/styles'
+import RadioGroteskRegular from './fonts/radio-grotesk/RadioGrotesk-Regular.woff2'
+import RadioGroteskBold from './fonts/radio-grotesk/RadioGrotesk-Bold.woff2'
+import SpaceMonoRegular from './fonts/space-mono/SpaceMono-Regular.ttf'
+import SpaceMonoBold from './fonts/space-mono/SpaceMono-Bold.ttf'
+import { Palette } from '@mui/material/styles/createPalette'
+import { Color } from '@mui/material'
 
 declare module '@mui/material/styles/createPalette' {
   interface TypeBackground {
-    dark: string;
-    light: string;
+    dark: string
+    light: string
     green: string
   }
 }
@@ -26,43 +26,43 @@ declare module '@mui/material/styles/createPalette' {
 export let theme = createTheme({
   palette: {
     grey: {
-      "50": '#2D2D2D',
-      "100": '#292929',
-      "200": '#4D4D4D',
-      "300": '#E5E5E5',
-      "400": '#D7D7D7',
-      "500": '#F9F9F9',
+      '50': '#2D2D2D',
+      '100': '#292929',
+      '200': '#4D4D4D',
+      '300': '#E5E5E5',
+      '400': '#D7D7D7',
+      '500': '#F9F9F9',
     },
     secondary: {
       main: '#292929',
     },
     primary: {
       main: '#01D662',
-      "500": '#19EB79',
+      '500': '#19EB79',
       light: '#A0EAC1',
-      dark: '#27AE60'
+      dark: '#27AE60',
     },
     error: {
-      main: '#FF5E4A'
+      main: '#FF5E4A',
     },
     warning: {
-      main: '#FFD334'
+      main: '#FFD334',
     },
     info: {
       main: '#5C95FF',
-      light: '#61DAFB'
+      light: '#61DAFB',
     },
     background: {
       paper: '#FFFFFF',
       dark: 'rgba(0, 0, 0, 0.9)',
-      green: '#01D662'
-    }
+      green: '#01D662',
+    },
   },
   components: {
     MuiButton: {
       defaultProps: {
         variant: 'contained',
-      }
+      },
     },
     MuiCssBaseline: {
       styleOverrides: `
@@ -101,8 +101,8 @@ export let theme = createTheme({
           font-display: swap;
           src: url(${SpaceMonoBold}) format('ttf');
         }
-      `
-    }
+      `,
+    },
   },
   typography: {
     allVariants: {
@@ -113,32 +113,32 @@ export let theme = createTheme({
     h1: {
       fontFamily: 'Radio Grotesk',
       fontWeight: 700,
-      fontSize: '4.375rem'
+      fontSize: '4.375rem',
     },
     h2: {
       fontFamily: 'Radio Grotesk',
       fontWeight: 700,
-      fontSize: '3.438rem'
+      fontSize: '3.438rem',
     },
     h5: {
       fontFamily: 'Radio Grotesk',
       fontWeight: 700,
-      fontSize: '1.5rem'
+      fontSize: '1.5rem',
     },
     h6: {
       fontFamily: 'Radio Grotesk',
       fontWeight: 400,
-      fontSize: '1.25rem'
+      fontSize: '1.25rem',
     },
     body1: {
       fontFamily: 'Space Mono',
       fontWeight: 400,
-      fontSize: '0.813rem'
+      fontSize: '1rem',
     },
     body2: {
       fontFamily: 'Space Mono',
       fontWeight: 700,
-      fontSize: '0.813rem'
+      fontSize: '1rem',
     },
     button: {
       fontFamily: 'Space Mono',
@@ -148,10 +148,10 @@ export let theme = createTheme({
     caption: {
       fontFamily: 'Radio Grotesk',
       fontWeight: 400,
-      fontSize: '0.75rem'
-    }
+      fontSize: '0.75rem',
+    },
   },
-});
+})
 
 // add responsive font sizes
-theme = responsiveFontSizes(theme);
+theme = responsiveFontSizes(theme)

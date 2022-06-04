@@ -5,27 +5,35 @@
   "targets": {
     "build": {
       "builder": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/models",
         "tsConfig": "libs/models/tsconfig.lib.json",
         "packageJson": "libs/models/package.json",
         "main": "libs/models/src/index.ts",
-        "assets": ["libs/models/*.md"]
+        "assets": [
+          "libs/models/*.md"
+        ]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["libs/models/**/*.ts"]
+        "lintFilePatterns": [
+          "libs/models/**/*.ts"
+        ]
       }
     },
     "test": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
-          "exit 0;"
+          "npx nz test:mocha libs/models --prod"
         ]
       }
     }
