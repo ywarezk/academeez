@@ -18,6 +18,20 @@
       "type": "node",
       "envFile": "${workspaceFolder}/apps/api/.env",
       "runtimeExecutable": "${env:HOME}/.nvm/versions/node/v16.14.2/bin/node"
+    },
+    {
+      "args": [
+        "test:mocha",
+        "libs/models"
+      ],
+      "name": "test-models",
+      "program": "${workspaceFolder}/node_modules/.bin/nz",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node",
+      "runtimeExecutable": "${env:HOME}/.nvm/versions/node/v16.14.2/bin/node"
     }
   ]
 }

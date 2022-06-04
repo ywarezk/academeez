@@ -7,13 +7,13 @@
  */
 
 import { getLessons, lessonFilter } from './lesson.utils'
-import { expect } from 'chai';
+import { expect } from 'chai'
 
 describe('lesson.model', () => {
-  it('find is features', async function() {
-    this.timeout(10000)
+  it('find is features', async function () {
+    this.timeout(60000)
     const lessons = await getLessons()
     const lessLessons = lessonFilter(lessons, { isFeatured: true })
-
+    expect(lessLessons.length > 0).to.equal(true)
   })
 })
