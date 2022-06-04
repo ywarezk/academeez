@@ -93,7 +93,19 @@ export const HomePage: FC<HomePageProps> = ({ cfaLessons = [] }) => {
             <Grid container>
               {cfaLessons.map((lesson) => {
                 return (
-                  <Grid xs={12} sm={6} md={4} lg={3} item key={lesson.link}>
+                  <Grid
+                    sx={{
+                      justifyContent: 'center',
+                      display: 'flex',
+                      marginBottom: 5,
+                    }}
+                    xs={12}
+                    sm={6}
+                    md={4}
+                    lg={3}
+                    item
+                    key={lesson.link}
+                  >
                     <CardLesson lesson={lesson} />
                   </Grid>
                 )
