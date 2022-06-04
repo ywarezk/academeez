@@ -9,7 +9,7 @@
  * @license: MIT
  */
 
-import { FC } from 'react'
+import { FC, useEffect, useRef, useState, createElement, Fragment } from 'react'
 import Card from '@az/mui/Card'
 import CardMedia from '@mui/material/CardMedia'
 import CardContent from '@mui/material/CardContent'
@@ -22,8 +22,20 @@ import Link from 'next/link'
 import Box from '@mui/material/Box'
 import ButtonPlay from '@az/mui/ButtonPlay'
 import { Lesson } from '@az/models'
+import Tooltip from '@mui/material/Tooltip'
 
 export const CardLesson: FC<{ lesson: Lesson }> = ({ lesson }) => {
+  const lessonTitleRef = useRef<HTMLHeadingElement>()
+  const [isTitleTooltip, setIsTitleTooltip] = useState(false)
+
+  useEffect(() => {
+    const titleDomElement = lessonTitleRef.current
+    if (!titleDomElement) return
+    if (titleDomElement.offsetWidth < titleDomElement.scrollWidth) {
+      setIsTitleTooltip(true)
+    }
+  }, [lessonTitleRef])
+
   return (
     <Card sx={{ maxWidth: 294 }}>
       <Box sx={{ position: 'relative' }}>
@@ -46,18 +58,29 @@ export const CardLesson: FC<{ lesson: Lesson }> = ({ lesson }) => {
         </Box>
       </Box>
       <CardContent>
-        <Typography
-          sx={{
-            textAlign: 'left',
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-          }}
-          gutterBottom
-          variant="h5"
-        >
-          {lesson.title}
-        </Typography>
+        {createElement(
+          isTitleTooltip ? Tooltip : Fragment,
+          isTitleTooltip
+            ? {
+                title: <Typography variant="body1">{lesson.title}</Typography>,
+                children: null,
+              }
+            : null,
+          <Typography
+            ref={lessonTitleRef}
+            sx={{
+              textAlign: 'left',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+            }}
+            gutterBottom
+            variant="h5"
+          >
+            {lesson.title}
+          </Typography>
+        )}
+
         <ShowMoreLess height={90}>
           <Typography sx={{ textAlign: 'left' }} variant="body1">
             {lesson.description}
