@@ -10,4 +10,3 @@
  */
 
 export * from './AppPage/AppPage';
-export * from './models/lesson.model';

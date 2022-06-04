@@ -7,14 +7,16 @@
  * @license: MIT
  */
 
-import { FC } from "react";
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import { Typography } from "@mui/material";
-import bgCfa from './bg-cfa.webp';
-import Head from 'next/head';
-import { Lesson } from "@az/models";
-import { GetStaticProps } from 'next';
+import { FC } from "react"
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import { Grid, Typography } from "@mui/material"
+import bgCfa from './bg-cfa.webp'
+import Head from 'next/head'
+import { Lesson } from "@az/models"
+import { GetStaticProps } from 'next'
+import axios from 'axios'
+import { CardLesson } from "./CardLesson"
 
 type HomePageProps = {cfaLessons?: Lesson[]}
 
@@ -63,7 +65,19 @@ export const HomePage: FC< HomePageProps > = ({
         {/* end intro text */}
 
         {/* begin intro cards */}
-
+        <Container maxWidth="xl">
+          <Grid container>
+            {
+              cfaLessons.map(lesson => {
+                return (
+                  <Grid xs={12} sm={6} md={4} lg={3} item key={lesson.link}>
+                    <CardLesson lesson={lesson} />
+                  </Grid>
+                )
+              })
+            }
+          </Grid>
+        </Container>
         {/* end intro cards */}
       </Box>
     </>
@@ -74,9 +88,11 @@ export const HomePage: FC< HomePageProps > = ({
  * this will run during build time to grab content from the server
  */
 export const getStaticProps: GetStaticProps< HomePageProps > = async () => {
+  const { data } = await axios.get<Lesson[]>('https://academeez.com/api/lessons')
+  console.log(data)
   return {
     props: {
-      cfaLessons: []
+      cfaLessons: data.filter(l => l.isFeatured)
     }
   }
 }

@@ -10,7 +10,6 @@
  */
 
 import { FC } from "react"
-import { Lesson } from '@az/az/common'
 import Card from '@az/mui/Card'
 import CardMedia from '@mui/material/CardMedia'
 import CardContent from '@mui/material/CardContent'
@@ -22,6 +21,7 @@ import PlayArrow from '@mui/icons-material/PlayArrow'
 import Link from 'next/link'
 import Box from '@mui/material/Box';
 import ButtonPlay from '@az/mui/ButtonPlay';
+import { Lesson } from "@az/models"
 
 export const CardLesson: FC<{ lesson: Lesson }> = ({
   lesson
@@ -30,7 +30,7 @@ export const CardLesson: FC<{ lesson: Lesson }> = ({
     <Card sx={{ maxWidth: 294}}>
       <Box sx={{ position: 'relative'}}>
         <CardMedia
-          image={lesson.bgImage}
+          image={lesson.bgImg}
           component="img"
           height="170"
         />

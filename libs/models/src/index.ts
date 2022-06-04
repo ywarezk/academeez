@@ -8,5 +8,5 @@
  * @version: 0.0.1
  */
 
-export * from './lib/lesson.model'
+export * from './lib/lesson'
 export * from './lib/error.model'

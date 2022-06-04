@@ -181,9 +181,15 @@ resource "google_compute_backend_service" "backend_lb_main" {
   protocol    = "HTTP"
   port_name   = "http"
   timeout_sec = 30
+  enable_cdn  = true
 
   backend {
     group = google_compute_region_network_endpoint_group.neg_cloudfunction_api.id
+  }
+
+  cdn_policy {
+    cache_mode = "FORCE_CACHE_ALL"
+    signed_url_cache_max_age_sec = 3600
   }
 }
 
