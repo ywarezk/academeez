@@ -10,10 +10,8 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 import RadioGroteskRegular from './fonts/radio-grotesk/RadioGrotesk-Regular.woff2'
 import RadioGroteskBold from './fonts/radio-grotesk/RadioGrotesk-Bold.woff2'
-import SpaceMonoRegular from './fonts/space-mono/SpaceMono-Regular.ttf'
-import SpaceMonoBold from './fonts/space-mono/SpaceMono-Bold.ttf'
-import { Palette } from '@mui/material/styles/createPalette'
-import { Color } from '@mui/material'
+import SpaceMonoRegular from './fonts/space-mono/SpaceMono-Regular.woff2'
+import SpaceMonoBold from './fonts/space-mono/SpaceMono-Bold.woff2'
 
 declare module '@mui/material/styles/createPalette' {
   interface TypeBackground {
