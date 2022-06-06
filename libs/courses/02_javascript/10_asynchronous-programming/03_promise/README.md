@@ -6,7 +6,7 @@ short_description: Promise is a class that helps us deal with certain async code
 description: Using Promise you can deal with async code that is resolved once.
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
-bg_img: https://github.com/ywarezk/academeez/raw/main/libs/courses/02_javascript/10_asynchronous-programming/03_promise/promise.webp
+bg_img: https://github.com/ywarezk/academeez/raw/main/libs/courses/02_javascript/10_asynchronous-programming/03_promise/bg.png
 slug: promise
 link: /courses/javascript/asynchronous-programming/promise
 order: 1
