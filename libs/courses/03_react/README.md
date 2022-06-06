@@ -10,7 +10,7 @@ description:
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
 logo: https://github.com/ywarezk/academeez/raw/main/libs/courses/01_react/logo.png
-bgImg: https://github.com/ywarezk/academeez/raw/main/libs/courses/01_react/bg.png
+bg_img: https://github.com/ywarezk/academeez/raw/main/libs/courses/03_react/bg.png
 slug: react
 prerequisites:
   - /courses/html-css
