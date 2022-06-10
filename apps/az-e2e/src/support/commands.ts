@@ -8,7 +8,7 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
-import '@nz/test/e2e';
+import 'nz-test/e2e'
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace Cypress {
