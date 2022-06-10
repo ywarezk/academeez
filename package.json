@@ -88,7 +88,7 @@
     "next-compose-plugins": "^2.2.1",
     "next-image-loader": "^2.0.6",
     "nx": "14.1.4",
-    "nz-test": "^4.2.0",
+    "nz-test": "^4.2.1",
     "prettier": "2.5.1",
     "react-test-renderer": "18.1.0",
     "ts-node": "^9.1.1",
