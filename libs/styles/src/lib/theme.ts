@@ -89,7 +89,7 @@ export let theme = createTheme({
           font-style: normal;
           font-weight: 400;
           font-display: swap;
-          src: url(${SpaceMonoRegular}) format('ttf');
+          src: url(${SpaceMonoRegular}) format('woff2');
         }
 
         @font-face {
@@ -97,7 +97,7 @@ export let theme = createTheme({
           font-style: normal;
           font-weight: 700;
           font-display: swap;
-          src: url(${SpaceMonoBold}) format('ttf');
+          src: url(${SpaceMonoBold}) format('woff2');
         }
       `,
     },

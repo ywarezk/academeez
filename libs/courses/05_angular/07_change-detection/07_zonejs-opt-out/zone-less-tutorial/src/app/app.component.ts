@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component } from '@angular/core'
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   template: `
-    <h1>Angular zone-less {{ counter }}</h1>
+    <h1>Angular zone-less {{ counter$ | ngrxPush }}</h1>
     <button (click)="incCounter()">Incremet counter</button>
     <br />
     <mat-checkbox (change)="refresh()"
@@ -12,13 +13,15 @@ import { ChangeDetectorRef, Component } from '@angular/core'
   `,
 })
 export class AppComponent {
-  counter = 0
+  counter$: BehaviorSubject<number> = new BehaviorSubject(0)
 
   constructor(private _cd: ChangeDetectorRef) {}
 
   incCounter() {
-    this.counter++
-    this._cd.detectChanges()
+    // this.counter++
+    // this._cd.detectChanges()
+
+    this.counter$.next(this.counter$.value + 1);
   }
 
   refresh() {

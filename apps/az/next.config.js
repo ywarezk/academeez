@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const withNx = require('@nrwl/next/plugins/with-nx');
-const optimizedImages = require('next-optimized-images');
-const withPlugins = require('next-compose-plugins');
+const withNx = require('@nrwl/next/plugins/with-nx')
+const optimizedImages = require('next-optimized-images')
+const withPlugins = require('next-compose-plugins')
 
 /**
  * @type {import('@nrwl/next/plugins/with-nx').WithNxOptions}
@@ -13,20 +13,24 @@ const nextConfig = {
     svgr: false,
   },
   images: {
-    disableStaticImages: true
+    disableStaticImages: true,
   },
   webpack5: true,
-  webpack: ( config ) => {
+  webpack: (config) => {
     config.module.rules.unshift(
       // this is used to load fonts using import
       {
         test: /\.(ttf|otf|woff|woff2)$/,
-        loader: 'url-loader',
+        type: 'asset/resource',
+        generator: {
+          filename: 'static/fonts/[name][ext]',
+        },
       }
     )
     return config
   },
-  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://cdn.academeez.com' : '',
-};
+  assetPrefix:
+    process.env.NODE_ENV === 'production' ? 'https://cdn.academeez.com' : '',
+}
 
-module.exports = withPlugins([optimizedImages, withNx], nextConfig);
+module.exports = withPlugins([optimizedImages, withNx], nextConfig)
