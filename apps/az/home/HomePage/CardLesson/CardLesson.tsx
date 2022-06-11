@@ -21,19 +21,19 @@ import PlayArrow from '@mui/icons-material/PlayArrow'
 import Link from 'next/link'
 import Box from '@mui/material/Box'
 import ButtonPlay from '@az/mui/ButtonPlay'
-import { Lesson } from '@az/models'
 import Tooltip from '@mui/material/Tooltip'
 import { keyframes } from '@mui/system'
+import { LessonProps } from '../../../common'
 
 const zoom = keyframes`
   from {
     transform: scale(1);
   }
   to {
-    transform: scale(1.3);
+    transform: scale(1.2);
   }`
 
-export const CardLesson: FC<{ lesson: Lesson }> = ({ lesson }) => {
+export const CardLesson: FC<LessonProps> = ({ lesson }) => {
   const lessonTitleRef = useRef<HTMLHeadingElement>()
   const [isTitleTooltip, setIsTitleTooltip] = useState(false)
 
