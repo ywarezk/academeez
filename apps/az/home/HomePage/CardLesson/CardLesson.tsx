@@ -39,7 +39,12 @@ export const CardLesson: FC<{ lesson: Lesson }> = ({ lesson }) => {
   return (
     <Card sx={{ maxWidth: 294 }}>
       <Box sx={{ position: 'relative' }}>
-        <CardMedia image={lesson.bgImg} component="img" height="170" />
+        <CardMedia
+          image={lesson.bgImg}
+          component="img"
+          height="170"
+          alt={lesson.title}
+        />
         <Box
           sx={{
             position: 'absolute',
