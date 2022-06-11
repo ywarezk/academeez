@@ -23,6 +23,15 @@ import Box from '@mui/material/Box'
 import ButtonPlay from '@az/mui/ButtonPlay'
 import { Lesson } from '@az/models'
 import Tooltip from '@mui/material/Tooltip'
+import { keyframes } from '@mui/system'
+
+const zoom = keyframes`
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.3);
+  }`
 
 export const CardLesson: FC<{ lesson: Lesson }> = ({ lesson }) => {
   const lessonTitleRef = useRef<HTMLHeadingElement>()
@@ -37,7 +46,23 @@ export const CardLesson: FC<{ lesson: Lesson }> = ({ lesson }) => {
   }, [lessonTitleRef])
 
   return (
-    <Card sx={{ maxWidth: 294 }}>
+    <Card
+      sx={{
+        maxWidth: 294,
+
+        ':hover': {
+          zIndex: {
+            lg: 2,
+          },
+          transform: {
+            lg: 'scale(1.3)',
+          },
+          animation: {
+            lg: `${zoom} 0.2s ease-in-out`,
+          },
+        },
+      }}
+    >
       <Box sx={{ position: 'relative' }}>
         <CardMedia
           image={lesson.bgImg}
