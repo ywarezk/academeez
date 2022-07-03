@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core'
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -10,7 +10,9 @@ import { BehaviorSubject } from 'rxjs';
     <mat-checkbox (change)="refresh()"
       >This doesnt work in zone-less</mat-checkbox
     >
+	<app-child></app-child>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
   counter$: BehaviorSubject<number> = new BehaviorSubject(0)

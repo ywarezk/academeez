@@ -188,7 +188,7 @@ resource "google_compute_backend_service" "backend_lb_main" {
   }
 
   cdn_policy {
-    cache_mode = "FORCE_CACHE_ALL"
+    cache_mode                   = "FORCE_CACHE_ALL"
     signed_url_cache_max_age_sec = 3600
   }
 }
@@ -207,13 +207,13 @@ resource "google_compute_backend_bucket" "cdn_backend_az_bucket" {
 }
 
 resource "google_compute_url_map" "urlmap_az_http" {
-  name            = "url-map-az-http"
-  description     = "Redirects to https"
-  project         = module.prj_academeez.project_id
+  name        = "url-map-az-http"
+  description = "Redirects to https"
+  project     = module.prj_academeez.project_id
 
   default_url_redirect {
-    https_redirect = true
-    strip_query = false
+    https_redirect         = true
+    strip_query            = false
     redirect_response_code = "TEMPORARY_REDIRECT"
   }
 }
@@ -222,14 +222,14 @@ resource "google_compute_url_map" "urlmap_az_http" {
  * our reverse proxy configurations
  */
 resource "google_compute_url_map" "urlmap_az" {
-  name            = "url-map-az"
-  description     = "Main url map for academeez routes"
-  project         = module.prj_academeez.project_id
+  name        = "url-map-az"
+  description = "Main url map for academeez routes"
+  project     = module.prj_academeez.project_id
 
   default_url_redirect {
-    https_redirect = true
-    strip_query = false
-    host_redirect = "www.academeez.com"
+    https_redirect         = true
+    strip_query            = false
+    host_redirect          = "www.academeez.com"
     redirect_response_code = "MOVED_PERMANENTLY_DEFAULT"
   }
 
@@ -257,8 +257,8 @@ resource "google_compute_url_map" "urlmap_az" {
   path_matcher {
     name = "redirect"
     default_url_redirect {
-      host_redirect = "www.academeez.com"
-      strip_query = false
+      host_redirect  = "www.academeez.com"
+      strip_query    = false
       https_redirect = true
     }
   }
@@ -333,4 +333,18 @@ resource "google_dns_managed_zone" "dns_az" {
     application = "academeez"
   }
   project = module.prj_academeez.project_id
+}
+
+
+/******************
+ * Video
+ ******************/
+
+module "bkt_videos" {
+  source      = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
+  version     = "~> 1.3"
+  name        = "bkt-az-videos"
+  location    = var.region
+  project_id  = module.prj_academeez.project_id
+  iam_members = var.video_permissions
 }

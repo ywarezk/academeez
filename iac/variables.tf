@@ -26,12 +26,20 @@ variable "environments" {
   type        = map(any)
   default = {
     dev = {
-      budget_amount              = 100
+      budget_amount = 100
     }
   }
 }
 
 variable "sa_terraform" {
-  type = string
+  type        = string
   description = "The service account of terraform"
+}
+
+variable "video_permissions" {
+  description = "The list of IAM members to grant permissions on the bucket."
+  type = list(object({
+    role   = string
+    member = string
+  }))
 }
