@@ -19,7 +19,7 @@ export class ChildComponent {
   ) { }
 
   triggerCd() {
-    console.log(Zone.current.name)
+    // console.log(Zone.current.name)
 
     // this._cd.markForCheck(); // uses zone.js this will not trigger cd in zoneless
     this._cd.detectChanges();

@@ -9,6 +9,6 @@ import { environment } from './environments/environment';
 // }
 
 platformBrowserDynamic().bootstrapModule(AppModule, {
-  // ngZone: 'noop'
+  ngZone: 'noop'
 })
   .catch(err => console.error(err));

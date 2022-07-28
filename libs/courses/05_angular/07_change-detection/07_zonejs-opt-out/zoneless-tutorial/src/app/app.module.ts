@@ -7,6 +7,7 @@ import { GrandComponent } from './grand/grand.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ZonelessModule } from 'az-zoneless';
+import { PushModule } from '@ngrx/component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ZonelessModule } from 'az-zoneless';
     BrowserModule,
     BrowserAnimationsModule,
     MatCheckboxModule,
-    ZonelessModule
+    ZonelessModule,
+    PushModule
   ],
   providers: [],
   bootstrap: [AppComponent]
