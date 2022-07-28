@@ -8,5 +8,5 @@ duration: 66
 author: Yariv Katz
 linkedin: https://il.linkedin.com/in/yariv-katz
 bg_img: https://github.com/ywarezk/academeez/raw/main/libs/courses/03_react/09_optimizing-components/bg.png
-is_featured: true
+is_featured: false
 ---
