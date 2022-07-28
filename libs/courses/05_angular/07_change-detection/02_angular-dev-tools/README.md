@@ -1,6 +1,6 @@
 ---
 title: Angular Dev Tools
-description: Using Angular Dev Tools to improve performance
+description: Angular dev tools will help you examine your components, debug, and improve the performance of your angular web application.
 slug: angular-dev-tools
 link: /courses/angular/change-detection/angular-dev-tools
 bg_img: https://github.com/ywarezk/academeez/raw/main/libs/courses/05_angular/07_change-detection/02_angular-dev-tools/bg.png
