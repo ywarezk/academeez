@@ -1,6 +1,24 @@
-import Image from 'next/image'
+import Image from 'next/image';
+import {allDocs} from 'contentlayer/generated';
 
-export default function Home() {
+interface PageProps {
+  params: {
+    slug: string[];
+  };
+}
+
+async function getDocFromParams({params}: DocPageProps) {
+  const slug = params.slug?.join('/') || '';
+  const doc = allDocs.find(doc => doc.slugAsParams === slug);
+
+  if (!doc) {
+    null;
+  }
+
+  return doc;
+}
+
+export default function Home({params}: PageProps) {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
@@ -15,15 +33,7 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
+            By <Image src="/vercel.svg" alt="Vercel Logo" className="dark:invert" width={100} height={24} priority />
           </a>
         </div>
       </div>
@@ -86,9 +96,7 @@ export default function Home() {
               -&gt;
             </span>
           </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
+          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>Explore the Next.js 13 playground.</p>
         </a>
 
         <a
@@ -109,5 +117,5 @@ export default function Home() {
         </a>
       </div>
     </main>
-  )
+  );
 }
