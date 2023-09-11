@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "tailwind:watch": "tailwindcss  -o ./styles/globals.css --watch"
+    "tailwind:watch": "tailwindcss  -o ./styles/globals.css --watch",
+    "e2e:dev": "start-server-and-test dev http://localhost:3000 \"cypress open --e2e\""
   },
   "dependencies": {
     "@types/node": "20.5.7",
@@ -30,5 +31,12 @@
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.1",
+    "cypress": "^13.1.0",
+    "cypress-pipe": "^2.0.0",
+    "cypress-wait-until": "^2.0.1",
+    "start-server-and-test": "^2.0.0"
   }
 }

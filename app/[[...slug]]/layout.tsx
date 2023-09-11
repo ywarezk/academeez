@@ -1,6 +1,7 @@
 import '@/styles/globals.css';
 import type {Metadata} from 'next';
 import {Inter} from 'next/font/google';
+import {Nav} from './Nav';
 
 const inter = Inter({subsets: ['latin']});
 
@@ -12,7 +13,17 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <head>
+        <title>academeez</title>
+        <meta
+          name="description"
+          content="academeez open source and free programming courses for beginners and experts"
+        />
+      </head>
+      <body className={inter.className}>
+        <Nav />
+        <div className="container mx-auto mt-10">{children}</div>
+      </body>
     </html>
   );
 }
