@@ -15,6 +15,9 @@ const components: MDXComponents = {
   h1: ({className, ...props}: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h1 className={cn('font-bold mt-2 text-7xl', className)} {...props} />
   ),
+  h2: ({className, ...props}: React.HTMLAttributes<HTMLHeadingElement>) => (
+    <h2 className={cn('font-bold mt-2 text-5xl', className)} {...props} />
+  ),
 };
 
 interface MdxProps {
