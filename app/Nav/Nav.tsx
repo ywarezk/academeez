@@ -14,7 +14,7 @@ import Link from 'next/link';
 export const Nav: FC = () => {
   return (
     <nav className={cn('border-b')}>
-      <div className={cn('flex container px-4 py-3 justify-between items-center mx-auto')}>
+      <div className={cn('flex px-4 py-3 justify-between items-center mx-auto')}>
         <div>
           <Link href="/" data-test="az-logo">
             <svg

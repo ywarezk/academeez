@@ -22,7 +22,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       </head>
       <body className={inter.className}>
         <Nav />
-        <div className="container mx-auto mt-10">{children}</div>
+        <div className="px-4 mx-auto mt-10">{children}</div>
       </body>
     </html>
   );

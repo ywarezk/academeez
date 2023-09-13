@@ -626,6 +626,18 @@ video {
   margin-left: 0.5rem;
 }
 
+.mb-12 {
+  margin-bottom: 3rem;
+}
+
+.ml-4 {
+  margin-left: 1rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
+}
+
 .flex {
   display: flex;
 }
@@ -738,6 +750,10 @@ video {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
+}
+
+.scroll-m-20 {
+  scroll-margin: 5rem;
 }
 
 .grid-flow-row {
@@ -1068,6 +1084,10 @@ video {
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
+}
+
+.\[counter-reset\:step\] {
+  counter-reset: step;
 }
 
 .hover\:border-green-400:hover {
