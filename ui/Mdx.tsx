@@ -18,6 +18,12 @@ const components: MDXComponents = {
   h2: ({className, ...props}: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h2 className={cn('font-bold mt-2 text-5xl', className)} {...props} />
   ),
+  a: ({className, ...props}: React.HTMLAttributes<HTMLAnchorElement>) => (
+    <a className={cn('font-medium underline underline-offset-4', className)} {...props} />
+  ),
+  p: ({className, ...props}: React.HTMLAttributes<HTMLParagraphElement>) => (
+    <p className={cn('leading-7 [&:not(:first-child)]:mt-6', className)} {...props} />
+  ),
 };
 
 interface MdxProps {

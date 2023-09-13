@@ -11,6 +11,8 @@
     "e2e:dev": "start-server-and-test dev http://localhost:3000 \"cypress open --e2e\""
   },
   "dependencies": {
+    "@radix-ui/react-hover-card": "^1.0.6",
+    "@radix-ui/react-scroll-area": "^1.0.4",
     "@types/node": "20.5.7",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",

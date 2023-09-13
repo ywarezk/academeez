@@ -1,6 +1,6 @@
 import {allDocs} from 'contentlayer/generated';
 import {notFound} from 'next/navigation';
-import {Mdx} from '@/ui/Mdx';
+import {Mdx} from '@/ui';
 
 interface PageProps {
   params: {
