@@ -1,6 +1,7 @@
 import {allDocs} from 'contentlayer/generated';
 import {notFound} from 'next/navigation';
 import {Mdx} from '@/ui';
+import {cn} from '@/lib';
 
 interface PageProps {
   params: {
@@ -27,8 +28,11 @@ export default async function Home({params}: PageProps) {
   }
 
   return (
-    <div className="pb-12 pt-8">
-      <Mdx code={doc.body.code} />
-    </div>
+    <>
+      <div className="pb-12 pt-8">
+        <Mdx code={doc.body.code} />
+      </div>
+      <div className={cn('bg-slate-300')}>video is here</div>
+    </>
   );
 }

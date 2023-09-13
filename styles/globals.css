@@ -638,6 +638,10 @@ video {
   margin-top: 2rem;
 }
 
+.block {
+  display: block;
+}
+
 .flex {
   display: flex;
 }
@@ -716,6 +720,10 @@ video {
 
 .w-2\.5 {
   width: 0.625rem;
+}
+
+.w-1\/5 {
+  width: 20%;
 }
 
 .flex-1 {
@@ -828,6 +836,10 @@ video {
   border-top-width: 1px;
 }
 
+.border-l-2 {
+  border-left-width: 2px;
+}
+
 .border-transparent {
   border-color: transparent;
 }
@@ -864,6 +876,11 @@ video {
 
 .bg-border {
   background-color: hsl(var(--border));
+}
+
+.bg-slate-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(203 213 225 / var(--tw-bg-opacity));
 }
 
 .fill-black {

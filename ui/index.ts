@@ -11,3 +11,4 @@ export * from './Card';
 export * from './Mdx';
 export * from './HoverCard';
 export * from './ScrollArea';
+export * from './Collapsible';

@@ -29,12 +29,13 @@ interface DocsSidebarNavItemsProps {
 
 export function SideBarNavItems({items}: DocsSidebarNavItemsProps) {
   const pathname = usePathname();
+  console.log(pathname);
 
   return items?.length ? (
     <>
       {items.map((item, index) =>
         item.href ? (
-          <div>
+          <div className={cn('p-2')}>
             <Link
               key={index}
               href={item.href}
@@ -51,12 +52,13 @@ export function SideBarNavItems({items}: DocsSidebarNavItemsProps) {
             <div
               key={index}
               className={cn(
-                'flex w-full cursor-not-allowed items-center rounded-md p-2 text-muted-foreground hover:underline'
+                'border-l-2',
+                'w-full cursor-not-allowed items-center rounded-md p-2 px-4 text-muted-foreground'
               )}
             >
               {item.title}
+              {item.items?.length > 0 && <SideBarNavItems items={item.items} />}
             </div>
-            {item.items?.length && <SideBarNavItems items={item.items} />}
           </>
         )
       )}

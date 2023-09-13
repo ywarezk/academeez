@@ -19,12 +19,32 @@ export const toc: {[key: string]: SidebarNavItem[]} = {
           items: [
             {
               title: 'What is React?',
-              href: 'react/tldr/what-is-react',
+              href: '/lessons/react/tldr/what-is-react',
               items: [],
             },
             {
               title: 'Our first React powered website',
-              href: 'react/tldr/our-first-react-powered-website',
+              href: '/lessons/react/tldr/our-first-react-powered-website',
+              items: [],
+            },
+          ],
+        },
+        {
+          title: 'ReactElement the building block of React',
+          items: [
+            {
+              title: 'What is a ReactElement?',
+              href: '/lessons/react/react-element/what-is-a-react-element',
+              items: [],
+            },
+          ],
+        },
+        {
+          title: 'JSX',
+          items: [
+            {
+              title: 'What is JSX?',
+              href: '/lessons/react/jsx/what-is-jsx',
               items: [],
             },
           ],
