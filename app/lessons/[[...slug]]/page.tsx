@@ -29,10 +29,10 @@ export default async function Home({params}: PageProps) {
 
   return (
     <>
-      <div className="pb-12 pt-8">
+      <div className="pb-12 pt-8 flex-1">
         <Mdx code={doc.body.code} />
       </div>
-      <div className={cn('bg-slate-300')}>video is here</div>
+      <div className={cn('bg-slate-300 flex-1')}>video is here</div>
     </>
   );
 }

@@ -5,6 +5,7 @@ import {useParams, usePathname} from 'next/navigation';
 import {cn} from '@/lib/utils';
 import {SidebarNavItem} from './nav.types';
 import {toc} from './toc';
+import {Collapsible} from '@/ui';
 
 export function SideBarNav() {
   const {slug} = useParams();

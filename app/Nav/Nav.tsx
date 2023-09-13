@@ -69,7 +69,7 @@ export const Nav: FC = () => {
         <div className={cn('h-auto flex grow justify-end')}>
           {/* link to github */}
           <a target="_blank" data-test="github-link" href="https://github.com/ywarezk/academeez">
-            <GitHubLogoIcon />
+            <GitHubLogoIcon height={28} width={28} />
           </a>
 
           {/* link to youtube with svg icon */}
@@ -79,7 +79,7 @@ export const Nav: FC = () => {
             className={cn('mx-6 hover:fill-green-400 fill-black group')}
             href="https://www.youtube.com/channel/UCmnTSM4hGDJin7g5PyXa9pQ"
           >
-            <VideoIcon />
+            <VideoIcon height={28} width={28} />
           </a>
 
           <a
@@ -88,7 +88,7 @@ export const Nav: FC = () => {
             href="https://twitter.com/academeez"
             className={cn('hover:fill-green-400')}
           >
-            <TwitterLogoIcon />
+            <TwitterLogoIcon className={cn('hover:fill-green-400')} height={28} width={28} />
           </a>
         </div>
       </div>
