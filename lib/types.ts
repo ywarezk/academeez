@@ -8,11 +8,3 @@
  */
 
 export type Topic = 'react' | 'angular' | 'express' | 'node';
-
-export interface Lesson {
-  slug: string;
-  title: string;
-  topic: Topic;
-  tldr: string;
-  cover: string;
-}

@@ -40,6 +40,11 @@ export const Doc = defineDocumentType(() => ({
       required: true,
     },
 
+    thumbnail: {
+      type: 'string',
+      required: false,
+    },
+
     video: {
       type: 'string',
       required: false,
