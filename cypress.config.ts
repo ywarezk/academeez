@@ -21,8 +21,17 @@ export default defineConfig({
   experimentalInteractiveRunEvents: true,
   chromeWebSecurity: false,
   e2e: {
-    supportFile: resolve(__dirname, 'cypress/support.ts'),
+    supportFile: 'cypress/support/e2e.ts',
     specPattern: '**/*.cy.ts',
     baseUrl: 'http://localhost:3000',
+  },
+  component: {
+    supportFile: 'cypress/support/component.ts',
+    specPattern: '**/*.spec.{ts,tsx}',
+    indexHtmlFile: 'cypress/component/index.html',
+    devServer: {
+      bundler: 'vite',
+      framework: 'react',
+    },
   },
 });

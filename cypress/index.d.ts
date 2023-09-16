@@ -29,5 +29,7 @@ declare namespace Cypress {
      * @example cy.getBySelLike('option-') // will select <div data-test="option-cu"></div>
      */
     getBySelLike<E extends Node = HTMLElement>(dataTestPrefixAttribute: string, args?: any): Chainable<JQuery<E>>;
+
+    mount: typeof import('cypress/react18').mount;
   }
 }

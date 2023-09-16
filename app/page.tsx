@@ -12,7 +12,7 @@ import {Lesson} from '@/entities';
 
 const featuredLessons: Lesson[] = [
   {
-    slug: '/lessons/react/jsx',
+    slug: '/course/react/jsx/what-is-jsx',
     title: 'Some article title we sdfsf czxcxz wqwe rtrr ds w cvxcvxv rtwew sddf xaxs gsfdf',
     cover:
       'https://github.com/ywarezk/academeez/blob/f428098622e75640f8c0bee0237242926ecd7b8e/lessons/courses/express/cookies/thumbnail.png?raw=true',
