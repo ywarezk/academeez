@@ -20,6 +20,7 @@ export default defineConfig({
   viewportHeight: 1080,
   experimentalInteractiveRunEvents: true,
   chromeWebSecurity: false,
+
   e2e: {
     supportFile: 'cypress/support/e2e.ts',
     specPattern: '**/*.cy.ts',

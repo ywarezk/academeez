@@ -25,14 +25,41 @@ export const Doc = defineDocumentType(() => ({
   filePathPattern: `**/*.mdx`,
   contentType: 'mdx',
   fields: {
-    // title: {
-    //   type: 'string',
-    //   required: true,
-    // },
-    // description: {
-    //   type: 'string',
-    //   required: true,
-    // },
+    title: {
+      type: 'string',
+      required: true,
+    },
+    description: {
+      type: 'string',
+      required: true,
+    },
+
+    // 1280 X 720 image of the lesson: used for youtube thumbnail, and social media sharing
+    imageBig: {
+      type: 'string',
+      required: true,
+    },
+
+    video: {
+      type: 'string',
+      required: false,
+    },
+
+    /**
+     * Will determine if the article should be featured in the homepage
+     * @default false
+     */
+    isFeatured: {
+      type: 'boolean',
+      required: false,
+      default: false,
+    },
+
+    isReady: {
+      type: 'boolean',
+      required: false,
+      default: false,
+    },
   },
   computedFields,
 }));

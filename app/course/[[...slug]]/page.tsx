@@ -20,13 +20,43 @@ interface PageProps {
 }
 
 /**
- *
+ * generate the metadata information for a page
  * @param param0
  */
-// export async function generateMetadata({
-//   params,
-// }: PageProps): Promise<Metadata> {
+// export async function generateMetadata({params}: PageProps): Promise<Metadata> {
+//   console.log('11111');
+//   const slug = params.slug?.join('/') || '';
+//   const doc = allDocs.find(doc => doc.slugAsParams === slug);
 
+//   if (!doc) {
+//     return {};
+//   }
+
+//   return {
+//     title: doc.title,
+//     description: doc.description,
+//     openGraph: {
+//       title: doc.title,
+//       description: doc.description,
+//       type: 'article',
+//       url: `https://www.academeez.com/course/${doc.slug}`,
+//       images: [
+//         {
+//           url: doc.imageBig,
+//           width: 1280,
+//           height: 720,
+//           alt: doc.title,
+//         },
+//       ],
+//     },
+//     twitter: {
+//       card: 'summary_large_image',
+//       title: doc.title,
+//       description: doc.description,
+//       images: [doc.imageBig],
+//       creator: '@academeez',
+//     },
+//   };
 // }
 
 async function getDocFromParams({params}: PageProps) {
