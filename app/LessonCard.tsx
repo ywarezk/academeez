@@ -35,7 +35,7 @@ export const LessonCard: FC<{lesson: Doc}> = ({lesson}) => {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <Card onClick={() => router.push(lesson.slug)} className="hover:border-green-400 cursor-pointer">
+        <Card onClick={() => router.push(`/course/${lesson.slug}`)} className="hover:border-green-400 cursor-pointer">
           <CardHeader>
             <Link className="flex items-center" href={`/course/${topic}`}>
               <TopicIconFactory className="h-8 w-8 rounded-full" topic={topic} />

@@ -11,6 +11,7 @@ import type {FC} from 'react';
 import {cn} from '@/lib';
 import Link from 'next/link';
 import {TwitterLogoIcon, GitHubLogoIcon, VideoIcon} from '@radix-ui/react-icons';
+import {buttonVariants} from '@/ui';
 
 export const Nav: FC = () => {
   return (
@@ -19,7 +20,7 @@ export const Nav: FC = () => {
         <div>
           <Link href="/" data-test="az-logo">
             <svg
-              className={cn('h-7 w-auto')}
+              className={cn('h-5 w-auto')}
               width="309"
               height="43"
               viewBox="0 0 309 43"
@@ -69,26 +70,43 @@ export const Nav: FC = () => {
         <div className={cn('h-auto flex grow justify-end')}>
           {/* link to github */}
           <a target="_blank" data-test="github-link" href="https://github.com/ywarezk/academeez">
-            <GitHubLogoIcon height={28} width={28} />
+            <div
+              className={cn(
+                buttonVariants({
+                  variant: 'ghost',
+                }),
+                'w-11 px-0'
+              )}
+            >
+              <GitHubLogoIcon className="h-5 w-5 fill-current" />
+            </div>
           </a>
 
           {/* link to youtube with svg icon */}
-          <a
-            data-test="youtube-link"
-            target="_blank"
-            className={cn('mx-6 hover:fill-green-400 fill-black group')}
-            href="https://www.youtube.com/channel/UCmnTSM4hGDJin7g5PyXa9pQ"
-          >
-            <VideoIcon height={28} width={28} />
+          <a data-test="youtube-link" target="_blank" href="https://www.youtube.com/channel/UCmnTSM4hGDJin7g5PyXa9pQ">
+            <div
+              className={cn(
+                buttonVariants({
+                  variant: 'ghost',
+                }),
+                'w-11 px-0'
+              )}
+            >
+              <VideoIcon className="h-5 w-5 fill-current" />
+            </div>
           </a>
 
-          <a
-            target="_blank"
-            data-test="twitter-link"
-            href="https://twitter.com/academeez"
-            className={cn('hover:fill-green-400')}
-          >
-            <TwitterLogoIcon className={cn('hover:fill-green-400')} height={28} width={28} />
+          <a target="_blank" data-test="twitter-link" href="https://twitter.com/academeez">
+            <div
+              className={cn(
+                buttonVariants({
+                  variant: 'ghost',
+                }),
+                'w-11 px-0'
+              )}
+            >
+              <TwitterLogoIcon className="h-5 w-5 fill-current" />
+            </div>
           </a>
         </div>
       </div>

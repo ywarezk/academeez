@@ -2,8 +2,13 @@ import '@/styles/globals.css';
 import type {Metadata} from 'next';
 import {Inter} from 'next/font/google';
 import {Nav} from './Nav';
+import {cn} from '@/lib';
 
-const inter = Inter({subsets: ['latin']});
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  weight: ['300', '400', '700'],
+});
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -20,7 +25,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
           content="academeez open source and free programming courses for beginners and experts"
         />
       </head>
-      <body className={inter.className}>
+      <body className={cn(inter.variable, 'font-sans')}>
         <Nav />
         <div className="px-4 mx-auto mt-10">{children}</div>
       </body>
