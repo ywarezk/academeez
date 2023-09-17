@@ -13,3 +13,4 @@ export * from './HoverCard';
 export * from './ScrollArea';
 export * from './Collapsible';
 export * from './Button';
+export * from './icons';
