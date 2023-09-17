@@ -9,11 +9,20 @@
 
 import {allDocs} from '@/.contentlayer/generated';
 import {LessonCard} from './LessonCard';
+import {AzLineIcon} from '@/ui';
+import {cn} from '@/lib';
 
 export default async function HomePage() {
   return (
-    <div className="container mx-auto mt-20">
-      <h1 className="text-6xl text-center">Open Source Learning Platform for Programmers</h1>
+    <div className="container mx-auto mt-20 text-center">
+      <div className={cn('flex justify-center items-center')}>
+        <AzLineIcon className="w-7 h-10 relative top-1 left-1" />
+        <h1 className={cn('font-bold text-5xl leading-snug')}>academeez</h1>
+      </div>
+
+      <p className="text-3xl text-muted-foreground font-normal self-center py-1 leading-snug">
+        Open Source Learning Platform for Programmers
+      </p>
 
       <div className="grid gap-8 grid-cols-4 mt-9">
         <article>

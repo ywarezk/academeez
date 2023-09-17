@@ -2,8 +2,8 @@ import type {SVGProps} from 'react';
 
 export const AzLineIcon = (props: SVGProps<any>) => {
   return (
-    <svg width="21" height="31" viewBox="0 0 21 31" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-      <mask id="mask0_1314_1210" maskUnits="userSpaceOnUse" x="0" y="0" width="21" height="31">
+    <svg viewBox="0 0 21 31" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <mask id="mask0_1314_1210" maskUnits="userSpaceOnUse" x="0" y="0">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0.285156H20.3185V30.0769H0V0.285156Z" fill="white" />
       </mask>
       <g mask="url(#mask0_1314_1210)">
