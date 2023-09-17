@@ -18,7 +18,7 @@ export const Nav: FC = () => {
     <header className={cn('sticky z-50 top-0')}>
       <nav className={cn('border-b')}>
         <div className={cn('flex px-4 py-3 justify-between items-center mx-auto')}>
-          <div>
+          <div className="flex">
             <Link href="/" data-test="az-logo" className={cn('flex items-center font-bold text-2xl')}>
               <AzLineIcon className="h-8 w-8" />
               <span>academeez</span>
@@ -39,6 +39,18 @@ export const Nav: FC = () => {
               </kbd>
             </Button>
             {/* end search */}
+
+            <Link
+              href="/course"
+              className={cn(
+                buttonVariants({
+                  variant: 'outline',
+                }),
+                'mx-2 text-muted-foreground'
+              )}
+            >
+              Courses
+            </Link>
 
             {/* link to github */}
             <a target="_blank" data-test="github-link" href="https://github.com/ywarezk/academeez">
