@@ -18,6 +18,8 @@ const config: Config = {
       },
       fontSize: {
         sm: ['0.8125rem', {lineHeight: undefined}],
+
+        base: ['0.938rem', {lineHeight: undefined}],
       },
       lineHeight: {
         base: '30px',

@@ -8,11 +8,13 @@
  */
 
 import {NavItem} from './nav.types';
+import {ReactIcon} from '@/ui/icons';
 
 export const toc: NavItem[] = [
   {
     title: 'React',
     href: '/course/react',
+    Icon: ReactIcon,
     items: [
       {
         title: 'TLDR; Learn React in a few minutes',
