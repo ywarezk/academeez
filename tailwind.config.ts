@@ -5,26 +5,36 @@ const config: Config = {
   darkMode: ['class'],
   content: ['./ui/**/*.{js,ts,jsx,tsx,mdx}', './app/**/*.{js,ts,jsx,tsx,mdx}', './content/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
-    container: {
-      center: true,
-      padding: '2rem',
-      screens: {
-        '2xl': '1400px',
-      },
-    },
+    // container: {
+    //   center: true,
+    //   padding: '2rem',
+    //   screens: {
+    //     '2xl': '1400px',
+    //   },
+    // },
     extend: {
+      backgroundColor: {
+        green: '#01D662',
+      },
+      fontSize: {
+        sm: ['0.8125rem', {lineHeight: undefined}],
+      },
+      lineHeight: {
+        base: '30px',
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        green: '#01D662',
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
+          DEFAULT: 'rgb(64 71 86/var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
         },
         destructive: {
@@ -48,21 +58,11 @@ const config: Config = {
           foreground: 'hsl(var(--card-foreground))',
         },
       },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-      },
-      borderRadius: {
-        xl: `calc(var(--radius) + 4px)`,
-        lg: `var(--radius)`,
-        md: `calc(var(--radius) - 2px)`,
-        sm: 'calc(var(--radius) - 4px)',
-      },
+
       fontFamily: {
         sans: ['var(--font-inter)'],
       },
     },
   },
-  plugins: [],
 };
 export default config;

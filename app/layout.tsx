@@ -7,7 +7,7 @@ import {cn} from '@/lib';
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
-  weight: ['300', '400', '700'],
+  weight: ['100', '200', '300', '400', '500', '600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -25,9 +25,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
           content="academeez open source and free programming courses for beginners and experts"
         />
       </head>
-      <body className={cn(inter.variable, 'font-sans')}>
+      <body className={cn(inter.variable, 'font-sans leading-base')}>
         <Nav />
-        <div className="px-4 mx-auto mt-10">{children}</div>
+        <div className="mx-auto mt-8">{children}</div>
       </body>
     </html>
   );

@@ -20,7 +20,7 @@ export default async function HomePage() {
         <h1 className={cn('font-bold text-5xl leading-snug')}>academeez</h1>
       </div>
 
-      <p className="text-3xl text-muted-foreground font-normal self-center py-1 leading-snug">
+      <p className="text-3xl text-green/90 font-mono self-center py-1 leading-snug">
         Open Source Learning Platform for Programmers
       </p>
 

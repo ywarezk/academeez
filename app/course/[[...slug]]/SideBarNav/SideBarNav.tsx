@@ -1,16 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import {notFound, useParams, useRouter, useSelectedLayoutSegment, useSelectedLayoutSegments} from 'next/navigation';
+import {notFound, useParams} from 'next/navigation';
 import {cn} from '@/lib/utils';
 import {toc} from './toc';
 import {NavItem} from './nav.types';
-import {Collapsible, CollapsibleTrigger} from '@/ui';
-import {useState} from 'react';
+import {Collapsible, CollapsibleContent} from '@/ui';
 import {difference, isEmpty} from 'lodash';
-import {TriangleRightIcon} from '@radix-ui/react-icons';
-// import {} from '@/ui';
-// import {useRouter} from 'next/router';
+import {CaretRightIcon, CaretDownIcon} from '@radix-ui/react-icons';
+import {buttonVariants} from '@/ui';
+import {FC, Fragment} from 'react';
+import {IconProps} from '@radix-ui/react-icons/dist/types';
 
 export function SideBarNav() {
   const {slug} = useParams();
@@ -21,96 +21,76 @@ export function SideBarNav() {
   }
 
   return (
-    <div className="w-full">
-      <h3 className={cn('text-2xl hover:underline hover:text-green-400')}>
-        <Link href={course?.href}>{course?.title}</Link>
-      </h3>
-      {course.items.map(item => {
-        return <SideBarNavItems item={item} />;
-      })}
+    <div className="lg:-mt-16">
+      <div className="lg:pt-16 fixed lg:sticky top-0 start-0 end-0 py-0 shadow lg:shadow-none">
+        <div className="sticky top-0 lg:bottom-0 lg:h-[calc(100vh-4rem)] flex flex-col">
+          <div className="overflow-y-scroll no-bg-scrollbar lg:w-[342px] grow bg-wash dark:bg-wash-dark">
+            <aside className="lg:grow flex-col w-full pb-8 lg:pb-0 lg:max-w-xs z-10 hidden lg:block">
+              <nav>
+                <ul>
+                  <h3 className={cn('mb-1 text-left text-base font-bold text-tertiary dark:text-tertiary-dark')}>
+                    <Link className={cn('hover:bg-green/20 w-full justify-start font-bold')} href={course?.href}>
+                      {course?.title}
+                    </Link>
+                  </h3>
+                  {course.items.map(item => {
+                    return <SideBarNavItems item={item} key={item.href} />;
+                  })}
+                </ul>
+              </nav>
+            </aside>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
-// export function SideBarNav() {
-//   const {slug} = useParams();
-//   const title = slug[0];
-//   const items = toc[title];
-//   console.log(items);
-
-//   return (
-//     <div className="w-full">
-//       {items.map((item, index) => (
-//         <div key={index} className={cn('pb-4')}>
-//           <h4 className="mb-1 rounded-md px-2 py-1 text-sm font-semibold">{item.title}</h4>
-//           <div className="text-sm">{item?.items?.length && <SideBarNavItems items={item.items} />}</div>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
-
 interface DocsSidebarNavItemsProps {
   item: NavItem;
+  ps?: number;
+  className?: string;
 }
 
-export function SideBarNavItems({item}: DocsSidebarNavItemsProps) {
-  const segments = useSelectedLayoutSegment();
-  console.log(segments);
-  const router = useRouter();
-  console.log(router);
+export function SideBarNavItems({item, ps = 5}: DocsSidebarNavItemsProps) {
   const {slug} = useParams() as {slug: string[]};
 
   const itemSlug = item.href.split('/').shift();
 
   // lodash check if array slug contains the array itemSlug
-  const isInitialOpen = difference(itemSlug, slug).length === 0;
-  const [isOpen, setIsOpen] = useState(isInitialOpen);
+  const isOpen = difference(itemSlug, slug).length === 0;
 
-  if (!isEmpty(item.items)) {
-    return (
-      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-        <CollapsibleTrigger asChild></CollapsibleTrigger>
-      </Collapsible>
-    );
+  let Icon: FC<IconProps> = Fragment;
+  if (!isEmpty(item.items) && !isOpen) {
+    Icon = CaretRightIcon;
   }
+  if (!isEmpty(item.items) && isOpen) {
+    Icon = CaretDownIcon;
+  }
+
+  return (
+    <li>
+      <Link
+        className={cn(`hover:bg-green/20 flex justify-between font-medium p-2 ps-${ps}`, 'text-sm text-secondary')}
+        href={item.href}
+      >
+        <div className="overflow-ellipsis whitespace-nowrap overflow-hidden">{item.title}</div>
+        <span className="pe-1 text-tertiary dark:text-tertiary-dark ml-2">
+          <Icon viewBox="0 0 20 20" />
+        </span>
+      </Link>
+
+      {!isEmpty(item.items) && (
+        <Collapsible open={isOpen}>
+          <CollapsibleContent>
+            <ul>
+              {item.items.map(item => {
+                return <SideBarNavItems className="ps-5 ps-6 ps-7 ps-8" ps={ps + 1} item={item} key={item.href} />;
+              })}
+            </ul>
+          </CollapsibleContent>
+        </Collapsible>
+      )}
+    </li>
+  );
 }
-
-// export function SideBarNavItems({items}: DocsSidebarNavItemsProps) {
-//   const pathname = usePathname();
-//   console.log(pathname);
-
-//   return items?.length ? (
-//     <>
-//       {items.map((item, index) =>
-//         item.href ? (
-//           <div className={cn('p-2')}>
-//             <Link
-//               key={index}
-//               href={item.href}
-//               className={cn(
-//                 'group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline',
-//                 pathname === item.href ? 'font-medium text-foreground' : 'text-muted-foreground'
-//               )}
-//             >
-//               {item.title}
-//             </Link>
-//           </div>
-//         ) : (
-//           <>
-//             <div
-//               key={index}
-//               className={cn(
-//                 'border-l-2',
-//                 'w-full cursor-not-allowed items-center rounded-md p-2 px-4 text-muted-foreground'
-//               )}
-//             >
-//               {item.title}
-//               {item.items?.length > 0 && <SideBarNavItems items={item.items} />}
-//             </div>
-//           </>
-//         )
-//       )}
-//     </>
-//   ) : null;
-// }

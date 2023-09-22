@@ -44,9 +44,9 @@ export const Nav: FC = () => {
               href="/course"
               className={cn(
                 buttonVariants({
-                  variant: 'outline',
+                  variant: 'default',
                 }),
-                'mx-2 text-muted-foreground'
+                'mx-2'
               )}
             >
               Courses
