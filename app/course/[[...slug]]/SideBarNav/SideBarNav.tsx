@@ -6,7 +6,7 @@ import {cn} from '@/lib/utils';
 import {toc} from './toc';
 import {NavItem} from './nav.types';
 import {Collapsible, CollapsibleContent} from '@/ui';
-import {difference, isEmpty} from 'lodash';
+import {difference, isEmpty, isEqual} from 'lodash';
 import {CaretRightIcon, CaretDownIcon} from '@radix-ui/react-icons';
 import {buttonVariants} from '@/ui';
 import {FC, Fragment, SVGProps} from 'react';
@@ -59,10 +59,13 @@ interface DocsSidebarNavItemsProps {
 export function SideBarNavItems({item, ps = 5}: DocsSidebarNavItemsProps) {
   const {slug} = useParams() as {slug: string[]};
 
-  const itemSlug = item.href.split('/').shift();
+  // remove first item from the array
+  const itemFullUrlArray = item.href.split('/');
+  const itemSlug = itemFullUrlArray.slice(2);
 
   // lodash check if array slug contains the array itemSlug
   const isOpen = difference(itemSlug, slug).length === 0;
+  const isEqualSlug = isEqual(itemSlug, slug);
 
   let Icon = <></>;
   if (!isEmpty(item.items) && !isOpen) {
@@ -77,7 +80,8 @@ export function SideBarNavItems({item, ps = 5}: DocsSidebarNavItemsProps) {
       <Link
         className={cn(
           `hover:bg-green/20 flex justify-between font-medium p-2 ps-${ps} text-secondary rounded-r-2xl`,
-          !isEmpty(item.items) ? 'font-bold text-base' : 'text-sm'
+          !isEmpty(item.items) ? 'font-bold text-base' : 'text-sm',
+          isEqualSlug && 'bg-green/20'
         )}
         href={item.href}
       >
