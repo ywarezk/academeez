@@ -9,7 +9,15 @@
 
 import {cn} from '@/lib';
 import type {FC} from 'react';
+import {getDocFromParams} from '@/lib';
+import type {Params} from 'next/dist/shared/lib/router/utils/route-matcher';
 
-export const VideoBar: FC = () => {
+export const VideoBar: FC<{params: Params}> = async ({params}) => {
+  const doc = await getDocFromParams(params);
+
+  if (!doc?.video && !doc?.exercise) {
+    return null;
+  }
+
   return <div className={cn('bg-slate-300 flex-1')}>video is here</div>;
 };

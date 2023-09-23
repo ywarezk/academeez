@@ -17,7 +17,11 @@ export const TocBar: FC<{params: Params}> = async ({params}) => {
   // or @/content/blog/:articleName/toc
   let toc = null;
   if (slug?.length >= 2) {
-    toc = (await import(`@/content/${slug[0]}/${slug[1]}/toc`)).default;
+    try {
+      toc = (await import(`@/content/${slug[0]}/${slug[1]}/toc`)).default;
+    } catch (_e) {
+      console.log(`failed to find toc for ${slug[0]}/slug[1]`);
+    }
   }
 
   if (!toc) {

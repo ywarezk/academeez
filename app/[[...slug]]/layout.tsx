@@ -12,7 +12,7 @@ import type {PropsWithChildren} from 'react';
 
 export default async function LessonLayout({children, params}: PropsWithChildren<{params: any}>) {
   return (
-    <div className="border-b">
+    <div>
       <div className="flex">
         <TocBar params={params} />
         {children}
