@@ -65,6 +65,11 @@ export const Doc = defineDocumentType(() => ({
       required: false,
       default: false,
     },
+
+    exercise: {
+      type: 'string',
+      required: false,
+    },
   },
   computedFields,
 }));

@@ -8,7 +8,7 @@
  */
 
 import {allDocs} from 'contentlayer/generated';
-import {notFound} from 'next/navigation';
+import {notFound, usePathname} from 'next/navigation';
 import {Mdx} from '@/ui';
 import {cn} from '@/lib';
 import type {Metadata} from 'next';
@@ -24,7 +24,8 @@ interface PageProps {
  * @param param0
  */
 export async function generateMetadata({params}: PageProps): Promise<Metadata> {
-  const slug = params.slug?.join('/') || '';
+  usePathname();
+  const slug = `blog/${params.slug?.join('/')}` || '';
   const doc = allDocs.find(doc => doc.slugAsParams === slug);
 
   if (!doc) {
@@ -59,7 +60,8 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
 }
 
 async function getDocFromParams({params}: PageProps) {
-  const slug = params.slug?.join('/') || '';
+  const slug = `blog/${params.slug?.join('/')}` || '';
+
   const doc = allDocs.find(doc => doc.slugAsParams === slug);
 
   if (!doc) {
@@ -69,7 +71,7 @@ async function getDocFromParams({params}: PageProps) {
   return doc;
 }
 
-export default async function Home({params}: PageProps) {
+export default async function Home({params, ...props}: PageProps) {
   const doc = await getDocFromParams({params});
 
   if (!doc) {
