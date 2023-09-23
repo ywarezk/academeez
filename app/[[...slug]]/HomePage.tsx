@@ -8,11 +8,11 @@
  */
 
 import {allDocs} from '@/.contentlayer/generated';
-import {LessonCard} from './LessonCard';
+// import {LessonCard} from './LessonCard';
 import {AzLineIcon} from '@/ui';
 import {cn} from '@/lib';
 
-export default async function HomePage() {
+export async function HomePage() {
   return (
     <div className="container mx-auto mt-20 text-center">
       <div className={cn('flex justify-center items-center')}>
@@ -25,13 +25,13 @@ export default async function HomePage() {
       </p>
 
       <div className="grid gap-8 grid-cols-4 mt-9">
-        <article>
+        {/* <article>
           {allDocs
             .filter(doc => doc.isFeatured)
             .map(doc => (
               <LessonCard key={doc.slug} lesson={doc} />
             ))}
-        </article>
+        </article> */}
       </div>
     </div>
   );

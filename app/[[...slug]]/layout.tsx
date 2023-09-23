@@ -10,7 +10,8 @@
 import {SideBarNav} from './SideBarNav';
 import type {PropsWithChildren} from 'react';
 
-export default function LessonLayout({children}: PropsWithChildren) {
+export default function LessonLayout({children, params}: PropsWithChildren<{params: any}>) {
+  console.log(params);
   return (
     <div className="border-b">
       <div className="flex">

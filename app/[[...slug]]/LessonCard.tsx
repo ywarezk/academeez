@@ -21,7 +21,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/ui';
-import {TopicIconFactory} from './TopicIconFactory';
 import Link from 'next/link';
 import {useRouter} from 'next/navigation';
 import type {Doc} from '@/.contentlayer/generated';
@@ -38,7 +37,6 @@ export const LessonCard: FC<{lesson: Doc}> = ({lesson}) => {
         <Card onClick={() => router.push(`/course/${lesson.slug}`)} className="hover:border-green-400 cursor-pointer">
           <CardHeader>
             <Link className="flex items-center" href={`/course/${topic}`}>
-              <TopicIconFactory className="h-8 w-8 rounded-full" topic={topic} />
               <h6 className="ml-3 capitalize text-green-400 underline underline-offset-4">{topic}</h6>
             </Link>
             <CardTitle className="mt-4">
