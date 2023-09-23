@@ -7,15 +7,14 @@
  * @license MIT
  */
 
-import {SideBarNav} from './SideBarNav';
+import {TocBar} from './TocBar';
 import type {PropsWithChildren} from 'react';
 
-export default function LessonLayout({children, params}: PropsWithChildren<{params: any}>) {
-  console.log(params);
+export default async function LessonLayout({children, params}: PropsWithChildren<{params: any}>) {
   return (
     <div className="border-b">
       <div className="flex">
-        <SideBarNav />
+        <TocBar params={params} />
         {children}
       </div>
     </div>

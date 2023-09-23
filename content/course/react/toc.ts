@@ -10,7 +10,7 @@
 import {NavItem} from '@/lib';
 import {ReactIcon} from '@/ui/icons';
 
-export const toc: NavItem = {
+const toc: NavItem = {
   title: 'React',
   href: '/course/react',
   Icon: ReactIcon,
@@ -55,3 +55,5 @@ export const toc: NavItem = {
     },
   ],
 };
+
+export default toc;

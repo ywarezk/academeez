@@ -8,18 +8,6 @@ import remarkGfm from 'remark-gfm';
 import {getHighlighter, loadTheme} from 'shiki';
 import {visit} from 'unist-util-visit';
 
-/** @type {import('contentlayer/source-files').ComputedFields} */
-const computedFields = {
-  slug: {
-    type: 'string',
-    resolve: doc => `/${doc._raw.flattenedPath}`,
-  },
-  slugAsParams: {
-    type: 'string',
-    resolve: doc => doc._raw.flattenedPath,
-  },
-};
-
 export const Doc = defineDocumentType(() => ({
   name: 'Doc',
   filePathPattern: `**/*.mdx`,
@@ -71,7 +59,12 @@ export const Doc = defineDocumentType(() => ({
       required: false,
     },
   },
-  computedFields,
+  computedFields: {
+    slug: {
+      type: 'string',
+      resolve: doc => doc._raw.flattenedPath,
+    },
+  },
 }));
 
 export default makeSource({

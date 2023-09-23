@@ -10,9 +10,10 @@
 import {allDocs} from 'contentlayer/generated';
 import {notFound} from 'next/navigation';
 import {Mdx} from '@/ui';
-import {cn} from '@/lib';
 import type {Metadata} from 'next';
 import {HomePage} from './HomePage';
+import {VideoBar} from './VideoBar';
+import {getDocFromParams} from '@/lib';
 
 interface PageProps {
   params: {
@@ -26,7 +27,7 @@ interface PageProps {
  */
 export async function generateMetadata({params}: PageProps): Promise<Metadata> {
   const slug = params.slug?.join('/') || '';
-  const doc = allDocs.find(doc => doc.slugAsParams === slug);
+  const doc = allDocs.find(doc => doc.slug === slug);
 
   if (!doc) {
     return {};
@@ -59,20 +60,8 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
   };
 }
 
-async function getDocFromParams({params}: PageProps) {
-  const slug = params.slug?.join('/') || '';
-
-  const doc = allDocs.find(doc => doc.slugAsParams === slug);
-
-  if (!doc) {
-    null;
-  }
-
-  return doc;
-}
-
 export default async function Home({params}: PageProps) {
-  const doc = await getDocFromParams({params});
+  const doc = await getDocFromParams(params);
 
   if (!params.slug) {
     return <HomePage />;
@@ -87,7 +76,7 @@ export default async function Home({params}: PageProps) {
       <div className="pb-12 pt-8 flex-1">
         <Mdx code={doc.body.code} />
       </div>
-      <div className={cn('bg-slate-300 flex-1')}>video is here</div>
+      <VideoBar />
     </>
   );
 }
