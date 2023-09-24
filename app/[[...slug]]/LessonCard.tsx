@@ -7,29 +7,21 @@
  * @license MIT
  */
 
-'use client';
+'use client'
 
-import type {FC} from 'react';
+import type {FC} from 'react'
 // import type {Lesson} from '@/entities';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardDescription,
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/ui';
-import Link from 'next/link';
-import {useRouter} from 'next/navigation';
-import type {Doc} from '@/.contentlayer/generated';
-import type {Topic} from '@/lib';
+import {Card, CardHeader, CardTitle, CardContent, CardDescription, HoverCard, HoverCardContent, HoverCardTrigger} from '@/ui'
+import Link from 'next/link'
+import {useRouter} from 'next/navigation'
+import type {Doc} from '@/.contentlayer/generated'
+import type {Topic} from '@/lib'
+import Image from 'next/image'
 
 export const LessonCard: FC<{lesson: Doc}> = ({lesson}) => {
-  const topic: Topic = lesson.slug.split('/')[1] as Topic;
+  const topic: Topic = lesson.slug.split('/')[1] as Topic
 
-  const router = useRouter();
+  const router = useRouter()
 
   return (
     <HoverCard>
@@ -46,7 +38,7 @@ export const LessonCard: FC<{lesson: Doc}> = ({lesson}) => {
           </CardHeader>
           {lesson.thumbnail && (
             <CardContent>
-              <img
+              <Image
                 src={lesson.thumbnail}
                 className="h-40 w-full"
                 alt={lesson.title}
@@ -68,5 +60,5 @@ export const LessonCard: FC<{lesson: Doc}> = ({lesson}) => {
         </div>
       </HoverCardContent>
     </HoverCard>
-  );
-};
+  )
+}
