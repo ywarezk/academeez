@@ -1,21 +1,6 @@
 
 name: npm audit
-on:
+on
 	push:
-		- main
-	pull_request:
-		- main
-		
-jobs:
-	npm-audit:
-		runs-on: ubuntu-latest
-		jobs:
-			npm-audit:
-				runs-on: ubuntu-latest
-				steps:
-					- uses: actions/checkout@v2
-					- name: npm audit
-					  run: npm audit
-				- uses: actions/checkout@v2
-				- name: npm audit
-				  run: npm audit
+		branches:
+			- master

@@ -1,13 +1,13 @@
 {
 	// Visuals
 	"workbench.activityBar.visible": true,
-	"workbench.colorTheme": "Vitesse Dark",
+	"workbench.colorTheme": "Default Light+",
 	"workbench.fontAliasing": "antialiased",
-	"workbench.iconTheme": "file-icons",
+	"workbench.iconTheme": "material-icon-theme",
 	"workbench.list.smoothScrolling": true,
-	"workbench.preferredDarkColorTheme": "Vitesse Dark",
-	"workbench.preferredLightColorTheme": "Vitesse Light",
-	"workbench.productIconTheme": "icons-carbon",
+	"workbench.preferredDarkColorTheme": "Default Dark+",
+	"workbench.preferredLightColorTheme": "Default Light+",
+	"workbench.productIconTheme": "Default",
 	"workbench.startupEditor": "newUntitledFile",
 	"workbench.tree.expandMode": "singleClick",
 	"workbench.tree.indent": 10,
@@ -21,7 +21,6 @@
 	"editor.inlineSuggest.enabled": true,
 	"editor.lineNumbers": "interval",
 	"editor.multiCursorModifier": "ctrlCmd",
-	"editor.renderWhitespace": "boundary",
 	"editor.suggestSelection": "first",
 	"editor.tabSize": 2,
 	"editor.unicodeHighlight.invisibleCharacters": false,
@@ -88,12 +87,9 @@
 		"typescript",
 		"javascriptreact",
 		"typescriptreact",
-		"vue",
 		"html",
 		"markdown",
-		"json",
-		"jsonc",
-		"json5"
+		"json"
 	],
 	"github.copilot.enable": {
 		"*": true,
@@ -183,5 +179,5 @@
 		"svelte.config.*": "*.env, .babelrc*, .codecov, .cssnanorc*, .env.*, .envrc, .htmlnanorc*, .lighthouserc.*, .mocha*, .postcssrc*, .terserrc*, api-extractor.json, ava.config.*, babel.config.*, contentlayer.config.*, cssnano.config.*, cypress.*, env.d.ts, formkit.config.*, formulate.config.*, histoire.config.*, houdini.config.*, htmlnanorc.*, jasmine.*, jest.config.*, jsconfig.*, karma*, lighthouserc.*, mdsvex.config.js, playwright.config.*, postcss.config.*, puppeteer.config.*, rspack.config.*, svgo.config.*, tailwind.config.*, tsconfig.*, tsdoc.*, uno.config.*, unocss.config.*, vite.config.*, vitest.config.*, webpack.config.*, windi.config.*",
 		"vite.config.*": "*.env, .babelrc*, .codecov, .cssnanorc*, .env.*, .envrc, .htmlnanorc*, .lighthouserc.*, .mocha*, .postcssrc*, .terserrc*, api-extractor.json, ava.config.*, babel.config.*, contentlayer.config.*, cssnano.config.*, cypress.*, env.d.ts, formkit.config.*, formulate.config.*, histoire.config.*, htmlnanorc.*, jasmine.*, jest.config.*, jsconfig.*, karma*, lighthouserc.*, playwright.config.*, postcss.config.*, puppeteer.config.*, rspack.config.*, svgo.config.*, tailwind.config.*, tsconfig.*, tsdoc.*, uno.config.*, unocss.config.*, vitest.config.*, webpack.config.*, windi.config.*",
 		"vue.config.*": "*.env, .babelrc*, .codecov, .cssnanorc*, .env.*, .envrc, .htmlnanorc*, .lighthouserc.*, .mocha*, .postcssrc*, .terserrc*, api-extractor.json, ava.config.*, babel.config.*, contentlayer.config.*, cssnano.config.*, cypress.*, env.d.ts, formkit.config.*, formulate.config.*, histoire.config.*, htmlnanorc.*, jasmine.*, jest.config.*, jsconfig.*, karma*, lighthouserc.*, playwright.config.*, postcss.config.*, puppeteer.config.*, rspack.config.*, svgo.config.*, tailwind.config.*, tsconfig.*, tsdoc.*, uno.config.*, unocss.config.*, vitest.config.*, webpack.config.*, windi.config.*"
-	},
+	}
 }
