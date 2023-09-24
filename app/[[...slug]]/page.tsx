@@ -73,7 +73,7 @@ export default async function Home({params}: PageProps) {
 
   return (
     <>
-      <div className="pb-12 pt-8 flex-1">
+      <div className="pb-12 pt-8 flex-1 max-w-4xl">
         <Mdx code={doc.body.code} />
       </div>
       <VideoBar params={params} />

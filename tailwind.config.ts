@@ -5,13 +5,13 @@ const config: Config = {
   darkMode: ['class'],
   content: ['./ui/**/*.{js,ts,jsx,tsx,mdx}', './app/**/*.{js,ts,jsx,tsx,mdx}', './content/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
-    // container: {
-    //   center: true,
-    //   padding: '2rem',
-    //   screens: {
-    //     '2xl': '1400px',
-    //   },
-    // },
+    container: {
+      center: true,
+      padding: '2rem',
+      screens: {
+        '2xl': '1400px',
+      },
+    },
     extend: {
       backgroundColor: {
         green: '#01D662',
@@ -20,6 +20,7 @@ const config: Config = {
         sm: ['0.8125rem', {lineHeight: undefined}],
 
         base: ['0.938rem', {lineHeight: undefined}],
+        lg: ['1.0625rem', {lineHeight: '30px'}],
       },
       lineHeight: {
         base: '30px',

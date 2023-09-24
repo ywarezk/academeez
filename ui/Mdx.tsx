@@ -43,7 +43,7 @@ export const components: MDXComponents = {
     <a className={cn('font-medium underline underline-offset-4', className)} {...props} />
   ),
   p: ({className, ...props}: React.HTMLAttributes<HTMLParagraphElement>) => (
-    <p className={cn('leading-7 [&:not(:first-child)]:mt-6', className)} {...props} />
+    <p className={cn('leading-7 [&:not(:first-child)]:mt-6 text-lg', className)} {...props} />
   ),
   Step: ({className, ...props}: React.ComponentProps<'h3'>) => (
     <h3 className={cn('font-heading mt-8 scroll-m-20 text-xl font-semibold tracking-tight', className)} {...props} />
