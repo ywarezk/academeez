@@ -38,6 +38,7 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.38.1",
     "@types/lodash": "^4.14.198",
     "@types/mocha": "^10.0.1",
     "@vitejs/plugin-react": "^4.0.4",
