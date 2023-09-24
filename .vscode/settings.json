@@ -1,4 +1,8 @@
 {
+	"[github-actions-workflow]": {
+		"editor.detectIndentation": false,
+		"editor.insertSpaces": true
+	},
 	// Visuals
 	"workbench.activityBar.visible": true,
 	"workbench.colorTheme": "Default Light+",
@@ -23,6 +27,8 @@
 	"editor.multiCursorModifier": "ctrlCmd",
 	"editor.suggestSelection": "first",
 	"editor.tabSize": 2,
+	"editor.insertSpaces": true,
+	"editor.detectIndentation": true,
 	"editor.unicodeHighlight.invisibleCharacters": false,
 	"editor.stickyScroll.enabled": true,
 	"editor.hover.sticky": true,

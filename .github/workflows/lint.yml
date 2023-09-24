@@ -1,0 +1,27 @@
+#
+# Runs npm run lint
+#
+# Created September 24th, 2023
+# @author ywarezk
+# @license MIT
+#
+
+name: lint
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.15.0
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint

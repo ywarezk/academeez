@@ -1,3 +1,11 @@
+#
+# Runs npm audit and creates an issue if vulnerabilities are found.
+#
+# Created September 24th, 2023
+# @author ywarezk
+# @license MIT
+#
+
 name: npm audit
 
 on:
@@ -12,11 +20,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.15.0
+          cache: 'npm'
       - name: install dependencies
         run: npm ci
       - uses: oke-py/npm-audit-action@v2
         with:
-          audit_level: moderate
           github_token: ${{ secrets.GITHUB_TOKEN }}
           issue_assignees: oke-py
           issue_labels: vulnerability,test
