@@ -107,7 +107,7 @@
 	"cSpell.language": "en,en-US",
 	"css.lint.hexColorLength": "ignore",
 	// I only use Prettier for manually formatting
-	"prettier.enable": false,
+	"prettier.enable": true,
 	"prettier.printWidth": 200,
 	"prettier.semi": false,
 	"prettier.singleQuote": true
