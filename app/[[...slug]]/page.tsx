@@ -7,76 +7,99 @@
  * @license MIT
  */
 
-import {allDocs} from 'contentlayer/generated';
-import {notFound} from 'next/navigation';
-import {Mdx} from '@/ui';
-import type {Metadata} from 'next';
-import {HomePage} from './HomePage';
-import {VideoBar} from './VideoBar';
-import {getDocFromParams} from '@/lib';
+import {Doc, allDocs} from 'contentlayer/generated'
+import {notFound} from 'next/navigation'
+import {Mdx} from '@/ui'
+import type {Metadata} from 'next'
+import {HomePage} from './HomePage'
+import {VideoBar} from './VideoBar'
+import {getDocFromParams} from '@/lib'
+import {isEmpty} from 'lodash'
 
 interface PageProps {
   params: {
-    slug: string[];
-  };
+    slug: string[]
+  }
 }
 
 /**
  * generate the metadata information for a page
+ * The title is a combination of all the parent docs title
  * @param param0
  */
 export async function generateMetadata({params}: PageProps): Promise<Metadata> {
-  const slug = params.slug?.join('/') || '';
-  const doc = allDocs.find(doc => doc.slug === slug);
+  const docs: Doc[] = []
+  const slugArray = params.slug ? [...params.slug] : []
 
-  if (!doc) {
-    return {};
+  for (let i = 0; i <= slugArray.length; i++) {
+    const partialSlug = slugArray.slice(0, i)
+    const slug = partialSlug.join('/')
+    const doc = allDocs.find(doc => doc.slug === slug)
+    doc && docs.push(doc)
+  }
+
+  const currentDoc = docs[docs.length - 1]
+
+  // calculate the title
+  // the title is calculated by grabbing the title of the doc
+  // and all the ancestors title
+  let title = ''
+  if (!params.slug) {
+    title = `${currentDoc.title} | ${currentDoc.description}`
+  } else {
+    title = docs.reduce((acc, doc, index) => (index === 0 ? doc.title : `${acc} | ${doc.title}`), '')
   }
 
   return {
-    title: doc.title,
-    description: doc.description,
+    title,
+    description: currentDoc.description,
     openGraph: {
-      title: doc.title,
-      description: doc.description,
+      title: currentDoc.title,
+      description: currentDoc.description,
       type: 'article',
-      url: `https://www.academeez.com/${doc.slug}`,
+      url: `https://www.academeez.com/${currentDoc.slug}`,
       images: [
         {
-          url: doc.imageBig,
+          url: currentDoc.imageBig,
           width: 1280,
           height: 720,
-          alt: doc.title,
+          alt: currentDoc.title,
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: doc.title,
-      description: doc.description,
-      images: [doc.imageBig],
+      title: currentDoc.title,
+      description: currentDoc.description,
+      images: [currentDoc.imageBig],
       creator: '@academeez',
     },
-  };
+  }
 }
 
-export default async function Home({params}: PageProps) {
-  const doc = await getDocFromParams(params);
+/**
+ * Will render a page from the mdx content area
+ * If no slug I will render the homepage
+ * @param {Object} param0 props holding the params with a slug
+ * @returns
+ */
+export default async function Page({params}: PageProps) {
+  const doc = await getDocFromParams(params)
 
   if (!params.slug) {
-    return <HomePage />;
+    return <HomePage />
   }
 
   if (!doc) {
-    notFound();
+    notFound()
   }
 
   return (
     <>
-      <div className="pb-12 pt-8 flex-1 max-w-4xl">
+      <div className="pb-12 pt-8 flex-1">
         <Mdx code={doc.body.code} />
       </div>
       <VideoBar params={params} />
     </>
-  );
+  )
 }
