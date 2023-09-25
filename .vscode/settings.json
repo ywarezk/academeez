@@ -4,7 +4,7 @@
 		"editor.insertSpaces": true
 	},
 	// Visuals
-	"workbench.activityBar.visible": true,
+	"workbench.activityBar.visible": false,
 	"workbench.colorTheme": "Vitesse Light",
 	"workbench.fontAliasing": "antialiased",
 	"workbench.iconTheme": "file-icons",
@@ -110,5 +110,13 @@
 	"prettier.enable": true,
 	"prettier.printWidth": 200,
 	"prettier.semi": false,
-	"prettier.singleQuote": true
+	"prettier.singleQuote": true,
+	// vim settings
+	"vim.startInInsertMode": true,
+	"vim.useCtrlKeys": true,
+	"vim.easymotion": true,
+	"vim.sneak": true,
+	"vim.useSystemClipboard": true,
+	"vim.hlsearch": true,
+	"vim.leader": "<space>"
 }
