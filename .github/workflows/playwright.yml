@@ -1,4 +1,13 @@
-name: Playwright Tests
+#
+# Run playwright e2e tests
+#
+# Created September 25th, 2023
+# @author ywarezk
+# @version 0.0.1
+# @license MIT
+#
+
+name: Playwright E2E
 on:
   push:
     branches: [main, master]
@@ -18,7 +27,7 @@ jobs:
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install chrome --with-deps
-      - name: Run Playwright tests
+      - name: Run Playwright E2E tests
         run: npx playwright test
       - uses: actions/upload-artifact@v3
         if: always()

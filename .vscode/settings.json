@@ -4,7 +4,7 @@
 		"editor.insertSpaces": true
 	},
 	// Visuals
-	"workbench.activityBar.visible": false,
+	"workbench.activityBar.visible": true,
 	"workbench.colorTheme": "Vitesse Light",
 	"workbench.fontAliasing": "antialiased",
 	"workbench.iconTheme": "file-icons",
