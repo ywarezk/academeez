@@ -8,5 +8,5 @@
  */
 
 export default function Version() {
-  return <p>v0.0.2</p>
+  return <p>v0.0.3 - with breadcrumbs</p>
 }

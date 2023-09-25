@@ -7,14 +7,14 @@
  * @license MIT
  */
 
-import {Doc, allDocs} from 'contentlayer/generated'
+import type {Doc} from 'contentlayer/generated'
 import {notFound} from 'next/navigation'
 import {Mdx} from '@/ui'
 import type {Metadata} from 'next'
 import {HomePage} from './HomePage'
 import {VideoBar} from './VideoBar'
-import {getDocFromParams} from '@/lib'
-import {isEmpty} from 'lodash'
+import {getDocFromSlug, getDocsArrayFromSlug} from '@/lib'
+import {Breadcrumbs} from './Breadcrumbs'
 
 interface PageProps {
   params: {
@@ -28,16 +28,7 @@ interface PageProps {
  * @param param0
  */
 export async function generateMetadata({params}: PageProps): Promise<Metadata> {
-  const docs: Doc[] = []
-  const slugArray = params.slug ? [...params.slug] : []
-
-  for (let i = 0; i <= slugArray.length; i++) {
-    const partialSlug = slugArray.slice(0, i)
-    const slug = partialSlug.join('/')
-    const doc = allDocs.find(doc => doc.slug === slug)
-    doc && docs.push(doc)
-  }
-
+  const docs: Doc[] = getDocsArrayFromSlug(params.slug)
   const currentDoc = docs[docs.length - 1]
 
   // calculate the title
@@ -84,7 +75,7 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
  * @returns
  */
 export default async function Page({params}: PageProps) {
-  const doc = await getDocFromParams(params)
+  const doc = await getDocFromSlug(params.slug)
 
   if (!params.slug) {
     return <HomePage />
@@ -96,9 +87,10 @@ export default async function Page({params}: PageProps) {
 
   return (
     <>
-      <div className="pb-12 pt-8 flex-1">
+      <article className="pb-12 pt-8 flex-1">
+        <Breadcrumbs slug={params.slug} />
         <Mdx code={doc.body.code} />
-      </div>
+      </article>
       <VideoBar params={params} />
     </>
   )

@@ -7,5 +7,6 @@
  * @version 0.0.1
  */
 
-export * from './utils';
-export * from './types';
+export * from './utils'
+export * from './types'
+export * from './docs'
