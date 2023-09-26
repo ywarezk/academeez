@@ -110,13 +110,5 @@
 	"prettier.enable": true,
 	"prettier.printWidth": 200,
 	"prettier.semi": false,
-	"prettier.singleQuote": true,
-	// vim settings
-	"vim.startInInsertMode": true,
-	"vim.useCtrlKeys": true,
-	"vim.easymotion": true,
-	"vim.sneak": true,
-	"vim.useSystemClipboard": true,
-	"vim.hlsearch": true,
-	"vim.leader": "<space>"
+	"prettier.singleQuote": true
 }

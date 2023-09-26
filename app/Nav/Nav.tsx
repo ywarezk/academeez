@@ -7,11 +7,11 @@
  * @license MIT
  */
 
-import type {FC} from 'react';
-import {cn} from '@/lib';
-import Link from 'next/link';
-import {TwitterLogoIcon, GitHubLogoIcon, VideoIcon, MagnifyingGlassIcon} from '@radix-ui/react-icons';
-import {buttonVariants, AzLineIcon, Button} from '@/ui';
+import type {FC} from 'react'
+import {cn} from '@/lib'
+import Link from 'next/link'
+import {TwitterLogoIcon, GitHubLogoIcon, VideoIcon, MagnifyingGlassIcon} from '@radix-ui/react-icons'
+import {buttonVariants, AzLineIcon, Button} from '@/ui'
 
 export const Nav: FC = () => {
   return (
@@ -19,19 +19,14 @@ export const Nav: FC = () => {
       <nav className={cn('border-b')}>
         <div className={cn('flex px-4 py-3 justify-between items-center mx-auto')}>
           <div className="flex">
-            <Link href="/" data-test="az-logo" className={cn('flex items-center font-bold text-2xl')}>
+            <Link href="/" data-testid="az-logo" className={cn('flex items-center font-bold text-2xl')}>
               <AzLineIcon className="h-8 w-8" />
               <span>academeez</span>
             </Link>
           </div>
           <div className={cn('h-auto flex grow justify-end')}>
             {/* begin search */}
-            <Button
-              variant="outline"
-              className={cn(
-                'relative w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64 mr-2'
-              )}
-            >
+            <Button variant="outline" className={cn('relative w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64 mr-2')}>
               <MagnifyingGlassIcon />
               <span className="inline-flex ml-3">Search</span>
               <kbd className="pointer-events-none absolute right-1.5 top-1.5 hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
@@ -48,6 +43,7 @@ export const Nav: FC = () => {
                 }),
                 'mx-2'
               )}
+              data-testid="btn-courses"
             >
               Courses
             </Link>
@@ -96,5 +92,5 @@ export const Nav: FC = () => {
         </div>
       </nav>
     </header>
-  );
-};
+  )
+}
