@@ -11,6 +11,8 @@ import '@/styles/globals.css'
 import {Inter} from 'next/font/google'
 import {Nav} from './Nav'
 import {cn} from '@/lib'
+import type {ReactNode} from 'react'
+import {notFound} from 'next/navigation'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -18,9 +20,21 @@ const inter = Inter({
   weight: ['300', '400', '500', '700'],
 })
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+const locales = ['en', 'he']
+
+type LocaleLayoutProps = {
+  children: ReactNode
+  params: {locale: string}
+}
+
+export default function LocaleLayout({children, params: {locale}}: LocaleLayoutProps) {
+  // check if the local is valid, and if not redirect to notFound()
+  if (!locales.includes(locale)) {
+    return notFound()
+  }
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body className={cn(inter.variable, 'font-sans leading-base')}>
         <Nav />
         <div className="mx-auto mt-8">{children}</div>

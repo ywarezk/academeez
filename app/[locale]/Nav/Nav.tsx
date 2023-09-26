@@ -12,8 +12,11 @@ import {cn} from '@/lib'
 import Link from 'next/link'
 import {TwitterLogoIcon, GitHubLogoIcon, VideoIcon, MagnifyingGlassIcon} from '@radix-ui/react-icons'
 import {buttonVariants, AzLineIcon, Button} from '@/ui'
+import {useTranslations} from 'next-intl'
 
 export const Nav: FC = () => {
+  const t = useTranslations('Nav')
+
   return (
     <header className={cn('sticky z-50 top-0')}>
       <nav className={cn('border-b')}>
@@ -45,7 +48,7 @@ export const Nav: FC = () => {
               )}
               data-testid="btn-courses"
             >
-              Courses
+              {t('courses')}
             </Link>
 
             {/* link to github */}
