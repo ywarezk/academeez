@@ -3,5 +3,22 @@
     "deploymentEnabled": {
       "main": false
     }
+  },
+  "builds": [
+    {
+      "src": "next.config.js",
+      "use": "@now/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/pages/$1"
+    }
+  ],
+  "build": {
+    "env": {
+      "IS_NOW": "true"
+    }
   }
 }
