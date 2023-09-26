@@ -39,7 +39,7 @@ export default function HomePage() {
         <h1 className={cn('font-bold text-5xl leading-snug')}>academeez</h1>
       </div>
 
-      <p className="text-3xl text-green/90 font-mono self-center py-1 leading-snug mt-5"></p>
+      <p className="text-3xl text-green/90 font-mono self-center py-1 leading-snug mt-5">{t('description')}</p>
 
       <div className="grid gap-8 grid-cols-4 mt-9">
         {/* <article>
@@ -50,10 +50,6 @@ export default function HomePage() {
             ))}
         </article> */}
       </div>
-
-      <Link href="/" locale="he">
-        hebrew
-      </Link>
     </div>
   )
 }

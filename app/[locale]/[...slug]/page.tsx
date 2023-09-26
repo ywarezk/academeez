@@ -34,7 +34,7 @@ export function generateMetadata({params}: PageProps) {
   // calculate the title
   // the genericGenerateData
   // and all the ancestors title
-  const title = docs.reduce((acc, doc) => `${acc} | ${doc.title}`, 'academeez |')
+  const title = docs.reduce((acc, doc) => `${acc} | ${doc.title}`, 'academeez')
 
   return genericGenerateMetadata(title, currentDoc.description, currentDoc.imageBig, currentDoc.slug)
 }
