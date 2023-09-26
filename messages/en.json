@@ -1,5 +1,9 @@
 {
   "Nav": {
-    "courses": "courses"
+    "courses": "courses",
+    "search": "Search"
+  },
+  "HomePage": {
+    "description": "Open Source Learning Platform for Coders"
   }
 }

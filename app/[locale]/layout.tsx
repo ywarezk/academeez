@@ -20,7 +20,10 @@ const inter = Inter({
   weight: ['300', '400', '500', '700'],
 })
 
-const locales = ['en', 'he']
+const locales = {
+  he: 'rtl',
+  en: 'ltr',
+} as const
 
 type LocaleLayoutProps = {
   children: ReactNode
@@ -28,13 +31,15 @@ type LocaleLayoutProps = {
 }
 
 export default function LocaleLayout({children, params: {locale}}: LocaleLayoutProps) {
+  const dir = locales[locale as keyof typeof locales]
+
   // check if the local is valid, and if not redirect to notFound()
-  if (!locales.includes(locale)) {
+  if (!dir) {
     return notFound()
   }
 
   return (
-    <html lang={locale}>
+    <html lang={locale} dir={dir}>
       <body className={cn(inter.variable, 'font-sans leading-base')}>
         <Nav />
         <div className="mx-auto mt-8">{children}</div>

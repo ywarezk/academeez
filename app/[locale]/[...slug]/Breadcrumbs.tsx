@@ -15,8 +15,6 @@ import Link from 'next/link'
 export const Breadcrumbs: FC<{slug: string[]}> = async ({slug}) => {
   const docs = getDocsArrayFromSlug(slug)
 
-  const toc = await getToc(slug)
-
   return (
     <nav>
       <ul className="flex items-center text-sm font-bold">

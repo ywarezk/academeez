@@ -1,5 +1,9 @@
 {
   "Nav": {
-    "courses": "קורסים"
+    "courses": "קורסים",
+    "search": "חיפוש"
+  },
+  "HomePage": {
+    "description": "פרוייקט קוד פתוח ללימוד תכנות"
   }
 }
