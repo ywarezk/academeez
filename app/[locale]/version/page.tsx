@@ -8,5 +8,5 @@
  */
 
 export default function Version() {
-  return <p>v0.0.6 - with i18n</p>
+  return <p>v0.0.7 - with localization menu</p>
 }

@@ -13,6 +13,7 @@ import Link from 'next/link'
 import {TwitterLogoIcon, GitHubLogoIcon, VideoIcon, MagnifyingGlassIcon} from '@radix-ui/react-icons'
 import {buttonVariants, AzLineIcon, Button} from '@/ui'
 import {useTranslations} from 'next-intl'
+import {LocaleMenu} from './LocaleMenu'
 
 export const Nav: FC = () => {
   const t = useTranslations('Nav')
@@ -91,6 +92,7 @@ export const Nav: FC = () => {
                 <TwitterLogoIcon className="h-5 w-5 fill-current" />
               </div>
             </a>
+            <LocaleMenu />
           </div>
         </div>
       </nav>

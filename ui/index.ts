@@ -7,10 +7,11 @@
  * @license MIT
  */
 
-export * from './Card';
-export * from './Mdx';
-export * from './HoverCard';
-export * from './ScrollArea';
-export * from './Collapsible';
-export * from './Button';
-export * from './icons';
+export * from './Card'
+export * from './Mdx'
+export * from './HoverCard'
+export * from './ScrollArea'
+export * from './Collapsible'
+export * from './Button'
+export * from './icons'
+export * from './DropdownMenu'
