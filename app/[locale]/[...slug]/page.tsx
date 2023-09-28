@@ -28,8 +28,12 @@ interface PageProps {
  * @param param0
  */
 export function generateMetadata({params}: PageProps) {
-  const docs: Doc[] = getDocsArrayFromSlug(params.slug)
+  const docs: Doc[] = getDocsArrayFromSlug(params.slug, params.locale)
   const currentDoc = docs[docs.length - 1]
+
+  if (!currentDoc) {
+    return {}
+  }
 
   // calculate the title
   // the genericGenerateData
@@ -46,7 +50,7 @@ export function generateMetadata({params}: PageProps) {
  * @returns
  */
 export default async function Page({params}: PageProps) {
-  const doc = await getDocFromSlug(params.slug)
+  const doc = await getDocFromSlug(params.slug, params.locale)
 
   if (!doc) {
     notFound()

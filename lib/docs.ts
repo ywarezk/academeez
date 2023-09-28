@@ -13,8 +13,8 @@ import {type Doc, allDocs} from 'contentlayer/generated'
  * Get doc from slug
  * @param slugArr - slug array
  */
-export function getDocFromSlug(slugArr: string[] = []) {
-  const slug = slugArr.join('/') || ''
+export function getDocFromSlug(slugArr: string[] = [], locale = 'en') {
+  const slug = `${locale}/${slugArr.join('/')}` || ''
   const doc = allDocs.find(doc => {
     return doc.slug === slug
   })
@@ -26,12 +26,12 @@ export function getDocFromSlug(slugArr: string[] = []) {
   return doc
 }
 
-export function getDocsArrayFromSlug(slugArr: string[] = []) {
+export function getDocsArrayFromSlug(slugArr: string[] = [], locale = 'en') {
   const docs: Doc[] = []
 
   for (let i = 0; i <= slugArr.length; i++) {
     const partialSlug = slugArr.slice(0, i)
-    const doc = getDocFromSlug(partialSlug)
+    const doc = getDocFromSlug(partialSlug, locale)
     doc && docs.push(doc)
   }
   return docs
@@ -48,7 +48,7 @@ export async function getToc(slugArr: string[] = []) {
   let toc = null
   if (slugArr?.length >= 2) {
     try {
-      toc = (await import(`@/content/${slugArr[0]}/${slugArr[1]}/toc`)).default
+      toc = (await import(`@/content/en/${slugArr[0]}/${slugArr[1]}/toc`)).default
     } catch (_e) {
       console.log(`failed to find toc for ${slugArr[0]}/slugArr[1]`)
     }

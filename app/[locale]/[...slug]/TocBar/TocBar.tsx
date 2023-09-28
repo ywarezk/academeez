@@ -1,13 +1,11 @@
 import Link from 'next/link'
 import {cn} from '@/lib/utils'
-
 import {NavItem, getToc} from '@/lib'
 import {Collapsible, CollapsibleContent} from '@/ui'
 import {difference, isEmpty, isEqual} from 'lodash'
 import {CaretRightIcon, CaretDownIcon} from '@radix-ui/react-icons'
 import {FC, SVGProps} from 'react'
 import {ScrollArea} from '@/ui'
-import {Params} from 'next/dist/shared/lib/router/utils/route-matcher'
 
 export const TocBar: FC<{slug: string[]}> = async ({slug = []}) => {
   let toc = await getToc(slug)
