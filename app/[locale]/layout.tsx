@@ -14,6 +14,7 @@ import {cn} from '@/lib'
 import type {ReactNode} from 'react'
 import {notFound} from 'next/navigation'
 import {locales, SupportedLocales} from '@/lib'
+import {Analytics} from '@vercel/analytics/react'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -39,6 +40,7 @@ export default function LocaleLayout({children, params: {locale}}: LocaleLayoutP
       <body className={cn(inter.variable, 'font-sans leading-base')}>
         <Nav />
         <div className="mx-auto mt-8">{children}</div>
+        <Analytics />
       </body>
     </html>
   )

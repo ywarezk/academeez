@@ -8,5 +8,5 @@
  */
 
 export default function Version() {
-  return <p>v0.0.8 - with localization menu in the right language</p>
+  return <p>v0.0.10 - with analytics</p>
 }
