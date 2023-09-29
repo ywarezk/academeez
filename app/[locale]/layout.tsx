@@ -27,6 +27,10 @@ type LocaleLayoutProps = {
   params: {locale: SupportedLocales}
 }
 
+export async function generateStaticParams() {
+  return Object.keys(locales).map(locale => ({locale}))
+}
+
 export default function LocaleLayout({children, params: {locale}}: LocaleLayoutProps) {
   const dir = locales[locale]
 
