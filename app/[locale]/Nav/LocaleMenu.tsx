@@ -7,7 +7,7 @@
  * @license MIT
  */
 
-import {FC} from 'react'
+import type {FC} from 'react'
 import {DropdownMenu, DropdownMenuTrigger, Button, DropdownMenuContent, DropdownMenuItem} from '@/ui'
 import {GlobeIcon} from '@radix-ui/react-icons'
 import Link from 'next/link'
@@ -27,14 +27,10 @@ export const LocaleMenu: FC = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align={fromLocaleToDropdownDir(locale)}>
         <DropdownMenuItem>
-          <Link href="/en" locale="en">
-            {t('en')}
-          </Link>
+          <Link href="/en">{t('en')}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <Link href="/he" locale="he">
-            {t('he')}
-          </Link>
+          <Link href="/he">{t('he')}</Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -42,7 +42,6 @@ export const Nav: FC = () => {
 
             <Link
               href={`/${locale}/course`}
-              locale={locale}
               className={cn(
                 buttonVariants({
                   variant: 'default',

@@ -9,8 +9,10 @@
 
 import {TocBar} from './TocBar'
 import type {PropsWithChildren} from 'react'
+import {unstable_setRequestLocale} from 'next-intl/server'
 
 export default async function LessonLayout({children, params}: PropsWithChildren<{params: any}>) {
+  unstable_setRequestLocale(params.locale)
   return (
     <div>
       <div className="flex">

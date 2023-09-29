@@ -14,6 +14,7 @@ import {VideoBar} from './VideoBar'
 import {getDocFromSlug, getDocsArrayFromSlug} from '@/lib'
 import {Breadcrumbs} from './Breadcrumbs'
 import {generateMetadata as genericGenerateMetadata} from '@/lib'
+import {unstable_setRequestLocale} from 'next-intl/server'
 
 interface PageProps {
   params: {
@@ -55,6 +56,8 @@ export default async function Page({params}: PageProps) {
   if (!doc) {
     notFound()
   }
+
+  unstable_setRequestLocale(params.locale)
 
   return (
     <>

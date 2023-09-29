@@ -15,6 +15,7 @@ import type {ReactNode} from 'react'
 import {notFound} from 'next/navigation'
 import {locales, SupportedLocales} from '@/lib'
 import {Analytics} from '@vercel/analytics/react'
+import {unstable_setRequestLocale} from 'next-intl/server'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -38,6 +39,8 @@ export default function LocaleLayout({children, params: {locale}}: LocaleLayoutP
   if (!dir) {
     return notFound()
   }
+
+  unstable_setRequestLocale(locale)
 
   return (
     <html lang={locale} dir={dir}>

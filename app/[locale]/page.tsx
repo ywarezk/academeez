@@ -9,9 +9,9 @@
 
 import {AzLineIcon} from '@/ui'
 import {cn} from '@/lib'
-import Link from 'next/link'
 import {useTranslations} from 'next-intl'
 import {generateMetadata as genericGenerateData} from '@/lib'
+import {unstable_setRequestLocale} from 'next-intl/server'
 
 type HomePageProps = {
   params: {
@@ -30,8 +30,10 @@ export async function generateMetadata({params}: HomePageProps) {
   return genericGenerateData(title, description, image)
 }
 
-export default function HomePage() {
+export default function HomePage(props: HomePageProps) {
   const t = useTranslations('HomePage')
+
+  unstable_setRequestLocale(props.params.locale)
 
   return (
     <div className="container mx-auto mt-20 text-center">
