@@ -37,7 +37,7 @@ export default function LocaleLayout({children, params: {locale}}: LocaleLayoutP
   return (
     <html lang={locale} dir={dir}>
       <body className={cn(inter.variable, 'font-sans leading-base')}>
-        <Nav locale={locale} />
+        <Nav />
         <div className="mx-auto mt-8">{children}</div>
       </body>
     </html>

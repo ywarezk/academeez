@@ -14,8 +14,8 @@ export const locales = {
   en: 'ltr',
 } as const
 
-export function fromLocaleToDropdownDir(locale: keyof typeof locales): 'start' | 'end' {
-  if (locales[locale] === 'rtl') {
+export function fromLocaleToDropdownDir(locale: string): 'start' | 'end' {
+  if (locales[locale as keyof typeof locales] === 'rtl') {
     return 'start'
   } else {
     return 'end'

@@ -10,12 +10,13 @@
 import {FC} from 'react'
 import {DropdownMenu, DropdownMenuTrigger, Button, DropdownMenuContent, DropdownMenuItem} from '@/ui'
 import {GlobeIcon} from '@radix-ui/react-icons'
-import Link from 'next-intl/link'
-import {type SupportedLocales, fromLocaleToDropdownDir} from '@/lib'
-import {useTranslations} from 'next-intl'
+import Link from 'next/link'
+import {fromLocaleToDropdownDir} from '@/lib'
+import {useLocale, useTranslations} from 'next-intl'
 
-export const LocaleMenu: FC<{locale: SupportedLocales}> = ({locale}) => {
+export const LocaleMenu: FC = () => {
   const t = useTranslations('Nav')
+  const locale = useLocale()
 
   return (
     <DropdownMenu>
@@ -26,12 +27,12 @@ export const LocaleMenu: FC<{locale: SupportedLocales}> = ({locale}) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align={fromLocaleToDropdownDir(locale)}>
         <DropdownMenuItem>
-          <Link href="/" locale="en">
+          <Link href="/en" locale="en">
             {t('en')}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <Link href="/" locale="he">
+          <Link href="/he" locale="he">
             {t('he')}
           </Link>
         </DropdownMenuItem>

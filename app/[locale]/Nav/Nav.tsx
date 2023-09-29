@@ -12,11 +12,12 @@ import {cn, type SupportedLocales} from '@/lib'
 import Link from 'next/link'
 import {TwitterLogoIcon, GitHubLogoIcon, VideoIcon, MagnifyingGlassIcon} from '@radix-ui/react-icons'
 import {buttonVariants, AzLineIcon, Button} from '@/ui'
-import {useTranslations} from 'next-intl'
+import {useTranslations, useLocale} from 'next-intl'
 import {LocaleMenu} from './LocaleMenu'
 
-export const Nav: FC<{locale: SupportedLocales}> = ({locale}) => {
+export const Nav: FC = () => {
   const t = useTranslations('Nav')
+  const locale = useLocale()
 
   return (
     <header className={cn('sticky z-50 top-0')}>
@@ -40,7 +41,8 @@ export const Nav: FC<{locale: SupportedLocales}> = ({locale}) => {
             {/* end search */}
 
             <Link
-              href="/course"
+              href={`/${locale}/course`}
+              locale={locale}
               className={cn(
                 buttonVariants({
                   variant: 'default',
@@ -92,7 +94,7 @@ export const Nav: FC<{locale: SupportedLocales}> = ({locale}) => {
                 <TwitterLogoIcon className="h-5 w-5 fill-current" />
               </div>
             </a>
-            <LocaleMenu locale={locale} />
+            <LocaleMenu />
           </div>
         </div>
       </nav>
