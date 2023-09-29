@@ -8,14 +8,14 @@
  */
 
 import type {FC} from 'react'
-import {cn} from '@/lib'
+import {cn, type SupportedLocales} from '@/lib'
 import Link from 'next/link'
 import {TwitterLogoIcon, GitHubLogoIcon, VideoIcon, MagnifyingGlassIcon} from '@radix-ui/react-icons'
 import {buttonVariants, AzLineIcon, Button} from '@/ui'
 import {useTranslations} from 'next-intl'
 import {LocaleMenu} from './LocaleMenu'
 
-export const Nav: FC = () => {
+export const Nav: FC<{locale: SupportedLocales}> = ({locale}) => {
   const t = useTranslations('Nav')
 
   return (
@@ -92,7 +92,7 @@ export const Nav: FC = () => {
                 <TwitterLogoIcon className="h-5 w-5 fill-current" />
               </div>
             </a>
-            <LocaleMenu />
+            <LocaleMenu locale={locale} />
           </div>
         </div>
       </nav>

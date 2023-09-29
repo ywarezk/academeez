@@ -1,7 +1,9 @@
 {
   "Nav": {
     "courses": "קורסים",
-    "search": "חיפוש"
+    "search": "חיפוש",
+    "en": "English",
+    "he": "עברית"
   },
   "HomePage": {
     "description": "פרוייקט קוד פתוח ללימוד תכנות"

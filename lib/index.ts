@@ -10,3 +10,4 @@
 export * from './utils'
 export * from './types'
 export * from './docs'
+export * from './locale'

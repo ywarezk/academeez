@@ -1,7 +1,9 @@
 {
   "Nav": {
     "courses": "courses",
-    "search": "Search"
+    "search": "Search",
+    "en": "English",
+    "he": "עברית"
   },
   "HomePage": {
     "description": "Open Source Learning Platform for Coders"

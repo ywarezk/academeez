@@ -13,7 +13,7 @@ import {Nav} from './Nav'
 import {cn} from '@/lib'
 import type {ReactNode} from 'react'
 import {notFound} from 'next/navigation'
-import {locales} from './locale.types'
+import {locales, SupportedLocales} from '@/lib'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -23,11 +23,11 @@ const inter = Inter({
 
 type LocaleLayoutProps = {
   children: ReactNode
-  params: {locale: keyof typeof locales}
+  params: {locale: SupportedLocales}
 }
 
 export default function LocaleLayout({children, params: {locale}}: LocaleLayoutProps) {
-  const dir = locales[locale as keyof typeof locales]
+  const dir = locales[locale]
 
   // check if the local is valid, and if not redirect to notFound()
   if (!dir) {
@@ -37,7 +37,7 @@ export default function LocaleLayout({children, params: {locale}}: LocaleLayoutP
   return (
     <html lang={locale} dir={dir}>
       <body className={cn(inter.variable, 'font-sans leading-base')}>
-        <Nav />
+        <Nav locale={locale} />
         <div className="mx-auto mt-8">{children}</div>
       </body>
     </html>

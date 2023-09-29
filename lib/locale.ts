@@ -7,6 +7,8 @@
  * @license MIT
  */
 
+export type SupportedLocales = keyof typeof locales
+
 export const locales = {
   he: 'rtl',
   en: 'ltr',
