@@ -25,7 +25,7 @@ export function cn(...inputs: ClassValue[]) {
 export function generateMetadata(title: string, description: string, image: string, path = '') {
   return {
     title,
-    description: description,
+    description,
     openGraph: {
       title: title,
       description: description,

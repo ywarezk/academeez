@@ -21,8 +21,9 @@ type HomePageProps = {
 
 export async function generateMetadata({params}: HomePageProps) {
   const messages = (await import(`@/messages/${params.locale}.json`)).default
-  const title = 'academeez'
+
   const description = messages['HomePage']['description']
+  const title = `academeez | ${description}`
 
   // TODO: add image
   const image = ''

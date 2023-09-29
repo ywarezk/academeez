@@ -13,6 +13,7 @@ import {Nav} from './Nav'
 import {cn} from '@/lib'
 import type {ReactNode} from 'react'
 import {notFound} from 'next/navigation'
+import {locales} from './locale.types'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -20,14 +21,9 @@ const inter = Inter({
   weight: ['300', '400', '500', '700'],
 })
 
-const locales = {
-  he: 'rtl',
-  en: 'ltr',
-} as const
-
 type LocaleLayoutProps = {
   children: ReactNode
-  params: {locale: string}
+  params: {locale: keyof typeof locales}
 }
 
 export default function LocaleLayout({children, params: {locale}}: LocaleLayoutProps) {

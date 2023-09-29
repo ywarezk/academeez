@@ -11,9 +11,17 @@ test('has title', async ({page}) => {
 })
 
 /**
- * check the title in the course page
+ * check the title in the course page for hebrew
  */
-test('course page has title', async ({page}) => {
+test('course page has title he', async ({page}) => {
   await page.goto('http://localhost:3000/he/course/react')
-  await expect(page).toHaveTitle('academeez | Courses | React')
+  await expect(page).toHaveTitle('academeez | קורסים | React')
+})
+
+/**
+ * check the title in the course page for hebrew
+ */
+test('course page has title en', async ({page}) => {
+  await page.goto('http://localhost:3000/course/react')
+  await expect(page).toHaveTitle('academeez | Academeez courses | React')
 })
