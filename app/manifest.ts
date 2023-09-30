@@ -6,14 +6,15 @@
  * @license MIT
  */
 
-import {MetadataRoute} from 'next';
+import {MetadataRoute} from 'next'
+import {siteConfig} from '@/config/site'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'academeez',
-    short_name: 'academeez',
-    description: 'Open Source Learning Platform for Developers',
-    start_url: '/',
+    name: siteConfig.name,
+    short_name: siteConfig.name,
+    description: siteConfig.description,
+    start_url: '/en',
     display: 'standalone',
     background_color: '#fff',
     theme_color: '#fff',
@@ -24,5 +25,5 @@ export default function manifest(): MetadataRoute.Manifest {
         type: 'image/x-icon',
       },
     ],
-  };
+  }
 }

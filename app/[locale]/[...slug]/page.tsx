@@ -11,10 +11,11 @@ import type {Doc} from 'contentlayer/generated'
 import {notFound} from 'next/navigation'
 import {Mdx} from '@/ui'
 import {VideoBar} from './VideoBar'
-import {getDocFromSlug, getDocsArrayFromSlug} from '@/lib'
+import {cn, getDocFromSlug, getDocsArrayFromSlug} from '@/lib'
 import {Breadcrumbs} from './Breadcrumbs'
 import {generateMetadata as genericGenerateMetadata} from '@/lib'
 import {unstable_setRequestLocale} from 'next-intl/server'
+import Balancer from 'react-wrap-balancer'
 
 interface PageProps {
   params: {
@@ -60,12 +61,21 @@ export default async function Page({params}: PageProps) {
   unstable_setRequestLocale(params.locale)
 
   return (
-    <>
+    <main>
       <article className="pb-12 pt-8 flex-1">
         <Breadcrumbs slug={params.slug} />
+
+        <div className="my-4">
+          <h1 className={cn('scroll-m-20 text-4xl font-bold tracking-tight')}>{doc.title}</h1>
+          {doc.description && (
+            <p className="text-lg text-muted-foreground">
+              <Balancer>{doc.description}</Balancer>
+            </p>
+          )}
+        </div>
         <Mdx code={doc.body.code} />
       </article>
       <VideoBar params={params} />
-    </>
+    </main>
   )
 }

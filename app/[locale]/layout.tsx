@@ -16,6 +16,8 @@ import {notFound} from 'next/navigation'
 import {locales, SupportedLocales} from '@/lib'
 import {Analytics} from '@vercel/analytics/react'
 import {unstable_setRequestLocale} from 'next-intl/server'
+import type {Metadata} from 'next'
+import {siteConfig} from '@/config/site'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -26,6 +28,55 @@ const inter = Inter({
 type LocaleLayoutProps = {
   children: ReactNode
   params: {locale: SupportedLocales}
+}
+
+export const metadata: Metadata = {
+  title: {
+    default: siteConfig.name,
+    template: `%s - ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  keywords: ['Next.js', 'React', 'Angular', 'Node.js', 'Typescript', 'Javascript', 'HTML', 'CSS'],
+  authors: [
+    {
+      name: 'ywarezk',
+      url: 'https://www.nerdeez.com/',
+    },
+  ],
+  creator: 'ywarezk',
+  themeColor: [
+    {media: '(prefers-color-scheme: light)', color: 'white'},
+    {media: '(prefers-color-scheme: dark)', color: 'black'},
+  ],
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: siteConfig.url,
+    title: siteConfig.name,
+    description: siteConfig.description,
+    siteName: siteConfig.name,
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: siteConfig.name,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: [siteConfig.ogImage],
+    creator: '@shadcn',
+  },
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon-16x16.png',
+    apple: '/apple-touch-icon.png',
+  },
+  manifest: `${siteConfig.url}/manifest.webmanifest`,
 }
 
 export async function generateStaticParams() {
