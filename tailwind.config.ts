@@ -65,6 +65,10 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-inter)'],
       },
+
+      borderColor: {
+        link: '#01D662',
+      },
     },
   },
 }
