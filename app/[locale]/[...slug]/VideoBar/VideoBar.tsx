@@ -1,5 +1,6 @@
 /**
- * The bar on the right side will display a video and coding section
+ * The bar on the right side will display a video and coding section.
+ * This bar is optional and will only display if there is a vidoe.mdx file
  *
  * Created September 23rd, 2023
  * @author ywarezk
@@ -7,17 +8,22 @@
  * @license MIT
  */
 
-import {cn} from '@/lib'
 import type {FC} from 'react'
 import {getDocFromSlug} from '@/lib'
 import type {Params} from 'next/dist/shared/lib/router/utils/route-matcher'
+import {Mdx} from '@/ui'
 
 export const VideoBar: FC<{params: Params}> = async ({params}) => {
-  const doc = await getDocFromSlug(params.slug)
+  const video = await getDocFromSlug([...params.slug, 'video'], params.locale)
 
-  if (!doc?.video && !doc?.exercise) {
+  console.log('video', video)
+  if (!video) {
     return null
   }
 
-  return <div className={cn('bg-slate-300 flex-1')}>video is here</div>
+  return (
+    <div className="mt-12 w-full max-w-md">
+      <Mdx code={video.body.code} />
+    </div>
+  )
 }

@@ -61,23 +61,25 @@ export default async function Page({params}: PageProps) {
   unstable_setRequestLocale(params.locale)
 
   return (
-    <main>
-      <article className="pb-12 pt-8 flex-1 px-5">
-        <Breadcrumbs slug={params.slug} />
+    <>
+      <main className="flex-grow flex justify-center">
+        <article className="pb-12 pt-8 flex-1 px-5 max-w-4xl">
+          <Breadcrumbs slug={params.slug} />
 
-        <div className="my-4">
-          <h1 className={cn('scroll-m-20 text-4xl font-bold tracking-tight')}>{doc.title}</h1>
-          {doc.description && (
-            <p className="text-lg text-muted-foreground my-4">
-              <Balancer>{doc.description}</Balancer>
-            </p>
-          )}
-        </div>
-        <div className="pb-12 pt-8">
-          <Mdx code={doc.body.code} />
-        </div>
-      </article>
+          <div className="my-4">
+            <h1 className={cn('scroll-m-20 text-4xl font-bold tracking-tight')}>{doc.title}</h1>
+            {doc.description && (
+              <p className="text-lg text-muted-foreground my-4">
+                <Balancer>{doc.description}</Balancer>
+              </p>
+            )}
+          </div>
+          <div className="pb-12 pt-8">
+            <Mdx code={doc.body.code} />
+          </div>
+        </article>
+      </main>
       <VideoBar params={params} />
-    </main>
+    </>
   )
 }

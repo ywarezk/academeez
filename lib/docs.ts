@@ -16,6 +16,7 @@ import {type Doc, allDocs} from 'contentlayer/generated'
 export function getDocFromSlug(slugArr: string[] = [], locale = 'en') {
   const slug = `${locale}/${slugArr.join('/')}` || ''
   const doc = allDocs.find(doc => {
+    console.log('docs', doc.slug)
     return doc.slug === slug
   })
 
