@@ -16,13 +16,12 @@ import {Mdx} from '@/ui'
 export const VideoBar: FC<{params: Params}> = async ({params}) => {
   const video = await getDocFromSlug([...params.slug, 'video'], params.locale)
 
-  console.log('video', video)
   if (!video) {
     return null
   }
 
   return (
-    <div className="mt-12 w-full max-w-md">
+    <div className="mt-7 w-full max-w-md p-5">
       <Mdx code={video.body.code} />
     </div>
   )

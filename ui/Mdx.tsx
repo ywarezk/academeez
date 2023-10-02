@@ -11,7 +11,7 @@ import {useMDXComponent} from 'next-contentlayer/hooks'
 import type {MDXComponents} from 'mdx/types'
 import {cn} from '@/lib/utils'
 import Link from 'next/link'
-import {ReactIcon, AngularIcon} from './icons'
+import * as icons from './icons'
 
 export const components: MDXComponents = {
   h1: ({className, ...props}: React.HTMLAttributes<HTMLHeadingElement>) => <h1 className={cn('font-heading mt-2 scroll-m-20 text-4xl font-bold', className)} {...props} />,
@@ -32,8 +32,7 @@ export const components: MDXComponents = {
   LinkedCard: ({className, ...props}: React.ComponentProps<typeof Link>) => (
     <Link className={cn('flex w-full flex-col items-center rounded-xl border bg-card p-6 text-card-foreground shadow transition-colors hover:bg-muted/50 sm:p-10', className)} {...props} />
   ),
-  ReactIcon,
-  AngularIcon,
+  icons,
 }
 
 interface MdxProps {
