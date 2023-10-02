@@ -12,6 +12,7 @@ import type {MDXComponents} from 'mdx/types'
 import {cn} from '@/lib/utils'
 import Link from 'next/link'
 import * as icons from './icons'
+import * as ui from '@/ui'
 
 export const components: MDXComponents = {
   h1: ({className, ...props}: React.HTMLAttributes<HTMLHeadingElement>) => <h1 className={cn('font-heading mt-2 scroll-m-20 text-4xl font-bold', className)} {...props} />,
@@ -33,6 +34,8 @@ export const components: MDXComponents = {
     <Link className={cn('flex w-full flex-col items-center rounded-xl border bg-card p-6 text-card-foreground shadow transition-colors hover:bg-muted/50 sm:p-10', className)} {...props} />
   ),
   icons,
+  ui,
+  Link,
 }
 
 interface MdxProps {
