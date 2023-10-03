@@ -21,7 +21,7 @@ export const Nav: FC = () => {
 
   return (
     <header className={cn('sticky z-50 top-0')}>
-      <nav className={cn('border-b')}>
+      <nav className={cn('border-b duration-300 backdrop-filter backdrop-blur-lg backdrop-saturate-200 transition-shadow bg-opacity-90  w-full bg-wash px-1.5 lg:pe-5 lg:ps-4 z-50 shadow-nav')}>
         <div className={cn('flex px-4 py-3 justify-between items-center mx-auto')}>
           <div className="flex">
             <Link href="/" data-testid="az-logo" className={cn('flex items-center font-bold text-2xl')}>

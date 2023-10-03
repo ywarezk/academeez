@@ -13,6 +13,9 @@ const config: Config = {
       },
     },
     extend: {
+      boxShadow: {
+        nav: 'var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),0 16px 32px -16px rgba(0,0,0,.1),0 0 0 1px rgba(0,0,0,.1)',
+      },
       backgroundColor: {
         green: '#01D662',
       },
@@ -32,6 +35,7 @@ const config: Config = {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         green: '#01D662',
+        wash: 'rgb(255 255 255/var(--tw-bg-opacity))',
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
