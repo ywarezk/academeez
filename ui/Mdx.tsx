@@ -33,6 +33,9 @@ export const components: MDXComponents = {
   LinkedCard: ({className, ...props}: React.ComponentProps<typeof Link>) => (
     <Link className={cn('flex w-full flex-col items-center rounded-xl border bg-card p-6 text-card-foreground shadow transition-colors hover:bg-muted/50 sm:p-10', className)} {...props} />
   ),
+  ul: ({className, ...props}: React.HTMLAttributes<HTMLUListElement>) => <ul className={cn('my-6 ml-6 list-disc', className)} {...props} />,
+  ol: ({className, ...props}: React.HTMLAttributes<HTMLOListElement>) => <ol className={cn('my-6 ml-6 list-decimal', className)} {...props} />,
+  li: ({className, ...props}: React.HTMLAttributes<HTMLElement>) => <li className={cn('mt-2', className)} {...props} />,
   icons,
   ui,
   Link,

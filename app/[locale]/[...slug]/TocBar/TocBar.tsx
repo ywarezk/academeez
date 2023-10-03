@@ -6,9 +6,11 @@ import {difference, isEmpty, isEqual} from 'lodash'
 import {CaretRightIcon, CaretDownIcon} from '@radix-ui/react-icons'
 import {FC, SVGProps} from 'react'
 import {ScrollArea} from '@/ui'
+import {useLocale} from 'next-intl'
 
 export const TocBar: FC<{slug: string[]}> = async ({slug = []}) => {
-  let toc = await getToc(slug)
+  const locale = useLocale()
+  let toc = await getToc(slug, locale)
 
   if (isEmpty(slug)) {
     return null

@@ -16,6 +16,7 @@ import {Breadcrumbs} from './Breadcrumbs'
 import {generateMetadata as genericGenerateMetadata} from '@/lib'
 import {unstable_setRequestLocale} from 'next-intl/server'
 import Balancer from 'react-wrap-balancer'
+import {Pager} from './Pager'
 
 interface PageProps {
   params: {
@@ -77,6 +78,8 @@ export default async function Page({params}: PageProps) {
           <div className="pb-12 pt-8">
             <Mdx code={doc.body.code} />
           </div>
+
+          <Pager slug={params.slug} />
         </article>
       </main>
       <VideoBar params={params} />

@@ -12,7 +12,7 @@ import {AngularIcon} from '@/ui/icons'
 
 const toc: NavItem = {
   title: 'Angular',
-  href: '/course/angular',
+  href: '/en/course/angular',
   Icon: AngularIcon,
   items: [
     {

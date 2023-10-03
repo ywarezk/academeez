@@ -18,7 +18,7 @@ export const RxjsIcon = (props: SVGProps<any>) => {
       x="0px"
       y="0px"
       viewBox="0 0 544.329956 544.347595"
-      enable-background="new 0 0 544.329956 544.347595"
+      enableBackground="new 0 0 544.329956 544.347595"
       xmlSpace="preserve"
       {...props}
     >

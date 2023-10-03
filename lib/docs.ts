@@ -8,6 +8,7 @@
  */
 
 import {type Doc, allDocs} from 'contentlayer/generated'
+import type {NavItem} from './types'
 
 /**
  * Get doc from slug
@@ -16,7 +17,6 @@ import {type Doc, allDocs} from 'contentlayer/generated'
 export function getDocFromSlug(slugArr: string[] = [], locale = 'en') {
   const slug = `${locale}/${slugArr.join('/')}` || ''
   const doc = allDocs.find(doc => {
-    console.log('docs', doc.slug)
     return doc.slug === slug
   })
 
@@ -45,7 +45,7 @@ export function getDocsArrayFromSlug(slugArr: string[] = [], locale = 'en') {
  * @param slugArr
  * @returns
  */
-export async function getToc(slugArr: string[] = []) {
+export async function getToc(slugArr: string[] = [], locale = 'en'): Promise<NavItem> {
   let toc = null
   if (slugArr?.length >= 2) {
     try {
@@ -55,4 +55,76 @@ export async function getToc(slugArr: string[] = []) {
     }
   }
   return toc
+}
+
+/**
+ * given an href we will find the nav item with that href and also return his parent
+ * @param toc
+ * @param href
+ */
+export function findNavItemInToc(toc: NavItem, href: string): NavItem | null {
+  if (toc.href === href) {
+    return toc
+  }
+
+  if (toc.items) {
+    for (const item of toc.items) {
+      const found = findNavItemInToc(item, href)
+      if (found) {
+        return found
+      }
+    }
+  }
+
+  return null
+}
+
+export function findParentNavItemInToc(toc: NavItem, href: string): NavItem | null {
+  // split by / and remove the last element then join again
+  const parentHref = href.split('/').slice(0, -1).join('/')
+
+  return findNavItemInToc(toc, parentHref)
+}
+
+/**
+ * will find the previous item if parent has items array so one before me of return the parent
+ * @param toc
+ * @param href
+ */
+export function findPrev(toc: NavItem, href: string): NavItem | null {
+  const parent = findParentNavItemInToc(toc, href)
+  if (!parent) {
+    return null
+  }
+
+  if (parent.items) {
+    const myIndex = parent.items.findIndex(item => item.href === href)
+    if (myIndex === 0) {
+      return parent
+    }
+    return parent.items[myIndex - 1]
+  }
+
+  return null
+}
+
+/**
+ * will find the next item if parent has items array so one after me or return one after the parent
+ * @param toc
+ * @param href
+ */
+export function findNext(toc: NavItem, href: string): NavItem | null {
+  const parent = findParentNavItemInToc(toc, href)
+
+  if (!parent) {
+    return null
+  }
+
+  if (parent.items) {
+    const myIndex = parent.items.findIndex(item => item.href === href)
+    if (myIndex === parent.items.length - 1) {
+      return findNext(toc, parent.href)
+    }
+    return parent.items[myIndex + 1]
+  }
 }
