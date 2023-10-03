@@ -126,13 +126,16 @@ export function findNext(toc: NavItem, href: string): NavItem | null {
   // if no parent choose my first items
   if (!parent && isEmpty(me.items)) {
     return null
-  } else if (!parent && !isEmpty(me.items)) {
+  }
+
+  if (!isEmpty(me.items)) {
     return me.items[0]
   }
 
   // if i do have a parent find my next brother
   if (parent) {
     const myIndex = parent.items.findIndex(item => item.href === href)
+    console.log('myIndex', parent.href)
     if (myIndex === parent.items.length - 1) {
       return findNext(toc, parent?.href)
     }

@@ -39,10 +39,11 @@ export const Pager: FC<{slug: string[]}> = async ({slug}) => {
             buttonVariants({
               variant: 'ghost',
             }),
-            ' justify-self-start py-12 flex gap-x-4 md:gap-x-6 items-center w-full md:w-80 px-4 md:px-5 border-2 border-transparent text-base leading-base  flex-row-reverse justify-end text-end'
+            'py-12 flex gap-x-4 md:gap-x-6 items-center justify-start w-full md:w-80 px-4 md:px-5 border-2 border-transparent text-base leading-base text-end'
           )}
           href={prev.href}
         >
+          <CaretLeftIcon className="w-5 h-5 text-link dark:text-link-dark" />
           <span>
             <span className="block no-underline text-sm tracking-wide text-secondary dark:text-secondary-dark uppercase font-bold group-focus:text-link dark:group-focus:text-link-dark group-focus:text-opacity-100">
               Previous
@@ -51,7 +52,6 @@ export const Pager: FC<{slug: string[]}> = async ({slug}) => {
               {prevDoc?.lessonType}: {prev.title}
             </span>
           </span>
-          <CaretLeftIcon className="w-5 h-5 text-link dark:text-link-dark" />
         </Link>
       ) : (
         <div />
@@ -62,11 +62,10 @@ export const Pager: FC<{slug: string[]}> = async ({slug}) => {
             buttonVariants({
               variant: 'ghost',
             }),
-            ' justify-self-end py-12 flex gap-x-4 md:gap-x-6 items-center w-full md:w-80 px-4 md:px-5 border-2 border-transparent text-base leading-base  flex-row-reverse justify-end text-end'
+            ' justify-self-end py-12 flex gap-x-4 md:gap-x-6 items-center w-full md:w-80 px-4 md:px-5 border-2 border-transparent text-base leading-base  flex-row justify-end text-end'
           )}
           href={next.href}
         >
-          <CaretRightIcon className="w-5 h-5 text-link dark:text-link-dark" />
           <span>
             <span className="block no-underline text-sm tracking-wide text-secondary dark:text-secondary-dark uppercase font-bold group-focus:text-link dark:group-focus:text-link-dark group-focus:text-opacity-100">
               Next
@@ -75,6 +74,7 @@ export const Pager: FC<{slug: string[]}> = async ({slug}) => {
               {nextDoc?.lessonType}: {next.title}
             </span>
           </span>
+          <CaretRightIcon className="w-5 h-5 text-link dark:text-link-dark" />
         </Link>
       ) : (
         <div />
