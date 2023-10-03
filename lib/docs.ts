@@ -9,6 +9,7 @@
 
 import {type Doc, allDocs} from 'contentlayer/generated'
 import type {NavItem} from './types'
+import {isEmpty} from 'lodash'
 
 /**
  * Get doc from slug
@@ -115,16 +116,27 @@ export function findPrev(toc: NavItem, href: string): NavItem | null {
  */
 export function findNext(toc: NavItem, href: string): NavItem | null {
   const parent = findParentNavItemInToc(toc, href)
+  const me = findNavItemInToc(toc, href)
 
-  if (!parent) {
+  // no next if i couldn't find myself
+  if (!me) {
     return null
   }
 
-  if (parent.items) {
+  // if no parent choose my first items
+  if (!parent && isEmpty(me.items)) {
+    return null
+  } else if (!parent && !isEmpty(me.items)) {
+    return me.items[0]
+  }
+
+  // if i do have a parent find my next brother
+  if (parent) {
     const myIndex = parent.items.findIndex(item => item.href === href)
     if (myIndex === parent.items.length - 1) {
-      return findNext(toc, parent.href)
+      return findNext(toc, parent?.href)
     }
     return parent.items[myIndex + 1]
   }
+  return null
 }

@@ -22,6 +22,12 @@ export const Doc = defineDocumentType(() => ({
       required: true,
     },
 
+    lessonType: {
+      type: 'string',
+      required: false,
+      default: 'lesson',
+    },
+
     // 1280 X 720 image of the lesson: used for youtube thumbnail, and social media sharing
     imageBig: {
       type: 'string',
