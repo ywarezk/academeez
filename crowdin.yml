@@ -8,5 +8,5 @@ preserve_hierarchy: true
 files:
   - source: /messages/en.json
     translation: /messages/%two_letters_code%.json
-  - source: /content/en/**/*.mdx
-    translation: /content/%two_letters_code%/**/*.mdx
+  - source: /content/en/**/.*\.mdx
+    translation: /content/%two_letters_code%/**/.*\.mdx
