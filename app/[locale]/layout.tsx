@@ -33,7 +33,7 @@ type LocaleLayoutProps = {
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
+    template: `${siteConfig.name} | %s`,
   },
   description: siteConfig.description,
   keywords: ['Next.js', 'React', 'Angular', 'Node.js', 'Typescript', 'Javascript', 'HTML', 'CSS'],

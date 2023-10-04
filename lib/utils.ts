@@ -27,8 +27,8 @@ export function generateMetadata(title: string, description: string, image: stri
     title,
     description,
     openGraph: {
-      title: title,
-      description: description,
+      title,
+      description,
       type: 'article',
       url: `https://www.academeez.com/${path}`,
       images: [
@@ -42,8 +42,8 @@ export function generateMetadata(title: string, description: string, image: stri
     },
     twitter: {
       card: 'summary_large_image',
-      title: title,
-      description: description,
+      title,
+      description,
       images: [image],
       creator: '@academeez',
     },
