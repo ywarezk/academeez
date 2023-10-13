@@ -1,0 +1,19 @@
+---
+title: NGRX State
+description: Facts you need to know about the state that is managed by NGRX.
+imageBig: ''
+lessonType: 'Lesson'
+---
+
+`NGRX` is a **STATE** management library, in this lesson we will learn the basic rules about the state that is managed by `NGRX`.
+
+## About NGRX State
+
+The state in an `Object` that `NGRX` holds.  
+Components can choose to subscribe to state change, and get notified when the state is changing, they will then render the UI with the new data.  
+Components can also tell `NGRX` to replace the state with a new state, so a state can always be replaced with a new state.  
+We can look at the state as the data snapshot at a certain time point, and NGRX holds the current present state.
+
+## Counter app example
+
+Let's examine the state in this simple counter app:
