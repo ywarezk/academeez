@@ -17,3 +17,16 @@ We can look at the state as the data snapshot at a certain time point, and NGRX 
 ## Counter app example
 
 Let's examine the state in this simple counter app:
+
+![counter app](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/state/state.gif?raw=true)
+
+The app will increase the counter every button click.  
+The counter value is taken from `NGRX`.  
+Using [Redux Dev Tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) we can examine the state the `NGRX` holding at the right side of the screen.  
+Notice that the state is a simple object that looks like so:
+
+```json
+{
+  "counter": 0
+}
+```
