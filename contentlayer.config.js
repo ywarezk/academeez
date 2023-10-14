@@ -111,8 +111,9 @@ export default makeSource({
         rehypePrettyCode,
         {
           getHighlighter: async () => {
-            const theme = await loadTheme(path.join(process.cwd(), '/lib/themes/dark.json'))
-            return await getHighlighter({theme})
+            const theme = await loadTheme(path.join(process.cwd(), '/node_modules/shiki/themes/github-dark.json'))
+            // type Theme = 'css-variables' | 'dark-plus' | 'dracula-soft' | 'dracula' | 'github-dark-dimmed' | 'github-dark' | 'github-light' | 'hc_light' | 'light-plus' | 'material-theme-darker' | 'material-theme-lighter' | 'material-theme-ocean' | 'material-theme-palenight' | 'material-theme' | 'min-dark' | 'min-light' | 'monokai' | 'nord' | 'one-dark-pro' | 'poimandres' | 'rose-pine-dawn' | 'rose-pine-moon' | 'rose-pine' | 'slack-dark' | 'slack-ochin' | 'solarized-dark' | 'solarized-light' | 'vitesse-dark' | 'vitesse-light';
+            return await getHighlighter({theme: 'css-variables'})
           },
           onVisitLine(node) {
             // Prevent lines from collapsing in `display: grid` mode, and allow empty

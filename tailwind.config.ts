@@ -20,7 +20,7 @@ const config: Config = {
         green: '#01D662',
       },
       fontSize: {
-        sm: ['0.8125rem', {lineHeight: undefined}],
+        sm: ['0.875rem', {lineHeight: undefined}],
 
         base: ['0.938rem', {lineHeight: undefined}],
         lg: ['1.0625rem', {lineHeight: '30px'}],
