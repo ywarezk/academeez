@@ -74,6 +74,19 @@ export default async function Page({params}: PageProps) {
                 <Balancer>{doc.description}</Balancer>
               </p>
             )}
+
+            {doc.video && (
+              <iframe
+                className="mx-auto mt-12"
+                width="560"
+                height="315"
+                src={doc.video}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
+            )}
           </div>
           <div className="pb-12 pt-8">
             <Mdx code={doc.body.code} />

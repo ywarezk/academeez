@@ -21,8 +21,8 @@ export const VideoBar: FC<{params: Params}> = async ({params}) => {
   }
 
   return (
-    <div className="-mt-16 hidden lg:max-w-xs 2xl:block">
-      <nav className="pt-16 sticky top-0 end-0">
+    <div className="-mt-16">
+      <nav className="pt-16 sticky top-0 end-0 pr-5">
         <Mdx code={video.body.code} />
       </nav>
     </div>

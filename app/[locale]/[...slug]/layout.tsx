@@ -16,7 +16,7 @@ export default async function LessonLayout({children, params}: PropsWithChildren
   unstable_setRequestLocale(params.locale);
   return (
     <div>
-      <div className="grid grid-cols-[20rem_auto_20rem]">
+      <div className="grid grid-cols-[20rem_auto_30rem]">
         <TocBar slug={params.slug} />
         {children}
       </div>
