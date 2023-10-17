@@ -1,0 +1,47 @@
+---
+title: NGRX State
+description: Facts you need to know about the state that is managed by NGRX.
+imageBig: ""
+lessonType: Lesson
+---
+
+`NGRX` is a **STATE** management library, in this lesson we will learn the basic rules about the state that is managed by `NGRX`.
+
+## About NGRX State
+
+The state in an `Object` that `NGRX` holds.\
+Components can choose to subscribe to state change, and get notified when the state is changing, they will then render the UI with the new data.\
+Components can also tell `NGRX` to replace the state with a new state, so a state can always be replaced with a new state.\
+We can look at the state as the data snapshot at a certain time point, and NGRX holds the current present state.
+
+## Counter app example
+
+Let's examine the state in this simple counter app:
+
+![counter app](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/state/state.gif?raw=true)
+
+The app will increase the counter every button click.\
+The counter value is taken from `NGRX`.\
+Using [Redux Dev Tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) we can examine the state the `NGRX` holding at the right side of the screen.\
+From that simple state we can understand a few facts about the state that is managed by `NGRX`, which is rules that are also derived from the base of `Redux` which `NGRX` is an implementation of.
+
+## State has an initial value
+
+Notice that the state is a simple object that looks like so:
+
+```json
+{
+  "counter": 0
+}
+```
+
+That object starts with an initial value of 0.\
+`NGRX` state has an initial value that we will have to supply when we configure `NGRX` (Same with `Redux` we have to supply the initial value of the state)
+
+## State is an Object
+
+Our state is a simple `Javascript` `Object`
+
+## Recommendation: State should be serializable
+
+## State is immutable
