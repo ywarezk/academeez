@@ -7,28 +7,28 @@
  * @license MIT
  */
 
-import '@/styles/globals.css'
-import {Inter} from 'next/font/google'
-import {Nav} from './Nav'
-import {cn} from '@/lib'
-import type {ReactNode} from 'react'
-import {notFound} from 'next/navigation'
-import {locales, SupportedLocales} from '@/lib'
-import {Analytics} from '@vercel/analytics/react'
-import {unstable_setRequestLocale} from 'next-intl/server'
-import type {Metadata} from 'next'
-import {siteConfig} from '@/config/site'
+import '@/styles/globals.css';
+import {Inter} from 'next/font/google';
+import {Nav} from './Nav';
+import {cn} from '@/lib';
+import type {ReactNode} from 'react';
+import {notFound} from 'next/navigation';
+import {locales, SupportedLocales} from '@/lib';
+import {Analytics} from '@vercel/analytics/react';
+import {unstable_setRequestLocale} from 'next-intl/server';
+import type {Metadata} from 'next';
+import {siteConfig} from '@/config/site';
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   weight: ['300', '400', '500', '700'],
-})
+});
 
 type LocaleLayoutProps = {
-  children: ReactNode
-  params: {locale: SupportedLocales}
-}
+  children: ReactNode;
+  params: {locale: SupportedLocales};
+};
 
 export const metadata: Metadata = {
   title: {
@@ -77,29 +77,29 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
   manifest: `${siteConfig.url}/manifest.webmanifest`,
-}
+};
 
 export async function generateStaticParams() {
-  return Object.keys(locales).map(locale => ({locale}))
+  return Object.keys(locales).map(locale => ({locale}));
 }
 
 export default function LocaleLayout({children, params: {locale}}: LocaleLayoutProps) {
-  const dir = locales[locale]
+  const dir = locales[locale];
 
   // check if the local is valid, and if not redirect to notFound()
   if (!dir) {
-    return notFound()
+    return notFound();
   }
 
-  unstable_setRequestLocale(locale)
+  unstable_setRequestLocale(locale);
 
   return (
     <html lang={locale} dir={dir}>
-      <body className={cn(inter.variable, 'font-sans leading-base')}>
+      <body className={cn(inter.variable, 'font-sans leading-base antialiased font-medium')}>
         <Nav />
         <div className="mx-auto mt-8">{children}</div>
         <Analytics />
       </body>
     </html>
-  )
+  );
 }

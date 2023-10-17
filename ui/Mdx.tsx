@@ -74,21 +74,34 @@ export const components: MDXComponents = {
   ),
   li: ({className, ...props}: React.HTMLAttributes<HTMLElement>) => <li className={cn('mt-2', className)} {...props} />,
   pre: ({className, style, __rawString__, ...props}: any) => {
-    console.log(__rawString__);
+    const fileExtension = {
+      javascript: 'js',
+      typescript: 'ts',
+      json: 'json',
+      bash: 'sh',
+    } as const;
+
+    const ext = fileExtension[props['data-language'] as keyof typeof fileExtension];
+
+    console.log(props['data-language']);
     return (
-      <ui.Card className="mt-5">
+      <ui.Card className="mt-5 text-sm">
         <ui.CardContent className="pt-6">
-          <CodeEditor readOnly code={__rawString__} wrapContent={__rawString__} initMode="immediate" />
+          <CodeEditor
+            showTabs={false}
+            files={{
+              [`index.${ext}`]: {
+                code: __rawString__.trim(),
+                active: true,
+                readOnly: true,
+              },
+            }}
+            readOnly
+            initMode="immediate"
+          />
         </ui.CardContent>
       </ui.Card>
     );
-    // return (
-    //   <ui.Card className="mt-5">
-    //     <ui.CardContent className="pt-6">
-    //       <pre className={cn('max-h-[650px] overflow-x-auto rounded-lg bg-white', className)} {...props} />
-    //     </ui.CardContent>
-    //   </ui.Card>
-    // )
   },
   code: ({className, ...props}: React.HTMLAttributes<HTMLElement>) => (
     <code className={cn('relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm', className)} {...props} />

@@ -7,19 +7,19 @@
  * @license MIT
  */
 
-import {TocBar} from './TocBar'
-import type {PropsWithChildren} from 'react'
-import {unstable_setRequestLocale} from 'next-intl/server'
-import '@/styles/mdx.css'
+import {TocBar} from './TocBar';
+import type {PropsWithChildren} from 'react';
+import {unstable_setRequestLocale} from 'next-intl/server';
+import '@/styles/mdx.css';
 
 export default async function LessonLayout({children, params}: PropsWithChildren<{params: any}>) {
-  unstable_setRequestLocale(params.locale)
+  unstable_setRequestLocale(params.locale);
   return (
     <div>
-      <div className="flex">
+      <div className="grid grid-cols-[20rem_auto_20rem]">
         <TocBar slug={params.slug} />
         {children}
       </div>
     </div>
-  )
+  );
 }

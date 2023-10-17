@@ -7,22 +7,22 @@
  * @license MIT
  */
 
-import type {Doc} from 'contentlayer/generated'
-import {notFound} from 'next/navigation'
-import {Mdx} from '@/ui'
-import {VideoBar} from './VideoBar'
-import {cn, getDocFromSlug, getDocsArrayFromSlug} from '@/lib'
-import {Breadcrumbs} from './Breadcrumbs'
-import {generateMetadata as genericGenerateMetadata} from '@/lib'
-import {unstable_setRequestLocale} from 'next-intl/server'
-import Balancer from 'react-wrap-balancer'
-import {Pager} from './Pager'
+import type {Doc} from 'contentlayer/generated';
+import {notFound} from 'next/navigation';
+import {Mdx, ScrollArea} from '@/ui';
+import {VideoBar} from './VideoBar';
+import {cn, getDocFromSlug, getDocsArrayFromSlug} from '@/lib';
+import {Breadcrumbs} from './Breadcrumbs';
+import {generateMetadata as genericGenerateMetadata} from '@/lib';
+import {unstable_setRequestLocale} from 'next-intl/server';
+import Balancer from 'react-wrap-balancer';
+import {Pager} from './Pager';
 
 interface PageProps {
   params: {
-    slug: string[]
-    locale: string
-  }
+    slug: string[];
+    locale: string;
+  };
 }
 
 /**
@@ -31,19 +31,19 @@ interface PageProps {
  * @param param0
  */
 export function generateMetadata({params}: PageProps) {
-  const docs: Doc[] = getDocsArrayFromSlug(params.slug, params.locale)
-  const currentDoc = docs[docs.length - 1]
+  const docs: Doc[] = getDocsArrayFromSlug(params.slug, params.locale);
+  const currentDoc = docs[docs.length - 1];
 
   if (!currentDoc) {
-    return {}
+    return {};
   }
 
   // calculate the title
   // the genericGenerateData
   // and all the ancestors title
-  const title = docs.reduce((acc, doc, index) => (index === 0 ? doc.title : `${acc} | ${doc.title}`), '')
+  const title = docs.reduce((acc, doc, index) => (index === 0 ? doc.title : `${acc} | ${doc.title}`), '');
 
-  return genericGenerateMetadata(title, currentDoc.description, currentDoc.imageBig, currentDoc.slug)
+  return genericGenerateMetadata(title, currentDoc.description, currentDoc.imageBig, currentDoc.slug);
 }
 
 /**
@@ -53,18 +53,18 @@ export function generateMetadata({params}: PageProps) {
  * @returns
  */
 export default async function Page({params}: PageProps) {
-  const doc = await getDocFromSlug(params.slug, params.locale)
+  const doc = await getDocFromSlug(params.slug, params.locale);
 
   if (!doc) {
-    notFound()
+    notFound();
   }
 
-  unstable_setRequestLocale(params.locale)
+  unstable_setRequestLocale(params.locale);
 
   return (
     <>
-      <main className="flex-grow flex justify-center">
-        <article className="pb-12 pt-8 flex-1 px-5 max-w-4xl">
+      <main className="min-w-0 isolate px-5">
+        <article className="pb-12 pt-8 flex-1 px-5 max-w-4xl mx-auto">
           <Breadcrumbs slug={params.slug} />
 
           <div className="my-4">
@@ -84,5 +84,5 @@ export default async function Page({params}: PageProps) {
       </main>
       <VideoBar params={params} />
     </>
-  )
+  );
 }

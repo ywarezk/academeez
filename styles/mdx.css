@@ -69,3 +69,11 @@
 .mdx > .steps:first-child > h3:first-child {
   @apply mt-0;
 }
+
+[data-rehype-pretty-code-fragment] .sp-read-only {
+  display: none;
+}
+
+[data-rehype-pretty-code-fragment] .cm-line {
+  font-size: 0.875rem;
+}
