@@ -16,8 +16,8 @@ const toc: NavItem = {
     title: 'NGRX',
     href: '/en/course/angular/ngrx',
     items: [{
-      title: 'Installing NGRX',
-      href: '/en/course/angular/ngrx/installation',
+      title: 'NGRX State',
+      href: '/en/course/angular/ngrx/state',
       items: []
     }]
   }]
