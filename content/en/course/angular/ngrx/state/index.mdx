@@ -42,6 +42,107 @@ That object starts with an initial value of 0.
 
 Our state is a simple `Javascript` `Object`
 
+## State is immutable
+
+Our state is starting with:
+
+```json
+{
+  "couter": 0
+}
+```
+
+and after the user is clicking the _+ Increment_ button, the state is changing to:
+
+```json
+{
+  "couter": 1
+}
+```
+
+When we examine this state, one might think that the state is mutable, but it's not.  
+It's not like we are changing the value of the `counter` property, we are actually replacing the entire state with a new state.  
+To explain with psuedo code:
+
+```javascript
+// lets imaging we have the following imaginary function from ngrx
+import {getState, setState} from '@ngrx/store';
+
+/**
+ * this is an imaginary function called from pressing the increment button
+ */
+function increment() {
+  const currentState = getState();
+
+  // we are not doing
+  // currentState['counter'] = currentState['counter'] + 1
+
+  // we are doing
+  const newState = {
+    ...currentState,
+    counter: currentState.counter + 1,
+  };
+  setState(newState);
+}
+```
+
+In this example we have a function to get the current state, and a function to set a new state.  
+We are not changing the `counter` key in the current state, rather we are constructing a new state object from scratch, by copying the current state, and overriding the `counter` property with a new value (In this simple example since the counter is the only key, we don't even have to use the spread operator, but usually the state has more keys then that and then the spread operator becomes handy).
+
+The state in `NGRX` is immutable, we can use the spread operator to copy values that stay the same, while overriding fields we want to change.
+
 ## Recommendation: State should be serializable
 
-## State is immutable
+Serialized object means that we can convert the object to a string, and then convert the string back to an object, and get a similar object.  
+A good trick to check if an object is serializable or not is to use `JSON.stringify` and `JSON.parse` and see if we get the same object back.  
+For example:
+
+```javascript
+// this is an example of a serializable object
+const obj = {
+  name: 'Yariv',
+  age: 37,
+  myBooks: [
+    {
+      title: 'The Hobbit',
+      author: 'J.R.R Tolkien',
+    },
+  ],
+};
+
+const objString = JSON.stringify(obj);
+const objFromString = JSON.parse(objString);
+
+console.log(objFromString); // this will return the same obj
+```
+
+In this example we took an object, converted it to a string, and then converted the string back to an object, and we got the same object back.
+
+Here's an example of a non serializable object:
+
+```typescript
+class Book {
+  constructor(public title: string, public author: string) {}
+}
+
+const obj = {
+  name: 'Yariv',
+  age: 37,
+  myFunctions: [function hello() {}],
+};
+
+const objString = JSON.stringify(obj);
+const objFromString = JSON.parse(objString);
+
+console.log(objFromString); // this will return an object without the functions in the array
+```
+
+so basically an object that is created from simple primitives (string, number, boolean) and arrays and objects that are created from simple primitives is serializable.
+
+It's only a recommendation and you can use `NGRX` to store functions, classes, etc... but things like: time travel, storing the state of the user to restore him to the same state, will probably not work as good.
+
+## State should be organized
+
+The state is not a global variable that you throw all your data into. I'm guessing the before `NGRX` you stored your application data using `Services`, in that case you didn't create a single `Service` to store all the data, you created a `Service` according to a certain logic. If you had `User` information, you probably created a `UserService` to store the user data along with certain methods like grabbing the user from server, updating the user, and other.  
+The same rule is applied here, you should organize your state according to the logic of your application.  
+Let's examine the following example:
