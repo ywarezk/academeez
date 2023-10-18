@@ -82,8 +82,6 @@ export const components: MDXComponents = {
     } as const;
 
     const ext = fileExtension[props['data-language'] as keyof typeof fileExtension];
-
-    console.log(props['data-language']);
     return (
       <ui.Card className="mt-5 text-sm">
         <ui.CardContent className="pt-6">

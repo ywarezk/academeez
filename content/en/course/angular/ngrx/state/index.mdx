@@ -91,6 +91,8 @@ We are not changing the `counter` key in the current state, rather we are constr
 
 The state in `NGRX` is immutable, we can use the spread operator to copy values that stay the same, while overriding fields we want to change.
 
+## We can look at the state change with RXJS lens
+
 ## Recommendation: State should be serializable
 
 Serialized object means that we can convert the object to a string, and then convert the string back to an object, and get a similar object.  
@@ -147,4 +149,29 @@ The state is not a global variable that you throw all your data into. I'm guessi
 The same rule is applied here, you should organize your state according to the logic of your application.  
 Let's examine the following example:
 
-## We can look at the state change with RXJS lens
+![counter app](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/state/state-organized.gif?raw=true)
+
+Notice that in this example the state looks like so:
+
+```json
+{
+  "user": {
+    "firstName": "Yariv",
+    "lastName": "Katz",
+    "avatar": "..."
+  },
+  "books": {
+    list: [
+      {
+        "title": "The Hobbit",
+        "author": "J.R.R Tolkien"
+        "year": "1937"
+      }
+    ]
+  }
+}
+```
+
+Notice how the state is organized according to the logic of the application. In addition the state organization is also enforced with an `Interface`.
+
+## State can be lazy loaded / removed
