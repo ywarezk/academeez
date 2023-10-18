@@ -93,6 +93,11 @@ The state in `NGRX` is immutable, we can use the spread operator to copy values 
 
 ## We can look at the state change with RXJS lens
 
+There is a `Service` in the `NGRX` main package called <Link href="/en/course/angular/ngrx/store">Store</Link> which we will discuss in future lesson.  
+We can look at this `Service` as an `Observable` that emits the state every time the state is changing.
+
+![state as observable](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/state/state-rxjs.gif?raw=true)
+
 ## Recommendation: State should be serializable
 
 Serialized object means that we can convert the object to a string, and then convert the string back to an object, and get a similar object.  
@@ -149,7 +154,7 @@ The state is not a global variable that you throw all your data into. I'm guessi
 The same rule is applied here, you should organize your state according to the logic of your application.  
 Let's examine the following example:
 
-![counter app](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/state/state-organized.gif?raw=true)
+![books app](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/state/state-organized.gif?raw=true)
 
 Notice that in this example the state looks like so:
 
@@ -175,3 +180,45 @@ Notice that in this example the state looks like so:
 Notice how the state is organized according to the logic of the application. In addition the state organization is also enforced with an `Interface`.
 
 ## State can be lazy loaded / removed
+
+Take another look at the books app:
+
+![books app](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/state/state-organized.gif?raw=true)
+
+Notice that the state is starting with:
+
+```json
+{
+  "user": null
+}
+```
+
+and only after the user logs in do we have the books in the state:
+
+```json
+{
+  "user": {
+    "firstName": "Yariv",
+    "lastName": "Katz",
+    "avatar": "..."
+  },
+  "books": {
+    list: [
+      {
+        "title": "The Hobbit",
+        "author": "J.R.R Tolkien"
+        "year": "1937"
+      }
+    ]
+  }
+}
+```
+
+just like we have lazy loaded modules, usually those lazy loaded module load their state in a lazy fashion.  
+This means that our state can grow and shrink according to the data we currently need.
+
+## Summary
+
+In this lesson we learned the basic rules about the state that is managed by `NGRX`.  
+Probably the most important rule that you need to take with you to the next lessons, is the fact that the state is `immutable`.  
+Let's take all this info to the next lesson where we will learn about the `Service` that holds the state - The `Store`

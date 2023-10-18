@@ -7,8 +7,8 @@
  * @license MIT
  */
 
-import {NavItem} from '@/lib'
-import {AngularIcon} from '@/ui/icons'
+import {NavItem} from '@/lib';
+import {AngularIcon} from '@/ui/icons';
 
 const toc: NavItem = {
   title: 'Angular',
@@ -20,13 +20,13 @@ const toc: NavItem = {
       href: '/en/course/angular/ngrx',
       items: [
         {
-          title: 'Installing NGRX',
-          href: '/en/course/angular/ngrx/installation',
+          title: 'NGRX State',
+          href: '/en/course/angular/ngrx/state',
           items: [],
         },
       ],
     },
   ],
-}
+};
 
-export default toc
+export default toc;
