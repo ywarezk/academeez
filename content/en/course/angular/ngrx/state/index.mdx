@@ -146,3 +146,5 @@ It's only a recommendation and you can use `NGRX` to store functions, classes, e
 The state is not a global variable that you throw all your data into. I'm guessing the before `NGRX` you stored your application data using `Services`, in that case you didn't create a single `Service` to store all the data, you created a `Service` according to a certain logic. If you had `User` information, you probably created a `UserService` to store the user data along with certain methods like grabbing the user from server, updating the user, and other.  
 The same rule is applied here, you should organize your state according to the logic of your application.  
 Let's examine the following example:
+
+## We can look at the state change with RXJS lens
