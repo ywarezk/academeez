@@ -25,6 +25,10 @@ The counter value is taken from `NGRX`.\
 Using [Redux Dev Tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) we can examine the state the `NGRX` holding at the right side of the screen.\
 From that simple state we can understand a few facts about the state that is managed by `NGRX`, which is rules that are also derived from the base of `Redux` which `NGRX` is an implementation of.
 
+## State is an Object
+
+Our state is a simple `Javascript` `Object`
+
 ## State has an initial value
 
 Notice that the state is a simple object that looks like so:
@@ -37,10 +41,6 @@ Notice that the state is a simple object that looks like so:
 
 That object starts with an initial value of 0.\
 `NGRX` state has an initial value that we will have to supply when we configure `NGRX` (Same with `Redux` we have to supply the initial value of the state)
-
-## State is an Object
-
-Our state is a simple `Javascript` `Object`
 
 ## State is immutable
 
