@@ -14,6 +14,9 @@ import Link from 'next/link';
 import * as icons from './icons';
 import * as ui from '@/ui';
 import {CodeEditor} from './CodeEditor';
+import {Sandpack} from './Sandpack';
+import {SandpackProps} from '@codesandbox/sandpack-react';
+import {CopyButton} from './copy-button';
 
 export const components: MDXComponents = {
   h1: ({className, ...props}: React.HTMLAttributes<HTMLHeadingElement>) => (
@@ -78,25 +81,42 @@ export const components: MDXComponents = {
       javascript: 'js',
       typescript: 'ts',
       json: 'json',
-      bash: 'sh',
     } as const;
 
     const ext = fileExtension[props['data-language'] as keyof typeof fileExtension];
+
+    if (!ext) {
+      return (
+        <>
+          <pre
+            className={cn(
+              'mb-4 mt-6 max-h-[650px] overflow-x-auto rounded-lg border bg-zinc-950 py-4 dark:bg-zinc-900',
+              className
+            )}
+            {...props}
+          />
+          <CopyButton className="absolute right-4 top-4" value={__rawString__} />
+        </>
+      );
+    }
+
     return (
       <ui.Card className="mt-5 text-sm">
         <ui.CardContent className="pt-6">
-          <CodeEditor
-            showTabs={false}
-            files={{
-              [`index.${ext}`]: {
-                code: __rawString__.trim(),
-                active: true,
-                readOnly: true,
-              },
-            }}
-            readOnly
-            initMode="immediate"
-          />
+          {ext && (
+            <CodeEditor
+              showTabs={false}
+              files={{
+                [`index.${ext}`]: {
+                  code: __rawString__.trim(),
+                  active: true,
+                  readOnly: true,
+                },
+              }}
+              readOnly
+              initMode="immediate"
+            />
+          )}
         </ui.CardContent>
       </ui.Card>
     );
@@ -107,6 +127,9 @@ export const components: MDXComponents = {
   icons,
   ui,
   Link,
+  Sandpack: (props: SandpackProps) => {
+    return <Sandpack {...props} />;
+  },
 };
 
 interface MdxProps {

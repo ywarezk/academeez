@@ -24,7 +24,7 @@
   box-decoration-break: clone;
 }
 
-[data-rehype-pretty-code-fragment] .line {
+[data-rehype-pretty-code-fragment] .line, [data-rehype-pretty-code-fragment] [data-line] {
   @apply px-4 min-h-[1rem] py-0.5 w-full inline-block;
 }
 

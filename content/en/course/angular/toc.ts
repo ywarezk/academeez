@@ -24,6 +24,11 @@ const toc: NavItem = {
           href: '/en/course/angular/ngrx/state',
           items: [],
         },
+        {
+          title: 'Installing @ngrx/store',
+          href: '/en/course/angular/ngrx/installing-ngrx-store',
+          items: [],
+        },
       ],
     },
   ],
