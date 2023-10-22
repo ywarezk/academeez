@@ -1,0 +1,43 @@
+---
+title: Installing @ngrx/store
+description: Create a new Angular application and install @ngrx/store.
+imageBig: ""
+---
+
+In the following coding exercise we will do the following:
+
+-   Create a new Angular application
+-   Install `@ngrx/store`
+-   Install `@ngrx/store-devtools`
+-   Install Redux DevTools Chrome extension
+-   Populate the state with some data
+-   Inspect the state using Redux DevTools
+
+We will cover here the starting point of combining Angular and NGRX, including some recommended tools and best practices you should use.
+
+<Steps>
+
+### Create a new Angular application
+
+You can start a new Angular application using the Angular CLI.
+
+```bash
+npx @angular/cli@latest new ngrx-store-install --minimal --style css --routing false
+```
+
+This will create a new angular application, the `--minimal` flag will create a minimal application with minimum files (`--inline-template`, `--skip-tests`, `--inline-style`).\
+We also choose to create the application with `css` style and without `routing`.
+
+### Install @ngrx/store
+
+Each of the `@ngrx/*` libraries has an `ng add` command that will install the library and add additional boilerplate code.
+
+In your angular application run the following:
+
+```bash
+npx ng add @ngrx/store@latest --skip-confirmation
+```
+
+Running this command will npm install `@ngrx/store` and also add the following change to `src/app/app.module.ts`:
+
+</Steps>
