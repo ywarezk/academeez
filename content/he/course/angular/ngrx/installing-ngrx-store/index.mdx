@@ -40,4 +40,20 @@ npx ng add @ngrx/store@latest --skip-confirmation
 
 Running this command will npm install `@ngrx/store` and also add the following change to `src/app/app.module.ts`:
 
+![app.module.ts changes](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/installing-ngrx-store/ng-add-store-change.png?raw=true)
+
+Notice that `NGRX` `StoreModule.forRoot({}, {})` is added to the `imports` array with empty objects, which mean we will have an empty state in `NGRX`.
+
+### Install @ngrx/store-devtools
+
+It's recommended that on `Angular+NGRX` applications, you will work with `@ngrx/store-devtools` which will allow you to inspect the state of your application.
+
+```bash
+npx ng add @ngrx/store-devtools@latest --skip-confirmation
+```
+
+Running this command will npm install `@ngrx/store-devtools` and also add the following change to `src/app/app.module.ts`:
+
+![app.module.ts changes](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/installing-ngrx-store/ng-add-devtools-change.png?raw=true)
+
 </Steps>
