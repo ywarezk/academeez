@@ -8,7 +8,7 @@
  */
 
 export * from './Card';
-export * from './mdx';
+export * from './mdx1';
 export * from './HoverCard';
 export * from './ScrollArea';
 export * from './Collapsible';
