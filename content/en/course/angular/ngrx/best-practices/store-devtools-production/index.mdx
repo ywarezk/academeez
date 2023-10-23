@@ -1,0 +1,59 @@
+---
+title: 'Best Practice: Remove `@ngrx/store-devtools` in production'
+description: If you are using `@ngrx/store-devtools` in your application, you should remove it in production.
+imageBig: ''
+---
+
+In production `@ngrx/store-devtools` should be completly removed from the bundle.  
+Let's see an example:
+
+<Steps>
+
+### Start a new angular application
+
+```bash
+npx @angular/cli@latest new ngrx-remove-devtools --style css --routing false --minimal
+```
+
+### Install `@ngrx/store` and `@ngrx/store-devtools`
+
+```bash
+cd ngrx-remove-devtools
+npx ng add @ngrx/store --skip-confirmation
+npx ng add @ngrx/store-devtools@latest --skip-confirmation
+```
+
+### Populate your state
+
+```typescript title="app.module.ts"
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    StoreModule.forRoot(
+      {
+        counter: () => 0,
+      },
+      {}
+    ),
+    StoreDevtoolsModule.instrument({maxAge: 25, logOnly: !isDevMode()}),
+  ],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+
+```
+
+### Examine the state
+
+If you have the [Redux dev tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) installed you can now examine your state.
+
+```bash
+ng serve
+```
+
+![Redux dev tools]()
+
+
+</Steps>

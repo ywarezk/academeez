@@ -1,4 +1,4 @@
-import type {Config} from 'tailwindcss'
+import type {Config} from 'tailwindcss';
 // const {fontFamily} = require('tailwindcss/defaultTheme');
 
 const config: Config = {
@@ -18,6 +18,9 @@ const config: Config = {
       },
       backgroundColor: {
         green: '#01D662',
+      },
+      textColor: {
+        green: 'rgb(43 110 98)',
       },
       fontSize: {
         sm: ['0.875rem', {lineHeight: undefined}],
@@ -75,5 +78,5 @@ const config: Config = {
       },
     },
   },
-}
-export default config
+};
+export default config;

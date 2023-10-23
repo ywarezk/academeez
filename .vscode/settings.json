@@ -1,0 +1,4 @@
+{
+	// disable auto format on save on mdx files
+	"editor.formatOnSave": false,
+}

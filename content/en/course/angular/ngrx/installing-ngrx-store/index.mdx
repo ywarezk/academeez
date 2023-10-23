@@ -54,6 +54,14 @@ npx ng add @ngrx/store-devtools@latest --skip-confirmation
 
 Running this command will npm install `@ngrx/store-devtools` and also add the following change to `src/app/app.module.ts`:
 
-![app.module.ts changes](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/installing-ngrx-store/ng-add-devtools-change.png?raw=true)
+![app.module.ts changes](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/installing-ngrx-store/ng-add-devtools-change2.png?raw=true)
 
+Notice that `StoreDevtoolsModule.instrument()` is added to the `imports` array.
+
+<Callout className="mt-3 bg-green/5" title="Best Practice Tip">
+	
+	In production, it's best not to add the `StoreDevtoolsModule` to the imports array, in fact it's best to completly remove remove the `@ngrx/store-devtools` from the bundle.
+	
+</Callout>
+	
 </Steps>

@@ -17,6 +17,7 @@ import {CodeEditor} from './CodeEditor';
 import {Sandpack} from './Sandpack';
 import {SandpackProps} from '@codesandbox/sandpack-react';
 import {CopyButton} from './copy-button';
+import {Callout} from './callout';
 
 export const components: MDXComponents = {
   h1: ({className, ...props}: React.HTMLAttributes<HTMLHeadingElement>) => (
@@ -130,6 +131,7 @@ export const components: MDXComponents = {
   Sandpack: (props: SandpackProps) => {
     return <Sandpack {...props} />;
   },
+  Callout,
 };
 
 interface MdxProps {
