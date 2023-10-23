@@ -9,7 +9,7 @@
 
 import type {Doc} from 'contentlayer/generated';
 import {notFound} from 'next/navigation';
-import {Mdx, ScrollArea} from '@/ui';
+import {Mdx} from '@/ui';
 import {VideoBar} from './VideoBar';
 import {cn, getDocFromSlug, getDocsArrayFromSlug} from '@/lib';
 import {Breadcrumbs} from './Breadcrumbs';
