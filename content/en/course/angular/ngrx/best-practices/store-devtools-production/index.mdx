@@ -53,7 +53,72 @@ If you have the [Redux dev tools](https://chrome.google.com/webstore/detail/redu
 ng serve
 ```
 
-![Redux dev tools]()
+![Redux dev tools](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/best-practices/store-devtools-production/examine-state.png?raw=true)
 
+### Problem examine state in Production
+
+It's best to disable redux dev tools in production.
+
+```bash
+npx ng build
+cd dist/ngrx-remove-devtools
+npx http-server
+```
+
+Redux dev tools still works in production
+
+### Solution 1
+
+If on production do not place the `StoreDevtoolsModule.instrument` in the imports array.  
+
+```bash
+npx ng generate environments
+```
+
+add a `production` key to the environments files:
+
+```json title="src/environments/environment.development.ts"
+export const environment = {
+  production: false,
+};
+```
+
+```json title="src/environments/environment.ts"
+export const environment = {
+  production: true,
+};
+```
+
+```typescript title="app.module.ts"
+import {environment} from '../environments/environment';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    StoreModule.forRoot(
+      {
+        counter: () => 0,
+      },
+      {}
+    ),
+    !environment.production ? StoreDevtoolsModule.instrument({maxAge: 25, logOnly: !isDevMode()}) : [],
+  ],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
+
+### Problem
+
+`@ngrx/store-devtools` is still in the bundle
+
+```bash
+npx ng build --source-map
+npx source-map-explorer dist/ngrx-remove-devtools/main.4a92d461e97ce051.js
+```
+
+![source-map-explorer](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/best-practices/store-devtools-production/examine-bundle.png?raw=true)
 
 </Steps>
