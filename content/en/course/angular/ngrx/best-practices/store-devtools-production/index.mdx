@@ -121,4 +121,59 @@ npx source-map-explorer dist/ngrx-remove-devtools/main.4a92d461e97ce051.js
 
 ![source-map-explorer](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/best-practices/store-devtools-production/examine-bundle.png?raw=true)
 
+it will add around `16kb` of unused code to your bundle.
+
+### Replace app.module.ts
+
+We can achieve the same result with `fileReplacement`.  
+
+```typescript title="src/app/imports.common.ts"
+import {BrowserModule} from '@angular/platform-browser';
+import {StoreModule} from '@ngrx/store';
+
+export const commonImports = [
+  BrowserModule,
+  StoreModule.forRoot(
+    {
+      counter: () => 0,
+    },
+    {}
+  ),
+];
+```
+
+```typescript title="src/app/imports.development.ts"
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import {commonImports} from './imports.common';
+import {isDevMode} from '@angular/core';
+
+export const imports = [
+	...commonImports, 
+	StoreDevtoolsModule.instrument({maxAge: 25, logOnly: !isDevMode()})
+];
+```
+
+```typescript title="src/app/imports.ts"
+import {commonImports} from './imports.common';
+
+export const imports = [...commonImports];
+```
+
+```typescript title="src/app/app.module.ts"
+import {NgModule} from '@angular/core';
+import {AppComponent} from './app.component';
+import {imports} from './imports';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [...imports],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
+
 </Steps>
+
+`@ngrx/store-devtools` is completly removed from the bundle.  
+The source code is available here.
