@@ -1,21 +1,27 @@
 import {Alert, AlertDescription, AlertTitle} from './alert';
+import { CheckCircledIcon } from '@radix-ui/react-icons';
 
 interface CalloutProps {
-  icon?: string;
+  icon?: 'success';
   title?: string;
   children?: React.ReactNode;
 }
 
-export function Callout({title, children, icon, ...props}: CalloutProps) {
+export function Callout({title, children, icon = 'success', ...props}: CalloutProps) {
+  let Icon = <CheckCircledIcon className='h-8 w-8' />;
+  
   return (
     <Alert {...props}>
-      {icon && <span className="mr-4 text-2xl">{icon}</span>}
+      <div className="px-4 py-4">      
       {title && (
-        <AlertTitle>
-          <h3 className="text-2xl font-display font-bold text-green/80 dark:text-green-40">{title}</h3>
+        <AlertTitle className="text-2xl font-display font-bold text-green/80 dark:text-green-40 flex">
+          <span className="mr-4 text-2xl">{Icon}</span> {title}
         </AlertTitle>
       )}
-      <AlertDescription>{children}</AlertDescription>
+      <AlertDescription className='leading-base py-2'>
+        <p className='mt-4'>{children}</p>
+      </AlertDescription>
+      </div>
     </Alert>
   );
 }
