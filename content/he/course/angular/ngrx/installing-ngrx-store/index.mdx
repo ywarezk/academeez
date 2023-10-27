@@ -26,7 +26,27 @@ npx @angular/cli@latest new ngrx-store-install --minimal --style css --routing f
 ```
 
 This will create a new angular application, the `--minimal` flag will create a minimal application with minimum files (`--inline-template`, `--skip-tests`, `--inline-style`).\
-We also choose to create the application with `css` style and without `routing`.
+We also chose to create the application with `css` style and without `routing`.
+
+### OnPush
+
+with `NGRX` you will get the data as `Observable` which makes angular applications with `NGRX` ideal for `OnPush` change detection strategy (in all the components).\
+change the `app.component.ts` `changeDetection` to `OnPush`
+
+```typescript title="src/app/app.component.ts"
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+@Component({
+	...
+	changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class AppComponent {}
+```
+
+<Callout className="my-8 bg-green/5" title="Best Practice Tip">
+It's recommended to use `OnPush` on all components in your application, not just the root component.  
+Follow <Link className="text-green/80 underline" href="/en/course/angular/best-practices/onpush">this</Link> best practice tip to make angular cli generate `OnPush` components, as well as adding a lint rule to verify `OnPush` is set for all components
+</Callout>
 
 ### Install @ngrx/store
 
@@ -54,6 +74,13 @@ npx ng add @ngrx/store-devtools@latest --skip-confirmation
 
 Running this command will npm install `@ngrx/store-devtools` and also add the following change to `src/app/app.module.ts`:
 
-![app.module.ts changes](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/installing-ngrx-store/ng-add-devtools-change.png?raw=true)
+![app.module.ts changes](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/installing-ngrx-store/ng-add-devtools-change2.png?raw=true)
 
+Notice that `StoreDevtoolsModule.instrument()` is added to the `imports` array.
+
+<Callout className="my-8 bg-green/5" title="Best Practice Tip">
+In production, it's best not to add the `StoreDevtoolsModule` to the imports array, in fact it's best to completly remove the `@ngrx/store-devtools` from the bundle.  
+Check out our best practice tip <Link className="text-green/80 underline" href="/en/course/angular/ngrx/best-practices/store-devtools-production">here</Link>
+</Callout>
+	
 </Steps>
