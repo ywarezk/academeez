@@ -19,7 +19,7 @@ export function Callout({title, children, icon = 'success', ...props}: CalloutPr
         </AlertTitle>
       )}
       <AlertDescription className='leading-base py-2'>
-        <p className='mt-4'>{children}</p>
+        {children}
       </AlertDescription>
       </div>
     </Alert>

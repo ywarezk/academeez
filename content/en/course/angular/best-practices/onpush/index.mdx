@@ -1,0 +1,94 @@
+---
+title: OnPush in all components
+description: "Best practice tip: OnPush should be set on all components"
+imageBig: ''
+---
+
+If the user enters your site, and the site is sluggish and slow, the user will probably leave. We need to strive to make our web application as fast as possible. One way to speed you angular application is by using the `OnPush` change detection strategy on all components.  
+This best practice tip will force you to make all your components `OnPush`.
+
+<Steps>
+
+### Generate a new angular application
+
+```bash
+npx @angular/cli@latest new all-onpush --minimal --style css --routing false
+```
+
+### Angular cli is set to OnPush
+
+Problem: if you generate a component with Angular cli, it will not be set to `OnPush`.  
+Make sure every new component that is generated with the angular cli is set to `OnPush`.
+
+```json title="angular.json"
+...
+"@schematics/angular:component": {
+	...
+	"changeDetection": "OnPush"
+},
+...
+```
+
+### Add Lint
+
+Problem: if you remove the `OnPush` manually, or create a component without Angular cli, you might forget to set the `OnPush` change detection strategy. Lint can help you get a lint error on every component that is not set to `OnPush`.  
+Currently the `app.component.ts` is not set to `OnPush`, so let's install eslint to help us catch those problems.
+
+```bash
+npx ng lint
+```
+
+will install lint and running the same command again will show you the lint error.
+currently we have no lint errors, let's make lint error when we are not using `OnPush`.
+
+### Lint rule: @angular-eslint/prefer-on-push-component-change-detection
+
+We need to tell `ESLint` to watch for components that do not use `OnPush` and give us a lint error.
+
+```json title=".eslintrc.json
+"rules": {
+	"@angular-eslint/prefer-on-push-component-change-detection": [
+		"error"
+	],
+	...
+}
+```
+
+If you try and run lint again:
+
+```bash
+npx ng lint
+```
+
+you will see an error on the `app.component.ts` not using `OnPush`
+
+### Make sure your ci is running lint
+
+Configure your CI to run lint, so you will not be able to merge code that is not using `OnPush`.  
+In this example on every PR github actions will run `ng lint`.
+
+```yaml title=".github/workflows/lint.yml"
+name: Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm ci
+      - run: npx ng lint
+```
+
+</Steps>
+
+There is a significant performance boost when using `OnPush` change detection strategy, let's change all our components to use `OnPush`, and also enforce it with lint.
