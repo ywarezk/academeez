@@ -29,6 +29,11 @@ const toc: NavItem = {
           href: '/en/course/angular/ngrx/installing-ngrx-store',
           items: [],
         },
+        {
+          title: '@ngrx/store - data flow',
+          href: '/en/course/angular/ngrx/ngrx-store-data-flow',
+          items: [],
+        }
       ],
     },
   ],
