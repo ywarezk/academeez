@@ -18,7 +18,103 @@ This diagram does not represent the full diagram of `NGRX`, think of it as repre
 
 ## Store
 
-We will start by focusing on this part of the diagram:
+We will explore the diagram and start with the `Store`.
+The `Store` is a service that is provided by `@ngrx/store`.  
+Which means after you install `@ngrx/store` you can inject the `Store` service using [Angular's DI](https://angular.io/guide/dependency-injection-overview).
 
-![store and angular components](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/store-state-angular.png?raw=true)
+```bash
+npx ng add @ngrx/store@latest
+```
 
+```typescript title="some.component.ts"
+import {Component} from '@angular/core'
+import {Store} from '@ngrx/store'
+
+@Component({
+		selector: 'some-component',
+		...
+})
+export class SomeComponent {
+		constructor(private store: Store) {}
+}
+```
+
+In this example a component is asking for the `Store` service.
+
+There is a single `Store` service in the entire angular+ngrx application.
+The `Store` is holding the entire state of the application, where the main usage of the `Store` is:
+- Inject the `Store` service to read the state
+- Inject the `Store` change the state.
+
+## Reading the state
+
+An Angular component that is reading the state is represented in this part of the diagram:
+
+![@ngrx/store - data flow - reading the state](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/store-state-angular.png?raw=true)
+
+We can read the state by injecting the `Store` service and calling the `select` method.
+
+<div className="mt-5">
+<Sandpack 
+	customSetup={{ 
+		dependencies: { 
+			"@ngrx/store": "^16.3.0",
+			"@angular/core": "^16.2.0",
+			"@angular/platform-browser": "^16.2.0",
+			"@angular/platform-browser-dynamic": "^16.2.0",
+			"@angular/common": "^16.2.0",
+			"@angular/compiler": "^16.2.0"
+		}
+	}}
+	files={{
+		"src/app/app.module.ts": { code: `import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+
+import { AppComponent } from "./app.component";
+import { StoreModule } from "@ngrx/store";
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, StoreModule.forRoot({
+		counter: () => 42
+	}, {})],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+`, readOnly: true},
+		"src/app/app.component.ts": { code: `import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { State } from "./state";
+
+@Component({
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: "app-root",
+	template: \`<h1>Reading counter from state: {{ counter$ | async }}</h1>\`
+})
+export class AppComponent {
+	counter$ = this._store.select((state) => state.counter);
+	constructor(private _store: Store<State>){}
+}
+		`},
+	"src/app/state.ts": { readOnly: true, code: `export type State = {
+	counter: number;
+}
+	`}
+	}
+	}
+	template="angular" 
+/>
+</div>
+
+Note that when you `store.select` data from the state, you are getting an `Observable` of the data, which means you need to use the `async` pipe in the template.
+
+<Callout className="my-8 bg-green/5" title="Best Practice Tip">
+It's recommended to select from the state using <Link className="text-green/80 underline" href="/en/course/angular/ngrx/selectors">`NGRX Selectors`</Link>
+</Callout>
+
+## Changing the state
+
+After you inject the `Store` service, you can trigger a change of state process using the `store.dispatch` method. This part of the flow is a bit tricky, so let's break it down.
+
+![Trigger state change](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/trigger-change.png?raw=true)
