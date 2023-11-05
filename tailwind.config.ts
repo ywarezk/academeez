@@ -18,9 +18,11 @@ const config: Config = {
       },
       backgroundColor: {
         green: '#01D662',
+        "red-30": "rgb(208 125 119/0.05)"
       },
       textColor: {
         green: 'rgb(43 110 98)',
+        "red-50": "rgb(166 66 58/1);"
       },
       fontSize: {
         sm: ['0.875rem', {lineHeight: undefined}],

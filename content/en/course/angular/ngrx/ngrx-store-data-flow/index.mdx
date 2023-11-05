@@ -118,3 +118,86 @@ It's recommended to select from the state using <Link className="text-green/80 u
 After you inject the `Store` service, you can trigger a change of state process using the `store.dispatch` method. This part of the flow is a bit tricky, so let's break it down.
 
 ![Trigger state change](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/trigger-change.png?raw=true)
+
+Change will start from something that triggers a state change (In the diagram example we see above it's a button click).
+
+Popular things that will start a state change process are:
+- user actions (like clicking a button)
+- server request or response
+- timer events
+- Effects (which we will discuss about in <Link className="text-green/80 underline" href="/en/course/angular/ngrx/effects">this lesson</Link>)
+
+Keeping things simple we will use a button click to trigger a state change process. Take a look at this example which increments a counter every button click.
+
+<div className="mt-5">
+<Sandpack 
+	customSetup={{ 
+		dependencies: { 
+			"@ngrx/store": "^16.3.0",
+			"@angular/core": "^16.2.0",
+			"@angular/platform-browser": "^16.2.0",
+			"@angular/platform-browser-dynamic": "^16.2.0",
+			"@angular/common": "^16.2.0",
+			"@angular/compiler": "^16.2.0"
+		}
+	}}
+	files={{
+		"src/app/app.module.ts": { hidden: true, code: `import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+
+import { AppComponent } from "./app.component";
+import { StoreModule } from "@ngrx/store";
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, StoreModule.forRoot({
+		counter: (state, action) => {
+			if (action.type === 'INCREMENT') {
+				return state + 1;
+			} else {
+				return 0;
+			}
+		}
+	}, {})],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+`, readOnly: true},
+		"src/app/app.component.ts": { code: `import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { State } from "./state";
+
+@Component({
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: "app-root",
+	template: \`<button (click)="increment()">Increment: {{ counter$ | async }}</button>\`
+})
+export class AppComponent {
+	counter$ = this._store.select((state) => state.counter);
+	constructor(private _store: Store<State>){}
+	
+	increment() {
+		this._store.dispatch({ type: 'INCREMENT' });
+	}
+}
+		`},
+	"src/app/state.ts": { readOnly: true, code: `export type State = {
+	counter: number;
+}
+	`}
+	}
+	}
+	template="angular" 
+/>
+</div>
+
+we use `this._store.dispatch(...);` function to send an `Action`, we will have a <Link className="text-green/80 underline" href="/en/course/angular/ngrx/action">full lesson about an action</Link>, but for now let's look at an action as a simple `Object` which describes what happens with an identifier (in our case the identifier is: `type: 'INCREMENT'`) and optional `payload` data if the event needs to send more information.  
+
+<Callout className="my-8 bg-red-30" title="Bad Practice" variant="destructive">
+The goal of this lesson is to focus on the data flow, in real world NGRX you will not create `Actions` or `Reducers` like the example here.
+</Callout>
+
+![](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/store-dispatch.png?raw=true)
+
+### Reducer
