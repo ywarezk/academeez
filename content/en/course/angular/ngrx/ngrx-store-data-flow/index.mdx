@@ -218,10 +218,10 @@ The Reducer will get the current state and the action that happened and will ret
 			"@angular/compiler": "^16.2.0"
 		}
 	}}
+	
 	files={{
 		"src/app/reducer.ts": {
-			code: `
-export function counterReducer(state, action) {
+			code: `export function counterReducer(state, action) {
 	if (action.type === 'INCREMENT') {
 		return state + 1;
 	} else {
@@ -231,7 +231,9 @@ export function counterReducer(state, action) {
 			`,
 			active: true
 		},
-		"src/app/app.module.ts": { code: `import { BrowserModule } from "@angular/platform-browser";
+		"src/app/app.module.ts": {
+			readOnly: true,
+			code: `import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 
 import { AppComponent } from "./app.component";
@@ -246,9 +248,10 @@ import { counterReducer } from './reducer';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
-`, readOnly: true},
-		"src/app/app.component.ts": { code: `import { Component, ChangeDetectionStrategy } from "@angular/core";
+export class AppModule {}`
+		},
+		"src/app/app.component.ts": {
+			code: `import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { State } from "./state";
 
@@ -264,20 +267,37 @@ export class AppComponent {
 	increment() {
 		this._store.dispatch({ type: 'INCREMENT' });
 	}
-}
-		`},
-	"src/app/state.ts": { hidden: true, readOnly: true, code: `export type State = {
+}`
+		},
+		"src/app/state.ts": {
+			hidden: true, readOnly: true,
+			code: `export type State = {
 	counter: number;
-}
-	`}
-	}
-	}
+}`
+		}
+	}}
+	
+	
 	template="angular" 
 />
 </div>
+
 
 The reducer decides what is the new state by getting the current state and the action that happened, and returns the new state.
 
 ![reducer](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/reducer.png?raw=true)
 
 And that is the last piece of the puzzle of `NGRX` data flow.
+
+## Summary
+
+In this lesson we learned about the data flow in `NGRX` which consists of the following parts:
+
+1. `Store` is holding the current `State`
+2. Component can inject the store to read the state.
+3. Component can trigger `store.dispatch(...)` on events to start a state change process.
+4. The `store.dispatch(Action)` is getting an `Action` object which describes what happened.
+5. The `Reducer` will get the current state and the action and will return a new state.
+6. The `Store` will change the current state to the new state.
+7. The component will get the new state and will re-render the template.
+
