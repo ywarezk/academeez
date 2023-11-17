@@ -14,12 +14,7 @@ import Link from "next/link";
 import { cn } from "@/lib";
  
 export const LessonCard: FC<{lesson: Doc}> = ({lesson}) => {
-	const course = lesson.slug.split('/')[2]
-	
-	console.log(lesson.slug)
-	
-	// //'https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/best-practices/store-devtools-production/thumbnail.png?raw=true'
-	
+	const course = lesson.slug.split('/')[2]	
 	return (
 		<Card>
 			<CardHeader>
@@ -31,7 +26,7 @@ export const LessonCard: FC<{lesson: Doc}> = ({lesson}) => {
 				<CardDescription className="text-left mt-2 leading-snug">{lesson.description}</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<img src="" className="object-cover my-2 rounded-xl h-40" />
+				<img src={lesson.thumbnail} className="object-cover my-2 rounded-xl h-40" />
 			</CardContent>
 			<CardFooter>
 				<Link className={cn(buttonVariants(), 'w-full')} href={lesson.slug}>

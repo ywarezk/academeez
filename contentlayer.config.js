@@ -44,7 +44,12 @@ export const Doc = defineDocumentType(() => ({
         return doc._raw.flattenedPath;
       },
     },
-    
+    thumbnail: {
+      type: 'string',
+      resolve: doc => {
+        return `https://raw.githubusercontent.com/ywarezk/academeez/main/content/${doc._raw.flattenedPath}/video/thumbnail.png`;
+      },
+    }
   },
 }));
 
