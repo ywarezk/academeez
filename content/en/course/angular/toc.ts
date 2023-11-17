@@ -54,6 +54,15 @@ const toc: NavItem = {
           title: '@ngrx/store - data flow',
           href: '/en/course/angular/ngrx/ngrx-store-data-flow',
           items: [],
+        },
+        {
+          title: 'Best practices',
+          href: '/en/course/angular/ngrx/best-practices',
+          items: [{
+            title: 'Remove @ngrx/store-devtools in production',
+            href: '/en/course/angular/ngrx/best-practices/store-devtools-production',
+            items: []
+          }]
         }
       ],
     },
