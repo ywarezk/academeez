@@ -13,6 +13,22 @@ const toc: NavItem = {
   href: '/en/course/angular',
   Icon: AngularIcon,
   items: [{
+    title: 'Best practice tips',
+    href: '/en/course/angular/best-practices',
+    items: [{
+      title: 'changeDetection: OnPush on all components',
+      href: '/en/course/angular/best-practices/onpush',
+      items: []
+    }, {
+      title: 'Injectable functions for repeating initialization',
+      href: '/en/course/angular/best-practices/inject-repeating-initializations',
+      items: []
+    }, {
+      title: 'custom structural directives use case',
+      href: '/en/course/angular/best-practices/structural-directives',
+      items: []
+    }]
+  }, {
     title: 'NGRX',
     href: '/en/course/angular/ngrx',
     items: [{
@@ -23,6 +39,18 @@ const toc: NavItem = {
       title: 'Installing @ngrx/store',
       href: '/en/course/angular/ngrx/installing-ngrx-store',
       items: []
+    }, {
+      title: '@ngrx/store - data flow',
+      href: '/en/course/angular/ngrx/ngrx-store-data-flow',
+      items: []
+    }, {
+      title: 'Best practices',
+      href: '/en/course/angular/ngrx/best-practices',
+      items: [{
+        title: 'Remove @ngrx/store-devtools in production',
+        href: '/en/course/angular/ngrx/best-practices/store-devtools-production',
+        items: []
+      }]
     }]
   }]
 };
