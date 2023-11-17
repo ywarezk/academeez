@@ -19,6 +19,12 @@ type HomePageProps = {
   }
 }
 
+// list of urls of featured articles
+// const featuredCards = [
+//   "course/angular/best-practices/inject-repeating-initializations",
+//   ""
+// ]
+
 export async function generateMetadata({params}: HomePageProps) {
   const messages = (await import(`@/messages/${params.locale}.json`)).default
 
@@ -34,6 +40,8 @@ export default function HomePage(props: HomePageProps) {
   const t = useTranslations('HomePage')
 
   unstable_setRequestLocale(props.params.locale)
+  
+  
 
   return (
     <div className="container mx-auto mt-20 text-center">

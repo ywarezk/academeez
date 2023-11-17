@@ -16,6 +16,27 @@ const toc: NavItem = {
   Icon: AngularIcon,
   items: [
     {
+      title: 'Best practice tips',
+      href: '/en/course/angular/best-practices',
+      items: [
+        {
+          title: 'changeDetection: OnPush on all components',
+          href: '/en/course/angular/best-practices/onpush',
+          items: []
+        },
+        {
+          title: 'Injectable functions for repeating initialization',
+          href: '/en/course/angular/best-practices/inject-repeating-initializations',
+          items: []
+        },
+        {
+          title: 'custom structural directives use case',
+          href: '/en/course/angular/best-practices/structural-directives',
+          items: []
+        }
+      ]
+    },
+    {
       title: 'NGRX',
       href: '/en/course/angular/ngrx',
       items: [
