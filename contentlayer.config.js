@@ -28,42 +28,14 @@ export const Doc = defineDocumentType(() => ({
       default: 'lesson',
     },
 
-    // 1280 X 720 image of the lesson: used for youtube thumbnail, and social media sharing
-    imageBig: {
-      type: 'string',
-      required: true,
-    },
-
-    thumbnail: {
-      type: 'string',
-      required: false,
-    },
+    
 
     video: {
       type: 'string',
       required: false,
     },
 
-    /**
-     * Will determine if the article should be featured in the homepage
-     * @default false
-     */
-    isFeatured: {
-      type: 'boolean',
-      required: false,
-      default: false,
-    },
-
-    isReady: {
-      type: 'boolean',
-      required: false,
-      default: false,
-    },
-
-    exercise: {
-      type: 'string',
-      required: false,
-    },
+    
   },
   computedFields: {
     slug: {
@@ -72,6 +44,7 @@ export const Doc = defineDocumentType(() => ({
         return doc._raw.flattenedPath;
       },
     },
+    
   },
 }));
 

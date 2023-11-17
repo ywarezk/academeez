@@ -12,6 +12,8 @@ import {cn} from '@/lib'
 import {useTranslations} from 'next-intl'
 import {generateMetadata as genericGenerateData} from '@/lib'
 import {unstable_setRequestLocale} from 'next-intl/server'
+import { allDocs } from '@/.contentlayer/generated'
+import { LessonCard } from './lesson-card'
 
 type HomePageProps = {
   params: {
@@ -20,10 +22,13 @@ type HomePageProps = {
 }
 
 // list of urls of featured articles
-// const featuredCards = [
-//   "course/angular/best-practices/inject-repeating-initializations",
-//   ""
-// ]
+const featuredCards = [
+  "en/course/angular/ngrx",
+  "en/course/angular/best-practices/inject-repeating-initializations",
+  "en/course/angular/best-practices/onpush",
+  "en/course/angular/best-practices/structural-directives",
+  "en/course/angular/ngrx/best-practices/store-devtools-production"
+]
 
 export async function generateMetadata({params}: HomePageProps) {
   const messages = (await import(`@/messages/${params.locale}.json`)).default
@@ -41,7 +46,9 @@ export default function HomePage(props: HomePageProps) {
 
   unstable_setRequestLocale(props.params.locale)
   
-  
+  const featuredDocs = allDocs.filter(doc => {
+    return featuredCards.find(card => card === doc.slug)
+  })
 
   return (
     <div className="container mx-auto mt-20 text-center">
@@ -53,13 +60,14 @@ export default function HomePage(props: HomePageProps) {
       <p className="text-3xl text-green/90 font-mono self-center py-1 leading-snug mt-5">{t('description')}</p>
 
       <div className="grid gap-8 grid-cols-4 mt-9">
-        {/* <article>
-          {allDocs
-            .filter(doc => doc.isFeatured)
+        
+          {featuredDocs
             .map(doc => (
-              <LessonCard key={doc.slug} lesson={doc} />
+              <article key={doc.slug}>
+                <LessonCard lesson={doc} />
+              </article>
             ))}
-        </article> */}
+        
       </div>
     </div>
   )
