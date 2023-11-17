@@ -43,7 +43,7 @@ export function generateMetadata({params}: PageProps) {
   // and all the ancestors title
   const title = docs.reduce((acc, doc, index) => (index === 0 ? doc.title : `${acc} | ${doc.title}`), '');
 
-  return genericGenerateMetadata(title, currentDoc.description, currentDoc.imageBig, currentDoc.slug);
+  return genericGenerateMetadata(title, currentDoc.description, currentDoc.thumbnail, currentDoc.slug);
 }
 
 /**

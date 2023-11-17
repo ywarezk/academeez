@@ -14,7 +14,7 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: allDocs.map(doc => ({
       userAgent: '*',
-      ...(doc.isReady ? {allow: doc.slug} : {disallow: doc.slug}),
+      allow: doc.slug,
     })),
     sitemap: 'https://acme.com/sitemap.xml',
   };
