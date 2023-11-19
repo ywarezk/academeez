@@ -30,7 +30,7 @@ type LocaleLayoutProps = {
   params: {locale: SupportedLocales};
 };
 
-export const metadata: Metadata = {
+export const metadata: Metadata = {  
   title: {
     default: siteConfig.name,
     template: `${siteConfig.name} | %s`,
@@ -95,6 +95,9 @@ export default function LocaleLayout({children, params: {locale}}: LocaleLayoutP
 
   return (
     <html lang={locale} dir={dir}>
+      <head>
+        <meta name="google-site-verification" content="ZLdedo-l5mm1TcXoJ4Ikyasbj8wnH4iHMyMuWu2do9s" />
+      </head>
       <body className={cn(inter.variable, 'font-sans leading-base antialiased font-medium')}>
         <Nav />
         <div className="mx-auto mt-8">{children}</div>
