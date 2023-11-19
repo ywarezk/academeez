@@ -94,10 +94,7 @@ export default function LocaleLayout({children, params: {locale}}: LocaleLayoutP
   unstable_setRequestLocale(locale);
 
   return (
-    <html lang={locale} dir={dir}>
-      <head>
-        <meta name="google-site-verification" content="ZLdedo-l5mm1TcXoJ4Ikyasbj8wnH4iHMyMuWu2do9s" />
-      </head>
+    <html lang={locale} dir={dir}>      
       <body className={cn(inter.variable, 'font-sans leading-base antialiased font-medium')}>
         <Nav />
         <div className="mx-auto mt-8">{children}</div>
