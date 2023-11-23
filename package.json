@@ -1,6 +1,6 @@
 {
   "name": "academeez",
-  "version": "0.30.0",
+  "version": "0.31.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -39,6 +39,7 @@
     "rehype-slug": "^5.1.0",
     "remark-code-import": "^1.2.0",
     "remark-gfm": "^3.0.1",
+    "rss": "^1.2.2",
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2"
@@ -47,6 +48,7 @@
     "@playwright/test": "^1.38.1",
     "@types/lodash": "^4.14.198",
     "@types/mocha": "^10.0.1",
+    "@types/rss": "^0.0.32",
     "@vitejs/plugin-react": "^4.0.4",
     "next-router-mock": "^0.9.9",
     "vite": "^4.4.9",
