@@ -26,7 +26,11 @@ export default function rss(req: NextApiRequest, res: NextApiResponse) {
 
   const feed = new RSS(feedOptions);
   
-  allDocs.filter(doc => doc.isReady).forEach((doc) => {
+  allDocs.filter(doc => doc.isReady).sort((a, b) => {
+    if (a.getPublishDate < b.getPublishDate) return 1;
+    if (a.getPublishDate > b.getPublishDate) return -1;
+    return 0;
+  }).forEach((doc) => {
     feed.item({
       title: doc.title,
       description: doc.description,
