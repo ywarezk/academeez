@@ -11,7 +11,7 @@ import { allDocs } from '@/.contentlayer/generated'
 import { MetadataRoute } from 'next'
  
 export default function sitemap(): MetadataRoute.Sitemap {
-	return allDocs.map((doc) => {
+	return allDocs.filter(doc => doc.isReady).map((doc) => {
 		return {
 			url: `https://www.academeez.com/${doc.slug}`,
 			changeFrequency: 'monthly',			

@@ -1,0 +1,17 @@
+---
+title: NGRX Actions
+description: Student Ex. for NGRX actions
+publishDate: "2023-11-23"
+---
+
+To study api's it's best to code it yourself, so let's go over the proper way to create actions using NGRX.
+
+## What are actions?
+
+- Actions are sent to the store using `store.dispatch(someAction)`
+- The store will send that actions to the reducers which often will result in a state change.
+
+The meaning of an action is to say that something happened in the app, a lot of the times it's something that the user did like clicking a button or activating some sort of event.  
+An action will often send additional data, for example if there is an action we want to send after a server response, we will often send the server response as the payload for the action.  
+Action contains an identifier and optional payload data `{ type: string, additionalData?: ..., moreData?: ... }`.
+

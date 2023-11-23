@@ -27,15 +27,20 @@ export const Doc = defineDocumentType(() => ({
       required: false,
       default: 'lesson',
     },
-
-    
-
     video: {
       type: 'string',
       required: false,
     },
-
-    
+    publishDate: {
+      type: 'string',
+      required: true,
+      default: '2021-01-01',  
+    },
+    isReady: {
+      type: 'boolean',
+      required: true,
+      default: true        
+    }
   },
   computedFields: {
     slug: {
@@ -48,6 +53,12 @@ export const Doc = defineDocumentType(() => ({
       type: 'string',
       resolve: doc => {
         return `https://raw.githubusercontent.com/ywarezk/academeez/main/content/${doc._raw.flattenedPath}/video/thumbnail.png`;
+      },
+    },
+    getPublishDate: {
+      type: 'date',
+      resolve: doc => {
+        return new Date(doc.publishDate);
       },
     }
   },
