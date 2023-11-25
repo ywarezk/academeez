@@ -68,6 +68,11 @@ const toc: NavItem = {
             href: '/en/course/angular/ngrx/best-practices/store-devtools-production',
             items: []
           }]
+        },
+        {
+          title: 'NGRX Actions',
+          href: '/en/course/angular/ngrx/actions',
+          items: [],
         }
       ],
     },
