@@ -27,6 +27,10 @@ const toc: NavItem = {
       title: 'custom structural directives use case',
       href: '/en/course/angular/best-practices/structural-directives',
       items: []
+    }, {
+      title: 'improve performance in *ngFor with trackBy',
+      href: '/en/course/angular/best-practices/ngfor-trackby',
+      items: []
     }]
   }, {
     title: 'NGRX',
@@ -51,6 +55,10 @@ const toc: NavItem = {
         href: '/en/course/angular/ngrx/best-practices/store-devtools-production',
         items: []
       }]
+    }, {
+      title: 'NGRX Actions',
+      href: '/en/course/angular/ngrx/actions',
+      items: []
     }]
   }]
 };
