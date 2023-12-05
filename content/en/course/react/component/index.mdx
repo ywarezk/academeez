@@ -6,11 +6,78 @@ publishDate: 2023-11-28
 
 React is a simple library with main goal of giving you tools to create UI components. A component represents part of your user interface. Let's take this image of academeez homepage as example:
 
+![homepage](https://github.com/ywarezk/academeez/blob/main/content/en/course/react/component/homepage.png?raw=true)
 
+If we would like to create this homepage using React, we can create a component for the **Header**, a component for those lesson cards, and basically create different ui components that together will construct this screen.  
 
-## What is a React Component?
+After we create a UI component with React, that component turn to a new tag (we use syntax similar to HTML that is called JSX - more on that later in the course), so if you created a UI component for **Header**, you can now reuse that component by placing the `<Header />` tag.
 
-A React Component is a reusable piece of code that can be used to build user interface. When we are building a ui using React, for example a certain web page, we can split that page to logical ui sections and we can create those sections as React Components.  
-The end result of the screen would be a tree of React Components.
+## Component in React is a function
 
-Let's get started by creating our first React component.
+A component in React is represented by a function that usually returns a syntax that is similar to HTML (JSX) which describes how the component should look like. Let's take a look at a simple component that will render a button:
+
+```javascript
+function MyButton() {
+	return <button>Click Me</button>
+}
+```
+
+## Exercise - your first component
+
+First lesson and you'll already write your first React UI Component. No need to install anything, you can simply write the exercise solution here in the site.
+Create a component that will display a login form with 2 inputs - username and password, and a button to submit the form.
+There is a solution to the exercise below so you can see the result.
+
+<div className="mt-5">
+<Sandpack 
+	
+	files={{
+		"App.js": {			
+			code: `export default function Login() {
+  return (
+		<h1>Write your solution here</h1>
+  )
+}`
+		}
+	}}
+	template="react" 
+/>
+</div>
+
+## Solution
+
+<div className="mt-5">
+<Sandpack 
+	
+	files={{
+		"App.js": {
+			readOnly: true,
+			code: `export default function Login() {
+  return (
+		<form>
+			<div>
+				<label>Username</label>
+				<input type="text" />
+			</div>
+			<div>
+				<label>Password</label>
+				<input type="password" />
+			</div>
+			<div>
+				<button type="submit">Login</button>
+			</div>
+		</form>
+	)
+}`
+		}
+	}}
+	
+	
+	template="react" 
+/>
+</div>
+
+## Summary 
+
+React essence is to give you an easy api to create reusable UI components. A component is a function that returns a JSX syntax (resembels HTML) that describes how the component should look like.  
+You saw how easy it is to create your first React component

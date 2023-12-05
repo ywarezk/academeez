@@ -12,10 +12,14 @@ import {ReactIcon} from '@/ui/icons';
 
 const toc: NavItem = {
   title: 'React',
-  href: '/course/react',
+  href: '/en/course/react',
   Icon: ReactIcon,
   items: [
-    
+    {
+      href: '/en/course/react/component',
+      title: 'UI Components',
+      items: [],      
+    }
   ],
 };
 

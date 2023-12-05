@@ -118,7 +118,7 @@ export function findNext(toc: NavItem, href: string): NavItem | null {
   const parent = findParentNavItemInToc(toc, href)
   const me = findNavItemInToc(toc, href)
 
-  // no next if i couldn't find myself
+  // no next if i couldn't find myself  
   if (!me) {
     return null
   }

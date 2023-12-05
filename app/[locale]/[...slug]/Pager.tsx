@@ -16,13 +16,13 @@ import {CaretRightIcon, CaretLeftIcon} from '@radix-ui/react-icons'
 
 export const Pager: FC<{slug: string[]}> = async ({slug}) => {
   const locale = useLocale()
-  const toc = await getToc(slug, locale)
+  const toc = await getToc(slug, locale)  
   const currentHref = `/${locale}/${slug.join('/')}`
 
   if (!toc) {
     return null
   }
-
+  
   const next = findNext(toc, currentHref)
 
   // find the doc for next
