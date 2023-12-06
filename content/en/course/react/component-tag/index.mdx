@@ -73,3 +73,170 @@ React application is made from a tree of components, usually the root of the com
 We can create this screen with the following components:
 
 ![React component tree](https://raw.githubusercontent.com/ywarezk/academeez/main/content/en/course/react/component-tag/components.png)
+
+When we create a React application we are building a tree of components (this is the popular way of creating a web application today, and this approach is the common way in other popular frameworks as well).
+
+### Splitting files
+
+It's common to split your application to multiple files, and you will often place a component in a seperate file (like in this example where we had 2 components splitted to 2 files: `App.js` and `Login.js`).
+When splitting files we use [ES6 Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). so one syntax is to use `export default`:
+
+<div className="mt-5">
+<Sandpack 
+	
+	files={{
+		"App.js": {
+			readOnly: true,
+			code: `
+import Hello from "./Hello"
+
+export default function App() {
+  return (
+		<div>			
+			<Hello />			
+		</div>
+  )
+}`
+		},
+		"Hello.js": {
+			readOnly: true,
+			code: `export default function Hello() {
+	return (
+		<h1>
+			hello world
+		</h1>
+	)
+}
+`
+		}
+	}}
+	template="react" 
+/>
+</div>
+
+Or you can use `export`
+
+<div className="mt-5">
+<Sandpack 
+	
+	files={{
+		"App.js": {
+			readOnly: true,
+			code: `
+import { Hello } from "./Hello"
+
+export default function App() {
+  return (
+		<div>			
+			<Hello />			
+		</div>
+  )
+}`
+		},
+		"Hello.js": {
+			readOnly: true,
+			code: `export function Hello() {
+	return (
+		<h1>
+			hello world
+		</h1>
+	)
+}
+`
+		}
+	}}
+	template="react" 
+/>
+</div>
+
+Few things to note here:
+- If you place a component in a seperate file, you need to import it in the file that you want to use it.
+- The name of the component is the name of the function.
+- That name has to be in PascalCase (camelCase but with the first letter capitalized, otherwise React will not recognize it as a component - but a tag name).
+
+## Exercise - component tree
+
+In this exercise we will create the following component tree:
+
+![React component tree](https://raw.githubusercontent.com/ywarezk/academeez/main/content/en/course/react/component-tag/tree.png)
+
+![React component tree](https://raw.githubusercontent.com/ywarezk/academeez/main/content/en/course/react/component-tag/components.png)
+
+Where the focus is to simply place those components, and not on the styling of those components which we will cover in the next lesson.
+You can write the code right here in the site: 
+
+<div className="mt-5">
+<Sandpack 
+	
+	files={{
+		"App.js": {			
+			code: `
+
+
+export default function App() {
+  return (
+		<div>			
+			<h1>Place the components here:</h1>
+		</div>
+  )
+}`
+		},
+		"Header.js": {			
+			code: ``
+		},
+		"Logo.js": {			
+			code: ``
+		},
+		"Menu.js": {			
+			code: ``
+		},
+		"LoginForm.js": {			
+			code: ``
+		},		
+		"Footer.js": {			
+			code: ``
+		},		
+	}}
+	template="react" 
+/>
+</div>
+
+## Solution
+
+And here is the solution for the exercise:
+
+<div className="mt-5">
+<Sandpack 
+	
+	files={{
+		"App.js": {			
+			code: `
+
+
+export default function App() {
+  return (
+		<div>			
+			<h1>Place the components here:</h1>
+		</div>
+  )
+}`
+		},
+		"Header.js": {			
+			code: ``
+		},
+		"Logo.js": {			
+			code: ``
+		},
+		"Menu.js": {			
+			code: ``
+		},
+		"LoginForm.js": {			
+			code: ``
+		},		
+		"Footer.js": {			
+			code: ``
+		},		
+	}}
+	template="react" 
+/>
+</div>
