@@ -19,6 +19,11 @@ const toc: NavItem = {
       href: '/en/course/react/component',
       title: 'UI Components',
       items: [],      
+    },
+    {
+      href: '/en/course/react/component-tag',
+      title: 'Component tags',
+      items: [],      
     }
   ],
 };
