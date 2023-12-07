@@ -23,6 +23,7 @@ type HomePageProps = {
 
 // list of urls of featured articles
 const featuredCards = [
+  "en/course/react",
   "en/course/angular/ngrx",
   "en/course/angular/best-practices/inject-repeating-initializations",
   "en/course/angular/best-practices/onpush",
