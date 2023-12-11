@@ -54,6 +54,10 @@ const toc: NavItem = {
         title: 'Remove @ngrx/store-devtools in production',
         href: '/en/course/angular/ngrx/best-practices/store-devtools-production',
         items: []
+      }, {
+        title: 'Stop storing server queries in NGRX',
+        href: "/en/course/angular/ngrx/best-practices/stop-storing-server-query",
+        items: []
       }]
     }, {
       title: 'NGRX Actions',
