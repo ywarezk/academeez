@@ -21,8 +21,8 @@ const toc: NavItem = {
       items: [],      
     },
     {
-      href: '/en/course/react/component-tag',
-      title: 'Component tags',
+      href: '/en/course/react/component-tree',
+      title: 'Component Tree',
       items: [],      
     }
   ],
