@@ -17,28 +17,11 @@ Let's examine this simple scenario:
 			"@angular/platform-browser": "^17.0.0",
 			"@angular/platform-browser-dynamic": "^17.0.0",
 			"@angular/common": "^17.0.0",
-			"@angular/compiler": "^17.0.0"
+			"@angular/compiler": "^17.0.0"			
 		}
 	}}
 	
-	files={{
-		"src/app/app.module.ts": {
-			hidden: true,
-			readOnly: true,
-			code: `import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
-
-import { AppComponent } from "./app.component";
-import { HttpClientModule } from "@angular/common/http";
-
-@NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule, HttpClientModule],
-  providers: [],
-  bootstrap: [AppComponent],
-})
-export class AppModule {}`
-		},
+	files={{		
 		"src/app/github.service.ts": {
 			readOnly: true,
 			code: `import { HttpClient } from "@angular/common/http";
@@ -57,42 +40,74 @@ export class GithubService {
 		},
 		"src/app/app.component.ts": {
 			readOnly: true,
-			code: `import { Component } from "@angular/core";
+			code: `import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { GithubService } from "./github.service";
-
+import { CommonModule } from '@angular/common';
 @Component({
-  selector: "app-root",
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule],
   template: \`
     <h1>Repo list</h1>
     <ul>
-      <li *ngFor="let repo of repos$ | async">
-        {{ repo.name }}
-      </li>
+			@for (repo of repos$ | async; track 'id') {
+				<li>
+					{{ repo.name }}
+				</li>	
+			}      
     </ul>
   \`,
 })
 export class AppComponent {
-  repos$ = this._github.getRepos();
+	repos$ = this._github.getRepos();
   constructor(private _github: GithubService) {}
-}
+}`
+		},
+		"src/app/app.config.ts": {
+			hidden: true,
+			readOnly: true,
+			code: `import { ApplicationConfig } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+
+export const appConfig: ApplicationConfig = {
+	providers: [
+		provideHttpClient(),		
+	]
+}			
 `
-		}
+		},
+		"src/main.ts": {
+			hidden: true,
+			readOnly: true,
+			code: `import '@angular/compiler';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+import { appConfig } from './app/app.config';
+
+bootstrapApplication(AppComponent, appConfig)
+  .catch((err) => console.error(err));
+`
+		}	
 	}}
 	
 	template="angular" 
 />
 </div>
 
-Everything is working great, but then you have to use the same list of repositories in another component. You could just call the service again, but that would be a waste of resources. So you decide to store the list of repositories in NGRX store.  
+Everything is working great, but then you have to use the same list of repositories in another component. You could just call the service again, but that would be an unnecessary call and you can simply cache the response (what if you need to use it in 100 places, does that mean you will have to send 100 of those requests?). So you decide to store the list of repositories in NGRX store.  
 There are few ways that can be achieved (which are all wrong):
 - Dispatch proper actions in components (worst of the wrong solutions)
 - Use `@ngrx/effects` and make each component dispatch an intent to read that data (a bit better)
 - Use `@ngrx/data` which will save you a lot of boilerplate code, but still requires you to configure it properly (best of the wrong solutions).
 
+Our recommendation: **DON'T USE STATE MANAGEMENT LIBRARY AS SERVER QUERY CACHE**
+
 ## The problem with storing server query in NGRX
 
 If you are using NGRX to store server query, there is a lot of complexity you will have to face. This complexity today has led me to the believe that there is application state, and query cache, and those things should be seperated.  
-Using NGRX to store server query has lots of boiler plate code, and it is not easy to get it right.  
+Using NGRX to store server query has lots of boilerplate code, and it is not easy to get it right. In short I would recommend today a side from using state management library (currently [NGRX](https://ngrx.io/) is the most popular) I would recommend to use additional library for sending server queries, which will also cache the responses (I recommend using [Angular Query - @ngneat/query](https://github.com/ngneat/query)).  
+
 Let's see what are the problems with storing server query in NGRX.
 
 ### @ngrx/effects
@@ -113,6 +128,238 @@ Morover, look at this diagram which is posted in `@ngrx/data`:
 
 server query cache needs to be simple, most of the developers that are using `@ngrx/data` I'm not convincede that they fully understand what actually happens, which makes it even harder to understand and debug once there are issues.
 
-## The solution
+## The solution - @ngneat/query
+
+With [@ngneat/query](https://github.com/ngneat/query) (also called angular-query which is inspired by the popular react library for server calls) things are much simpler, in your service, you wrap your server calls (we will show how to do it) with some api from angular-query (which you can add options regarding caching) and when you call the fetch method you get caching and other goodies.
+Super simple and just feels right. Let's show a simple example of using angular-query.  
+In the following example we will have 2 components that will use the same list of repositories, and we will use angular-query to cache the response.
 
 
+
+<div className="mt-5">
+<Sandpack 
+	customSetup={{ 
+		dependencies: { 			
+			"@angular/core": "^17.0.0",
+			"@angular/platform-browser": "^17.0.0",
+			"@angular/platform-browser-dynamic": "^17.0.0",
+			"@angular/common": "^17.0.0",
+			"@angular/compiler": "^17.0.0"			
+		}
+	}}
+	
+	files={{
+		"src/app/repo-counter.component.ts": {
+			readOnly: true,
+			code: `import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { GithubService } from "./github.service";
+import { CommonModule } from '@angular/common';
+
+@Component({
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [ CommonModule ],
+  selector: "app-repo-counter",
+  template: \`<h5>number of repos {{ (repos$ | async)?.length }}</h5> \`,
+})
+export class RepoCounterComponent {
+  repos$ = this._github.getRepos();
+  constructor(private _github: GithubService) {}
+}
+`
+		},
+				
+		"src/app/github.service.ts": {
+			readOnly: true,
+			code: `import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+
+@Injectable({
+  providedIn: "root",
+})
+export class GithubService {
+  constructor(private _http: HttpClient) {}
+
+  getRepos() {
+    return this._http.get("https://api.github.com/users/colt/repos");
+  }
+}`
+		},
+		"src/app/app.component.ts": {
+			readOnly: true,
+			code: `import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { GithubService } from "./github.service";
+import { CommonModule } from '@angular/common';
+import { RepoCounterComponent } from './repo-counter.component.ts';
+
+@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule, RepoCounterComponent],
+  template: \`
+    <h1>Repo list</h1>
+		<app-repo-counter></app-repo-counter>
+    <ul>
+			@for (repo of repos$ | async; track 'id') {
+				<li>
+					{{ repo.name }}
+				</li>	
+			}      
+    </ul>
+  \`,
+})
+export class AppComponent {
+	repos$ = this._github.getRepos();
+  constructor(private _github: GithubService) {}
+}`
+		},
+		"src/app/app.config.ts": {
+			hidden: true,
+			readOnly: true,
+			code: `import { ApplicationConfig } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+
+export const appConfig: ApplicationConfig = {
+	providers: [
+		provideHttpClient(),		
+	]
+}			
+`
+		},
+		"src/main.ts": {
+			hidden: true,
+			readOnly: true,
+			code: `import '@angular/compiler';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+import { appConfig } from './app/app.config';
+
+bootstrapApplication(AppComponent, appConfig)
+  .catch((err) => console.error(err));
+`
+		}	
+	}}
+	
+	template="angular" 
+/>
+</div>
+
+There is one component `AppComponent` which displays the list and another component `RepoCounterComponent` which displays the number of repositories.
+
+Let's use the power of `@ngneat/query` (AKA angular-query) to cache the response.
+
+
+<div className="mt-5">
+<Sandpack 
+	customSetup={{ 
+		dependencies: { 			
+			"@angular/core": "^17.0.0",
+			"@angular/platform-browser": "^17.0.0",
+			"@angular/platform-browser-dynamic": "^17.0.0",
+			"@angular/common": "^17.0.0",
+			"@angular/compiler": "^17.0.0",
+			"@ngneat/query": "2.0.0-beta.8",
+    	"@ngneat/query-devtools": "2.0.0-beta.0",
+			"@tanstack/query-core": "5.13.4"
+		}
+	}}
+	
+	files={{
+		"src/app/repo-counter.component.ts": {
+			readOnly: true,
+			code: `import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { GithubService } from "./github.service";
+import { CommonModule } from '@angular/common';
+
+@Component({
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [ CommonModule ],
+  selector: "app-repo-counter",
+  template: \`<h5>number of repos {{ (repos$ | async)?.length }}</h5> \`,
+})
+export class RepoCounterComponent {
+  repos$ = this._github.getRepos();
+  constructor(private _github: GithubService) {}
+}
+`
+		},
+				
+		"src/app/github.service.ts": {
+			readOnly: true,
+			code: `import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+
+@Injectable({
+  providedIn: "root",
+})
+export class GithubService {
+  constructor(private _http: HttpClient) {}
+
+  getRepos() {
+    return this._http.get("https://api.github.com/users/colt/repos");
+  }
+}`
+		},
+		"src/app/app.component.ts": {
+			readOnly: true,
+			code: `import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { GithubService } from "./github.service";
+import { CommonModule } from '@angular/common';
+import { RepoCounterComponent } from './repo-counter.component.ts';
+
+@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule, RepoCounterComponent],
+  template: \`
+    <h1>Repo list</h1>
+		<app-repo-counter></app-repo-counter>
+    <ul>
+			@for (repo of repos$ | async; track 'id') {
+				<li>
+					{{ repo.name }}
+				</li>	
+			}      
+    </ul>
+  \`,
+})
+export class AppComponent {
+	repos$ = this._github.getRepos();
+  constructor(private _github: GithubService) {}
+}`
+		},
+		"src/app/app.config.ts": {
+			hidden: true,
+			readOnly: true,
+			code: `import { ApplicationConfig } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { provideQueryDevTools } from "@ngneat/query-devtools";
+
+export const appConfig: ApplicationConfig = {
+	providers: [
+		provideHttpClient(),
+		provideQueryDevTools()
+	]
+}			
+`
+		},
+		"src/main.ts": {
+			hidden: true,
+			readOnly: true,
+			code: `import '@angular/compiler';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+import { appConfig } from './app/app.config';
+
+bootstrapApplication(AppComponent, appConfig)
+  .catch((err) => console.error(err));
+`
+		}	
+	}}
+	
+	template="angular" 
+/>
+</div>

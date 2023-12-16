@@ -38,6 +38,17 @@ const toc: NavItem = {
           title: 'improve performance in *ngFor with trackBy',
           href: '/en/course/angular/best-practices/ngfor-trackby',
           items: []
+        },
+        {
+          title: 'New control flow syntax',
+          href: '/en/course/angular/best-practices/new-control-flow-syntax',
+          items: [
+            {
+              title: "@if",
+              href: '/en/course/angular/best-practices/new-control-flow-syntax/if',
+              items: []  
+            }
+          ]
         }
       ]
     },
