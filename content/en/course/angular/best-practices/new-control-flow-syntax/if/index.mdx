@@ -116,7 +116,7 @@ import {NewIfComponent} from './new-if.component';
   standalone: true,
   imports: [OldIfComponent, NewIfComponent],
   template: \`
-    <h1>*ngIf -> &#64;ngIf</h1>
+    <h1>*ngIf -> &#64;if</h1>
 		<old-if></old-if>
 		<new-if></new-if>
   \`,
@@ -147,4 +147,52 @@ Few things to note here:
 - The else case is much easier to write in the new syntax.
 - You can use `@else if` which you can't in the old syntax.
 
+## Playground
 
+You can practice the new `@if` syntax in the playground below:
+
+<div className="mt-5">
+<Sandpack 
+	customSetup={{ 
+		dependencies: { 			
+			"@angular/core": "^17.0.0",
+			"@angular/platform-browser": "^17.0.0",
+			"@angular/platform-browser-dynamic": "^17.0.0",
+			"@angular/common": "^17.0.0",
+			"@angular/compiler": "^17.0.0"			
+		}
+	}}
+	
+	files={{		
+		"src/app/app.component.ts": {						
+			code: `import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <h1>Practice &#64;if</h1>		
+  \`,
+})
+export class AppComponent {	
+}`
+		},		
+		"src/main.ts": {
+			hidden: true,
+			readOnly: true,
+			code: `import '@angular/compiler';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+
+bootstrapApplication(AppComponent)
+  .catch((err) => console.error(err));
+`
+		}	
+	}}
+	
+	template="angular" 
+/>
+</div>
