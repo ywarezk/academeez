@@ -23,6 +23,7 @@ type HomePageProps = {
 
 // list of urls of featured articles
 const featuredCards = [
+  "en/course/angular/best-practices/new-control-flow-syntax/if",
   "en/course/react",
   "en/course/angular/ngrx",
   "en/course/angular/best-practices/inject-repeating-initializations",
@@ -49,7 +50,7 @@ export default function HomePage(props: HomePageProps) {
   
   const featuredDocs = allDocs.filter(doc => {
     return featuredCards.find(card => card === doc.slug)
-  })
+  })  
 
   return (
     <div className="container mx-auto mt-20 text-center">
