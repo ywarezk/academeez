@@ -155,27 +155,43 @@ This task would have been complex if we did our own solution, but using the powe
 			"@angular/platform-browser-dynamic": "^17.0.0",
 			"@angular/common": "^17.0.0",
 			"@angular/compiler": "^17.0.0",
-			"@tanstack/angular-query-experimental": "5.14.1"
+			"@ngneat/query": "^2.0.0-beta.8",
+			"@tanstack/query-core": "^5.14.1",
+			"rxjs": "~7.8.0",
+			"@ngneat/query-devtools": "^2.0.0-beta.0",
+			"@tanstack/query-devtools": "^5.13.5",
 		}
 	}}
 	
 	files={{
-		"src/app/repo-counter.component.ts": {
+		"src/app/repo.ts": {
 			readOnly: true,
-			code: `import { Component, ChangeDetectionStrategy } from "@angular/core";
+			code: `
+			export type Repo = {
+  id: number;
+  name: string;
+};
+			`
+		},
+		"src/app/repo-counter.component.ts": {
+			hidden: true,
+			readOnly: true,
+			code: `import { Component, ChangeDetectionStrategy, inject } from "@angular/core";
 import { GithubService } from "./github.service";
 import { CommonModule } from '@angular/common';
+
 
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	standalone: true,
 	imports: [ CommonModule ],
   selector: "app-repo-counter",
-  template: \`<h5>number of repos {{ (repos$ | async)?.length }}</h5> \`,
+  template: \`<h5>
+    number of repos {{ (repos.result$ | async)?.data?.length }}
+  </h5> \`,
 })
 export class RepoCounterComponent {
-  repos$ = this._github.getRepos();
-  constructor(private _github: GithubService) {}
+  repos = inject(GithubService).getRepos();
 }
 `
 		},
@@ -183,25 +199,33 @@ export class RepoCounterComponent {
 		"src/app/github.service.ts": {
 			readOnly: true,
 			code: `import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { injectQuery } from "@tanstack/angular-query-experimental";
+import { Injectable, inject } from "@angular/core";
+import { injectQuery } from "@ngneat/query";
+import { Repo } from "./repo.ts";
 
 @Injectable({
   providedIn: "root",
 })
 export class GithubService {
-  #http = inject(HttpClient);
-  reposResult = injectQuery(() => ({
-    queryKey: ["repos"],
-    queryFn: () => {
-      return this.#http.get<Repo[]>("https://api.github.com/users/colt/repos");
-    },
-  }));
+  http = inject(HttpClient);
+	query = injectQuery();
+	
+	getRepos() {
+    return this.query({
+      queryKey: ["repos"],
+      queryFn: () => {
+        return this.http.get<Repo[]>(
+          "https://api.github.com/users/colt/repos"
+        );
+      },
+      staleTime: 1000 * 30,
+    });
+  }
 }`
 		},
 		"src/app/app.component.ts": {
 			readOnly: true,
-			code: `import { Component, ChangeDetectionStrategy } from '@angular/core';
+			code: `import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { GithubService } from "./github.service";
 import { CommonModule } from '@angular/common';
 import { RepoCounterComponent } from './repo-counter.component.ts';
@@ -213,40 +237,31 @@ import { RepoCounterComponent } from './repo-counter.component.ts';
   imports: [CommonModule, RepoCounterComponent],
   template: \`
     <h1>Repo list</h1>
-		<app-repo-counter></app-repo-counter>
+    <app-repo-counter></app-repo-counter>
     <ul>
-			@for (repo of repos$ | async; track 'id') {
-				<li>
-					{{ repo.name }}
-				</li>	
-			}      
+      @for(repo of (repos.result$ | async)?.data; track repo.id) {
+      <li>
+        {{ repo.name }}
+      </li>
+      }
     </ul>
   \`,
 })
 export class AppComponent {
-	repos$ = this._github.getRepos();
-  constructor(private _github: GithubService) {}
+	repos = inject(GithubService).getRepos();
+  
 }`
 		},
-		"src/app/app.config.ts": {			
+		"src/app/app.config.ts": {						
 			readOnly: true,
 			code: `import { ApplicationConfig } from "@angular/core";
 import { provideHttpClient } from "@angular/common/http";
-import {
-  provideAngularQuery,
-  QueryClient,
-} from "@tanstack/angular-query-experimental";
-
-const client = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 30,
-    },
-  },
-});
+import { provideQueryDevTools } from '@ngneat/query-devtools';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideHttpClient(), provideAngularQuery(client)],
+  providers: [provideHttpClient(), provideQueryDevTools({
+      initialIsOpen: true,
+    })],
 };		
 `
 		},
@@ -267,4 +282,13 @@ bootstrapApplication(AppComponent, appConfig)
 	template="angular" 
 />
 </div>
+
+Notice that on the `GithubService` I can define the `staleTime` which means that the data will be stale after 30 seconds, which means it will take the data from the cache but after 30 seconds will also refetch in the background (the user sees the result right away and after refetch his data will be updated).  
+We also included the query devtools that allows us to inspect the content of our cache.
+
+## Conclusion
+
+Using NGRX to store server query is a bad idea, it is complex and hard to get it right.
+Using a dedicated library for server queries and cache will reduce the amount of complexity and work much better.
+
 

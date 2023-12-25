@@ -1,0 +1,23 @@
+---
+title: "Basic suspense api"
+description: "In this lesson we will learn the basic api of suspense"
+publishDate: "2023-12-21"
+---
+
+When a portion of your component tree needs some async data to render, you can wrap those components with the `<Suspense>` component. This will allow you to display a `fallback` until you can render those components.
+
+## Async components problem
+
+Let's imagine we need to create the following React components:
+- `<Table />` - a table component that is grabbing data from an API and arranging it in a table
+- `<TableSummary />` A summary data for the table - this data is taken from a different backend API that the `<Table />` is using
+
+Those 2 components will need to send 2 server queries, and we want a loading spinner to be displayed until both of the components are ready.  
+For example if the `<Table />` query takes 5 seconds and the `<TableSummary />` query takes 2 seconds, we want to display a loading spinner for 5 seconds and then display the data for both of those components.
+
+## Naive solution
+
+The naive solution would be to create a `<Parent />` component that will place the `<Table />` and `<TableSummary />`, that component can send the 2 server queries and pass the data to the children components.
+
+![Naive solution](https://github.com/ywarezk/academeez/blob/main/content/en/course/react/suspense/basic-suspense-api/parent-tree.png?raw=true)
+

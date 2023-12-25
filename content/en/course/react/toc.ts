@@ -24,6 +24,15 @@ const toc: NavItem = {
       href: '/en/course/react/component-tree',
       title: 'Component Tree',
       items: [],      
+    },
+    {
+      href: '/en/course/react/suspense',
+      title: 'Suspense',
+      items: [{
+        href: '/en/course/react/suspense/basic-suspense-api',
+        title: 'Basic Suspense API',
+        items: [],
+      }],      
     }
   ],
 };
