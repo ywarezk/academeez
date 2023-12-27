@@ -1,0 +1,72 @@
+---
+title: Suspense
+description: In this chapter we will learn everything you need to know about React Suspense.
+publishDate: 2023-12-21
+---
+
+When a portion of your component tree  needs some async data to render, you can wrap these components with the `<Suspense>` component. This will allow you to display a `fallback` until you can render the async components.
+
+## Async components problem
+
+Let's imagine we need to create the following React components:
+
+-   `<Table />` - a table component that is grabbing data from an API and arranging it in a table
+-   `<TableSummary />` A summary data for the table - this data is taken from a different backend API that the `<Table />` is using
+
+Those 2 components will need to send 2 server queries, and we want a loading spinner to be displayed until both of the components are ready.\
+For example if the `<Table />` query takes 5 seconds and the `<TableSummary />` query takes 2 seconds, we want to display a loading spinner for 5 seconds and then display the data for both of those components.
+
+## Naive solution
+
+The naive solution would be to create a `<Parent />` component that will place the `<Table />` and `<TableSummary />`, that component can send the 2 server queries and pass the data to the children components.
+
+![Naive solution](https://github.com/ywarezk/academeez/blob/main/content/en/course/react/suspense/parent-tree.png?raw=true)
+
+## The problem with the naive solution
+
+At times it helps to see that a solution is not ideal if you try to enlarge the problem, let's imagine instead of 2 component that needs to send a query, we now have 50 async components, all in different depths.
+
+![Naive solution problem](https://github.com/ywarezk/academeez/blob/main/content/en/course/react/suspense/larger-tree.png?raw=true)
+
+Now making the parent send 50 queries and passing all that data to those components will be cumbersome to say the least, we would need to create some kind of `Context` probably to pass that data, and the fact that the `<Parent />` needs to deal with a lot of data that doesn't really concern him (except when to display the spinner) does not make our code look any better.
+
+## Notify parent using throw
+
+Did you know that on some conditions you can send data up the tree to a certain parent using `throw`?  
+
+There are few conditions to use `throw` as means for sending data to parent:
+
+-   The `throw` must be located in the `render` function or lifecycle hooks
+-   The `throw` can not be located in events, or timer, or async calls.
+-   Up the tree from the component that threw there should be a parent that satisfies few conditions.
+
+### So which parent will grab the thrown data?
+
+The parent that will grab the thrown data is the first parent that satisfies the following conditions:
+
+-   If the `thrown` data is an instance of `Promise` it will be catched by the first `<Suspense>` up the tree
+-   All other types or promise instance with no `<Suspense>` to catch it will be catched by the first `<ErrorBoundary>` up the tree (We will talk on `ErrorBoundary` in future lessons)
+
+If there is no one to catch the thrown data, the usuall Javascript uncaught exception will happen (usually resulting in a crash).
+
+## What is `<Suspense>`
+
+`<Suspense>` can wrap part of your component tree, where some of the wrapped components (can be 0 or more) can throw a promise.\
+`Promise` can be in 3 states:
+
+-   `pending` - the promise is still waiting for the data and the `<Suspense>` fallback will be displayed
+-   `resolved` - the promise is resolved and the `<Suspense>` will display the wrapped components
+-   `rejected` - the promise is rejected and the `<Suspense>` will send the error to the next error boundary.
+
+<Callout title="Carefull" variant="info">
+Make sure you are not regenerating the promise on each render, if you do, the `<Suspense>` will think that the promise is pending and will display the fallback.
+</Callout>
+
+## Suspense demo
+
+In the following example we want a component to only render after 5 seconds.\
+For this we are creating a `Promise` that will resolve after 5 seconds, and we are throwing that promise in the `render` function of the component.
+
+<div className="mt-5">
+<Sandpack />
+</div>
