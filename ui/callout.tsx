@@ -1,9 +1,9 @@
 import { cn } from '@/lib';
 import {Alert, AlertDescription, AlertTitle} from './alert';
-import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons';
+import { CheckCircledIcon, CrossCircledIcon, InfoCircledIcon } from '@radix-ui/react-icons';
 
 interface CalloutProps {
-  variant?: 'default' | 'destructive';
+  variant?: 'default' | 'destructive' | 'info';
   title?: string;
   children?: React.ReactNode;
 }
@@ -16,6 +16,9 @@ export function Callout({title, children, variant = 'default', ...props}: Callou
   switch (variant) {
     case 'destructive':
       Icon = <CrossCircledIcon className='h-8 w-8' />;
+      break;
+    case 'info':
+      Icon = <InfoCircledIcon className='h-8 w-8' />;
       break;
   }
   
