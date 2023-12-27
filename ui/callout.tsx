@@ -26,7 +26,7 @@ export function Callout({title, children, variant = 'default', ...props}: Callou
     <Alert variant={variant} {...props}>
       <div className="px-4 py-4">      
       {title && (
-        <AlertTitle className={cn("text-2xl font-display font-bold flex", variant === 'default'? "text-green/80 dark:text-green-40" : "text-red-50")}>
+        <AlertTitle className={cn("text-2xl font-display font-bold flex")}>
           <span className="mr-4 text-2xl">{Icon}</span> {title}
         </AlertTitle>
       )}

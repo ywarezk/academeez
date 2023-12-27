@@ -18,11 +18,13 @@ const config: Config = {
       },
       backgroundColor: {
         green: '#01D662',
-        "red-30": "rgb(208 125 119/0.05)"
+        "red-30": "rgb(208 125 119/0.05)",
+        "blue-30": "#cce5ff"
       },
       textColor: {
         green: 'rgb(43 110 98)',
-        "red-50": "rgb(166 66 58/1);"
+        "red-50": "rgb(166 66 58/1);",
+        "blue-50": "#004085"
       },
       fontSize: {
         sm: ['0.875rem', {lineHeight: undefined}],
