@@ -12,47 +12,24 @@ import {ReactIcon} from '@/ui/icons';
 
 const toc: NavItem = {
   title: 'React',
-  href: '/course/react',
+  href: '/he/course/react',
   Icon: ReactIcon,
   items: [
     {
-      title: 'TLDR; Learn React in a few minutes',
-      href: '/course/react/tldr',
-      items: [
-        {
-          title: 'What is React?',
-          href: '/course/react/tldr/what-is-react',
-          items: [],
-        },
-        {
-          title: 'Our first React powered website',
-          href: '/course/react/tldr/our-first-react-powered-website',
-          items: [],
-        },
-      ],
+      href: '/he/course/react/component',
+      title: 'UI Components',
+      items: [],      
     },
     {
-      href: '/course/react/react-element',
-      title: 'ReactElement the building block of React',
-      items: [
-        {
-          title: 'What is a ReactElement?',
-          href: '/course/react/react-element/what-is-a-react-element',
-          items: [],
-        },
-      ],
+      href: '/he/course/react/component-tree',
+      title: 'Component Tree',
+      items: [],      
     },
     {
-      href: '/course/react/jsx',
-      title: 'JSX',
-      items: [
-        {
-          title: 'What is JSX?',
-          href: '/course/react/jsx/what-is-jsx',
-          items: [],
-        },
-      ],
-    },
+      href: '/he/course/react/suspense',
+      title: 'Suspense',
+      items: [],      
+    }
   ],
 };
 
