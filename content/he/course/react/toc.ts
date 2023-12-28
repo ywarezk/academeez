@@ -10,11 +10,11 @@ import { NavItem } from "@/ui/icons";
 import { ReactIcon } from '@/ui/icons';
 const toc: NavItem = {
   title: 'React',
-  href: '/course/react',
+  href: "/he/course/react",
   Icon: ReactIcon,
   items: [{
-    title: 'TLDR; Learn React in a few minutes',
-    href: '/course/react/tldr',
+    title: "UI Components",
+    href: "/he/course/react/component",
     items: [{
       title: 'What is React?',
       href: '/course/react/tldr/what-is-react',
@@ -25,16 +25,16 @@ const toc: NavItem = {
       items: []
     }]
   }, {
-    href: '/course/react/react-element',
-    title: 'ReactElement the building block of React',
+    href: "/he/course/react/component-tree",
+    title: "Component Tree",
     items: [{
       title: 'What is a ReactElement?',
       href: '/course/react/react-element/what-is-a-react-element',
       items: []
     }]
   }, {
-    href: '/course/react/jsx',
-    title: 'JSX',
+    href: "/he/course/react/suspense",
+    title: "Suspense",
     items: [{
       title: 'What is JSX?',
       href: '/course/react/jsx/what-is-jsx',
