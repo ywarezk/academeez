@@ -47,6 +47,11 @@ const toc: NavItem = {
               title: "@if",
               href: '/en/course/angular/best-practices/new-control-flow-syntax/if',
               items: []  
+            },
+            {
+              title: "@for",
+              href: '/en/course/angular/best-practices/new-control-flow-syntax/for',
+              items: []  
             }
           ]
         }

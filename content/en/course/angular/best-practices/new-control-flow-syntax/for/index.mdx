@@ -1,0 +1,173 @@
+---
+title: "Angular 17: Stop using *ngFor, use @for"
+description: "Angular 17 has a new control flow syntax and it's recommended to stop using *ngFor, and use @for instead."
+publishDate: "2024-01-01"
+---
+
+The new `@for` which we can use to replace *ngFor is available from Angular 17.
+The new syntax is much cleaner and easier to read and write, and more powerful.
+Let's look at the following example and disect the main features and benefits of the new syntax.
+
+<div className="mt-5">
+<Sandpack 
+	customSetup={{ 
+		dependencies: { 			
+			"@angular/core": "^17.0.0",
+			"@angular/platform-browser": "^17.0.0",
+			"@angular/platform-browser-dynamic": "^17.0.0",
+			"@angular/common": "^17.0.0",
+			"@angular/compiler": "^17.0.0"			
+		}
+	}}
+	
+	files={{
+		"src/app/old-ngfor.component.ts": {			
+			code: `import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+@Component({
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: 'old-ngfor',
+	standalone: true,
+	imports: [CommonModule],
+	template: \`
+		<h1>Old way - *ngFor</h1>
+		<h2>Simple</h2>
+		<ul>
+			<li *ngFor="let book of books">{{book.title}}</li>
+		</ul>	
+		<h2>With trackBy</h2>
+		<ul>
+			<li *ngFor="let book of books; trackBy: trackByFn">{{book.title}}</li>
+		</ul>
+		<h2>With context variables</h2>
+		<ul>
+			<li *ngFor="let book of books; index as i; even as e">{{i}} {{e}} {{book.title}}</li>
+		</ul>
+	\`,
+})
+export class OldNgForComponent {
+	books = [
+    {id: 1, title: 'Book 1'},
+    {id: 2, title: 'Book 2'},
+    {id: 3, title: 'Book 3'},
+    {id: 4, title: 'Book 4'},
+    {id: 5, title: 'Book 5'},
+  ];
+	
+	trackByFn(index, item) {
+		return item.id;		
+	}
+}
+`
+		},
+		"src/app/new-for.component.ts": {			
+			code: `import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+@Component({
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: 'new-for',
+	standalone: true,
+	imports: [CommonModule],
+	template: \`
+		<h1>new way - &#64;for</h1>	
+		<h2>Simple</h2>
+		<ul>
+		@for(book of books; track book.id) {
+			<li>{{book.title}}</li>	
+		}
+		</ul>	
+		<h2>With empty block</h2>
+		<ul>
+		@for(book of books2; track book.id) {
+			<li>{{book.title}}</li>	
+		}
+		@empty {
+			<li>No books</li>
+		}
+		</ul>
+		<h2>With context variables</h2>
+		<ul>
+		@for(book of books; track book.id; let i = $index; let e = $even) {
+			<li>{{i}} {{e}} {{book.title}}</li>	
+		}
+		</ul>
+	\`,
+})
+export class NewForComponent {
+	books = [
+    {id: 1, title: 'Book 1'},
+    {id: 2, title: 'Book 2'},
+    {id: 3, title: 'Book 3'},
+    {id: 4, title: 'Book 4'},
+    {id: 5, title: 'Book 5'},
+  ];
+	
+	books2 = [];
+}
+`
+		},
+		"src/app/app.component.ts": {
+			hidden: true,
+			readOnly: true,
+			code: `import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {OldNgForComponent} from './old-ngfor.component';
+import {NewForComponent} from './new-for.component';
+@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-root',
+  standalone: true,
+  imports: [OldNgForComponent, NewForComponent],
+  template: \`
+    <h1>*ngFor -> &#64;for</h1>
+		<old-ngfor></old-ngfor>
+		<new-for></new-for>
+  \`,
+})
+export class AppComponent {	
+}`
+		},		
+		"src/main.ts": {
+			hidden: true,
+			readOnly: true,
+			code: `import '@angular/compiler';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+
+bootstrapApplication(AppComponent)
+  .catch((err) => console.error(err));
+`
+		}	
+	}}
+	
+	template="angular" 
+/>
+</div>
+
+## track
+
+in the new `@for` control flow syntax, supplying `track` is mandatory. According to angular docs, a lot of angular apps performance issues were caused by `*ngFor` loops without `trackBy`, now the `track` is mandatory with a much simpler syntax.  
+You can now choose a propery from the iterated object to track by, and angular will use it to track changes in the array.  
+You can also use the `$index` context variable to track by index, but it's better if you have a primary key on the object to use that as the track property.
+
+## empty block
+
+After the `@for` block you can add an `@empty` block, which will be rendered if the array is empty.  
+Before the new control flow syntax we had to use `*ngIf` to check if the array is empty, and then render the empty block.
+
+## context variables
+
+The same context variables that were available in *ngFor are available in `@for` as well:
+- `$index` - the index of the current item in the array
+- `$first` - true if the current item is the first item in the array
+- `$last` - true if the current item is the last item in the array
+- `$even` - true if the current item index is even
+- `$odd` - true if the current item index is odd
+
+## Summary
+
+It's recommended to stop using *ngFor and use the new `@for` control flow syntax instead. There are few advantages for using the new `@for` syntax:
+- easier to understand the `@for` block
+- easier to supply `track`
+- mandatory `track` will prevent performance issues
+- easier to render an empty block
+
