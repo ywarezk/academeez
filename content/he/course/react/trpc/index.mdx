@@ -1,0 +1,126 @@
+---
+title: React trpc
+description: Type safe backend-frontend communication.
+publishDate: 2024-01-10
+---
+
+[tRPC](https://trpc.io/) is by far my favorite way for communicating with my server in my react applications.\
+In this lesson we will learn how to integrate React application with tRPC, we will create a monorepository using [TURBOREPO](https://turbo.build/) and that monorepo will contain our backend server and react frontend application.\
+Using trpc we will communicate between React and our backend.
+
+To use tRPC you will have to use Typescript, it's also recommended to use if you are using monorepo to place all your code in a single place.\
+For monorepo management we recommend [NX](https://nx.dev/) or [TURBOREPO](https://turbo.build/), in this tutorial we will use **TURBOREPO**
+
+## Create a TURBOREPO monorepository
+
+In your terminal run the following command:
+
+```bash
+> npx create-turbo@latest
+```
+
+When asked choose `npm` as your package manager (you can choose something else but this article will write the installation commands in `npm`).\
+After your monorepo is created open the created folder with your IDE.\
+Notice that you have 2 Next application in the `apps` directory: `web`, `docs` we can delete the `docs` since we will only work with the `apps/web`.\
+You can run the `dev` server of `apps/web` using the command:
+
+```bash
+> npx turbo dev
+```
+
+You can visit the browser at `http://localhost:3000` to view the app.
+
+## Create the trpc server
+
+Let's create the backend server.\
+create the directory `/apps/server` and in it create a `package.json` file:
+
+```json
+{
+	"name": "server"
+}
+```
+
+Let's install the trpc packages in our server.
+
+```bash
+> npm i @trpc/server --workspace=server
+```
+
+Our server will have 3 files:
+
+-   `trpc.ts` will reexport trpc objects
+-   `app.router.ts` - will contain our trpc api
+-   `main.ts` will start our server
+
+Let's start with `apps/server/trpc.ts`
+
+```typescript
+import {initTRPC} from '@trpc/server';
+
+const t = initTRPC.create();
+
+export const router = t.router;
+export const publicProcedure = t.procedure;
+```
+
+We are initializing trpc and exposing router which is used to logically group api's and `procedure` which is used to create a `query` or `mutation` api.
+
+Now let's create our api, in `apps/server/app.router.ts`
+
+```typescript
+import {router, publicProcedure} from './trpc';
+
+export const appRouter = router({
+  hello: publicProcedure.query(() => 'hello world'),
+});
+
+export type AppRouter = typeof appRouter;
+```
+
+We will start with a simple hello world and move from there.
+
+Let's create the entry point for our server `apps/server/main.ts`
+
+```typescript
+import {createHTTPServer} from '@trpc/server/adapters/standalone';
+import {appRouter} from './app.router';
+
+const server = createHTTPServer({
+  router: appRouter,
+});
+
+server.listen(3001);
+```
+
+Let's create a `dev` command in the `apps/server/package.json` for running the main server:
+
+```json
+{
+	"name": "server",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "ts-node main.ts"
+	},
+	"dependencies": {
+		"@trpc/server": "^10.45.0"
+	}
+}
+```
+
+Now we can run both our frontend and backend with the command:
+
+```bash
+> npx turbo dev
+```
+
+after you run this command you can see our `hello` query running in `http://localhost:3001/hello`
+
+## cors
+
+Let's open our server for cross origin requests in order to serve the frontend app running on port `3000` while the server is running on a different port `3001`.\
+Usually you will either place the backend on the same domain but in different path, or on a subdomain and restrict cors in a better way then what we will do here - here it's the quick and dirty open cors to everyone, not good for production but for development and this introduction tutorial it will be sufficient.
+
+```bash
+> npm i cors --workspace=server
+```
