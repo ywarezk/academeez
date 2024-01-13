@@ -10,36 +10,24 @@ import { NavItem } from "@/ui/icons";
 import { ReactIcon } from '@/ui/icons';
 const toc: NavItem = {
   title: 'React',
-  href: "/he/course/react",
+  href: '/en/course/react',
   Icon: ReactIcon,
   items: [{
-    title: "UI Components",
-    href: "/he/course/react/component",
-    items: [{
-      title: 'What is React?',
-      href: '/course/react/tldr/what-is-react',
-      items: []
-    }, {
-      title: 'Our first React powered website',
-      href: '/course/react/tldr/our-first-react-powered-website',
-      items: []
-    }]
+    href: '/en/course/react/component',
+    title: 'UI Components',
+    items: []
   }, {
-    href: "/he/course/react/component-tree",
-    title: "Component Tree",
-    items: [{
-      title: 'What is a ReactElement?',
-      href: '/course/react/react-element/what-is-a-react-element',
-      items: []
-    }]
+    href: '/en/course/react/component-tree',
+    title: 'Component Tree',
+    items: []
   }, {
-    href: "/he/course/react/suspense",
-    title: "Suspense",
-    items: [{
-      title: 'What is JSX?',
-      href: '/course/react/jsx/what-is-jsx',
-      items: []
-    }]
+    href: '/en/course/react/suspense',
+    title: 'Suspense',
+    items: []
+  }, {
+    href: '/en/course/react/trpc',
+    title: 'tRPC',
+    items: []
   }]
 };
 export default toc;
