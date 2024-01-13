@@ -29,6 +29,11 @@ const toc: NavItem = {
       href: '/en/course/react/suspense',
       title: 'Suspense',
       items: [],      
+    },
+    {
+      href: '/en/course/react/trpc',
+      title: 'tRPC',
+      items: [],      
     }
   ],
 };
