@@ -55,7 +55,7 @@ Our server will have 3 files:
 
 Let's start with `apps/server/trpc.ts`
 
-```typescript
+```typescript title="apps/server/trpc.ts"
 import {initTRPC} from '@trpc/server';
 
 const t = initTRPC.create();
@@ -68,7 +68,7 @@ We are initializing trpc and exposing router which is used to logically group ap
 
 Now let's create our api, in `apps/server/app.router.ts`
 
-```typescript
+```typescript title="apps/server/app.router.ts"
 import {router, publicProcedure} from './trpc';
 
 export const appRouter = router({
@@ -82,7 +82,7 @@ We will start with a simple hello world and move from there.
 
 Let's create the entry point for our server `apps/server/main.ts`
 
-```typescript
+```typescript title="apps/server/main.ts"
 import {createHTTPServer} from '@trpc/server/adapters/standalone';
 import {appRouter} from './app.router';
 
@@ -123,4 +123,362 @@ Usually you will either place the backend on the same domain but in different pa
 
 ```bash
 > npm i cors --workspace=server
+> npm i @types/cors --workspace=server
 ```
+
+```typescript title="apps/server/main.ts"
+import {createHTTPServer} from '@trpc/server/adapters/standalone';
+import {appRouter} from './app.router';
+import cors from 'cors';
+
+const server = createHTTPServer({
+  middleware: cors(),
+  router: appRouter,
+});
+
+server.listen(3001);
+```
+
+## Frontend
+
+time to make our first frontend request, in this lesson we won't focus on the technicallities of server side rendering, but if that intrests you you should follow the [nextjs trpc guide](https://trpc.io/docs/client/nextjs).\
+In our case we will not focus on nextjs and focus on the React part.
+
+Install the client packages:
+
+```bash
+> npm install @trpc/client @trpc/server @trpc/react-query @tanstack/react-query@4 --workspace=web
+```
+
+Note that one of the packages we installed is [@tanstack/react-query](https://tanstack.com/query/latest/docs/react/overview),
+This is a big advantage of using trpc for our React application, it works on top of `react-query` so you're not losing all the great features of `react-query` but are getting all of them and in addition static type checking to your client-server communications.\
+So basically we need to initialize our trpc and `react-query` providers, but before we do that let's modify our `apps/web/package.json` that we are using the `type AppRouter` defined in the server, this is how our client will not the exact api's that are exposed in the server.
+
+`apps/web/package.json`
+
+```json
+{
+  "name": "web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint . --max-warnings 0"
+  },
+  "dependencies": {
+    "@repo/ui": "*",
+    "@tanstack/react-query": "^4.36.1",
+    "@trpc/client": "^10.45.0",
+    "@trpc/react-query": "^10.45.0",
+    "@trpc/server": "^10.45.0",
+    "next": "^14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+		"server": "*"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "^14.0.4",
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "@types/eslint": "^8.56.1",
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18.2.18",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  }
+}
+
+```
+
+Notice that we added `"server": "*"` to tell `turborepo` that we need to import from `apps/server` (this should be the same name we wrote in the `apps/server/package.json`).\
+Let's make sure that the `server` is exporting the `type AppRouter`.\
+Change the file `apps/server/package.json` to the following:
+
+```json
+{
+	"name": "server",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "ts-node main.ts"
+	},
+	"dependencies": {
+		"@trpc/server": "^10.45.0",
+		"@types/cors": "^2.8.17",
+		"cors": "^2.8.5"
+	},
+	"exports": {
+		"./app.router": "./app.router.ts"
+	}
+}
+```
+
+Notice that we added the `exports` part to specify that we are exporting the type in `app.router.ts`.\
+Now we can start using that type in our `apps/web` frontend.  
+
+Let's initialize trpc in the client which will allow us to create the client as well as issue requests to the server using trpc and `react-query`.\
+Create the file: `apps/web/app/trpc.ts` with the following:
+
+```typescript title="apps/web/app/trpc.ts"
+import {createTRPCReact} from '@trpc/react-query';
+import type {AppRouter} from 'server/app.router';
+
+export const trpc = createTRPCReact<AppRouter>();
+```
+
+The best place to initialize all the providers (trpc and react-query) is in our layout which will make it available everywhere.
+Edit the file `apps/web/app/layout.tsx`
+
+```typescript title="apps/web/app/layout.tsx"
+'use client';
+
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {httpBatchLink} from '@trpc/client';
+import {trpc} from './trpc';
+import {useState} from 'react';
+
+export default function RootLayout({children}: {children: React.ReactNode}): JSX.Element {
+  const [queryClient] = useState(() => new QueryClient());
+  const [trpcClient] = useState(() =>
+    trpc.createClient({
+      links: [
+        httpBatchLink({
+          url: 'http://localhost:3001',
+        }),
+      ],
+    })
+  );
+  return (
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <html lang="en">
+          <body>{children}</body>
+        </html>
+      </QueryClientProvider>
+    </trpc.Provider>
+  );
+}
+```
+
+I had to also add `baseUrl` to the root of the monorepo for typescript to not complain about the `trpc.ts` file, so my `apps/web/tsconfig.json` looks like so:
+
+```json
+{
+  {
+    "extends": "@repo/typescript-config/nextjs.json",
+    "compilerOptions": {
+      "baseUrl": "../..",
+      "plugins": [
+        {
+          "name": "next"
+        }
+      ]
+    },
+    "include": [
+      "next-env.d.ts",
+      "next.config.js",
+      "**/*.ts",
+      "**/*.tsx",
+      ".next/types/**/*.ts"
+    ],
+    "exclude": [
+      "node_modules"
+    ]
+  }
+}
+```
+
+Now we can start using trpc magic in our client side. Let's create an `<Hello>` component that will query the `hello` api we created in `trpc`
+
+```typescript title="apps/web/app/hello.tsx"
+import {trpc} from './trpc';
+
+export function Hello() {
+  const {data, isLoading} = trpc.hello.useQuery();
+
+  if (isLoading) return <div>Loading...</div>;
+
+  return <div>{data}</div>;
+}
+```
+
+In your `apps/web/app/page.tsx` file, let's add the component we just created:
+
+```typescript title="apps/web/app/page.tsx"
+'use client';
+
+import {Hello} from './hello';
+
+export default function Page() {
+  return <Hello />;
+}
+```
+
+You should see query is sent and the hello message is displayed.
+
+## input, output and zod
+
+Let's harness some more static powers and validations in our server query. Let's create a query that will accept an input and return an output. We will have trpc validate that we are passing the right types in the frontend.\
+For validation we will use [zod](https://zod.dev/) so let's install it:
+
+```bash
+> npm i zod --workspace=server
+```
+
+In the `app.router.ts` file let's add another query, this query will search in a list of strings, The query will get as an input a `search` term and will search an array of strings and will return array of matches.
+
+```typescript title="apps/server/app.router.ts"
+import {router, publicProcedure} from './trpc';
+import {z} from 'zod';
+
+const list = ['hello', 'world', 'lurem', 'ipsum', 'academeez', 'rules'];
+
+export const appRouter = router({
+  hello: publicProcedure.query(() => 'hello world'),
+  search: publicProcedure
+    .input(z.string())
+    .output(z.array(z.string()))
+    .query(({input}) => {
+      return list.filter(item => item.includes(input));
+    }),
+});
+
+export type AppRouter = typeof appRouter;
+```
+
+We added a new query called `search` which accepts a string as an input and returns an array of strings.\
+Notice that you can specify trpc an input and an output, the output makes sure that the server is returning the right type and the input makes sure that the client is sending the right type.
+The output will also verify that no extra fields are returned from the server (good for security).
+
+Let's create a component that will use this query, create the file `apps/web/app/search.tsx`
+
+```typescript title="apps/web/app/search.tsx"
+import {useState} from 'react';
+import {trpc} from './trpc';
+
+export function Search() {
+  const [search, setSearch] = useState('');
+  const {data, isLoading} = trpc.search.useQuery(search);
+
+  return (
+    <>
+      <input type="search" value={search} onChange={e => setSearch(e.target.value)} />
+      {isLoading && <div>Loading...</div>}
+      {data && (
+        <ul>
+          {data.map(str => (
+            <li key={str}>{str}</li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
+}
+
+```
+
+We have an input to type the search string, and a ul-li to display the result, notice that `data` type is defined for us as `string[]` according to the output we specified in the server, notice also that typescript will verify that you supply an input and  the type of the input.
+
+Let's place that component on screen, edit the file `apps/web/app/page.tsx`
+
+```typescript title="apps/web/app/page.tsx"
+'use client';
+
+import {Hello} from './hello';
+import {Search} from './search';
+
+export default function Page() {
+  return (
+    <>
+      <Hello />
+      <Search />
+    </>
+  );
+}
+```
+
+You should see a search list with input and the server returning a list.
+
+## mutations
+
+Let's create a mutation that will add a string to the list, we will use the same list we used in the search query.
+
+```typescript title="apps/server/app.router.ts"
+...
+export const appRouter = router({
+  hello: publicProcedure.query(() => 'hello world'),
+  search: publicProcedure
+    .input(z.string())
+    .output(z.array(z.string()))
+    .query(({input}) => {
+      return list.filter(item => item.includes(input));
+    }),
+  add: publicProcedure
+    .input(z.string())
+    .output(z.string())
+    .mutation(({input}) => {
+      list.push(input);
+      return input;
+    }),
+});
+...
+```
+
+notice that we now have an `add` mutation that will get a string input and return the string output and push the string to the list.
+
+Let's create a component that will use this mutation, create the file `apps/web/app/add.tsx`
+
+```typescript title="apps/web/app/add.tsx"
+import {FormEvent, useState} from 'react';
+import {trpc} from './trpc';
+
+export function Add() {
+  const [item, setItem] = useState('');
+  const {mutate, isSuccess} = trpc.add.useMutation();
+
+  const handleSubmit = (e: FormEvent) => {
+    mutate(item);
+    e.preventDefault();
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input type="text" value={item} onChange={e => setItem(e.target.value)} />
+        <button type="submit">Add</button>
+        {isSuccess && <div>Item added!</div>}
+      </form>
+    </div>
+  );
+}
+```
+
+Notice that we are using `useMutation` instead of `useQuery` since this is a mutation and not a query. The `mutate` function will send the mutation to the server and the `isSuccess` will be true when the mutation is successful, also the `mutate` will validate that we are sending the right input.
+
+Let's place that component on screen, edit the file `apps/web/app/page.tsx`
+
+```typescript title="apps/web/app/page.tsx"
+'use client';
+
+import {Hello} from './hello';
+import {Search} from './search';
+import {Add} from './add';
+
+export default function Page() {
+  return (
+    <>
+      <Hello />
+      <Search />
+      <Add />
+    </>
+  );
+}
+
+```
+
+## Summary
+
+I've been using trpc for a while now, and I have to say that it's my favorite way to communicate between my frontend and backend. On my large projects with large teams, that extra staticness in frontend backend communication really reduces the amount of bugs, before trpc the layer of communication between backend and frontend always was prune to bugs, the client might expect a certain response and gettings something different while the server expects a certain input and gets something else, the amount of those bugs are drastically reduced with trpc, not that it's clear and enforced by typescript that the backend frontend communication is done properly.\
+There is a caveat that it works better if the frontend projects and backend projects sits together in a mono repo, the other alternative would require the server project to publish the app router type (with `npm publish` for example) which would turn things a bit more clumsy in my opinion. But if you are working in a mono repo, this static layer on your back-front communication would do wonders to your project.
