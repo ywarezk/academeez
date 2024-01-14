@@ -1,0 +1,17 @@
+---
+title: Streaming with Suspense and NextJS
+description: How to use React Suspense to stream data in NextJS
+publishDate: "2024-01-14"
+---
+
+## SSR and TTFB problem
+
+Let's demonstrate a problem we had in the past with SSR. The easiest way to create an SSR react web site is by using [NextJS](https://nextjs.org/). NextJS is a framework that allows you to create a React web site with SSR out of the box. It's very easy to use and it's very popular. Let's create a simple NextJS app:
+
+```bash
+npx create-next-app@latest
+```
+
+You will be asked a few questions:
+
+![create-next-app](./create-next-app.png)
