@@ -17,9 +17,9 @@ On SSR when the server is getting the request it will evaluate the react compone
 ![SSR](https://github.com/ywarezk/academeez/blob/main/content/en/course/react/suspense/nextjs-streaming/ssr.png?raw=true)
 
 Few definitions that we should be acquainted with:
-- TTFB - Time To First Byte - the time it takes for the server to send the first byte of data to the browser.
-- FCP - First Contentful Paint - the time it takes for the browser to render the first  HTML element.
-- TTI - Time To Interactive - the time it takes for the browser to finish the hydration process and the site is interactive.
+- **TTFB** - Time To First Byte - the time it takes for the server to send the first byte of data to the browser.
+- **FCP** - First Contentful Paint - the time it takes for the browser to render the first  HTML element.
+- **TTI** - Time To Interactive - the time it takes for the browser to finish the hydration process and the site is interactive.
 
 ## SSR and TTFB problem
 
@@ -87,10 +87,144 @@ User can see the content faster, even part of the content is better than nothing
 It's also less consuming on the server because the server does not have to generate the entire HTML before sending it to the client.
 It can solve the TTFB problem cause now we can render part of the HTML after the **short query** arrives.
 
+## Streaming HTML example
+
+Let's examine a simple HTML streaming example using [ExpressJS](https://expressjs.com/).  
+Create an empty dir `demo-express-streaming` and cd to that dir and init npm:
+
+```bash
+npm init --yes
+```
+
+Install express:
+
+```bash
+npm i express
+```
+
+Create a file `main.js` with the following content:
+
+```js title="main.js"
+const createApplication = require('express');
+
+const app = createApplication();
+
+app.get('/', (req, res) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Transfer-Encoding', 'chunked');
+
+  res.write('Hello World!');
+
+  setTimeout(() => {
+    res.write('lurem ipsum');
+  }, 1000);
+
+  setTimeout(() => {
+    res.write('academeez.com');
+  }, 3000);
+
+  setTimeout(() => {
+    res.end();
+  }, 5000);
+});
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
+```
+
+In the code above we are creating an express application, and we are creating a route for the `/` path.
+We are setting the `Content-Type` header to `text/html; charset=utf-8` and the `Transfer-Encoding` header to `chunked`, this will allow us to stream the HTML.
+We then return the first chunk `Hello World!` after 1 second we return the second chunk `lurem ipsum` and after 3 seconds we return the third chunk `academeez.com` and after 5 seconds we end the response.
+As for the client, if he requests in the browser the `http://localhost:3000` path he will see a request that ends after about 5 seconds but he will see the `Hello World!` right away and the other content while their timers are invoked.
+So all the content is sent in chunks, and the browser renders the HTML as it arrives.
+
+
 ## Suspense and Streaming
 
-The backend evaluates `<Suspense>` and a streaming frame, it will evaluate the `<Suspense>` promises, and if they are pending (atleast one) it will stream the fallback, if all the promises are resolved it will stream the children, and if atleast on promise is rejected it will stream the content of the error-boundary (or uncaught exception if there is no error-boundary).
-Now that we know that `<Suspense>` is a streaming frame, we can wrap our calls under `<Suspense>` to send HTML content even after the first call.
+The backend evaluates `<Suspense>` in a streaming frame, it will evaluate the `<Suspense>` promises, and if they are pending (atleast one) it will stream the fallback as a streaming HTML frame, if all the promises are resolved it will stream the children, and if atleast on promise is rejected it will stream the content of the error-boundary (or uncaught exception if there is no error-boundary).
+Now that we know that `<Suspense>` is a streaming frame, we can wrap our calls under `<Suspense>` to send HTML content even after the first call.  
+let's return to our NextJS app and wrap the short and long calls with `<Suspense>`:
+
+Create a file `app/timer.js` with a function that can create a promise that is resolved after the given time with a message:
+
+```js title="app/timer.js"
+export function createTimerPromise(time, message) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(message);
+    }, time);
+  });
+}
+```
+
+We will create 2 components, one for the short call that took 2 seconds and one for the long call that took 5 seconds:
+
+```js title="app/short.js"
+import {createTimerPromise} from './timer';
+import {use} from 'react';
+
+// promise that resolves after 2 seconds
+let shortQuery = createTimerPromise(2000, 'short query');
+
+export function Short() {
+  const short = use(shortQuery);
+  return <div>{short}</div>;
+}
+```
+
+```js title="app/long.js"
+import {createTimerPromise} from './timer';
+import {use} from 'react';
+
+// promise that resolves after 5 seconds
+let longQuery = createTimerPromise(5000, 'long query');
+
+export function Long() {
+  const long = use(longQuery);
+  return <div>{long}</div>;
+}
+```
+
+We are using the `use` function to unwrap the promise, and send the promise pending to the closest parent `<Suspense>`.
+
+Now on the `app/page.js` we will wrap the short and long components with `<Suspense>`:
+
+```js title="app/page.js"
+'use client';
+
+import {Suspense} from 'react';
+import {Short} from './short';
+import {Long} from './long';
+
+export default function Home() {
+  return (
+    <>
+      <div>
+        <Suspense fallback={<div>Loading short...</div>}>
+          <Short />
+        </Suspense>
+      </div>
+      <div>
+        <Suspense fallback={<div>Loading long...</div>}>
+          <Long />
+        </Suspense>
+      </div>
+    </>
+  );
+}
+```
+
+Notice that our backend while rendering the initial HTML will create 2 streaming frames, one for the short call and one for the long call.
+The client will start seeing the screen after 2 seconds which gives us a better user experience.
+
+The source code is located here: [source code](https://github.com/ywarezk/demo-streaming-suspense)
+
+## Summary
+
+In this lesson we learned how `<Suspense>` behaves on the server side when we are server side rendering.
+We learned that `<Suspense>` is a streaming frame, and that the server will stream the fallback if the promise is pending, and will stream the children if the promise is resolved, and will stream the error-boundary if the promise is rejected.
+We learned how to improve the user experience in our site by loading initial HTML fast, with content and not just a loading screen, and stream that content so the user will start seeing response content at an earlier stage.
 
 The source code is located here: [source code](https://github.com/ywarezk/demo-streaming-suspense)
 
