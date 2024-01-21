@@ -4,6 +4,23 @@ description: How to use React Suspense to stream data in NextJS
 publishDate: "2024-01-14"
 ---
 
+In this lesson we will learn how the backend server deals with `<Suspense>` and how `<Suspense>` effects Server-Side-Rendering (SSR).
+
+## Server-Side-Rendering (SSR)
+
+In server side rendering a backend node will evaluate our React components to create the initial HTML page. This HTML page will be sent to the browser and the browser will render it.  
+The generated HTML will contain data fetched from api, so the user will not see a simple loading screen but actual content. The site will load fast even with slow internet connection, the server will fetch the data which will be fast.  
+We can generate the HTML during build time - this is called Static Site Generation (SSG) or we can generate the HTML during runtime - this is called Server-Side-Rendering (SSR). SSG is relevant for specific sites where the HTML depends on the build and not on the user entering the site, we will not touch SSG and will discuss SSR where the backend needs to generate HTML with every request.
+
+On SSR when the server is getting the request it will evaluate the react components, grab the data from the api, generate HTML and then send the HTML to the browser. The client will render the HTML, will download the JS files, and then Hydrate the HTML. Hydration means that the client will attach event listeners to the HTML elements and will make the HTML interactive. After hydration the site will be interactive and will behave like a regular React app, and the logic will arrive from the js files.
+
+![SSR](https://github.com/ywarezk/academeez/blob/main/content/en/course/react/suspense/nextjs-streaming/ssr.png?raw=true)
+
+Few definitions that we should be acquainted with:
+- TTFB - Time To First Byte - the time it takes for the server to send the first byte of data to the browser.
+- FCP - First Contentful Paint - the time it takes for the browser to render the first  HTML element.
+- TTI - Time To Interactive - the time it takes for the browser to finish the hydration process and the site is interactive.
+
 ## SSR and TTFB problem
 
 Let's demonstrate a problem we had in the past with SSR. The easiest way to create an SSR react web site is by using [NextJS](https://nextjs.org/). NextJS is a framework that allows you to create a React web site with SSR out of the box. It's very easy to use and it's very popular. Let's create a simple NextJS app:
@@ -14,4 +31,66 @@ npx create-next-app@latest
 
 You will be asked a few questions:
 
-![create-next-app](./create-next-app.png)
+![create-next-app](https://github.com/ywarezk/academeez/blob/main/content/en/course/react/suspense/nextjs-streaming/questions.png?raw=true)
+
+open the created project with your ide.  
+You can run the project using 
+
+```bash
+npm run dev
+```
+
+Let's imagine that  our homepage (file: `app/page.js`) has 2 server requests (we will mimic them using timers).  
+
+```js title="app/page.js"
+'use client';
+
+import {use} from 'react';
+
+// generates a promise that resolves after the given time
+function createTimerPromise(time, message) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(message);
+    }, time);
+  });
+}
+
+// promise that resolves after 2 seconds
+let shortQuery = createTimerPromise(2000, 'short query');
+
+// promise that resolves after 5 seconds
+let longQuery = createTimerPromise(5000, 'long query');
+
+export default function Home() {
+  const short = use(shortQuery);
+  const long = use(longQuery);
+
+  return (
+    <>
+      <div>{short}</div>
+      <div>{long}</div>
+    </>
+  );
+}
+
+```
+
+If you look at the network tab you will see that the page is rendered only after 5 seconds. The time it takes for the server to grab data, and the user waiting without seeing anything is called TTFB (Time To First Byte). This is a problem because the user is waiting for a long time without seeing anything.
+
+## Streaming HTML
+
+To solve the TTFB problem we can stream the HTML. Streaming HTML means that the server will send the HTML in chunks. The browser will render the HTML as it arrives. The browser will not wait for the entire HTML to arrive, it will render the HTML in chunks as it arrives.  
+The server returns chunks of the HTML which are often referred to as "frames" or "chunks".
+The browser can progressively render the HTML as it arrives, and does not have to wait for the entire HTML.
+User can see the content faster, even part of the content is better than nothing, and some will arrive really fast, and the server calls will also be faster on the backend so overall the client will have everything load faster then if the client made the requests himself.
+It's also less consuming on the server because the server does not have to generate the entire HTML before sending it to the client.
+It can solve the TTFB problem cause now we can render part of the HTML after the **short query** arrives.
+
+## Suspense and Streaming
+
+The backend evaluates `<Suspense>` and a streaming frame, it will evaluate the `<Suspense>` promises, and if they are pending (atleast one) it will stream the fallback, if all the promises are resolved it will stream the children, and if atleast on promise is rejected it will stream the content of the error-boundary (or uncaught exception if there is no error-boundary).
+Now that we know that `<Suspense>` is a streaming frame, we can wrap our calls under `<Suspense>` to send HTML content even after the first call.
+
+The source code is located here: [source code](https://github.com/ywarezk/demo-streaming-suspense)
+

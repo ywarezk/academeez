@@ -28,7 +28,13 @@ const toc: NavItem = {
     {
       href: '/en/course/react/suspense',
       title: 'Suspense',
-      items: [],      
+      items: [
+        {
+          href: '/en/course/react/suspense/nextjs-streaming',
+          title: 'Next.js Streaming',
+          items: [],
+        }
+      ],      
     },
     {
       href: '/en/course/react/trpc',
