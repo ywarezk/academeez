@@ -1,18 +1,19 @@
 ---
 title: Installing Flux
-description: We will start the lesson with an empty k8s cluster and install flux.
+description: Install Flux on your K8S cluster.
 publishDate: "2024-01-30"
 ---
 
-To install flux on our kubernetes cluster we will need to do the following steps:
-- Install the flux cli
-- create a repository in github where the state of the cluster will be declared in yaml files and stored in that repo
-- Create a github PAT (Personal Access Token) that will allow flux to access the repository
+To install flux on our **K8S cluster** we will need to do the following steps:
+- Install flux cli on your computer
+- create a repository in Github where the state of the cluster will be declared in yaml files and stored in that repo
+- Create a Github PAT (Personal Access Token) that will allow Flux to access the repository
+- Using Flux cli, running `flux bootstrap` to install Flux on the cluster
 
 ## Prerequisites
 
-This lesson assumes you have a kubernetes cluster version 1.26 or higher, and on your computer you have `kubectl` that can communicate with your cluster.  
-We will not explain those steps, but we do recommend to create a minimal managed cluster in one of the cloud providers.
+This lesson assumes you have a kubernetes cluster - server version 1.26 or higher, and on your computer you have `kubectl` that can communicate with your cluster.  
+We will not explain those steps, but we do recommend to create a minimal managed cluster in one of the cloud providers (In this course we will use [GKE](https://cloud.google.com/kubernetes-engine) - a GCP managed cluster).
 
 ## Flux cli
 
@@ -43,25 +44,31 @@ You can explore the commands by running:
 flux --help
 ```
 
-You will see that there are 3 main categories of commands:
-- bootstrap - commands that allow you to bootstrap flux on your cluster
-- create - commands that allow you to create resources (Usually you will use it to create the resources locally with the `--export` flag and then commit them to the git repository)
-- get - commands that allow you to get information about the resources that flux installed on your cluster
+Here are some of the main features of the cli:
+- **bootstrap** - This command will install flux on your cluster, update flux to a newer version, reinstall extra components if needed.
+- **check** - Will verify that your cluster meets the requirements for flux to run.
+- **create** - commands that allow you to create flux custom resources (Usually you will use it to create the resources locally with the `--export` flag and then commit them to the git repository)
+- **reconcile** - Means syncing the flux controllers and update k8s cluster state if needed.
 
-You can also run a check command before you bootstrap flux on your cluster to make sure that your cluster is ready for flux:
+Let's start by running the `flux check` command to verify that our cluster meets the requirements for flux to run:
 
 ```bash
 flux check --pre
 ```
 
-## Bootstrap flux
+## Flux sync with git repo
 
-Let's install flux to manage our cluster. We will run the `flux bootstrap` command and after running that command the k8s state will be stored in a git repository, and every modification to your cluster will be done by pushing changes to the git repository.
-Flux will know which resources it needs to create in the cluster by looking at the git repository. This means flux will need access to that repository which he needs to look at. To make flux examine the repository we will need to create a [Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+We will soon install flux on our cluster, and flux will create controller pods, those controllers will react to certain flux custom resources. Don't worry about those controllers for now cause we will have lessons about each controller. 
+What is important here is that one of those controller is called `source-controller` and we can tell this controller to read content from a branches in a git repositories. Now why is this important for us? cause this will basically be our entry point to tell flux, **"Watch for flux custom resources in this git repository"**.  
+This means that we will give flux permissions to read from a git repository, and then we can create flux `Kustomization` resource that tells flux to track a certain location in that repository, and then we can create k8s resources in the directory, and then flux will keep that state of our cluster with the resources we create.  
+During this course we will tell Flux to track branch **main** in a single git repository, every minute, but we can also tell Flux to track more then one git repo, or multiple branches, for a more distributed system with many teams.
+In order for Flux to read content from a git repository (in our example we will use github), we will need to create a PAT (Personal Access Token) that will allow Flux to access the repository.
 
-### PAT - Personal Access Token
+## PAT - Personal Access Token
 
-Since flux will have to pick on a repository change to know what resources to create, we will have to create a PAT (Personal Access Token) this token will allow flux to access the repository and look at the changes. Our git repo will be hosted on **Github**, and in Github there are 2 types of PATs, one that has access to all the repositories of the user (classic), and one that has access to only one repository (fine-grained token). We will create a PAT that has access to only one repository, and we will give it the `repo` scope.  
+We will configure flux to track on a repository change to know what resources to create, we will have to create a PAT (Personal Access Token) this token will allow flux to access the repository and look at the changes (we can configure a single token to access more then one repo). 
+Our git repo will be hosted on **Github**, and in Github there are 2 types of PATs, one that has access to all the repositories of the user (classic), and one that has access only to the repositories we allow (fine-grained token). 
+We will create a PAT that has access to only one repository (in our example but on distributed teams configuration we can configure multiple repos), and we will give it the `repo` scope.  
 First create a new repository in Github where the state of the k8s cluster will be saved. In this example I created the public repo: [ywarezk/academeez-k8s-course](https://github.com/ywarezk/academeez-k8s-course).  
 After the repo is created, let's create a PAT that has access to this repository. Go to [Settings/Developer Settings/Personal Access Tokens/Fine-grained token](https://github.com/settings/tokens?type=beta) or simply click this [link](https://github.com/settings/tokens?type=beta).  
 
@@ -76,9 +83,24 @@ Click the **Generate token** button and you should see a token that start with `
 > export GITHUB_TOKEN=github_pat_****
 ```
 
-Now we can bootstrap flux on our cluster, and flux can manage the state of the cluster in the repo we created.
+We are almost ready to bootstrap flux on our cluster, but before we do that let's plan how our git repository will look like.
 
-### Finishing the bootstrap
+## Multiple clusters
+
+In this course we will work with a single cluster, but in a real world scenario you will have multiple clusters, for example a cluster for staging, a cluster for production, a cluster for development, you might have a cluster for your CI, and more.
+Flux can manage multiple clusters, not only that but it provides a neat way to share resources between the clusters. Think about all those times when you created a cluster and then installed some ingress controller (in this course we will work with nginx ingress controller) and did over and over again on each cluster,
+not anymore, now we can construct a neat repository with shared resources in all or some of our clusters.
+
+Our repository will have a `/clusters/:name-of-cluster` in the `clusters` folder we will create a folder for each cluster.
+We will also create an `infastructure` folder for shared resources between the clusters like nginx ingress controller.
+  
+
+## Bootstrap flux
+
+Let's install flux to manage our cluster. We will run the `flux bootstrap` command and after running that command the k8s state will be stored in a git repository, and every modification to your cluster will be done by pushing changes to the git repository.
+Remember the `source-controller` we talked about? Flux will install that controller during the bootstrap,
+and remember the PAT we created? Flux will store it in a secret (if you place it in the right environment variable),
+and remember the github repo we created? We will tell Flux to create a resource that `source-controller` will know to sync with that repo
 
 Run the following command to bootstrap flux on your cluster:
 
@@ -87,12 +109,19 @@ flux bootstrap github \
 	--owner=your-username \
 	--repository=the-repo-you-opened \
 	--branch=main \
+    --path=./clusters/staging \
 	--personal
 ```
 
-Flux will install the controllers in your cluster, but since the state of your cluster should now be stored in the repo, flux will not only have to install the resources but also add and push files to the repo that represents the state of your cluster and the flux controllers that are installed.
+Let's examine this command:
+- using `github`, `owner`, `repository`, `branch` flux will know the `GitRepository` resource to create
+- Using `path` flux will know where to create the `Kustomization` resource (we will discuess this in future lesson)
+- `personal` let's flux know that we are using personal repo and not organization repo
 
-### clone the repo
+Based on those flags, flux will create 2 custom resources that flux controllers will examine, and also create all the components that flux needs to run on the cluster.
+Flux will store all those files in the repository, so after we run this we need to pull the latest changes
+
+## clone the repo
 
 Let's clone the repo that we created for flux:
 
@@ -115,11 +144,46 @@ metadata:
   name: flux-system
 ```
 
-### What did flux install?
+## What did flux install?
 
 When you install flux on your cluster, without specifying and extra flags to the bootstrap command, flux will install the default toolkit which we can examine by running:
 
 ```bash
 > kubectl get all -n flux-system
 ```
+
+In the default installation we have the following components:
+- **source-controller**
+- **kustomize-controller**
+- **helm-controller**
+- **notification-controller**
+
+We will have lessons about each of those controllers, but for now let's understand that those controllers are watching for custom resources that we will create in the git repository, and will create the resources in the cluster.
+
+## Create a Namespace
+
+Let's give flux some work to do.
+We will create a file in the `clusters/staging` folder called `namespace.yaml` with the following content:
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  www
+```
+
+commit and push the changes and wait for a minute and you will see that the namespace is created.
+
+```bash
+kubectl get namespaces
+```
+
+## Summary
+
+Flux is now managing our cluster, what and to achieve that we did the following steps:
+1. Installed flux cli on our computer
+2. Created a repository in Github where the state of the cluster will be declared in yaml files and stored in that repo
+3. Created a Github PAT (Personal Access Token) that will allow Flux to access the repository
+4. Using Flux cli, running `flux bootstrap` to install Flux on the cluster
+5. Created a namespace in the git repository and saw that flux created that namespace in the cluster
 
