@@ -1,0 +1,15 @@
+---
+title: k8s and FluxCD
+description: Manage your k8s cluster state using FluxCD
+publishDate: 2024-01-23
+---
+
+In this intermediate [K8S](https://kubernetes.io/) course, we will learn how to manage your k8s cluster state using [FluxCD](https://fluxcd.io/).\
+This means no more `kubectl apply ...` and no more `helm install ...` or any command that modified your cluster state.
+Everything needs to be done the **GitOps** way, using **FluxCD**, with files that are stored in a Git repository.  
+
+## Prerequisites
+
+We assume you have basic experience with **K8S** and that you have a cluster ready for this course and a `kubectl` command that communicates with that cluster. We recommend using a **Managed K8S** cluster from a cloud provider since some of our lesson we will examine the interaction between cluster resources and our cloud provider.\
+The cluster we will use in this course is a [GKE](https://cloud.google.com/kubernetes-engine) cluster from google GCP, but you can use any other cloud provider.\
+When running `kubectl version` make sure that the Server version is 1.26 or higher.
