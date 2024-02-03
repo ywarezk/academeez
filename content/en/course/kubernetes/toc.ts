@@ -8,12 +8,12 @@
  */
 
 import {NavItem} from '@/lib';
-import {ReactIcon} from '@/ui/icons';
+import {Kubernetes} from '@/ui/icons';
 
 const toc: NavItem = {
   title: 'Kubernetes',
   href: '/en/course/kubernetes',
-  Icon: ReactIcon,
+  Icon: Kubernetes,
   items: [
     {
       href: '/en/course/kubernetes/flux',

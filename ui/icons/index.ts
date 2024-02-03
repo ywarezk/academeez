@@ -9,3 +9,4 @@ export * from './HtmlIcon';
 export * from './CssIcon';
 export * from './icon-course';
 export * from './flux';
+export * from './kubernetes';
