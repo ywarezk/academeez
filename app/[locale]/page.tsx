@@ -23,6 +23,7 @@ type HomePageProps = {
 
 // list of urls of featured articles
 const featuredCards = [
+  "en/course/kubernetes/flux",
   "en/course/react/suspense",
   "en/course/angular/best-practices/new-control-flow-syntax/if",
   "en/course/react",
