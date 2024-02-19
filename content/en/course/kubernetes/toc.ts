@@ -22,6 +22,11 @@ const toc: NavItem = {
         href: '/en/course/kubernetes/flux/installation',
         title: 'Installing Flux',
         items: [],
+      },
+      {
+        href: '/en/course/kubernetes/flux/kustomize-controller',
+        title: 'kustomize-controller',
+        items: [],
       }],
     },    
   ],
