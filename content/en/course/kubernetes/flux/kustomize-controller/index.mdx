@@ -9,20 +9,15 @@ The `kustomize-controller` is looking at a `Kustomization` custom resource in th
 That folder can contain a `kustomization.yaml` file, which will contain a list of resources, and the `kustomize-controller` will strive to get the cluster state according to those resources.
 If the `kustomization.yaml` file is not present, then the `kustomize-controller` will generate a `kustomization.yaml` file based on the resources in the folder.
 
-## Repository branch
-
-The way we will structure our repository is that we will work in each lesson in the `main` branch, but in order for student to examine the code in other lessons as well, we will create a branch for every lesson.  
-So before starting with lesson 2 in our flux course, let's first make sure that lesson 1 is available in the `lesson-01` branch.
-
 ## kustomize, kustomize-controller, kustomize.config.k8s.io/v1beta1 - Kustomization, kustomize.toolkit.fluxcd.io/v1 - Kustomization
 
-This is where things get a bit confusing. There are two different `Kustomization` resources, one from the `kustomize.config.k8s.io/v1beta1` API group, which is client only `kubectl`, and one from the `kustomize.toolkit.fluxcd.io/v1` API group which is a custom resource added to our cluster.
+This is where things get a bit confusing. There are two different `Kustomization` resources, one from the `kustomize.config.k8s.io/v1beta1` API group, which is client only and not created in the cluster, and one from the `kustomize.toolkit.fluxcd.io/v1` API group which is a custom resource added to our cluster.
 In addition there is the `kustomize` tool, and the `kustomize-controller` which is part of the `flux` project.
 We need to understand each of these components and how they relate to each other.
 
 ## kustomize
 
-`kustomize` kinds of reminds me of a very simplified version of `helm`. You feed kustomize with a resource that looks like so:
+`kustomize` kind of remind me of a very simplified version of `helm`. You feed kustomize with a `Kustomization` resource that looks like so:
 
 ```yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
@@ -32,18 +27,19 @@ resources:
 - namespace.yaml
 ```
 
-Here's an example of a `Kustomization` resource, `kustomize` based on this file will create the group of resources which we can feed `kubectl` and those resources will be created.
+Here's an example of a `Kustomization` resource, `kustomize` based on this file will create the group of resources which we can feed `kubectl` and those resources will be created. 
+It's important to note that this `Kustomization` resource is not a custom resource in the cluster, it's just a file that `kustomize` will use to generate resources.
 
 `kustomize` can be externally installed but it's also now baked as part of `kubectl`.
 
 ```bash
-> kubectl kustomize <kustomization_directory>
+kubectl kustomize <kustomization_directory>
 ```
 
 Will show you the resources that will be created.
 
 ```bash
-> kubectl apply -k <kustomization_directory>
+kubectl apply -k <kustomization_directory>
 ```
 
 Will create the resources.
@@ -56,10 +52,10 @@ Although `kustomize` is now baked into `kubectl`, you can still install it separ
 The easiest way is using `homebrew`:
 
 ```bash
-> brew install kustomize
+brew install kustomize
 ```
 
-After installation you will have the `kustomize` command available. This command will not effect your cluster
+After installation you will have the `kustomize` command available. This command will not effect your cluster, and personally I love to use it as a tool to understand what is created, and patched.
 
 ## kustomization.yaml
 
@@ -70,7 +66,7 @@ There is a special meaning for files named `kustomization.yaml` in a directory. 
 kustomize can help you create a `kustomization.yaml` file based on the resources in a directory.
 
 ```bash
-> cd clusters/staging && kustomize create --autodetect --recursive
+cd clusters/staging && kustomize create --autodetect --recursive
 ```
 
 You can cd into a directory containing `yaml` resources, and you can run `kustomize create --autodetect --recursive` and it will generate a `kustomization.yaml` file based on the resources in that directory. 
@@ -82,7 +78,7 @@ I use this command often, it's a way to see the resources that will be created b
 The command will not actually create the resources, it will just show you the resources that will be created.
 
 ```bash
-> kustomize build <kustomization_directory>
+kustomize build <kustomization_directory>
 ```
 
 ## patch
@@ -103,7 +99,7 @@ kind: Kustomization
 resources:
 - flux-system
 - namespace.yaml
-patchesStrategicMerge:
+patches:
 - patch.yaml
 ```
 In this example we will use the `patch.yaml` to add annotation to the `source-controller` `ServiceAccount`
@@ -227,8 +223,8 @@ Modify the file `apps/production/release.yaml` to have the following content:
 We can test our overlays by running the following command:
 
 ```bash
-> kubectl kustomize apps/staging
-> kubectl kustomize apps/production
+kubectl kustomize apps/staging
+kubectl kustomize apps/production
 ```
 
 You should see how the configurations for the 2 clusters are identical except for the `version` field. Overlays usually combines with `patches` to create similar clusters with slight differences.
@@ -301,7 +297,7 @@ The way it creates the `kustomization.yaml` is by running `kustomize create --au
 Let's try to run it ourselves:
 
 ```bash
-> cd clusters/staging && kustomize create --autodetect --recursive
+cd clusters/staging && kustomize create --autodetect --recursive
 ```
 
 You will see that a `kustomization.yaml` file was created in the `clusters/staging` directory, and it contains the resources in the directory and also the subdirectories (like `flux-system` dir). It also included the `namespace.yaml` from the first lesson, this is how our namespace was created in the first lesson, by the `kustomize-controller` automatically generating a `Kustomization` resource, in the `clusters/staging` folder.
