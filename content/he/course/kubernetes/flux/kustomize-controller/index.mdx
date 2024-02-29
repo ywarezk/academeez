@@ -138,7 +138,7 @@ patches:
 	path: patch.yaml
 ```
 
-and in the `patch.json` file we can have the following content:
+and in the `patch.yaml` file we can have the following content:
 
 ```yaml
 - op: add
@@ -263,11 +263,11 @@ spec:
 
 Let's go over the important fields:
 
--   **metadata.namespace** - The `Kustomization` resource doesn't have to be in the `flux-system` namespace, Although I usually put it there.
--   **spec.interval** - The interval in which the `kustomize-controller` will examine the resource, check the cluster, and correct any drifting to match the cluster state to the resources in the `kustomization.yaml` file.
--   **spec.path** - The path to the folder in the source (git repository in this case) that contains the `kustomization.yaml` file (if no `kustomization.yaml` it will be generated - more on that later).
--   **spec.prune** - If set to `true` removed resources will be garbage collected, I turn this on must of the times.
--   **spec.sourceRef** - The `sourceRef` field is a reference to a `source-controller` custom resource, in this course we will use `GitRepository` custom resource - this points to where the `path` directory is located, and where our yaml files to apply reside.
+- **metadata.namespace** - The `Kustomization` resource doesn't have to be in the `flux-system` namespace, Although I usually put it there.
+- **spec.interval** - The interval in which the `kustomize-controller` will examine the resource, check the cluster, and correct any drifting to match the cluster state to the resources in the `kustomization.yaml` file.
+- **spec.path** - The path to the folder in the source (git repository in this case) that contains the `kustomization.yaml` file (if no `kustomization.yaml` it will be generated - more on that later).
+- **spec.prune** - If set to `true` removed resources will be garbage collected, I turn this on must of the times.
+- **spec.sourceRef** - The `sourceRef` field is a reference to a `source-controller` custom resource, in this course we will use `GitRepository` custom resource - this points to where the `path` directory is located, and where our yaml files to apply reside.
 
 ## kustomize-controller entry point
 
@@ -356,8 +356,8 @@ we prepared an apps overlay, and place the namespace creation in that directory.
 
 In this lesson we learned about:
 
--   `kustomize` - a tool that can generate resources based on a `kustomization.yaml` file, built-in in our `kubectl` client.
--   `kustomize-controller` which responds to `Kustomization` custom resource and keeps the cluster state in sync with the resources defined in a `kustomization.yaml` file.
+- `kustomize` - a tool that can generate resources based on a `kustomization.yaml` file, built-in in our `kubectl` client.
+- `kustomize-controller` which responds to `Kustomization` custom resource and keeps the cluster state in sync with the resources defined in a `kustomization.yaml` file.
 
 We also learned about the `Kustomization` resource, and created a basic overlay for our `apps` as well as learned how to use `patches` which will be handy to create slight differences in our overlays.
 
