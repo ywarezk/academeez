@@ -1,0 +1,321 @@
+---
+title: helm-controller
+description: In this lesson we will learn about helm-controller, and we will use it to install nginx ingress controller on our cluster
+publishDate: 2024-03-16
+---
+
+The `helm-controller` is a [Flux](https://fluxcd.io/flux/components/helm/) operator that works with the `HelmRelease` custom resource.
+It is used to manage helm releases on our cluster.
+
+## Helm
+
+Let's start with some basic concepts that we need to be familiar with before we start using `helm-controller`.
+[Helm](https://helm.sh/) is a package manager for Kubernetes. It is the best way to find, share, and use software built for Kubernetes.
+When using **Helm** to install resources on our cluster, there are few terms that we need to know...
+
+### Helm Chart
+
+A Helm chart is a collection of files that describe a related set of Kubernetes resources. A single chart might be used to deploy something simple, like a memcached pod, or something complex, like a full web app stack with HTTP servers, databases, caches, and so on.
+
+### Helm Repository
+
+A Helm repository is an HTTP server that houses an `index.yaml` file and some packaged charts. The `index.yaml` file contains a list of all of the charts in the repository, along with metadata about those charts.
+You don't need anything special for creating a Helm repository, you can use any web server to serve your charts.
+Popular choices of hosting your charts can be: S3 buckets, Github pages, and many cloud providers are now offering artifact registries.
+In addition to those self hosting options, you also have community managed repositories like [Artifact Hub](https://artifacthub.io/).
+In this lesson we will learn how to work with community managed repositories, and we will install [nginx ingress controller using helm](https://docs.nginx.com/nginx-ingress-controller/installation/installing-nic/installation-with-helm/)
+
+### OCI
+
+OCI stands for Open Container Initiative, and the idea is to create a standard for container images and runtime.
+
+### OCI Artifact
+
+OCI Artifact is a specification for a container image, and it can be used to store any kind of artifact, not just container images, including Helm charts.
+
+### OCI Repository
+
+OCI Repository can store OCI Artifacts, this means it can be used for images, helm charts, and other OCI artifacts.
+We will strive do install our helm charts in the new standard, from OCI repositories. Using OCI repositories will later benefit us when we learn to manage helm versions using flux image automation controllers.
+
+### Helm Release
+
+A Helm release is an instance of a chart running in a Kubernetes cluster. One chart can often be installed many times into the same cluster. And each time it is installed, a new release is created.
+
+## Flux helm workflow
+
+Based on the basic helm concepts, flux will need to do the following:
+
+1. Subscribe to an OCI Helm repository, grab the `index.yaml` file, and periodically check for updates.
+2. Grab a specific chart, and version from the repository, periodically check for updates for that chart.
+3. Install the chart on the cluster.
+4. Manage changes - for example if we want to supply different values to the chart.
+5. Manage upgrades - we need to update the release when a new version of the chart is available - this is a complex topic and we will dedicate a full lesson on how we recommend doing that.
+
+Grabbing artifacts from remote places is the job of the `source-controller` - so the `source-controller` will take care of **(1)** and **(2)**.\
+Installing the chart on the cluster is the job of the `helm-controller` - so the `helm-controller` will take care of **(3)** and **(4)**.
+Regarding **(5)** we will use flux image automation controllers to manage the upgrades - but more on this in a seperate lesson.
+
+## Subscribe to a Helm repository
+
+To add a helm repository without flux you would run the following command:
+
+```bash
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+```
+
+We do not use this command when we are using flux to manage our cluster. 
+In fact my usage of the helm command now is to read data, installation in `--dry-run`, and `helm create` to help me bootstrap a new chart, and that's about it. 
+Any other command that might change the state of my cluster, is not done with the helm command but with **Flux**
+So instead of the `helm repo add` command, we let the `source-controller` manage all our helm repositories.
+we use the `HelmRepository` custom resource which instructs the `source-controller` to subscribe to the repo.
+Let's start by subscribing to the `nginx-ingress` repository, since all our clusters will need an ingress controller, we will install it in the `infastructure/base` folder. 
+In that folder create the folder `/infastructure/base/nginx` where we will place all the resources related to the nginx ingress controller.
+Create the file `namespace.yaml` with the following content:
+
+```yaml title="/infastructure/base/nginx/namespace.yaml"
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  nginx
+```
+
+We will place all nginx resources inside the `nginx` namespace.
+
+Now let's create the `HelmRepository` custom resource to subscribe to the `ingress-nginx` repository.
+Create the file `infastructure/base/nginx/repository.yaml` with the following content:
+
+```yaml title="/infastructure/base/nginx/repository.yaml"
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: nginx
+  namespace: nginx
+spec:
+  interval: 1h
+  url: oci://ghcr.io/nginxinc/charts
+  type: oci
+```
+
+Few things to note here:
+
+- We are adding the repo from the official nginx. This is the nginx ingress controller helm repo that we recommend.
+- We prefer to always use `oci` helm repositories.
+  We will also need a few `kustomization.yaml` files to organize our resources.
+  Let's add one in the `nginx` folder: `/infastructure/base/nginx/kustomization.yaml` with the following content:
+
+```yaml title="/infastructure/base/nginx/kustomization.yaml"
+resources:
+  - namespace.yaml
+  - repository.yaml
+```
+
+We will also need a `kustomization.yaml` in the `/infastructure/base` folder to include the `nginx` folder.
+
+```yaml title="/infastructure/base/kustomization.yaml"
+resources:
+  - ./nginx
+```
+
+And we will also create a `infastructure/staging` folder with a `kustomization.yaml` file, which will allow us to patch changes that we want for a specific cluster - in this case the `staging` cluster.
+
+```yaml title="/infastructure/staging/kustomization.yaml"
+resources:
+	- ../base
+```
+
+It's best to verify using `kustomize` that `kustomize build` of the `/infastructure/staging` folder will output the expected resources.
+
+```bash
+kustomize build infastructure/staging
+```
+
+The result of running this command is:
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: nginx
+  namespace: nginx
+spec:
+  interval: 24h
+  url: https://kubernetes.github.io/ingress-nginx
+```
+
+Another thing that we need to do is to tell the `kustomize-controller` to watch the `infastructure/staging` folder.
+We achieve that with a `Kustomization` resource.
+Create the file `clusters/staging/infastructure.yaml` with the following content:
+
+```yaml title="clusters/staging/infastructure.yaml"
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infastructure
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: ./infastructure/staging
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+```
+
+Let's push our code and see if the `source-controller` will subscribe to the `ingress-nginx` repository.
+
+```bash
+kubectl get helmrepository -n nginx
+```
+
+You should see a result similar to this:
+
+```
+NAME    URL                                          AGE     READY   STATUS
+nginx   oci://ghcr.io/nginxinc/charts               7m57s   
+```
+
+Notice that in `OCI` repositories we do not have a `READY/STATUS` column, because the `source-controller` does not have a way to know if the repository is ready or not. See this [issue](https://github.com/fluxcd/flux2/issues/4469) as this might change in the future.
+
+## HelmChart
+
+Now that we managed to subscribe the `source-controller` to the `ingress-nginx` repository, we need to tell the `source-controller` to grab a specific chart from that repository.
+We can do that with the `HelmChart` custom resource.
+In the `infastructure/base/nginx` folder create the file `chart.yaml` with the following content:
+
+```yaml title="/infastructure/base/nginx/chart.yaml"
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmChart
+metadata:
+  name: nginx
+  namespace: nginx
+spec:  
+  interval: 1h
+  chart: nginx-ingress
+  sourceRef:
+    kind: HelmRepository
+    name: nginx    
+  version: 1.2.x
+```
+
+Few things to note in the `HelmChart` custom resource:
+
+- `chart` is the name of the chart that we want to install from the repository mentioned in `sourceRef`.
+- `version` specifies the version of the chart to grab, in this example we are using `1.2.x` which means we want to grab the latest version of the `1.2` series.
+
+The `version` field is optional, if you do not specify it, the `source-controller` will grab the latest version of the chart.
+We highly recommend to specify the version, you do not want to be surprised by a breaking change in the chart, and we need to keep track of version updates in a declarative gitops way.
+
+Throughout this course we will learn how to manage helm updates in a more preofessional and best practice ways:
+
+- We will use `notification-controller` to notify us when a new version of the chart is available.
+- We will use flux automation controllers to automatically update the staging cluster
+- We will use flux automation controllers to issue a pr to update the production cluster.
+
+All of these will be covered throughout this course, but not in this lesson. This will require us to have a kustomization patch for the version in staging and production, but we will deal with that when we learn how to handle helm versions in a professional way.
+
+But first let's add the chart resource to the `infastructure/base/nginx/kustomization.yaml` file:
+
+```yaml title="/infastructure/base/nginx/kustomization.yaml"
+resources:
+  - namespace.yaml
+  - repository.yaml
+  - chart.yaml
+```
+
+And let's push our code and see if the `source-controller` will grab the `nginx-ingress` chart. 
+If all went well you can run the command:
+
+```bash
+kubectl get helmchart -n nginx
+```
+
+and you should see the following result:
+
+```
+NAME    CHART           VERSION   SOURCE KIND      SOURCE NAME   AGE   READY   STATUS
+nginx   nginx-ingress   1.2.x     HelmRepository   nginx         20m   True    pulled 'nginx-ingress' ...
+```
+
+## HelmRelease
+
+Our chart is not installed yet, we just subscribed to the repository and grabbed the chart.
+Now it's time to install the chart on our cluster, and this is a job for the `helm-controller`.
+The `helm-controller` will watch for `HelmRelease` custom resources and install the charts specified in those resources.
+Those resources will specify which chart to use, and the values you want to pass to the chart.
+In the `infastructure/base/nginx` folder create the file `release.yaml` with the following content:
+
+```yaml title="/infastructure/base/nginx/release.yaml"
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: nginx
+  namespace: nginx
+spec:  
+  chart:
+    spec:
+      chart: nginx-ingress
+      version: 1.2.x
+      sourceRef:
+        kind: HelmRepository
+        name: nginx
+      interval: 1h
+  interval: 1h  
+  releaseName: nginx
+```
+
+Notice that in the `HelmRelease` you have a `spec.chart` section, which is a shortcut for creating a `HelmChart` resource.
+I find it a bit better to create the `HelmChart` with this shortcut since it allows me to see the version of the release in the same file.
+This means we can now delete the chart file: `infastructure/base/nginx/chart.yaml`.
+And update the `infastructure/base/nginx/kustomization.yaml` file to include the `release.yaml` file:
+
+```yaml title="/infastructure/base/nginx/kustomization.yaml"
+resources:
+  - namespace.yaml
+  - repository.yaml
+  - release.yaml
+```
+
+Also note in the `HelmRelease` there are 2 `interval` fields:
+
+- The first one is in the `spec.chart` section, this is the interval that the `source-controller` will check if a new chart is release according to the `spec.chart.spec.version` constraint.
+- The second one is in the `spec` section, this is the interval that the `helm-controller` will check drifting of the helm chart resources.
+
+Now push your code and see if the `helm-controller` will install the `nginx-ingress` chart on your cluster.
+In the terminal type:
+
+```bash
+kubectl get helmrelease -n nginx
+```
+
+You should see the following result:
+
+```
+NAME    AGE     READY   STATUS
+nginx   3m51s   True    Helm install...
+```
+
+If you want to examine what was installed on your cluster you can run the following command:
+
+```bash
+kubectl get all -n nginx
+```
+
+You should see a result similar to this:
+![release installation](installed.png) 
+
+Few things to note here:
+
+- ingress controller pod and deployment are running
+- A service with type `LoadBalancer` is created, this is the service that will expose the ingress controller to the internet.
+
+## Summary
+
+No more `helm install` commands, or any usage of `helm` to modify the state of our cluster. 
+Everything has to be declarative now, with yaml files instructing the `helm-controller` to manage our helm releases.
+Of course for the `helm-controller` to install a release, we will need it to work together with the `source-controller` which will subscribe to a helm repository, and grab a chart from that repository.
