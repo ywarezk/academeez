@@ -19,9 +19,9 @@ A Helm chart is a collection of files that describe a related set of Kubernetes 
 
 ### Helm Repository
 
-A Helm repository is an HTTP server that houses an `index.yaml` file and some packaged charts. The `index.yaml` file contains a list of all of the charts in the repository, along with metadata about those charts.
-You don't need anything special for creating a Helm repository, you can use any web server to serve your charts.
-Popular choices of hosting your charts can be: S3 buckets, Github pages, and many cloud providers are now offering artifact registries.
+A Helm repository is an HTTP server that houses an `index.yaml` (No `index.yaml` in OCI repositories) file and some packaged charts. The `index.yaml` file contains a list of all of the charts in the repository, along with metadata about those charts.
+You don't need anything special for creating a Helm repository, you can use any web server to serve your charts (In OCI repositories it will require a bit more, and it's recommended to use cloud solution).
+Popular choices of hosting your charts can be: S3 buckets, Github pages, and many cloud providers are now offering artifact registries (artifact registries are perfect choice for OCI repositories).
 In addition to those self hosting options, you also have community managed repositories like [Artifact Hub](https://artifacthub.io/).
 In this lesson we will learn how to work with community managed repositories, and we will install [nginx ingress controller using helm](https://docs.nginx.com/nginx-ingress-controller/installation/installing-nic/installation-with-helm/)
 
@@ -45,7 +45,7 @@ A Helm release is an instance of a chart running in a Kubernetes cluster. One ch
 ## Flux helm workflow
 
 Based on the basic helm concepts, flux will need to do the following:
-1. Subscribe to an OCI Helm repository, grab the `index.yaml` file, and periodically check for updates.
+1. Subscribe to an OCI Helm repository.
 2. Grab a specific chart, and version from the repository, periodically check for updates for that chart.
 3. Install the chart on the cluster.
 4. Manage changes - for example if we want to supply different values to the chart.
@@ -99,6 +99,7 @@ spec:
 Few things to note here:
 - We are adding the repo from the official nginx. This is the nginx ingress controller helm repo that we recommend.
 - We prefer to always use `oci` helm repositories.
+
 We will also need a few `kustomization.yaml` files to organize our resources.
 Let's add one in the `nginx` folder: `/infastructure/base/nginx/kustomization.yaml` with the following content:
 
@@ -302,7 +303,7 @@ kubectl get all -n nginx
 ```
 
 You should see a result similar to this:
-![release installation](installed.png) 
+![release installation](https://github.com/ywarezk/academeez/blob/main/content/en/course/kubernetes/flux/helm-controller/installed.png?raw=true) 
 
 Few things to note here:
 
