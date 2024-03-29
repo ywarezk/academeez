@@ -27,6 +27,11 @@ const toc: NavItem = {
         href: '/en/course/kubernetes/flux/kustomize-controller',
         title: 'kustomize-controller',
         items: [],
+      },
+      {
+        href: '/en/course/kubernetes/flux/helm-controller',
+        title: 'helm-controller',
+        items: [],
       }],
     },    
   ],

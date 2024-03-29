@@ -23,6 +23,7 @@ type HomePageProps = {
 
 // list of urls of featured articles
 const featuredCards = [
+  "en/course/kubernetes/flux/helm-controller",
   "en/course/kubernetes/flux/kustomize-controller",
   "en/course/kubernetes/flux/installation",
   "en/course/kubernetes/flux",
