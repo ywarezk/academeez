@@ -90,8 +90,7 @@ kind: HelmRepository
 metadata:
   name: nginx
   namespace: nginx
-spec:
-  interval: 1h
+spec:  
   url: oci://ghcr.io/nginxinc/charts
   type: oci
 ```
@@ -142,9 +141,9 @@ kind: HelmRepository
 metadata:
   name: nginx
   namespace: nginx
-spec:
-  interval: 24h
-  url: https://kubernetes.github.io/ingress-nginx
+spec:  
+  url: oci://ghcr.io/nginxinc/charts
+  type: oci
 ```
 
 Another thing that we need to do is to tell the `kustomize-controller` to watch the `infastructure/staging` folder.
