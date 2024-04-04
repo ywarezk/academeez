@@ -2,6 +2,7 @@
 title: helm-controller
 description: In this lesson we will learn about helm-controller, and we will use it to install nginx ingress controller on our cluster
 publishDate: 2024-03-16
+video: https://www.youtube.com/embed/aD5_OA3IEaA?si=UGUp2nH7JC0Pb85h
 ---
 
 The `helm-controller` is a [Flux](https://fluxcd.io/flux/components/helm/) operator that works with the `HelmRelease` custom resource.
@@ -19,9 +20,9 @@ A Helm chart is a collection of files that describe a related set of Kubernetes 
 
 ### Helm Repository
 
-A Helm repository is an HTTP server that houses an `index.yaml` file and some packaged charts. The `index.yaml` file contains a list of all of the charts in the repository, along with metadata about those charts.
-You don't need anything special for creating a Helm repository, you can use any web server to serve your charts.
-Popular choices of hosting your charts can be: S3 buckets, Github pages, and many cloud providers are now offering artifact registries.
+A Helm repository is an HTTP server that houses an `index.yaml` (No `index.yaml` in OCI repositories) file and some packaged charts. The `index.yaml` file contains a list of all of the charts in the repository, along with metadata about those charts.
+You don't need anything special for creating a Helm repository, you can use any web server to serve your charts (In OCI repositories it will require a bit more, and it's recommended to use cloud solution).
+Popular choices of hosting your charts can be: S3 buckets, Github pages, and many cloud providers are now offering artifact registries (artifact registries are perfect choice for OCI repositories).
 In addition to those self hosting options, you also have community managed repositories like [Artifact Hub](https://artifacthub.io/).
 In this lesson we will learn how to work with community managed repositories, and we will install [nginx ingress controller using helm](https://docs.nginx.com/nginx-ingress-controller/installation/installing-nic/installation-with-helm/)
 
@@ -46,7 +47,7 @@ A Helm release is an instance of a chart running in a Kubernetes cluster. One ch
 
 Based on the basic helm concepts, flux will need to do the following:
 
-1. Subscribe to an OCI Helm repository, grab the `index.yaml` file, and periodically check for updates.
+1. Subscribe to an OCI Helm repository.
 2. Grab a specific chart, and version from the repository, periodically check for updates for that chart.
 3. Install the chart on the cluster.
 4. Manage changes - for example if we want to supply different values to the chart.
@@ -91,8 +92,7 @@ kind: HelmRepository
 metadata:
   name: nginx
   namespace: nginx
-spec:
-  interval: 1h
+spec:  
   url: oci://ghcr.io/nginxinc/charts
   type: oci
 ```
@@ -101,8 +101,9 @@ Few things to note here:
 
 - We are adding the repo from the official nginx. This is the nginx ingress controller helm repo that we recommend.
 - We prefer to always use `oci` helm repositories.
-  We will also need a few `kustomization.yaml` files to organize our resources.
-  Let's add one in the `nginx` folder: `/infastructure/base/nginx/kustomization.yaml` with the following content:
+
+We will also need a few `kustomization.yaml` files to organize our resources.
+Let's add one in the `nginx` folder: `/infastructure/base/nginx/kustomization.yaml` with the following content:
 
 ```yaml title="/infastructure/base/nginx/kustomization.yaml"
 resources:
@@ -143,9 +144,9 @@ kind: HelmRepository
 metadata:
   name: nginx
   namespace: nginx
-spec:
-  interval: 24h
-  url: https://kubernetes.github.io/ingress-nginx
+spec:  
+  url: oci://ghcr.io/nginxinc/charts
+  type: oci
 ```
 
 Another thing that we need to do is to tell the `kustomize-controller` to watch the `infastructure/staging` folder.
@@ -307,7 +308,7 @@ kubectl get all -n nginx
 ```
 
 You should see a result similar to this:
-![release installation](installed.png) 
+![release installation](https://github.com/ywarezk/academeez/blob/main/content/en/course/kubernetes/flux/helm-controller/installed.png?raw=true) 
 
 Few things to note here:
 
@@ -319,3 +320,5 @@ Few things to note here:
 No more `helm install` commands, or any usage of `helm` to modify the state of our cluster. 
 Everything has to be declarative now, with yaml files instructing the `helm-controller` to manage our helm releases.
 Of course for the `helm-controller` to install a release, we will need it to work together with the `source-controller` which will subscribe to a helm repository, and grab a chart from that repository.
+
+The full source code of this lesson can be found [here](https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-03)
