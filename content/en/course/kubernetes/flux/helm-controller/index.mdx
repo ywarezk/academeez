@@ -2,6 +2,7 @@
 title: "helm-controller"
 description: "In this lesson we will learn about helm-controller, and we will use it to install nginx ingress controller on our cluster"
 publishDate: "2024-03-16"
+video: "https://www.youtube.com/embed/aD5_OA3IEaA?si=UGUp2nH7JC0Pb85h"
 ---
 
 The `helm-controller` is a [Flux](https://fluxcd.io/flux/components/helm/) operator that works with the `HelmRelease` custom resource.
@@ -314,3 +315,5 @@ Few things to note here:
 No more `helm install` commands, or any usage of `helm` to modify the state of our cluster. 
 Everything has to be declarative now, with yaml files instructing the `helm-controller` to manage our helm releases.
 Of course for the `helm-controller` to install a release, we will need it to work together with the `source-controller` which will subscribe to a helm repository, and grab a chart from that repository.
+
+The full source code of this lesson can be found [here](https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-03)
