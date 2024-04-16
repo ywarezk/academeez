@@ -1,0 +1,56 @@
+---
+title: High Availability Best Practices
+description: Best practice tips regarding infastructure and nginx ingress controller high availability.
+publishDate: "2024-04-08"
+---
+
+Once in a while throughout this course, we will focus on lessons about best practices.
+The goal of this course is not only to teach you advanced topics, but also to learn about the obstacles you will face and best practice tools to deal with them.
+In the previous [lesson](https://www.academeez.com/en/course/kubernetes/flux/helm-controller) we installed [nginx ingress controller](https://docs.nginx.com/nginx-ingress-controller/installation/installing-nic/installation-with-helm/) using flux [helm-controller](https://fluxcd.io/flux/components/helm/).
+In this lesson we will go over that installation and give some insights on tips to improve the high availability of your k8s cluster and nginx ingress controller.
+
+## High Availability
+
+High availability is a characteristic of a system to operate continuously without failure for a long period of time.
+During this course we will provide lessons and tips regarding best practices to achieve high availability in your k8s cluster.
+In this lesson we will provide some `Single point of failure tips`
+
+### Single point of failure
+
+A single point of failure is a part of a system that, if it fails, will stop the entire system from working.
+Currently, our nginx ingress controller is a single point of failure as well as our cluster infastructure.
+
+## Multi zone cluster
+
+One way to improve the high availability of your k8s cluster is to create a multi zone (or regional) cluster.
+A multi zone cluster is a k8s cluster that spans multiple availability zones.
+This way, if one availability zone fails, the other availability zone will continue to operate.
+
+**Our first best practice tip: Make sure your production clusters have multi zone availability**
+
+This means that your cluster needs to be [regional](https://cloud.google.com/kubernetes-engine/docs/concepts/regional-clusters) and not limited to a single zone.
+A region contains multiple zones, and each zone is a separate physical location.
+A regional cluster means the master nodes are spread across multiple zones, and the worker nodes are spread across multiple zones.
+No single point of failure for the master and nodes.
+Cost more but for high availability production cluster it's a must.
+
+## Use Infastructure as Code
+
+Changes in the infastructure should be done by code, and tracked in a version control system.
+This course does not cover infastructure by code technologies, it's more important to emphsize the importance of this practice of coding your infastructure, more then the actual technology you will use.
+It is important however to consider the cloud browser as a read only tool, and same goes for the cloud cli tool. Do not alter the state of the infastructure using the browser or cli, for altering the infastructure use code tracked by a version control system.
+
+To be clear regarding the infastructure used in this course, we created the folder `/iac` in the course repository, and we will store all the infastructure code there.
+This way you can also examine infastructure configurations that are used in the course.
+Inside the `/iac` folder there are folders for the cloud `/iac/gcp` if any other cloud provider will be asked we will create a folder for it - submit an issue (or create a PR if you really want a good practice).
+
+So it's `/iac/<cloud provider>` and inside that folder, there are folders according to the infastructure as code technology used.
+For example you will find the folder `/iac/gcp/tofu` for google cloud infastructure project created with [OpenTofu](https://opentofu.org/).
+If you want an example in another technology, submit an issue (or create a PR if you are up to the challenge - only open source license technologies are allowed).
+
+## Environments
+
+We want to emphasize tips for production cluster as well as non-production clusters.
+So the infastructure code will contain configurations for `dev` and `prod`, on dev we will focus on cost saving and on prod we will focus on high availability.
+
+

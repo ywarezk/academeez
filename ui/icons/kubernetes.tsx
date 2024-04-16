@@ -29,7 +29,7 @@ export const Kubernetes = (props: SVGProps<any>) => {
         color="#000000"
         fill="#ffffff"
         stroke="#ffffff"
-        stroke-width=".25"
+        strokeWidth=".25"
         overflow="visible"
         font-family="Sans"
       />

@@ -40,6 +40,15 @@ const toc: NavItem = {
       href: '/en/course/react/trpc',
       title: 'tRPC',
       items: [],      
+    },
+    {
+      href: '/en/course/react/best-practices',
+      title: 'Best Practices',
+      items: [{
+        href: '/en/course/react/best-practices/component-single-responsibility',
+        title: 'Component Single Responsibility',
+        items: [],
+      }],
     }
   ],
 };

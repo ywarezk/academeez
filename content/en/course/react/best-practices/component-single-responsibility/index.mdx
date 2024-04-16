@@ -1,0 +1,224 @@
+---
+title: Component Single Responsibility
+description: Each React component should have a clear responsibility or role
+publishDate: "2024-04-16"
+---
+
+[SOLID](https://simple.wikipedia.org/wiki/SOLID_(object-oriented_design)#:~:text=mnemonic%20acronym%20for%205%20principles,(rules)%20in%20computer%20programming.) is a set of five principles that help you design well-structured, maintainable, and scalable code.
+In this lesson we will focus on the `Single Responsibility Principle` which is the `S` in `SOLID`.
+
+This is a mistake I see often among React developers, and it's a mistake that can lead to a lot of problems down the road.
+If your component is very long and dealing with many different things, it's a sign that this component is probably violating the `Single Responsibility Principle`.
+
+If a component has many if's which render different things, or if it has many different states, or if it has many different functions that do different things, it's a sign that this component might be violating the `Single Responsibility Principle`. 
+
+Let's examine the following component and try and improve it by following the `Single Responsibility Principle`.
+
+<div className="mt-5">
+<Sandpack 
+	customSetup={{ 
+		dependencies: { 
+			"react": "^18.0.0",
+    	"react-dom": "^18.0.0",
+    	"react-scripts": "^5.0.0",
+    	"@tanstack/react-query": "5.29.2"
+		}
+	}}
+	files={{
+		"/BadTodo.js": {
+			readOnly: true,	
+			code: `/**
+ * Todo is in charge of:
+ *    - send a request to fetch the todo items
+ *    - render a loading sign until the response is recieved
+ *    - render a list of todo items
+ *    - render an error if the request if failing
+ *
+ * This long list is a sign for breaking the single responsibility rule
+ */
+
+import { useQuery } from "@tanstack/react-query";
+
+export function BadTodo() {
+  const { data, error, isPending } = useQuery({
+    queryKey: ["todos"],
+    queryFn: () => {
+      return fetch("https://jsonplaceholder.typicode.com/todos").then((res) => {
+        if (!res.ok) {
+          // make the promise be rejected if we didn't get a 2xx response
+          throw new Error("Not 2xx response", { cause: res });
+        } else {
+          return res.json();
+        }
+      });
+    },
+  });
+
+  if (isPending) {
+    return <h1>Loading</h1>;
+  }
+
+  if (error) {
+    return <h6>{error.message}</h6>;
+  }
+
+  return (
+    <ul>
+      {data?.map((todo) => (
+        <li key={todo.id}>{todo.title}</li>
+      ))}
+    </ul>
+  );
+}
+			`
+		},
+		"/App.js": {
+			hidden: true,
+			readOnly: true,		
+			code: `import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BadTodo } from "./BadTodo";
+			
+// Create a client
+const queryClient = new QueryClient();
+
+export default function App() {
+  return (
+		<QueryClientProvider client={queryClient}>
+			<BadTodo />
+		</QueryClientProvider>		
+  )
+}`
+		},
+		
+	}}
+	template="react" 
+/>
+</div>
+
+Take a look at the `<BadTodo />` component. The component is responsible for fetching the todo items, rendering a loading sign until the response is received, rendering a list of todo items, and rendering an error if the request is failing.
+Notice the multiple if's which cause a different render, which are a clear sign that this component is breaking the `Single Responsibility Principle`.
+What if we want to share the loading sign with other components? What if we want to share the error message with other components? What if we want to share the list of todo items with other components? We can't do that because this component is doing too many things.
+Often breaking the `Single Responsibility Principle` leads to code duplication, and it makes the code harder to maintain and test.
+
+Let's replace the `<BadTodo />` component and instead create the `<GoodTodo />` which follows the `Single Responsibility Principle`.
+Take a look at the following:
+
+<div className="mt-5">
+<Sandpack 
+	customSetup={{ 
+		dependencies: { 
+			"react": "^18.0.0",
+    	"react-dom": "^18.0.0",
+    	"react-scripts": "^5.0.0",
+    	"@tanstack/react-query": "5.29.2",
+			"react-error-boundary": "4.0.13"
+		}
+	}}
+	files={{
+		"/GoodTodo.js": {
+			readOnly: true,	
+			code: `import { useTodos } from "./todo.hook.js";
+
+export function GoodTodo() {
+  const { data } = useTodos();
+
+  return (
+    <ul>
+      {data.map((todo) => (
+        <li key={todo.id}>{todo.title}</li>
+      ))}
+    </ul>
+  );
+}
+`
+		},
+		"/App.js": {			
+			readOnly: true,		
+			code: `import "./styles.css";
+import { GoodTodo } from "./GoodTodo";
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import { Error } from "./Error";
+import { Loading } from "./Loading";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+// Create a client
+const queryClient = new QueryClient();
+
+export default function App() {
+  return (
+		<QueryClientProvider client={queryClient}>
+			<div className="App">
+				<ErrorBoundary fallback={<Error />}>
+					<Suspense fallback={<Loading />}>
+						<GoodTodo />
+					</Suspense>
+				</ErrorBoundary>
+			</div>
+		</QueryClientProvider>
+  );
+}
+`
+		},
+		"/Loading.js": {
+			readOnly: true,	
+			code: `export function Loading() {
+	return <h1>Loading</h1>;
+}					 
+					`
+		},
+		"/Error.js": {
+			readOnly: true,	
+			code: `export function Error() {
+	return <h6>Something went wrong</h6>;
+}`
+		},
+		"/todo.hook.js": {
+			readOnly: true,	
+			code: `import { useSuspenseQuery } from "@tanstack/react-query";
+
+/**
+ * Will query the server for a list of todo items
+ * @returns {ReturnType<typeof useSuspenseQuery>}
+ */
+export function useTodos() {
+  return useSuspenseQuery({
+    queryKey: ["todos"],
+    queryFn: () => {
+      return fetch("https://jsonplaceholder.typicode.com/todos").then(
+        (res) => {
+          if (!res.ok) {
+            // make the promise be rejected if we didn't get a 2xx response
+            throw new Error("Not 2xx response", { cause: res });
+          } else {
+            return res.json();
+          }
+        }
+      );
+    },
+  });
+}
+`
+		}
+	}}
+	template="react" 
+/>
+</div>
+
+We are using here a few techniques to give `<GoodTodo>` and all the components here a single responsibility:
+- We are using a custom hook `useTodos` to fetch the todo items. This hook is responsible for fetching the todo items and nothing else.
+- We use `<Suspense>` and provide a `fallback` prop with our `<Loading />` component. This way we can share the loading sign with other components, and the `<Loading>` has a single responsibility.
+- We use `<ErrorBoundary>` and provide a `fallback` prop with our `<Error />` component. This way we can share the error message with other components, and the `<Error>` has a single responsibility.
+
+Every thing in our app is responsible for one thing and one thing only. This makes our code easier to maintain, easier to test, and easier to extend.
+We can easily share the `<Loading />` and `<Error />` components with other components, and we can easily share the `useTodos` hook with other components.
+
+## Summary
+
+- Each React component should have a clear responsibility or role.
+- If a component is doing too many things, it's a sign that this component is violating the `Single Responsibility Principle`.
+- Breaking the `Single Responsibility Principle` leads to code duplication, and it makes the code harder to maintain and test.
+- Many if's in the component that cause different renders often indicate that the component is breaking the `Single Responsibility Principle`.
+- A component which is far too long and complex is often a sign that the component is breaking the `Single Responsibility Principle`.
+- Use custom hooks to share logic between components and help you maintain the `Single Responsibility Principle`.
+- Use `<Suspense>` and `<ErrorBoundary>` to share loading signs and error messages with other components and help you maintain the `Single Responsibility Principle`.

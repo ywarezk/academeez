@@ -23,6 +23,7 @@ type HomePageProps = {
 
 // list of urls of featured articles
 const featuredCards = [
+  "en/course/react/best-practices/component-single-responsibility",
   "en/course/kubernetes/flux/helm-controller",
   "en/course/kubernetes/flux/kustomize-controller",
   "en/course/kubernetes/flux/installation",
@@ -55,7 +56,7 @@ export default function HomePage(props: HomePageProps) {
   
   const featuredDocs = allDocs.filter(doc => {
     return featuredCards.find(card => card === doc.slug)
-  })  
+  })
 
   return (
     <div className="container mx-auto mt-20 text-center">
