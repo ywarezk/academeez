@@ -41,16 +41,38 @@ We are told to create a header for a website.
 The header contains a logo, navigation, and a search bar.
 Seems like a simple task, but we will break it down to smaller problems:
 1. create the logo
-2. create the navigation
-3. create the search bar
+2. create the search bar
+3. create the navigation
+
 
 We will open a new branch for the task, and since our commits should reflect the plan, we imagine that our commit diagram will look like this:
 
-![commit diagram](./commit-diagram.png)
+![commit diagram](https://github.com/ywarezk/academeez/blob/main/content/en/course/git/best-practices/clean-your-commits/plan-commits.png?raw=true)
+
+In the diagram we see that we open a branch called `feat/header` and we have 3 commits, each commit solves a problem from our plan, so the first commit in the branch will have the message:
+
+```bash
+git commit -m "feat: created the header logo"
+```
+
+The second commit in the branch will have the message:
+
+```bash
+git commit -m "feat: created the header search bar"
+```
+
+And the third commit in the branch will have the message:
+
+```bash
+git commit -m "feat: created the header navigation"
+```
 
 ## What happened to our plan in reality
 
 Mike Tyson once said: "Everyone has a plan until they get punched in the face."
+And this is an example of what happened to our plan.
+
+![git bad example](https://github.com/ywarezk/academeez/blob/main/content/en/course/git/best-practices/clean-your-commits/git-bad-example2.gif?raw=true)
 
 ## Good example bad example
 
