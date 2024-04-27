@@ -1,0 +1,94 @@
+---
+title: Git best practice - Clean your commits
+description: Learn how to clean your commits before pushing them to the remote repository.
+publishDate: "2024-04-23"
+---
+
+When you look at your version control history, you want to see a clean and readable history. 
+Think of your version control, in this lesson we will demonstrate with [git](https://git-scm.com/), as telling a story, the story of evolution of your software.
+The story has chapters which are the pr's, and the commits are the paragraphs of the chapters.
+Reading the version control history should be like reading a book, you should be able to understand the evolution of the software by reading the commit messages.
+
+## Developers common mistakes with commits
+
+There are repeating mistakes that developers do when they commit their changes.
+In this lesson we will focus on a common mistake that developers are sharing a really messy commit history.
+Before submitting your work for PR you should clean your commits.
+common `git` commands that will help you do that which we will practice in this lesson are:
+- `git commit --amend`
+- `git rebase -i`
+- `git reset`
+- `git stash`
+
+We will take those commands and different use cases and learn how to use them to clean your commits.
+
+## We start by planning our work
+
+Before we jump in to write code, we should plan our work.
+The process of planning your work is different from one developer to another, or between organizations.
+Some create [PRD](https://en.wikipedia.org/wiki/Product_requirements_document), some [Design Review](https://en.wikipedia.org/wiki/Design_review), some create [RFC](https://en.wikipedia.org/wiki/Request_for_Comments), and some just do the planning in their head.
+We will not focus on the planning phase, but rather the result of that phase.
+The result is a general plan of what you are going to do, and a general workflow of writing code to solve the problem.
+In general what we are doing is taking a problem, breaking it down to smaller problems, breaking the smaller problems to even smaller ones, and recursively do the same process until the problems are small enough for us to write code and solve them.
+Those problems that we solve we code them in logical groups and when finishing with a logical group of changes we can create a commit.
+This means that the commit should be derived from your plan.
+Not to say that plans don't change during development, so it's not going to be identical, but you should see a commit history that resembles and slowly build up to solve the problem according to the plan.
+
+## Our simple plan
+
+Let's create a plan for a simple task assigned to us.
+We are told to create a header for a website.
+The header contains a logo, navigation, and a search bar.
+Seems like a simple task, but we will break it down to smaller problems:
+1. create the logo
+2. create the navigation
+3. create the search bar
+
+We will open a new branch for the task, and since our commits should reflect the plan, we imagine that our commit diagram will look like this:
+
+![commit diagram](./commit-diagram.png)
+
+## What happened to our plan in reality
+
+Mike Tyson once said: "Everyone has a plan until they get punched in the face."
+
+## Good example bad example
+
+Let's examine a good and bad example of git history.
+The bad example is like reading a really boring book which you don't really understand what is going on.
+And the good example is like reading a well written book which you can understand the evolution of the software.
+In the following examples, we created a branch called `feat/header` where we worked on the header of our website.
+The header is made from a logo, navigation, and a search bar.
+During the work we also encountered some bugs when we ran the app, some bugs on tests, some bugs on build and some bugs on lint.
+Let's examine a good and bad example of git history.
+
+### Bad example
+
+
+So you had a plan:
+1. create the logo
+2. create the navigation
+3. create the search bar
+
+Then you got punched in the face (a few times):
+1. you encountered a bug when you ran the app
+2. you encountered a bug on tests
+3. you encountered a bug on build
+4. you encountered a bug on lint
+
+Your branch commits might look like this:
+
+
+
+
+### Good example
+
+
+## Why bother
+
+Why is it that important the my git history is clean?
+
+- **Readability**: You should be able to understand the evolution of the software by reading the commit messages.
+- **Debugging**: If you have a bug in your code, you should be able to find the commit which introduced the bug.
+- **Reverting**: If you need to revert a change, you should be able to find the commit which introduced the change.
+- **Code review**: If you are doing code review, you should be able to understand the changes by reading the commit messages.
