@@ -1,6 +1,7 @@
 export * from './AzLineIcon';
 export * from './ReactIcon';
 export * from './AngularIcon';
+export * from './GitIcon';
 export * from './TypescriptIcon';
 export * from './RxjsIcon';
 export * from './NpmIcon';

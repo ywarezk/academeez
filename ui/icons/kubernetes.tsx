@@ -25,7 +25,7 @@ export const Kubernetes = (props: SVGProps<any>) => {
           textTransform:"none",          
           marker: "none",          
         }}
-        font-weight="400"
+        fontWeight="400"
         color="#000000"
         fill="#ffffff"
         stroke="#ffffff"

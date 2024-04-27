@@ -74,40 +74,23 @@ And this is an example of what happened to our plan.
 
 ![git bad example](https://github.com/ywarezk/academeez/blob/main/content/en/course/git/best-practices/clean-your-commits/git-bad-example3.gif?raw=true)
 
-The problem is that we looked at our progress as linear progress and not as logical groups of changes.
-If we look at the commits differently we might unite together the commit with the creating logo and css fix of the logo, and also
-
-## Good example bad example
-
-Let's examine a good and bad example of git history.
-The bad example is like reading a really boring book which you don't really understand what is going on.
-And the good example is like reading a well written book which you can understand the evolution of the software.
-In the following examples, we created a branch called `feat/header` where we worked on the header of our website.
-The header is made from a logo, navigation, and a search bar.
-During the work we also encountered some bugs when we ran the app, some bugs on tests, some bugs on build and some bugs on lint.
-Let's examine a good and bad example of git history.
-
-### Bad example
-
-
-So you had a plan:
+So in reality our plan turned out like so:
 1. create the logo
-2. create the navigation
-3. create the search bar
+2. Create the search bar
+3. Fix the logo css
+4. create the navigation
+5. Fix search bar bug
+6. Fix navigation lint bug
 
-Then you got punched in the face (a few times):
-1. you encountered a bug when you ran the app
-2. you encountered a bug on tests
-3. you encountered a bug on build
-4. you encountered a bug on lint
-
-Your branch commits might look like this:
-
-
-
-
-### Good example
-
+The problem is that we looked at our progress as linear progress and not as logical groups of changes.
+If we look at the commits differently we might unite together the commit with the creating logo and css fix of the logo, and do a similar thing and group the search bar commits and the navigation commits.
+We often created commits then we get distracted so we create a **WIP** (work in progress), we switch branches to solve a bug in the main branch, we get remarks about css, and other distractions.
+Often it will cause our git history to be a mess.
+We need to think before automatically commiting all changes, think about our plan, think about the logical group of progress in our plan,
+and not necessarily see the commits as a linear progress history.
+Let's examine different tools git provides us to clean our commits.
+Tools that we have to learn in order to control how our git history looks like, and make it as clean and understandable as possible.
+But first let's answer **Why???** why should I bother cleaning my commits?
 
 ## Why bother
 
@@ -117,3 +100,107 @@ Why is it that important the my git history is clean?
 - **Debugging**: If you have a bug in your code, you should be able to find the commit which introduced the bug.
 - **Reverting**: If you need to revert a change, you should be able to find the commit which introduced the change.
 - **Code review**: If you are doing code review, you should be able to understand the changes by reading the commit messages.
+
+Let's go over different tools, and use cases that git provides us to clean our commits.
+
+## git commit --amend
+
+The `git commit --amend` command is used to add changes to the last commit.
+You can use it when working on your branch and before sharing your changes with others.
+You should not do it to shared branches, like `main` or `develop`, it will require a force push and it will mess up the history of other developers.
+But when working on your branch, you can use it to change the last commit, and you can feel free to force push on your branch when you know it's not shared.
+
+Let's see an example, let's say you are working on the `feat/header` branch and you created a commit with the message `feat: created the header logo`,
+After you created the commit the project manager sees your work and tell you to do some css changes.
+Instead of creating a new commit, since it's still the same logical group of changes, you can do the css changes and then do:
+
+```bash
+git add -A
+git commit --amend --no-edit
+```
+
+This will add the css changes to the last commit, so now you only have one commit of creating the logo.
+You can also change the commit message by dropping the `--no-edit` flag.
+
+## git reset
+
+`git reset` is a powerful command that can be used to undo changes.
+If used without the `--hard` flag it will keep the changes in the working directory, and will just remove commits, allowing you to restructure the commits.
+Let's see an example, let's say you are working on the `feat/header` branch and you created a commit with the message `feat: created the header logo and the search bar`,
+You look at the amount of changes and you notice that your commit includes a lot of changes (it's a common mistake to create single all encapsulating commits), and you want to split it to two commits.
+One commit for the changes that are related to the logo, and one commit for the changes that are related to the search bar.
+
+You can do:
+
+```bash
+git reset HEAD~1
+```
+
+This will remove the last commit, but the changes will still be in the working directory.
+Now you can add the changes related to the logo and create a commit, and then add the changes related to the search bar and create a commit.
+It's easy to use it to restructure your commits, but in the case where you want to change a commit that is located 20 places back in the history, it's a bit harder to use.
+In that case you can use the `git rebase -i` command.
+
+## git rebase -i
+
+`git rebase -i` is a powerful command that allows you to change the history of your commits.
+In my opinion it's the most important command to arrange a clean git history, which describes accurately the evolution of the software.
+The command allows you to squash commits, edit commits, reorder commits, and more.
+Let's examine two cases where we use the `git rebase -i` command for editing commits, and squashing commits.
+
+### Editing commits
+
+Let's say you are working on the `feat/header` branch and you created a commit with the message `feat: created the header logo`,
+After that you created 10 different commits, and then the project manager tells you that there are some css changes that need to be done to the logo.
+We can create those changes but maybe it's best to add them to the commit that created the logo.
+Say we create the css changes, before we stage them we can do:
+
+```bash
+git stash
+```
+
+To hold the changes in memory.
+Then we can do:
+
+```bash
+git rebase -i HEAD~11
+```
+
+find the commit we want to change and changing the word `pick` to `edit`, this will place us in the commit we want to change.
+We can then pop our changes with the command
+
+```bash
+git stash pop
+```
+
+we can stage the changes and ammend the commit with the command
+
+```bash
+git add -A
+git commit --amend --no-edit
+```
+
+We changed the commit without creating a new commit, and we can continue the rebase with the command
+
+```bash
+git rebase --continue
+```
+
+When editing commits we will often combine the `git rebase -i` command and also use `git stash` or `git commit --amend` or `git reset` to further make changes
+when we are in the commit we want to edit.
+
+### Squashing commits
+
+Let's say you are working on the `feat/header` branch and you created 5 different commits that are related to the search bar.
+For cleaner history you want to merge them together, one option is to use `git reset` if they are the last commits, but if they are not the last commits you can use the `git rebase -i` command.
+change the word `pick` to `squash` for all the commits you want to squash, and then save and close the editor.
+
+## Summary
+
+The main point of this lesson is not for you to remember all those commands,
+The point is that you should remember to keep your git history clean, and readable.
+You can squash, edit, change commits, you can add changes to previous commits, and you can make the history clean before sharing with your team.
+You will reap the benefits of a clean history when you need to debug, revert, or understand the evolution of the software.
+Once you understand the philosophy of keeping a clean history, you will naturally use the tools that git provides you to keep it clean, and when you practice it you will
+become better at it and controler all those commands we learned in this lesson
+```
