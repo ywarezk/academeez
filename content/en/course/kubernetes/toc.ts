@@ -32,7 +32,13 @@ const toc: NavItem = {
         href: '/en/course/kubernetes/flux/helm-controller',
         title: 'helm-controller',
         items: [],
-      }],
+      },
+      {
+        href: '/en/course/kubernetes/flux/installing-flux-terraform-opentofu',
+        title: 'Install Flux with Terraform/OpenTofu',
+        items: [],
+      }
+      ],
     },    
   ],
 };

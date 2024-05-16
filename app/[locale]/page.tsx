@@ -23,6 +23,7 @@ type HomePageProps = {
 
 // list of urls of featured articles
 const featuredCards = [
+  "en/course/kubernetes/flux/installing-flux-terraform-opentofu",
   "en/course/git/best-practices/clean-your-commits",
   "en/course/react/best-practices/component-single-responsibility",
   "en/course/kubernetes/flux/helm-controller",
