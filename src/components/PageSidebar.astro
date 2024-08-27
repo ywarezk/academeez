@@ -1,0 +1,37 @@
+---
+
+import Default from '@astrojs/starlight/components/PageSidebar.astro';
+import { getCollection } from 'astro:content';
+import { AvatarFull } from './Avatar';
+
+const writers = Astro.props.entry.data.authors;
+
+const allAuthors = await getCollection('authors');
+
+// from allAuthors find the authors that are in the writers array
+const authors = allAuthors.filter((author) => writers?.includes(author.slug));
+
+---
+
+<Default {...Astro.props as any} />
+
+<hr />
+
+<div class="p-4 not-content">
+	<h3 class="mb-2">Authors</h3>
+	
+	<!-- astro loop on the authors -->
+	<ul class="flex mt-4">
+		{authors.map((author) => (
+			<li>				
+				<AvatarFull 
+					client:load
+					avatar={author.data.avatar} 
+					name={author.data.name} 
+					slug={author.slug} 
+				/>
+			</li>
+		))}
+	</ul>
+</div>
+
