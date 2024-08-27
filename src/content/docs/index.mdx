@@ -1,0 +1,75 @@
+---
+title: academeez
+description: Open Source Learning Platform for Coders
+head:
+  - tag: title
+    content: academeez | Open Source Learning Platform for Coders
+template: splash
+next: false
+prev: false
+editUrl: false
+hero:
+  title: Open Source Learning Platform for Coders
+  tagline: Free, Open Source, Community Driven, Expert content for coders. <br/> No need to register, simple, free, professional content.
+  image:
+    dark: "../../assets/logo-dark.svg"
+    light: "../../assets/logo-light.svg"
+    alt: Open Source Learning Platform for Coders
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { 
+  CardContentCourse,
+  CourseCarousel 
+} from '~/components';
+
+## [Our courses](/courses)
+
+<CardGrid stagger>
+  <Card>
+    <CardContentCourse title="Kubernetes" img="k8s">
+      You program your app, place it in a container (usually with Docker), and you can orchestrate those containers with Kubernetes.  
+      <br/>
+      K8S will help you manage your containers, scale them, and deploy them.
+      <br/>
+      The massive community around K8S will help you with common problems like: DNS, Load Balancing, TLS, Secrets, and more.
+    </CardContentCourse>    
+  </Card>
+  <Card>
+    <CardContentCourse title="Flux">
+      Flux gives you tools to manage your K8S cluster state in a declarative, professional way.
+      <br />
+      Using Flux CRD's, you can specify helm charts, install resources using kustomize, and everything is declared in your remote repository.
+      <br/>
+      You simply push those CRD's to your remote repository, and Flux will make sure your K8S cluster is in the desired state.
+      
+    </CardContentCourse>    
+  </Card>
+  <Card>
+    <CardContentCourse title="React">
+      React is a UI library developed at Facebook to facilitate the creation of interactive, stateful & reusable UI components.  
+      React is the most popular UI library and is heavily used in a lot of web applications and native mobile apps. <br />
+
+      In this free and open source React course, you will learn the fundamentals of React, including React Hooks, JSX, props, state, events, and more.  
+      We will use React to create a web application, we will interact with server, and learn about the popular libraries and frameworks that are used with React, such as Redux, React Router, and Next.js.<br />
+
+      We will learn React in baby steps, taking short lessons, with plenty of online exercises in each lesson. The online exercises can be solved in the site in our online editor.
+      Each lesson will include a video, step by step guides, source code, and online exercises.
+    </CardContentCourse>    
+  </Card>
+  <Card>
+    <CardContentCourse title="Angular">
+    Angular is an open source framework, developed by Google, for creating web applications.<br/>
+    
+    In this **FREE, OPEN SOURCE, FULL**, Angular course, you will learn the fundamentals of Angular for beginners, and more advanced angular topics for the more experienced developer.
+    </CardContentCourse>
+  </Card>
+</CardGrid>
+
+## New Content
+
+<br/>
+<CourseCarousel client:load title="Kubernetes / Flux" courseLink="kubernetes/flux" />
+
+<br/>
+<CourseCarousel client:load title="Angular" courseLink="angular" />
