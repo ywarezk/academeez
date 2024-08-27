@@ -1,0 +1,43 @@
+---
+// create an astro starlight splash page
+
+import Page from 'node_modules/@astrojs/starlight/components/Page.astro';
+import { generateStarlightPageRouteData } from 'node_modules/@astrojs/starlight/utils/starlight-page';
+import { getCollection, getEntry } from 'astro:content';
+
+/**
+ * Will decide based on the authors collection
+ * which static pages to generate
+ */
+export async function getStaticPaths() {	
+	const authors = await getCollection('authors')	
+	return authors.map(author => {		
+		return {
+			params: {
+				name: author.slug
+			}
+		}
+	})	
+}
+
+const { name } = Astro.params;
+const authorEntry = await getEntry('authors', name)
+const {Content} = await authorEntry.render()
+
+const astroProps = await generateStarlightPageRouteData({ 
+	props: {...Astro.props as any, frontmatter: {title: 'hide me', template: 'splash', hero: {}}}, 
+	url: Astro.url  })
+
+---
+
+
+<style is:global>
+	.content-panel .hero {
+		display: none;
+	}
+</style>
+
+<Page {...astroProps} >
+	<Content />
+</Page>
+
