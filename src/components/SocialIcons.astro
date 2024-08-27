@@ -1,0 +1,14 @@
+---
+import Default from '@astrojs/starlight/components/SocialIcons.astro';
+import {buttonVariants} from './Button';
+import { cn } from './utils';
+---
+
+
+<a href="/courses" class={cn(buttonVariants({
+	variant: 'default',
+}), 'mx-2 no-underline text-black')}>
+	Courses
+</a>
+
+<Default {...Astro.props as any} />
