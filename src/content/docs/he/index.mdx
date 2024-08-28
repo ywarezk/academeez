@@ -20,7 +20,7 @@ hero:
 import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 import { 
   CardContentCourse,
-  CourseCarousel 
+  LocalCourseCarousel 
 } from '~/components';
 
 
@@ -68,7 +68,7 @@ import {
 ## תוכן חדש
 
 <br/>
-<CourseCarousel client:load title="Kubernetes / Flux" courseLink="/he/courses/kubernetes/flux" slug="kubernetes/flux" />
+<LocalCourseCarousel client:load title="Kubernetes / Flux" courseLink="kubernetes/flux" />
 
 <br/>
-<CourseCarousel client:load title="Angular" courseLink="/he/courses/angular" slug="angular" />
+<LocalCourseCarousel client:load title="Angular" courseLink="angular" />
