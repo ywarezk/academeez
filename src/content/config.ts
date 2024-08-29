@@ -30,6 +30,7 @@ export const collections = {
     schema: docsSchema({
       extend: z.object({
         order: z.number().optional(),
+        preview: z.boolean().optional().default(true),
         authors: z.array(z.string()).optional(),
       }),
     }),

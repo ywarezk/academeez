@@ -14,7 +14,7 @@ export const CourseCarousel: FC<{
 	
   useEffect(() => {    
     getCollection('docs', content => {
-      return content.data.template === 'doc' && content.slug.indexOf(courseLink) > -1;
+      return content.data.template === 'doc' && content.slug.indexOf(courseLink) > -1 && content.data.preview;
     }).then(allCollections => {			
       setArticles(allCollections.sort((a: any, b: any) => {
 				return a.data.order - b.data.order;
