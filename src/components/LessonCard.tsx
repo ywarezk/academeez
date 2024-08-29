@@ -12,6 +12,8 @@ import {Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter} f
 import {buttonVariants} from './Button'
 import {cn} from './utils'
 
+// https://github.com/ywarezk/academeez4/blob/main/src/content/docs/courses/angular/best-practices/new-control-flow-syntax/for/thumbnail.png?raw=true
+
 export const LessonCard: FC<{article: any}> = ({
   article
 }) => {
@@ -22,7 +24,7 @@ export const LessonCard: FC<{article: any}> = ({
 				<CardDescription className="text-left mt-2 leading-snug">{article.data.description}</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<img src="https://github.com/ywarezk/academeez/blob/main/content/en/course/kubernetes/flux/helm-controller/video/thumbnail.png?raw=true" className="object-cover my-2 rounded-xl h-40" />
+				<img src={`https://github.com/ywarezk/academeez4/blob/main/src/content/docs/courses/${article.slug}/thumbnail.png?raw=true`} className="object-cover my-2 rounded-xl h-40" />
 			</CardContent>
 			<CardFooter>
 				<a className={cn(buttonVariants(), 'w-full')} href={article.slug}>
