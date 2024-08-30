@@ -5,7 +5,7 @@ import { getCollection } from 'astro:content';
 import { AvatarFull } from './Avatar';
 
 const writers = Astro.props.entry.data.authors;
-
+const source = Astro.props.entry.data.source
 const allAuthors = await getCollection('authors');
 
 // from allAuthors find the authors that are in the writers array
@@ -15,10 +15,9 @@ const authors = allAuthors.filter((author) => writers?.includes(author.slug));
 
 <Default {...Astro.props as any} />
 
-<hr />
-
 {
 	authors.length > 0 ? (
+		<hr />
 		<div class="p-4 not-content">
 			<h3 class="mb-2">Authors</h3>
 			
@@ -36,5 +35,16 @@ const authors = allAuthors.filter((author) => writers?.includes(author.slug));
 				))}
 			</ul>
 		</div>
+	) : null
+}
+
+{
+	source ? (
+		<hr />
+		<div class="p-4 not-content">
+			<h3 class="mb-2">Source Code</h3>			
+			<a class="github-button" href={source} data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star" data-size="large" aria-label="Star ywarezk/academeez-k8s-flux on GitHub">Star</a>
+		</div>
+		<script async defer src="https://buttons.github.io/buttons.js"></script>
 	) : null
 }
