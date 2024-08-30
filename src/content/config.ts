@@ -28,8 +28,7 @@ export const collections = {
   }) }),
   docs: defineCollection({
     schema: docsSchema({
-      extend: z.object({
-        order: z.number().optional(),
+      extend: z.object({        
         preview: z.boolean().optional().default(true),
         authors: z.array(z.string()).optional(),
       }),
