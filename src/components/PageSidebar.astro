@@ -17,21 +17,24 @@ const authors = allAuthors.filter((author) => writers?.includes(author.slug));
 
 <hr />
 
-<div class="p-4 not-content">
-	<h3 class="mb-2">Authors</h3>
-	
-	<!-- astro loop on the authors -->
-	<ul class="flex mt-4">
-		{authors.map((author) => (
-			<li>				
-				<AvatarFull 
-					client:load
-					avatar={author.data.avatar} 
-					name={author.data.name} 
-					slug={author.slug} 
-				/>
-			</li>
-		))}
-	</ul>
-</div>
-
+{
+	authors.length > 0 ? (
+		<div class="p-4 not-content">
+			<h3 class="mb-2">Authors</h3>
+			
+			<!-- astro loop on the authors -->
+			<ul class="flex mt-4">
+				{authors.map((author) => (
+					<li>				
+						<AvatarFull 
+							client:load
+							avatar={author.data.avatar} 
+							name={author.data.name} 
+							slug={author.slug} 
+						/>
+					</li>
+				))}
+			</ul>
+		</div>
+	) : null
+}
