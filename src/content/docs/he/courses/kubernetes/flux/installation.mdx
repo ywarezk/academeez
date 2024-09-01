@@ -1,0 +1,210 @@
+---
+title: "התקנת Flux עם flux-cli"
+description: "התקנת Flux על הקלאסטר שלך של K8S" 
+template: "doc"
+publishDate: "2024-01-30"
+source: "https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-01"
+prev: false
+editUrl: "https://github.com/ywarezk/academeez4/edit/main/src/content/docs/he/courses/kubernetes/flux/installation.mdx"
+sidebar:
+  order: 1
+authors:
+  - "yariv-katz"
+---
+
+<div class="not-content flex">
+  <iframe
+    className="mx-auto"
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/vp-oFksFoZs?si=6XALIufPOMTq7rxG"
+    title="YouTube video player"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+  />
+</div>
+
+כדי להתקין את flux על הקלאסטר שלנו נצטרך לבצע את השלבים הבאים:
+
+- התקנת [Flux CLI](https://fluxcd.io/flux/installation/#install-the-flux-cli) על המחשב שלך
+- יצירת Repository ב-Github שבו יאוחסן המצב של הקלאסטר בקבצי yaml
+- Create a [Github PAT](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) (Personal Access Token) that will allow Flux to access the repository
+- יצירת [Github PAT](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) (Personal Access Token) שיאפשר ל-Flux לגשת ל-Repository
+- להשתמש ב-Flux CLI, להריץ את `flux bootstrap` כדי להתקין את Flux על הקלאסטר
+
+## דרישות מוקדמות
+
+בשיעור זה אנו מניחים שיש לך קלאסטר של kubernetes - גרסת שרת 1.26 או גבוהה יותר, ועל המחשב שלך יש `kubectl` שיכול לתקשר עם הקלאסטר שלך.  
+אנו לא נסביר את השלבים האלה, אך אנו ממליצים ליצור קלאסטר ניהולי מינימלי באחד מספקי הענן (בקורס זה נשתמש ב-[GKE](https://cloud.google.com/kubernetes-engine) - קלאסטר ניהולי של GCP).
+
+## Flux CLI
+
+Flux CLI הוא כלי שורת פקודה שמאפשר לך להפעיל את flux על הקלאסטר שלך, ולהתקשר עם flux שרץ על הקלאסטר שלך.
+Flux CLI ניתן להתקנה בדרכים שונות, אך נתקין אותו באמצעות homebrew:
+
+
+```bash
+brew install fluxcd/tap/flux
+```
+
+עבור דרכי התקנה נוספות ניתן לבדוק את [המדריך הרשמי](https://fluxcd.io/flux/installation/).
+
+ודאו שאחרי ההתקנה אתם יכולים להריץ בטרמינל:
+
+```bash
+flux --version
+```
+
+בזמן כתיבת המאמר גרסת ה-flux היא `fluxctl version 2.2.2`.
+
+## פקודת שכיחות של Flux CLI
+
+Flux CLI מכיל פקודות שונות שמאפשרות לך להתקשר עם flux שרץ על הקלאסטר שלך, או לעזור לך ליצור משאבים מקומיים.
+ניתן לראות את הפקודות באמצעות:
+
+```bash
+flux --help
+```
+
+להלן כמה מהתכונות העיקריות של ה-cli:
+- **bootstrap** - פקודה זו תתקין את flux על הקלאסטר שלך, תעדכן את flux לגרסה חדשה יותר, תתקין מחדש רכיבים נוספים אם נדרש.
+- **check** - תוודא שהקלאסטר שלך עומד בדרישות עבור flux.
+- **create** - פקודות שמאפשרות לך ליצור משאבים מקומיים (בדרך כלל תשתמש בזה כדי ליצור את המשאבים מקומית עם הדגל `--export` ואז לשלוח אותם למאגר git)
+- **reconcile** - פקודה שמאפשרת לך לסנכרן את flux controllers ולעדכן את מצב הקלאסטר שלך אם נדרש.
+
+נתחיל על ידי הרצת הפקודה `flux check` כדי לוודא שהקלאסטר שלנו עומד בדרישות עבור flux:
+
+```bash
+flux check --pre
+```
+
+## סנכרון Flux עם הריפוסיטורי
+
+בקרוב נתקין flux על הקלאסטר שלנו, וflux ייצור פודים של קונטרולרים, אלו הקונטרולרים יגיבו למשאבים מסוימים של flux. אל תדאגו על הקונטרולרים האלו כרגע כי נכון לעכשיו יהיו שיעורים על כל קונטרולר.
+מה שחשוב כרגע הוא שאחד מהקונטרולרים נקרא `source-controller` ואנו יכולים להורות לקונטרולר זה לקרוא מ branches בריפוסיטורי git. עכשיו למה זה חשוב עבורנו? כי זה יהיה נקודת הכניסה שלנו להורות ל-flux **"לצפות על משאבים מסוג flux בריפוסיטורי זה"**.  
+כלומר ניתן להורות ל-flux לקרוא מריפוסיטורי git, ואז נוכל ליצור משאבים מסוג `Kustomization` שיאמרו ל-flux לעקוב אחרי מיקום מסוים בריפוסיטורי, ואז נוכל ליצור משאבים בקלאסטר, ואז flux ישמור על מצב הקלאסטר עם המשאבים שיצרנו.  
+בקורס זה נורה ל-flux לעקוב אחרי branch **main** בריפוסיטורי git יחיד, כל דקה, אך ניתן להורות ל-flux לעקוב אחרי יותר מריפוסיטורי git, או יותר מ-branch אחד, למערכת מבוזרת עם כמה צוותים.
+על מנת ש-flux יוכל לקרוא מריפוסיטורי git (בדוגמה שלנו נשתמש ב-github), נצטרך ליצור PAT (Personal Access Token) שיאפשר ל-flux לגשת לריפוסיטורי.
+
+## PAT - Personal Access Token - מפתח גישה אישי
+
+אנחנו נגדיר את flux לעקוב אחרי שינוי בריפוסיטורי, ולדעת מה המשאבים שיצרנו, נצטרך ליצור PAT (Personal Access Token) שיאפשר ל-flux לגשת לריפוסיטורי. ה-PAT יתן ל-flux גישה לריפוסיטורי ולראות את השינויים (ניתן להגדיר PAT יחיד שיאפשר לגשת לריפוסיטורי רבים).
+הריפוסיטורי שלנו יהיה מאוחסן ב-Github, וב-Github יש 2 סוגי PATs, אחד שיש לו גישה לכל הריפוסיטוריות של המשתמש (קלאסי), ואחד שיש לו גישה רק לריפוסיטוריות שנקבעו (fine-grained token). 
+בדוגמה שלנו ניצור PAT שיש לו גישה רק לריפוסיטורי אחד (בדוגמה שלנו אבל בהגדרת צוותים מבוזרת נוכל להגדיר ריפוסיטורי רבים), ונקבע לו את הסקופ `repo`.  
+ראשית ניצור ריפוסיטורי ב-Github שבו יאוחסן המצב של הקלאסטר. בדוגמה שלנו יצרתי את הריפוסיטורי הציבורי: [ywarezk/academeez-k8s-course](https://github.com/ywarezk/academeez-k8s-course).  
+לאחר שיצרתם את הריפוסיטורי, ניצור PAT שיש לו גישה לריפוסיטורי זה. ניתן ליצור PAT בכתובת: [Settings/Developer Settings/Personal Access Tokens/Fine-grained token](https://github.com/settings/tokens?type=beta) או פשוט ללחוץ על [קישור זה](https://github.com/settings/tokens?type=beta).  
+
+- בחר שם ל-token
+- בחר תאריך תפוגה ל-token - כאשר ה-token יפוג תצטרך לסנכרן עם token חדש
+- אפשר גישה רק ל-repository שיצרת
+- באגף ההרשאות **Repository permissions** בחר **Contents** ושנה את הגישה ל-**Read and write**
+
+לחץ על **Generate token** ותראה טוקן שמתחיל ב `github_pat_****` העתק את הטוקן ובטרמינל קבע אותו כמשתנה סביבה:
+
+```bash
+> export GITHUB_TOKEN=github_pat_****
+```
+
+אנחנו כמעט מוכנים להתחיל להפעיל את flux על הקלאסטר שלנו, אך לפני שנעשה זאת נתכנן איך יראה ה-repository שלנו ב-git.
+
+## ריבוי קלאסטרים
+
+בקורס זה נעבוד עם קלאסטר אחד, אך בסביבה אמיתית תהיה לך ריבוי קלאסטרים, לדוגמה קלאסטר ל-staging, קלאסטר ל-production, קלאסטר ל-development, קלאסטר ל-CI ועוד.
+Flux יכול לנהל ריבוי קלאסטרים, ולא רק זה, אלא גם לשתף משאבים בין הקלאסטרים. חשבו על כל הפעמים שיצרתם קלאסטר ואז התקנתם ingress controller (בקורס זה נעבוד עם nginx ingress controller) ועשיתם זאת שוב ושוב על כל קלאסטר,
+אבל לא עוד, עכשיו נוכל לבנות מאגר נקי עם משאבים משותפים בכל או חלק מהקלאסטרים שלנו.
+
+הריפוסיטורי שלנו יכיל `/clusters/:name-of-cluster` בתיקיית `clusters` ניצור תיקייה עבור כל קלאסטר.
+בנוסף ניצור תיקייה בשם `infrastructure` למשאבים משותפים בין הקלאסטרים כמו nginx ingress controller.
+  
+## התקנת Flux עם פקודת bootstrap
+
+נתחיל בהתקנת flux כדי לנהל את הקלאסטר שלנו. נריץ את הפקודה `flux bootstrap` ולאחר הרצת הפקודה ייאחסן המצב של ה-k8s ב-repository git, וכל שינוי שנעשה בקלאסטר יתבצע על ידי דחיפת שינויים ל-repository git.
+זוכרים את ה-`source-controller` שדיברנו עליו? flux יתקין את הקונטרולר הזה בזמן ההתקנה, וזוכרים את ה-PAT שיצרנו? flux יכין אותו ב-secret (אם נקבע במשתנה סביבה נכון), וזוכרים את ה-repo שיצרנו? נגיד ל-flux ליצור משאב שה-`source-controller` ידע לסנכרן עם ה-repo הזה. 
+
+הריצו את הפקודה הבאה כדי להתקין את flux על הקלאסטר שלכם:
+
+```bash
+flux bootstrap github \
+	--owner=your-username \
+	--repository=the-repo-you-opened \
+	--branch=main \
+  --path=./clusters/staging \
+	--personal
+```
+
+נבחן את הפקודה:
+- באמצעות `github`, `owner`, `repository`, `branch` flux ידע ליצור את המשאב `GitRepository`
+- באמצעות `path` flux ידע ליצור את המשאב `Kustomization` (נדבר על זה בשיעורים הבאים)
+- `personal` מספר ל-flux שאנו משתמשים ב-repo אישי ולא ב-repo של ארגון
+
+בהתבסס על הדגלים האלו, flux ייצור 2 משאבים מותאמים אישית שקונטרולרים של flux יבדקו, וגם ייצור את כל הרכיבים שנדרשים ל-flux לרוץ על הקלאסטר.
+Flux יאחסן את כל הקבצים האלו ב-repository, אז לאחר הרצת הפקודה נצטרך למשוך את השינויים האחרונים.
+
+## שכפול הריפוסיטורי
+
+נשכפל את הריפוסיטורי על המחשב שלנו כדי לראות את המצב של הקלאסטר שלנו:
+
+```bash
+> git clone <url-of-the-repo>
+```
+
+שימו לב ש-flux יצר תיקייה בשם `flux-system` שמכילה את כל המשאבים שהוא התקין בקלאסטר שלנו. לדוגמה בקובץ `gotk-components.yaml` תמצאו את הקובץ שיצר את ה-namespace שבו flux התקין את כל הקונטרולרים:
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    app.kubernetes.io/instance: flux-system
+    app.kubernetes.io/part-of: flux
+    app.kubernetes.io/version: v2.2.2
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: latest
+  name: flux-system
+```
+
+## מה התקין flux?
+
+כאשר אתם מתקינים flux על הקלאסטר שלכם, בלי לציין דגלים נוספים לפקודת ההתקנה, flux יתקין את ה-toolkit הבסיסי שניתן לראות על ידי הרצת הפקודה:
+
+```bash
+> kubectl get all -n flux-system
+```
+
+בהתקנה ברירת המחדל יש לנו את הרכיבים הבאים:
+- **source-controller**
+- **kustomize-controller**
+- **helm-controller**
+- **notification-controller**
+
+יהיה לנו שיעורים על כל אחד מהם, אבל כרגע נבין שכל אחד מהם צפוי להסתכל בריפוסיטורי שלנו אחר משאבי CRD שניצור בו, וליצור את המשאבים בקלאסטר שלנו.
+
+## יצירת Namespace
+
+בואו ניתן ל-flux עבודה.
+אנחנו ניצור קובץ בתיקיית `clusters/staging` בשם `namespace.yaml` עם התוכן הבא:
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  www
+```
+
+נבצע commit ונדחוף את השינויים ל-repository ונחכה דקה ונראה שה-namespace נוצר:
+
+```bash
+kubectl get namespaces
+```
+
+## לסיכום
+
+Flux כעת מנהל את הקלאסטר שלנו, וכדי להשיג את זה עשינו את השלבים הבאים:
+1. התקנת flux cli על המחשב שלנו
+2. יצרנו ריפוסיטורי ב-Github שבו יאוחסן המצב של הקלאסטר בקבצי yaml
+3. יצרנו PAT (Personal Access Token) שיאפשר ל-flux לגשת לריפוסיטורי
+4. השתמשנו ב-Flux cli, הרצנו `flux bootstrap` כדי להתקין את Flux על הקלאסטר
+5. יצרנו קובץ בתיקיית `clusters/staging` בשם `namespace.yaml` וניצרנו namespace בקלאסטר
+
+קוד המקור המלא לשיעור זה זמין [כאן](https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-01)
