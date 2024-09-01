@@ -24,6 +24,8 @@ export const collections = {
   i18n: defineCollection({ type: 'data', schema: i18nSchema({
     extend: z.object({
       'header.courses': z.string(),
+      'pagesidebar.authors': z.string(),
+      'pagesidebar.source': z.string(),
     }),
   }) }),
   docs: defineCollection({

@@ -3,19 +3,35 @@ title: "kustomize-controller"
 description: The kustomize-controller will keep the cluster state in sync with the resources defined in a kustomization.yaml file.
 publishDate: "2024-02-12"
 template: "doc"
+authors:
+  - yariv-katz
+source: "https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-02"
 sidebar:
   order: 2
 ---
 
-The `kustomize-controller` is looking at a `Kustomization` custom resource in the cluster (One entry point `Kustomization` was created on `flux bootstrap`).
+<div class="not-content flex">
+  <iframe
+    className="mx-auto"
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/DqXDrAR4cJ4?si=CAm9-wSE9ZyjKBg5"
+    title="YouTube video player"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+  />
+</div>
+
+The [`kustomize-controller`](https://fluxcd.io/flux/components/kustomize/) is looking at a [`Kustomization`](https://fluxcd.io/flux/components/kustomize/kustomizations/) custom resource in the cluster (One entry point `Kustomization` was created on `flux bootstrap`).  
 `Kustomization` custom resource will contain a `sourceRef` and a `path` to a folder.
 That folder can contain a `kustomization.yaml` file, which will contain a list of resources, and the `kustomize-controller` will strive to get the cluster state according to those resources.
 If the `kustomization.yaml` file is not present, then the `kustomize-controller` will generate a `kustomization.yaml` file based on the resources in the folder.
 
-## kustomize, kustomize-controller, kustomize.config.k8s.io/v1beta1 - Kustomization, kustomize.toolkit.fluxcd.io/v1 - Kustomization
+## kustomize and kustomize-controller do not get confused
 
-This is where things get a bit confusing. There are two different `Kustomization` resources, one from the `kustomize.config.k8s.io/v1beta1` API group, which is client only and not created in the cluster, and one from the `kustomize.toolkit.fluxcd.io/v1` API group which is a custom resource added to our cluster.
-In addition there is the `kustomize` tool, and the `kustomize-controller` which is part of the `flux` project.
+There is the [`kustomize`](https://kustomize.io/) tool, and the `kustomize-controller` which is part of the `flux` project.  
+In addition There are two different `Kustomization` resources, one from the [`kustomize.config.k8s.io/v1beta1`](https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/) API group, which is client only and not created in the cluster, and one from the `kustomize.toolkit.fluxcd.io/v1` API group which is a custom resource added to our cluster.  
 We need to understand each of these components and how they relate to each other.
 
 ## kustomize
