@@ -1,0 +1,380 @@
+---
+title: "kustomize-controller"
+description: ה- kustomize-controller ישמור על מצב הקלאסטר תואם למשאבים שמוגדרים בקובץ kustomization.yaml.
+publishDate: "2024-02-12"
+template: "doc"
+authors:
+  - yariv-katz
+source: "https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-02"
+sidebar:
+  order: 2
+---
+
+<div class="not-content flex">
+  <iframe
+    className="mx-auto"
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/DqXDrAR4cJ4?si=CAm9-wSE9ZyjKBg5"
+    title="YouTube video player"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+  />
+</div>
+
+ה - [`kustomize-controller`](https://fluxcd.io/flux/components/kustomize/) מסתכל על משאב מקובץ [`Kustomization`](https://fluxcd.io/flux/components/kustomize/kustomizations/) בקלאסטר (נוצר נקודת כניסה אחת `Kustomization` בשלב `flux bootstrap`).  
+ה - `Kustomization` שהוא CRD של Flux יכיל `sourceRef` ו - `path` לתיקייה.
+אותה תיקייה תכיל קובץ `kustomization.yaml` שיכיל את המשאבים שיש ליצור בקלאסטר, וה - `kustomize-controller` ישמור על מצב הקלאסטר תואם למשאבים שמוגדרים בקובץ זה.
+במידה והקובץ `kustomization.yaml` לא קיים, אז ה - `kustomize-controller` יצור אותו על פי המשאבים בתיקייה.
+
+## kustomize ו - kustomize-controller לא להתבלבל
+
+יש כאן כמה דברים שיכולים לבלבל. יש את הכלי [`kustomize`](https://kustomize.io/), ואת ה - `kustomize-controller` שהוא חלק מפרויקט `flux`.  
+בנוסף יש שני משאבים שונים מסוג `Kustomization`, אחד מה - [`kustomize.config.k8s.io/v1beta1`](https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/) שהוא רק קליינט ולא נוצר בקלאסטר, ואחד מ - `kustomize.toolkit.fluxcd.io/v1` שהוא משאב CRD שנוסף לקלאסטר שלנו כאשר התקנו Flux.  
+אנחנו צריכים להבין כל אחד מהרכיבים האלה ואיך הם קשורים זה לזה.
+
+## kustomize
+
+`kustomize` מזכיר לי קצת גרסא מאוד מופשטת של `helm`. אתה מזין ל - `kustomize` קובץ `Kustomization` שנראה כך:
+
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- flux-system
+- namespace.yaml
+```
+
+להלן דוגמא למשאב `Kustomization`, `kustomize` יצור ממנו קבוצת משאבים שניתן להזין ל - `kubectl` והמשאבים האלה ייווצרו.
+חשוב לציין שמשאב `Kustomization` זה לא משאב CRD בקלאסטר, זה פשוט קובץ ש - `kustomize` ישתמש בו כדי ליצור משאבים. 
+`kustomize` מגיע מובנה בתוך `kubectl` אבל גם ניתן להתקין אותו ככלי חיצוני.
+
+```bash
+kubectl kustomize <kustomization_directory>
+```
+
+יציג את המשאבים שיוצרו על ידי `kustomize`.
+
+```bash
+kubectl apply -k <kustomization_directory>
+```
+
+והפקודה הנ"ל תייצר את המשאבים.
+
+חשוב לציין שזהו לא שיעור על `kustomize` ויש הרבה שיעורים טובים על הכלי הזה, ואני מניח שיש לך קצת ניסיון איתו.
+אנחנו כן נעבור על תכונות חשובות של הכלי שנשתמש בהן במהלך הקורס.
+
+## התקנת kustomize
+
+למרות ש - `kustomize` מובנה בתוך `kubectl`, עדיין ניתן להתקין אותו ככלי נפרד.
+הדרך הקלה ביותר היא דרך `homebrew`:
+
+```bash
+brew install kustomize
+```
+
+לאחר ההתקנה תהיה לך פקודת `kustomize` זמינה. פקודה זו לא תשפיע על הקלאסטר שלך, ואני אישית אוהב להשתמש בה ככלי להבנת מה הולך להיות מותקן.
+
+## kustomization.yaml
+
+יש משמעות מיוחדת לקבצים בשם `kustomization.yaml` בתיקייה. `kustomize` מקבל תיקייה, והוא יחפש קובץ בשם `kustomization.yaml` באותה תיקייה. אם הקובץ לא קיים אז `kustomize` יכשל ביצירת המשאבים.
+
+## kustomize create
+
+`kustomize` יכול לעזור לך ליצור קובץ `kustomization.yaml` על פי המשאבים בתיקייה.
+
+```bash
+cd clusters/staging && kustomize create --autodetect --recursive
+```
+
+ניתן להיכנס לתיקייה המכילה משאבים בפורמט `yaml`, ולהריץ `kustomize create --autodetect --recursive` וזה יצור קובץ `kustomization.yaml` על פי המשאבים בתיקייה.
+זהו feature חשוב מאוד, וזה הפיצ'ר שה - `kustomize-controller` ישתמש בו אם הקובץ `kustomization.yaml` לא קיים.
+
+## kustomize build
+
+אני משתמש בפקודה זו לעתים קרובות, זו דרך לראות אילו משאבים ייווצרו על ידי `kustomize-controller`.
+הפקודה לא תייצר את המשאבים, רק תראה לך אילו משאבים ייווצרו.
+
+```bash
+kustomize build <kustomization_directory>
+```
+
+## patch
+
+חשוב שנעבור על תכונת ה - `patch` ב - `Kustomization` משום שנשתמש בה הרבה, במיוחד כאשר יש לנו תצורות דומות בין הקלאסטרים.  
+לדוגמא ייתכן שיש לנו תצורת בסיס בין הקלאסטרים, אבל יש שינויים קטנים בתצורה בין הקלאסטרים, לעיתים קרובות kustomization patches יאפשרו לנו לבצע את ההבדלה הזאת.
+
+ישנם 2 סוגים של patches, `patchesStrategicMerge` ו - `patchesJson6902`.
+
+### patchesStrategicMerge
+
+בצורה זו אנחנו מציינים קבצים שיש למזג איתם את המשאבים בקובץ `kustomization.yaml`.
+
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- flux-system
+- namespace.yaml
+patches:
+- patch.yaml
+```
+
+בדוגמא זו נשתמש בקובץ `patch.yaml` כדי להוסיף annotation ל - `ServiceAccount` של `source-controller`.
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+	name: source-controller
+	namespace: flux-system
+	annotations:
+		iam.gke.io/gcp-service-account: source-controller@prj-academeez.iam.gserviceaccount.com
+```
+
+זהו התוכן של הקובץ `patch.yaml`, והוא יוסיף את ה - annotation ל - `ServiceAccount` של `source-controller`.
+הוא יחפש את ה - `ServiceAccount` בשם `source-controller` בתוך ה - `namespace` `flux-system` ויוסיף את ה - annotation.
+
+### patchesJson6902
+
+בצורה זו אנחנו משתמשים ב - `json` patch כדי למזג עם המשאבים בקובץ `kustomization.yaml`.
+בדרך זו ניתן לבצע שינוי יותר מדויק על מנת לשנות שדה או מספר שדות במקום להחליף בלוק שלם של מידע.
+
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- flux-system
+- namespace.yaml
+patches:
+- target:
+	kind: ServiceAccount
+	name: source-controller
+	namespace: flux-system
+	version: v1
+	path: patch.yaml
+```
+
+ובתוך הקובץ `patch.yaml` נמצא התוכן הבא:
+
+```yaml
+- op: add
+  path: /metadata/annotations/iam.gke.io~1gcp-service-account
+  value: "source-controller@prj-academeez.iam.gserviceaccount.com"
+```
+
+נשתמש בצורה זו כאשר נדבר על Workload Identity וגישה למאגר ה - helm הפרטי שלנו.
+		
+## overlays - שכבות
+
+מאפיין נוסף שבו נשתמש הוא `overlays`. זהו דרך להגדיר תצורה בסיסית ואז להוסיף תצורות שונות לקלאסטרים שונים.
+הבה נבחן דוגמא פשוטה. בתיקיית השורש ניצור תיקייה בשם `apps` שתכיל את תצורת האפליקציות שלנו.
+מאוחר יותר בקורס נגדיר קצת הבדל בין האפליקציה בקלאסטר `staging` לבין האפליקציה בקלאסטר `production`, נפעיל גרסא `canary` בקלאסטר `staging` וגרסא יציבה בקלאסטר `production`.
+
+בתיקיית `apps` ניצור תיקייה בשם `base` שתכיל את תצורת האפליקציות שמשותפת לכל הקלאסטרים.
+בתיקיית `apps/base` ניצור קובץ `release.yaml` עם התוכן הבא:
+
+```yaml
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: hello
+  namespace: www
+spec:
+  interval: 10m
+  timeout: 5m
+  chart:
+    spec:
+      chart: hello
+      repository: https://charts.example.com      
+      # version: "..." modify this per cluster
+      sourceRef:
+        kind: HelmRepository
+        name: hello  
+```
+
+שימו לב שלא כללנו את השדה `version`, נשתמש ב - `overlays` כדי להוסיף את השדה `version` לקלאסטרים, ולטעון גרסא `canary` לקלאסטר `staging`.
+בתיקיית `apps/base` ניצור גם קובץ `kustomization.yaml` עם התוכן הבא:
+
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - release.yaml
+```
+
+לעת עתה קובץ `kustomization.yaml` זה מכיל את כל המשאבים בתיקייה, אבל נשתמש בו בהמשך כדי להוסיף תגיות משותפות, ניימספייס והגדרות נוספות שמשותפות לכל המשאבים בתיקייה.
+
+בתוך התיקייה `apps` ניצור תיקייה בשם `staging` שתכיל את תצורת האפליקציות שמיועדות לקלאסטר `staging`.
+בתיקיית `apps/staging` ניצור קובץ `kustomization.yaml` עם התוכן הבא:
+
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+patches:
+  - path: release.yaml
+    target:
+      kind: HelmRelease
+```
+
+הוספנו שדה `patches` שמכוון למשאב `HelmRelease`, ונשתמש בשדה זה כדי להוסיף את השדה `version` למשאב `HelmRelease`.
+
+ניצור את הקובץ `release.yaml` בתיקיית `apps/staging` עם התוכן הבא:
+
+```yaml
+- op: add
+  path: /spec/chart/spec/version
+  value: ">=1.0.0-canary"
+```
+
+ניצור את אותם קבצים בתיקיית `apps/production` רק שהשדה `version` יהיה שונה.
+בתיקיית `apps/production` ניצור קובץ `kustomization.yaml` עם התוכן הבא:
+
+```yaml
+- op: add
+  path: /spec/chart/spec/version
+  value: ">=1.0.0"
+```
+
+ניתן לבחון את ה - overlays שלנו על ידי הרצת הפקודה הבאה:
+
+```bash
+kubectl kustomize apps/staging
+kubectl kustomize apps/production
+```
+
+ניתן לראות שההגדרות לשני הקלאסטרים זהות חוץ מהשדה `version`. זהו דוגמא טובה לשימוש ב - `overlays` כדי ליצור קלאסטרים דומים עם הבדלים קטנים.
+
+זהו הסיכום הקצר שנצטרך על הכלי `kustomize`, השיעור ימשיך על ה - `kustomize-controller` וה - `Kustomization` של Flux.
+
+## kustomize-controller
+
+ה - `kustomize-controller` הוא [אופרטור של קוברנטס](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/) שמשתמש במשאב CRD בשם `Kustomization` שמצביע על תיקייה בקוד מקור (בדרך כלל זה יהיה git repository).
+בהתבסס על `kustomization.yaml` בתיקייה (או אם אין הוא ייווצר) משאבים נוצרים בקלאסטר, והמצב של הקלאסטר נשמר.
+
+## Kustomization custom resource
+
+לאחר התקנת Flux יש לנו כעת 2 משאבי `Kustomization`, אחד מה - `kustomize.config.k8s.io/v1beta1` והשני מה - `kustomize.toolkit.fluxcd.io/v1`.
+זה יכול להיות מבלבל בהתחלה, חשוב להבין את ההבדל ביניהם, ולהבחין בשדה `apiVersion` כדי להבחין ביניהם.
+זכרו שמשאבי Flux יש להם `<controller>.toolkit.fluxcd.io` ב - `apiVersion`.
+להלן דוגמא למשאב `Kustomization` ונעבור על השדות החשובים:
+
+```yaml
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: apps
+  namespace: www
+spec:
+  interval: 10m0s
+  path: ./clusters/staging
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+```
+
+בואו נעבור על השדות החשובים:
+
+- **metadata.namespace** - ה - `Kustomization` לא חייב להיות ב - `flux-system` namespace, אם כי אני רגיל לשים אותו שם.
+- **spec.interval** - ה - `kustomize-controller` יבדוק את המשאב בכל זמן זה, ויתקן כל תקלה כדי להתאים את מצב הקלאסטר למשאבים בקובץ `kustomization.yaml`.
+- **spec.path** - הנתיב לתיקייה במקור (במקרה זה git repository) שמכילת קובץ `kustomization.yaml` (אם אין `kustomization.yaml` הוא ייווצר - נחזור לכך מאוחר יותר).
+- **spec.prune** - אם מוגדר כ - `true` אז משאבים שהוסרו יימחקו מהקלאסטר, אני כמעט תמיד מגדיר את זה.
+- **spec.sourceRef** - ה - `sourceRef` מצביע על משאב `source-controller`, בקורס זה יהיה `GitRepository` - זה מצביע לאיפה התיקייה `path` נמצאת, ואיפה הקבצי yaml שנרצה ליישם נמצאים.
+
+## נקודת הכניסה של kustomize-controller
+
+כאשר הרצנו `flux bootstrap` נוצר משאב `Kustomization` ב - `flux-system` namespace:
+
+```yaml
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: flux-system
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: ./clusters/staging
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+
+```
+
+זוהי נקודת הכניסה שלנו ל - `kustomize-controller` והנתיב מוגדר ל `./clusters/staging` על פי הדגל `--path` בפקודת `flux bootstrap`.
+
+## יצירת kustomization.yaml
+
+שימו לב שהנתיב `./clusters/staging` לא מכיל `kustomization.yaml` ועדיין ה - `kustomize-controller` לא התלונן.
+אם ה - `Kustomization` מצביע לנתיב שאינו מכיל `kustomization.yaml` אז ה - `kustomize-controller` יייצר אותו (לא באופן פיזי, אלא כמשאב וירטואלי).
+האופן שבו הוא יייצר את ה - `kustomization.yaml` הוא על ידי הרצת הפקודה `kustomize create --autodetect --recursive` על הנתיב.
+ננסה להריץ את הפקודה בעצמנו:
+
+```bash
+cd clusters/staging && kustomize create --autodetect --recursive
+```
+
+שימו לב שנוצר קובץ `kustomization.yaml` בתיקייה `clusters/staging` והוא מכיל את המשאבים בתיקייה וגם בתיקיות המשניות (כמו תיקיית `flux-system`). בנוסף נכלל בו גם קובץ `namespace.yaml` מהשיעור הראשון, זה כיצד נוצר ה - namespace בשיעור הראשון, על ידי ה - `kustomize-controller` שייצר את המשאב `Kustomization` בתיקייה `clusters/staging`.
+
+## סידור תיקיות
+
+עכשיו שהבנו את ה - `kustomize-controller` ואת ה - `Kustomization` נסדר את המאגר שלנו, כך שיהיה נוח יותר לפרויקטים גדולים יותר.
+
+נזיז את ה - `namespace.yaml` מתיקיית `clusters/staging` לתיקיית `apps/base` זה יהיה ה - namespace שבו נשים את האפליקציות שלנו (חשוב לציין שאני ממליץ לא להשליך את כל האפליקציות בתיקייה אחת, אלא להפריד אותן namespace שונות, אבל בשביל הקורס נשתמש בתיקייה אחת).
+נצטרך לשנות את ה - `kustomization.yaml` בתיקיית `apps/base` כך שיכלול את ה - `namespace.yaml`:
+
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml
+```
+
+נמחק את כל משאבי ה - `release.yaml` שיצרנו, אלו היו רק לצורך הדגמה, ניצור אותם שוב בשיעורים הבאים כאשר נלמד על `helm-controller`.
+שנו את ה - `apps/staging/kustomization.yaml` ואת ה - `apps/production/kustomization.yaml` כך שיכללו את התיקייה `apps/base`:
+
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+```
+
+בנוסף נוודא שהקובץ `clusters/staging/apps.yaml` קיים ומכיל את הקוד הבא:
+
+```yaml
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: apps
+  namespace: flux-system
+spec:
+  path: ./apps/staging
+  prune: true
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+```
+
+הכנו את ה apps overlay, ומיקמנו את יצירת ה namespace באותה התיקייה. אם נעשה push לקוד נראה את ה namespace וגם את ה - `Kustomization` שנוצר:
+
+```bash
+> kubectl get kustomization -n flux-system
+```
+
+## לסיכום
+
+בשיעור זה למדנו על:
+- `kustomize` - כלי שמאפשר ליצור משאבים בהתבסס על קובץ `kustomization.yaml`. זהו כלי מובנה ב - `kubectl`.
+- `kustomize-controller` - אופרטור של Flux שמסתכל על משאב מסוג `Kustomization` ומשמר את הקלאסטר תואם למשאבים שמוגדרים בקובץ `kustomization.yaml`.
+
+בנוסף למדנו על ה - `Kustomization` מסוג `kustomize.toolkit.fluxcd.io/v1` , ויצרנו overlay עבור ה - `apps` שלנו ולמדנו איך להשתמש ב - `patches` כדי לשנות משאבים ב overaly.
+
+קוד המקור המלא זמין [כאן](https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-02)
