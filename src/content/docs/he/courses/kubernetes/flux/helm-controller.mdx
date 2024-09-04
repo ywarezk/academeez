@@ -1,0 +1,338 @@
+---
+title: "helm-controller"
+description: בשיעור זה נלמד על helm-controller, ונשתמש בו כדי להתקין nginx ingress controller על הקלאסטר שלנו
+template: "doc"
+sidebar:
+  order: 3
+authors:
+  - yariv-katz
+source: "https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-03"
+---
+
+<div class="not-content flex">
+  <iframe
+    className="mx-auto"
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/aD5_OA3IEaA?si=UGUp2nH7JC0Pb85h"
+    title="YouTube video player"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+  />
+</div>
+
+ה - `helm-controller` הוא אופרטור של [Flux](https://fluxcd.io/flux/components/helm/), שעובד עם ה - `HelmRelease` custom resource.
+הוא משמש לניהול התקנות של helm על הקלאסטר שלנו.
+
+## Helm
+
+נתחיל מלעבור על כמה מושגים בסיסיים שיש לנו צורך להכיר לפני שנתחיל להשתמש ב - `helm-controller`.
+[Helm](https://helm.sh/) הוא כלי לניהול חבילות עבור Kubernetes. זהו הדרך הטובה ביותר למצוא, לשתף ולהשתמש בתוכנה שנבנתה עבור Kubernetes.
+כאשר אנו משתמשים ב - `Helm` כדי להתקין משאבים על הקלאסטר שלנו, ישנם כמה מושגים שעלינו להכיר...
+
+### Helm Chart
+
+`Helm chart` הוא אוסף של קבצים שמתארים קבוצה קשורה של משאבי Kubernetes. אותו ה - `chart` יכול לשמש להתקנה של משהו פשוט, כמו `pod` של `memcached`, או משהו מורכב יותר, כמו סטאק של אפליקציה מלאה עם שרתי HTTP, מסדי נתונים, caches וכו'.
+
+### Helm Repository
+
+Helm repository הוא שרת HTTP שמכיל את הקובץ `index.yaml` (אין `index.yaml` ב - OCI repositories) וכמה `charts` מארוזים. הקובץ `index.yaml` מכיל רשימה של כל ה - `charts` ב - repository, יחד עם מטא-נתונים על אותם `charts`.
+אין צורך בשום דבר מיוחד כדי ליצור `Helm repository`, ניתן להשתמש בכל שרת אינטרנטי כדי לשרת את ה - `charts` שלך (ב - OCI repositories זה דורש קצת יותר, ומומלץ להשתמש בפתרון בענן).
+בחירות פופולריות להצגת ה - `charts` שלך יכולות להיות: S3 buckets, Github pages, וכמה ספקי שירות ענן מציעים כיום artifact registries (artifact registries הם בחירה מושלמת ל - OCI repositories).
+בנוסף לאפשרויות האלו, ישנם גם repositories מנוהלים על ידי הקהילה כמו [Artifact Hub](https://artifacthub.io/).
+בשיעור זה נלמד כיצד לעבוד עם repositories מנוהלים על ידי הקהילה, ונתקין [nginx ingress controller באמצעות helm](https://docs.nginx.com/nginx-ingress-controller/installation/installing-nic/installation-with-helm/)
+
+### OCI
+
+ראשי התיבות של OCI הם Open Container Initiative, והרעיון הוא ליצור תקן עבור Container images ו - runtime.
+
+### OCI Artifact
+
+OCI Artifact הוא תקן ל - artifact, וניתן להשתמש בו לאחסון כל סוג של artifact, לא רק container images, כולל `Helm charts`.
+
+### OCI Repository
+
+OCI Repository הוא מקום שבו ניתן לאחסן OCI Artifacts, כלומר ניתן להשתמש בו לאחסון images, helm charts, וכל artifact אחר שהוא OCI.
+נשאף להתקין את ה - helm charts שלנו בתקן החדש, מה repositories של OCI. שימוש ב - OCI repositories יועיל לנו בהמשך כאשר נלמד לנהל גרסאות של helm באמצעות flux image automation controllers.
+
+### Helm Release
+
+ה - `Helm release` הוא התוצאה של התקנת `chart` על הקלאסטר שלנו. כל פעם שאנו מתקינים `chart` על הקלאסטר, נוצר `release` חדש. ניתן להתקין אותו `chart` כמה פעמים על אותו קלאסטר, ובכל פעם נוצר `release` חדש.
+
+## Flux helm workflow
+
+על פי המושגים הבסיסיים של helm, flux צריך לבצע את הפעולות הבאות:
+1. להירשם ל - OCI Helm repository.
+2. להביא `chart` ספציפי מה - repository, ולבדוק באופן תדיר אם יש עדכונים ל - `chart` הזה.
+3. להתקין את ה - `chart` על הקלאסטר.
+4. לנהל שינויים - לדוגמא אם נרצה לספק ערכים שונים ל - `chart`.
+5. לנהל שדרוגים - נצטרך לעדכן את הגרסא של ה - `chart` כאשר גרסא חדשה יוצאת - זה נושא מורכב ונקדיש לו שיעור מיוחד כיצד אנו ממליצים לעשות זאת.
+
+הורדת artifacts ממקומות מרוחקים היא עבודת ה - `source-controller`, ולכן ה - `source-controller` יטפל ב - **(1)** וב - **(2)**.  
+התקנת ה - `chart` על הקלאסטר היא עבודת ה - `helm-controller`, ולכן ה - `helm-controller` יטפל ב - **(3)** וב - **(4)**.
+בנוגע ל - **(5)** נשתמש ב - flux image automation controllers לניהול השדרוגים - אבל נדבר על זה בשיעור נפרד.
+
+## הרשמה ל - Helm repository
+
+כדי להוסיף `helm repository` ללא flux, נשתמש בפקודה הבאה:
+
+```bash
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+```
+
+אבל אנחנו לא נשתמש בפקודה זו כאשר אנו משתמשים ב - flux לניהול הקלאסטר שלנו.
+למעשה השימוש שלי בפקודת `helm` כיום הוא לקרוא נתונים, להתקין ב - `--dry-run`, וליצור `helm create` כדי לעזור לי ליצור תבנית חדשה, וזהו כל מה שאני עושה עם הפקודה `helm`.
+כל פקודה אחרת שיכולה לשנות את מצב הקלאסטר שלי, איננה נעשית עם פקודת `helm`, אלא עם **Flux**
+אז במקום הפקודה הזו, אנו מאפשרים ל - `source-controller` לנהל את כל ה - `helm repositories` שלנו.
+נשתמש ב - `HelmRepository` custom resource שמורה על כך שה - `source-controller` יירשם ל - `repository`.
+נתחיל בהרשמה ל - `nginx-ingress` repository, מאחר וכל הקלאסטרים שלנו יצטרכו להתקין ingress controller, נתקין אותו בתיקיית `infastructure/base` .
+בתוך התיקייה ניצור תיקייה נוספת `/infastructure/base/nginx` שבה נציב את כל המשאבים הקשורים ל - nginx ingress controller.
+צרו את הקובץ `namespace.yaml` עם התוכן הבא:
+
+```yaml title="/infastructure/base/nginx/namespace.yaml"
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  nginx
+```
+
+נציב את כל המשאבים של nginx בתוך ה - `namespace` `nginx`.
+
+כעת ניצור את ה - `HelmRepository` custom resource שירשם ל - `ingress-nginx` repository.
+ניצור את הקובץ `infastructure/base/nginx/repository.yaml` עם התוכן הבא:
+
+```yaml title="/infastructure/base/nginx/repository.yaml"
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: nginx
+  namespace: nginx
+spec:  
+  url: oci://ghcr.io/nginxinc/charts
+  type: oci
+```
+
+נשים לב לכמה נקודות:
+- אנו מוסיפים את ה - `repo` מה - `nginx` הרשמי. זהו ה - `nginx ingress controller` המומלץ שלנו.
+- אנו מעדיפים להשתמש תמיד ב - `oci` repositories.
+
+נצטרך גם כמה קבצי `kustomization.yaml` כדי לארגן את המשאבים שלנו.
+נוסיף אחד בתיקיית `nginx`: `/infastructure/base/nginx/kustomization.yaml` עם התוכן הבא:
+
+```yaml title="/infastructure/base/nginx/kustomization.yaml"
+resources:
+  - namespace.yaml
+  - repository.yaml
+```
+
+נצטרך גם קובץ `kustomization.yaml` בתיקיית `/infastructure/base` שיכלול את התיקייה `nginx`.
+
+```yaml title="/infastructure/base/kustomization.yaml"
+resources:
+  - ./nginx
+```
+
+בנוסף ניצור תיקייה `/infastructure/staging` עם קובץ `kustomization.yaml` שיאפשר לנו לעשות patch לשינויים שאנו רוצים להחיל על קלאסטר מסוים - במקרה זה קלאסטר `staging`.
+
+```yaml title="/infastructure/staging/kustomization.yaml"
+resources:
+	- ../base
+```
+
+כדאי לוודא עם `kustomize` שהפקודה `kustomize build` של התיקייה `/infastructure/staging` תחזיר את המשאבים הרצויים.
+
+```bash
+kustomize build infastructure/staging
+```
+
+תוצאת הפקודה תהיה:
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: nginx
+  namespace: nginx
+spec:  
+  url: oci://ghcr.io/nginxinc/charts
+  type: oci
+```
+
+דבר נוסף שעלינו לעשות הוא להודיע ל - `kustomize-controller` לצפות בתיקיית `infastructure/staging`.
+את זאת באמצעות `Kustomization` resource של Flux.
+ניצור את הקובץ `clusters/staging/infastructure.yaml` עם התוכן הבא:
+
+```yaml title="clusters/staging/infastructure.yaml"
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infastructure
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: ./infastructure/staging
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+```
+
+נדחוף את הקוד ל - git ונראה אם ה - `source-controller` יירשם ל - `ingress-nginx` repository.
+
+```bash
+kubectl get helmrepository -n nginx
+```
+
+נראה את התוצאה הבאה:
+
+```
+NAME    URL                                          AGE     READY   STATUS
+nginx   oci://ghcr.io/nginxinc/charts               7m57s   
+```
+
+שימו לב שב - `OCI` repositories אין לנו עמודה `READY/STATUS`, מאחר וה - `source-controller` אין דרך לדעת אם ה - `repository` מוכן או לא. ראו [issue](https://github.com/fluxcd/flux2/issues/4469) כי זה עשוי להשתנות בעתיד.
+
+## HelmChart
+
+עכשיו שהצלחנו לבצע הרשמה של ה - `source-controller` ל - `ingress-nginx` repository, עלינו להודיע ל - `source-controller` להביא `chart` ספציפי מה - `repository`.
+נעשה זאת עם ה - `HelmChart` custom resource.
+בתיקיית `/infastructure/base/nginx` ניצור את הקובץ `chart.yaml` עם התוכן הבא:
+
+```yaml title="/infastructure/base/nginx/chart.yaml"
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmChart
+metadata:
+  name: nginx
+  namespace: nginx
+spec:  
+  interval: 1h
+  chart: nginx-ingress
+  sourceRef:
+    kind: HelmRepository
+    name: nginx    
+  version: 1.2.x
+```
+
+נשים לב לכמה נקודות ב - `HelmChart` custom resource:
+- `chart` הוא שם ה - `chart` שאנו רוצים להתקין מה - `repository` שצוין ב - `sourceRef`.
+- `version` מציין את הגרסא של ה - `chart` שנרצה להביא, בדוגמא זו אנו משתמשים ב - `1.2.x` שמציין את הגרסא האחרונה בסדרה `1.2`.
+
+שדה `version` הוא אופציונלי, אם לא תציינו אותו, ה - `source-controller` יביא את הגרסא האחרונה של ה - `chart`.
+אנו ממליצים בחום לציין את הגרסא, אנו לא רוצים להיות מופתעים משינוי גרסא ב - `chart`, ואנו צריכים לעקוב אחרי עדכוני גרסאות בדרך דקלרטיבית עם gitops.
+
+בקורס זה נלמד כיצד לנהל עדכוני `helm` בדרך מקצועית ובצורה הטובה ביותר:
+- נשתמש ב - `notification-controller` כדי להודיע לנו כאשר גרסא חדשה של ה - `chart` זמינה.
+- נשתמש ב - `flux automation controllers` כדי לעדכן את ה - `staging cluster` באופן אוטומטי.
+- נשתמש ב - `flux automation controllers` כדי להניע `pr` לעדכון ה - `production cluster`.
+
+נלמד את כל אלו במהלך הקורס, אבל לא בשיעור זה. זה ידרוש מאיתנו ליצור `kustomization patch` לגרסא ב - `staging` וב - `production`, אבל נתמודד עם זה כאשר נלמד כיצד לנהל גרסאות של `helm` בדרך מקצועית.
+
+ראשית נוסיף את ה - `chart` ל - `infastructure/base/nginx/kustomization.yaml`:
+
+```yaml title="/infastructure/base/nginx/kustomization.yaml"
+resources:
+  - namespace.yaml
+  - repository.yaml
+  - chart.yaml
+```
+
+נדחוף את הקוד ל - git ונראה אם ה - `source-controller` יתפוס את ה - `chart` של `nginx-ingress`.
+אם הכל הלך כמו שצריך, נוכל להריץ את הפקודה:
+
+```bash
+kubectl get helmchart -n nginx
+```
+
+ונוכל לראות את התוצאה הבאה:
+
+```
+NAME    CHART           VERSION   SOURCE KIND      SOURCE NAME   AGE   READY   STATUS
+nginx   nginx-ingress   1.2.x     HelmRepository   nginx         20m   True    pulled 'nginx-ingress' ...
+```
+
+## HelmRelease
+
+ה - `chart` שלנו עדיין לא הותקן, אנו רק רשומים ל - `repository` והבאנו את ה - `chart`.
+עכשיו הגיע הזמן להתקין את ה - `chart` על הקלאסטר שלנו, וזה משימה ל - `helm-controller`.
+ה - `helm-controller` יצפה ל - `HelmRelease` custom resources ויתקין את ה - `chart` שצוין ב - `HelmRelease`.
+ה - `HelmRelease` יציין איזה `chart` להשתמש, ואילו ערכים להעביר ל - `chart`.
+בתיקייה `/infastructure/base/nginx` ניצור את הקובץ `release.yaml` עם התוכן הבא:
+
+```yaml title="/infastructure/base/nginx/release.yaml"
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: nginx
+  namespace: nginx
+spec:  
+  chart:
+    spec:
+      chart: nginx-ingress
+      version: 1.2.x
+      sourceRef:
+        kind: HelmRepository
+        name: nginx
+      interval: 1h
+  interval: 1h  
+  releaseName: nginx
+```
+
+בתוך ה - `HelmRelease` יש שדה `spec.chart` שהוא קיצור דרך ליצירת `HelmChart` resource.
+אני מוצא את זה קצת יותר נוח ליצור את ה - `HelmChart` עם הקיצור הזה היות וזה מאפשר לי לראות את הגרסא של ה - `release` באותו קובץ.
+כלומר אנחנו יכולים למחוק את הקובץ `infastructure/base/nginx/chart.yaml`.
+ולערוך את הקובץ `infastructure/base/nginx/kustomization.yaml` שיכלול את הקובץ `release.yaml`:
+
+```yaml title="/infastructure/base/nginx/kustomization.yaml"
+resources:
+  - namespace.yaml
+  - repository.yaml
+  - release.yaml
+```
+
+נשים לב שבתוך ה - `HelmRelease` ישנם 2 שדות `interval`:
+- הראשון בסעיף `spec.chart` - זה המרווח שבו ה - `source-controller` יבדוק אם יש גרסא חדשה של ה - `chart` ב - `repository` את הבדיקה הוא יבצע תוך התחשבות ב `spec.chart.spec.version`.
+- השני בסעיף `spec` - זה המרווח שבו ה - `helm-controller` יבדוק סטייה בהתקנת ה - `chart` על הקלאסטר.
+
+נדחוף את הקוד ל - git ונראה אם ה - `helm-controller` יתקין את ה - `nginx-ingress` על הקלאסטר שלנו.
+בטרמינל נריץ:
+
+```bash
+kubectl get helmrelease -n nginx
+```
+
+ניתן לראות את התוצאה הבאה:
+
+```
+NAME    AGE     READY   STATUS
+nginx   3m51s   True    Helm install...
+```
+
+אם נרצה לבדוק מה הותקן על הקלאסטר, נוכל להריץ:
+
+```bash
+kubectl get all -n nginx
+```
+
+נראה תוצאה דומה לזו:
+
+![release installation](https://github.com/ywarezk/academeez/blob/main/content/en/course/kubernetes/flux/helm-controller/installed.png?raw=true) 
+
+נשים לב לכמה נקודות:
+
+- ingress controller ו pod ו deployment רצים
+- ישנו גם service עם type `LoadBalancer` שנוצר, זהו ה - service שיחבר את ה - ingress controller לאינטרנט.
+
+## לסיכום
+
+כאשר אנחנו משתמשים ב Flux לא נשתמש יותר בפקודות `helm` שמשנות את מצב הקלאסטר שלנו.
+הכל צריך להיות דקלרטיבי עם קבצי yaml שמסבירים ל - `helm-controller` איך לנהל את ה - `helm releases` שלנו.
+על מנת שה - `helm-controller` יתקין `release`, נצטרך שהוא יעבוד ביחד עם ה - `source-controller` שיביא את ה - `chart` מה - `repository`.
+
+קוד המקור המלא של שיעור זה ניתן למצוא [כאן](https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-03)
+
