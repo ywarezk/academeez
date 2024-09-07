@@ -3,12 +3,29 @@ title: OnPush in all components
 description: "Best practice tip: OnPush should be set on all components"
 video: "https://www.youtube.com/embed/jbZIVoTxwYo?si=bxAxYFqLaxYIGX7R"
 publishDate: "2023-11-03"
+authors:
+  - yariv-katz
 ---
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/jbZIVoTxwYo?si=bxAxYFqLaxYIGX7R"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+
 
 If the user enters your site, and the site is sluggish and slow, the user will probably leave. We need to strive to make our web application as fast as possible. One way to speed you angular application is by using the `OnPush` change detection strategy on all components.  
 This best practice tip will force you to make all your components `OnPush`.
 
-<Steps>
+<div class="[&>h3]:step steps mb-12 ml-4 border-l pl-8 [counter-reset:step]">
 
 ### Generate a new angular application
 
@@ -90,6 +107,6 @@ jobs:
       - run: npx ng lint
 ```
 
-</Steps>
+</div>
 
 There is a significant performance boost when using `OnPush` change detection strategy, let's change all our components to use `OnPush`, and also enforce it with lint.
