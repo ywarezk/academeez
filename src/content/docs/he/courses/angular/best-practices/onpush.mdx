@@ -1,0 +1,110 @@
+---
+title: אכיפת OnPush בכל ה - Components
+description: מומלץ להגדיר את ה - Change Detection Strategy של כל ה - Components ל - OnPush
+video: "https://www.youtube.com/embed/jbZIVoTxwYo?si=bxAxYFqLaxYIGX7R"
+publishDate: "2023-11-03"
+authors:
+  - yariv-katz
+---
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/jbZIVoTxwYo?si=bxAxYFqLaxYIGX7R"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+אם משתמש נכנס לאתר שלך, והאתר איטי , המשתמש כנראה יעזוב. אנחנו צריכים להתאמץ לעשות את האפליקציה שלנו כמה שיותר מהירה. אחת הדרכים להאיץ את האפליקציה שלך היא להשתמש באסטרטגיית `OnPush` בכל ה - Components.  
+הצעדים הבאים יחייבו אותך להגדיר את כל ה - Components שלך להשתמש באסטרטגיית `OnPush`.
+
+<div class="[&>h3]:step steps mb-12 mr-4 border-r pr-8 [counter-reset:step]">
+
+### יצירת אפליקציה Angular חדשה
+
+```bash
+npx @angular/cli@latest new all-onpush --minimal --style css --routing false
+```
+
+### Angular cli מוגדר ל OnPush
+
+בעיה: אם תיצור קומפוננטה עם Angular cli, היא לא תהיה מוגדרת ל `OnPush`.  
+ודא שכל קומפוננטה חדשה שנוצרת עם Angular cli מוגדרת ל `OnPush`.
+
+```json title="angular.json"
+...
+"@schematics/angular:component": {
+	...
+	"changeDetection": "OnPush"
+},
+...
+```
+
+### הוספת Lint
+
+בעיה: אם תסיר את ה `OnPush` באופן ידני, או תיצור קומפוננטה בלי Angular cli, ייתכן שתשכח להגדיר את אסטרטגיית ה - Change Detection ל `OnPush`. Lint יכול לעזור לך לקבל שגיאת lint על כל קומפוננטה שאינה מוגדרת ל `OnPush`.  
+כרגע ה - `app.component.ts` אינו מוגדר ל `OnPush`, אז נתקין את eslint כדי לעזור לנו לתפוס את הבעיות האלה.
+
+```bash
+npx ng lint
+```
+
+פקודה זו תתקין lint והרצתה שוב תראה לך את השגיאות lint.
+כרגע אין לנו שגיאות lint, בוא נגדיר שגיאת lint כאשר אנחנו לא משתמשים ב `OnPush`.
+
+### כלל ה - Lint: @angular-eslint/prefer-on-push-component-change-detection
+
+צריך להגיד ל `ESLint` להתייחס לקומפוננטות שאינן משתמשות ב `OnPush` ולתת לנו שגיאת lint.
+
+```json title=".eslintrc.json
+"rules": {
+	"@angular-eslint/prefer-on-push-component-change-detection": [
+		"error"
+	],
+	...
+}
+```
+
+ננסה להריץ את lint שוב:
+
+```bash
+npx ng lint
+```
+
+תראה שגיאה ב `app.component.ts` שלא משתמש ב `OnPush`
+
+### וודא שה - CI שלך מריץ lint
+
+הגדר את ה - CI שלך להריץ lint, כך שלא תוכל למזג קוד שאינו משתמש ב `OnPush`.  
+בדוגמא זו בכל PR github actions יריץ `ng lint`.
+
+```yaml title=".github/workflows/lint.yml"
+name: Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm ci
+      - run: npx ng lint
+```
+
+</div>
+
+יש תועלת משמעותית בביצועים כאשר משתמשים באסטרטגיית `OnPush` ב - Change Detection, בוא נשנה את כל ה - Components שלנו להשתמש ב `OnPush`, וגם לאכוף את זה עם lint.
