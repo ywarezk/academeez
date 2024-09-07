@@ -1,8 +1,26 @@
 ---
-title: "Angular best practice tip: use *ngFor trackBy"
+title: "use *ngFor trackBy"
 description: Performance will be significantly improved if you use *ngFor trackBy functions
 publishDate: "2023-11-17"
+authors:
+  - yariv-katz
 ---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/XOMY6S6GcZw?si=EQ6gJzVZpaqIfjBc"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
 
 Understanding the `*ngFor` [`trackBy`](https://angular.io/api/core/TrackByFunction) function is essential to improve the performance of your `*ngFor` loops and your angular application as a whole.
 
@@ -21,47 +39,22 @@ npx @angular/cli@latest new trackby-demo --minimal --style css --routing false
 
 change your `app.component.ts` to look like this:
 
-<div className="mt-5">
-<Sandpack 
-	customSetup={{ 
-		dependencies: { 			
-			"@angular/core": "^17.0.0",
-			"@angular/platform-browser": "^17.0.0",
-			"@angular/platform-browser-dynamic": "^17.0.0",
-			"@angular/common": "^17.0.0",
-			"@angular/compiler": "^17.0.0"
-		}
-	}}
-	files={{
-		"src/main.ts": {hidden: true, code: `import "@angular/compiler";
-import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
-import { AppComponent } from './app/app.component';
-
-bootstrapApplication(AppComponent, appConfig)
-  .catch((err) => console.error(err));
-`},
-		"src/app/app.config.ts": { hidden: true, code: `import { ApplicationConfig } from '@angular/core';
-
-export const appConfig: ApplicationConfig = {
-  providers: []
-};
-`, readOnly: true},
-		"src/app/app.component.ts": { code: `import {Component} from '@angular/core';
+```typescript title="app.component.ts"
+import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule],
-  template: \`
+  template: `
     <ul>
       <li *ngFor="let item of todo">
         <input [value]="item.title" />
       </li>
     </ul>
     <button (click)="add()">add</button>
-  \`,
+  `,
 })
 export class AppComponent {
   todo = [
@@ -75,12 +68,7 @@ export class AppComponent {
     this.todo.push({id: Math.random(), title: 'baz' + Math.random()});
   }
 }
-`},	
-	}
-	}
-	template="angular" 
-/>
-</div>
+```
 
 In this example we have a list of todo items. We are using `*ngFor` to loop over the items and render an input for each item. We also have a button that adds a new item to the list.  
 We are placing an `input` in each item to verify if the list elements are recreated from scratch or is the list modified and an element is just appended to the list.  
@@ -96,47 +84,22 @@ In that case, the objects in the list will change, and angular will destroy the 
 
 We can try and simplify this example with the following code:
 
-<div className="mt-5">
-<Sandpack 
-	customSetup={{ 
-		dependencies: { 			
-			"@angular/core": "^17.0.0",
-			"@angular/platform-browser": "^17.0.0",
-			"@angular/platform-browser-dynamic": "^17.0.0",
-			"@angular/common": "^17.0.0",
-			"@angular/compiler": "^17.0.0"
-		}
-	}}
-	files={{
-		"src/main.ts": {hidden: true, code: `import "@angular/compiler";
-import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
-import { AppComponent } from './app/app.component';
-
-bootstrapApplication(AppComponent, appConfig)
-  .catch((err) => console.error(err));
-`},
-		"src/app/app.config.ts": { hidden: true, code: `import { ApplicationConfig } from '@angular/core';
-
-export const appConfig: ApplicationConfig = {
-  providers: []
-};
-`, readOnly: true},
-		"src/app/app.component.ts": { code: `import {Component} from '@angular/core';
+```typescript title="app.component.ts"
+import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule],
-  template: \`
+  template: `
     <ul>
       <li *ngFor="let item of todo">
         <input [value]="item.title" />
       </li>
     </ul>
     <button (click)="add()">add</button>
-  \`,
+  `,
 })
 export class AppComponent {
   todo = [
@@ -156,12 +119,7 @@ export class AppComponent {
     this.todo = [...this.clone(), {id: Math.random(), title: 'baz' + Math.random()}];
   }
 }
-`},	
-	}
-	}
-	template="angular" 
-/>
-</div>
+```
 
 Notice that on every add we are completly recreating the list, we are using the `clone` function to clone the list and add a new item to the list.  
 In the following case if you type something in the input and click the add button you will see that the input is recreated from scratch and you lose the state of the input.
@@ -171,47 +129,22 @@ Regardless of losing the state, it is also a performance issue, since angular wi
 
 The solution is to use `*ngFor` trackBy function, which will replace the default `===` comparison with a custom comparison function.
 
-<div className="mt-5">
-<Sandpack 
-	customSetup={{ 
-		dependencies: { 			
-			"@angular/core": "^17.0.0",
-			"@angular/platform-browser": "^17.0.0",
-			"@angular/platform-browser-dynamic": "^17.0.0",
-			"@angular/common": "^17.0.0",
-			"@angular/compiler": "^17.0.0"
-		}
-	}}
-	files={{
-		"src/main.ts": {hidden: true, code: `import "@angular/compiler";
-import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
-import { AppComponent } from './app/app.component';
-
-bootstrapApplication(AppComponent, appConfig)
-  .catch((err) => console.error(err));
-`},
-		"src/app/app.config.ts": { hidden: true, code: `import { ApplicationConfig } from '@angular/core';
-
-export const appConfig: ApplicationConfig = {
-  providers: []
-};
-`, readOnly: true},
-		"src/app/app.component.ts": { code: `import {Component} from '@angular/core';
+```typescript title="app.component.ts"
+import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule],
-  template: \`
+  template: `
     <ul>
       <li *ngFor="let item of todo; trackBy: tbid">
         <input [value]="item.title" />
       </li>
     </ul>
     <button (click)="add()">add</button>
-  \`,
+  `,
 })
 export class AppComponent {
   todo = [
@@ -235,12 +168,7 @@ export class AppComponent {
     this.todo = [...this.clone(), {id: Math.random(), title: 'baz' + Math.random()}];
   }
 }
-`},	
-	}
-	}
-	template="angular" 
-/>
-</div>
+```
 
 Try and type a text in the input and click the add, you will see that the state of the input is preserved which means that the dom element is not recreated from scratch.
 
