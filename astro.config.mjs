@@ -10,6 +10,7 @@ export default defineConfig({
   integrations: [react({
     experimentalReactChildren: true
   }), starlight({
+    favicon: '/favicon-32x32.png',
     editLink: {
       baseUrl: 'https://github.com/ywarezk/academeez/edit/main/docs/'
     },
