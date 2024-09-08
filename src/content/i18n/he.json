@@ -1,5 +1,7 @@
 {
 	"header.courses": "קורסים",
 	"pagesidebar.authors": "נכתב על ידי",
-	"pagesidebar.source": "קוד מקור"
+	"pagesidebar.source": "קוד מקור",
+	"breadcrumbs.home": "בית",
+	"breadcrumbs.courses": "קורסים"
 }

@@ -26,6 +26,8 @@ export const collections = {
       'header.courses': z.string(),
       'pagesidebar.authors': z.string(),
       'pagesidebar.source': z.string(),
+      "breadcrumbs.home": z.string(),
+      "breadcrumbs.courses": z.string(),
     }),
   }) }),
   docs: defineCollection({
