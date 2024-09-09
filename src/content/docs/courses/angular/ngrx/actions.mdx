@@ -1,0 +1,700 @@
+---
+title: NGRX Actions
+description: Student Ex. for NGRX actions
+publishDate: 2023-11-23
+---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+To study api's it's best to code it yourself, so let's go over the proper way to create actions using NGRX.  
+This lesson has 2 student execises, below each exercise you will find the solution for that exercise.
+
+## What are actions?
+
+- Actions are sent to the store using `store.dispatch(someAction)`
+- The store will send that actions to the reducers which often will result in a state change.
+
+The meaning of an action is to say that something happened in the app, a lot of the times it's something that the user did like clicking a button or activating some sort of event.  
+An action will often send additional data, for example if there is an action we want to send after a server response, we will often send the server response as the payload for the action.  
+Action contains an identifier and optional payload data `{ type: string, additionalData?: ..., moreData?: ... }`.
+
+## createAction
+
+There are 2 creator functions in `@ngrx/store` for actions `createAction` and `createActionGroup`.  
+Let's start with `createAction` which is used to create a single action.
+
+```ts
+import { createAction, props } from '@ngrx/store';
+
+export const setRepos = createAction(
+  '[GroupName] Identifier For Action',
+  props<{ additionalData: any, anotherData: any, asManyDataAsYouWant: any, anyNameHereYouWant: any }>()
+);
+```
+
+Notice that our action contains a unique identifier, it's common to group actions together and name the actions with square brackets and the name of the group (in the above example `[GroupName]`).  
+You can also add any optional data that you want with your action.
+
+## Student Exercise - createAction
+
+Time for you to practice the `createAction` api.  
+
+- You can write code in the editor here in the site (notice that the editor starts with an error cause the code is not completed).
+- This angular app contains a single component `app.component.ts` which will display a list of repositories from github.
+- The app contains `actions.ts` where you will need to create a single action
+- The app contains `reducer.ts` which responds to the action you will create.
+- The file `repos.service.ts` contains a service that will fetch the repositories from github.
+- The files you will modify in the exercise are: `app.component.ts`, `actions.ts` and `reducer.ts` (maybe), the rest of the files will be read only files.
+- You goal is that the `app.component.ts` will display the list of repositories from github, but grab that list from the store.
+- The `app.component.ts` will `implement OnInit` and in the `ngOnInit` method you will need to use the `repos.service.ts` to grab the repos and then populate the ngrx state with those repos.
+- You will need to create an action in `actions.ts` that will be dispatched from the `app.component.ts` and will be handled by the reducer in `reducer.ts`.
+
+<div class="mt-5">
+<Sandpack 
+	customSetup={{ 
+		dependencies: { 			
+			"@angular/core": "^17.0.0",
+			"@angular/platform-browser": "^17.0.0",
+			"@angular/platform-browser-dynamic": "^17.0.0",
+			"@angular/common": "^17.0.0",
+			"@angular/compiler": "^17.0.0",
+			"@ngrx/store": "^17.0.0",
+    	"@ngrx/store-devtools": "^17.0.0",
+		}
+	}}
+	
+	files={{
+		"src/app/repo.service.ts": {
+			readOnly: true,
+			code: `import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Repo } from "./repo";
+
+@Injectable({
+  providedIn: "root",
+})
+export class RepoService {
+  constructor(private _httpClient: HttpClient) {}
+
+  getRepos() {
+    return this._httpClient.get<Repo[]>(
+      "https://api.github.com/users/tannerlinsley/repos?sort=updated",
+    );
+  }
+}
+`
+		},
+		"src/app/reducer.ts": {
+			code: `import { createReducer, on } from "@ngrx/store";
+import { setRepos } from "./actions";
+import { Repo } from "./repo";
+
+export const reposReducer = createReducer(
+  {
+    list: [] as Array<Repo>,
+  },
+	
+	// TODO: notice how this reducer is setting the list in the state with the action setRepos
+  on(setRepos, (state, { repos }) => ({ ...state, list: repos })),
+);
+`		
+		},
+		"src/app/actions.ts": {
+			code: `
+// TODO: should export an action called setRepos that will be used to set the repos in the store, the action will get the repos
+`	
+		},
+		"src/app/repo.ts": {
+			readOnly: true,
+			code: `export type Repo = {
+  id: number;
+  name: string;
+  description: string;
+};
+`	
+		},
+		"src/app/state.ts": {
+			readOnly: true,
+			code: `import { Repo } from './repo';
+
+export type State = {
+  repos: {
+    list: Repo[];
+  };
+};
+`
+		},
+		"src/app/app.module.ts": {
+			hidden: true,
+			readOnly: true,	
+			code: `import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { StoreModule } from "@ngrx/store";
+import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { AppComponent } from "./app.component";
+import { reposReducer } from "./reducer";
+import { HttpClientModule } from "@angular/common/http";
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    StoreModule.forRoot({
+      repos: reposReducer,
+    }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: false,
+    }),
+    HttpClientModule,
+  ],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+`
+		},		
+		
+		"src/app/app.component.ts": {
+			code: `import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { State } from "./state";
+import { RepoService } from "./repo.service";
+import { setRepos } from "./actions";
+
+@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: "app-root",
+  template: \`
+    <h1>Display the list of repos2</h1>
+    <ul>
+      <li *ngFor="let repo of repos$ | async">
+				{{ repo.name }}
+			</li>
+    </ul>
+  \`,
+})
+// TODO: should implement OnInit
+export class AppComponent {
+  // TODO: should have a repos$ observable using the store.select
+
+	// TODO: should have a constructor that injects the store and the repo service
+  
+	// TODO: should impelment ngOnInit and use the repo service to fetch the repos and then dispatch an action to set the repos in the store.  
+}
+`
+		}
+	}}
+	
+	template="angular"
+/>
+</div>
+
+## Solution
+
+Here is the solution for the exercise:
+
+<div class="mt-5">
+<Sandpack 
+	customSetup={{ 
+		dependencies: { 			
+			"@angular/core": "^17.0.0",
+			"@angular/platform-browser": "^17.0.0",
+			"@angular/platform-browser-dynamic": "^17.0.0",
+			"@angular/common": "^17.0.0",
+			"@angular/compiler": "^17.0.0",
+			"@ngrx/store": "^17.0.0",
+    	"@ngrx/store-devtools": "^17.0.0",
+		}
+	}}
+	
+	files={{
+		"src/app/repo.service.ts": {
+			readOnly: true,
+			code: `import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Repo } from "./repo";
+
+@Injectable({
+  providedIn: "root",
+})
+export class RepoService {
+  constructor(private _httpClient: HttpClient) {}
+
+  getRepos() {
+    return this._httpClient.get<Repo[]>(
+      "https://api.github.com/users/tannerlinsley/repos?sort=updated",
+    );
+  }
+}
+`
+		},
+		"src/app/reducer.ts": {
+			code: `import { createReducer, on } from "@ngrx/store";
+import { setRepos } from "./actions";
+import { Repo } from "./repo";
+
+export const reposReducer = createReducer(
+  {
+    list: [] as Array<Repo>,
+  },
+  on(setRepos, (state, { repos }) => ({ ...state, list: repos })),
+);
+`		
+		},
+		"src/app/actions.ts": {
+			code: `import { createAction, props } from "@ngrx/store";
+import { Repo } from "./repo";
+
+export const setRepos = createAction(
+  "[Repos] Set Repos",
+  props<{ repos: Repo[] }>(),
+);`	
+		},
+		"src/app/repo.ts": {
+			readOnly: true,
+			code: `export type Repo = {
+  id: number;
+  name: string;
+  description: string;
+};
+`	
+		},
+		"src/app/state.ts": {
+			readOnly: true,
+			code: `import { Repo } from './repo';
+
+export type State = {
+  repos: {
+    list: Repo[];
+  };
+};
+`
+		},
+		"src/app/app.module.ts": {
+			hidden: true,
+			readOnly: true,	
+			code: `import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { StoreModule } from "@ngrx/store";
+import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { AppComponent } from "./app.component";
+import { reposReducer } from "./reducer";
+import { HttpClientModule } from "@angular/common/http";
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    StoreModule.forRoot({
+      repos: reposReducer,
+    }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: false,
+    }),
+    HttpClientModule,
+  ],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+`
+		},		
+		
+		"src/app/app.component.ts": {
+			code: `import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { State } from "./state";
+import { RepoService } from "./repo.service";
+import { setRepos } from "./actions";
+
+@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: "app-root",
+  template: \`
+    <h1>Display the list of repos2</h1>
+    <ul>
+      <li *ngFor="let repo of repos$ | async">
+				{{ repo.name }}
+			</li>
+    </ul>
+  \`,
+})
+export class AppComponent implements OnInit {
+  repos$ = this._store.select((state) => state.repos.list);
+
+  constructor(
+    private _store: Store<State>,
+    private _repo: RepoService,
+  ) {}
+
+  ngOnInit(): void {
+    this._repo.getRepos().subscribe((repos) => {
+      this._store.dispatch(setRepos({ repos }));
+    });
+  }
+}
+`
+		}
+	}}
+	
+	template="angular"
+/>
+</div>
+
+- In the `actions.ts` file, we are defining an action using `createAction`, we are also using the `props` to specify that our action needs the fetched repos.
+- In the `app.component.ts` `ngOnInit` we are fetching the repos and calling `store.dispatch` to set the repos in the store using the action we created. 
+- In the `app.component.ts` we are using the `store.select` to select the repos from the store.
+- In the `reducer.ts` we are handling the action and setting the repos in the store.
+
+## createActionGroup
+
+The `createActionGroup` is used to create multiple actions at once, it's useful when you want to create a group of actions that are related to each other (Usually we have groups of actions so you would probably use this function to create an action even more than `createAction`).  
+
+```ts
+import { createActionGroup, props } from '@ngrx/store';
+import type { Repo } from './repo';
+
+export const repoActions = createActionGroup({
+  source: 'Repos',
+  events: {
+    'Set Repos': props<{ repos: Repo[] }>(),    
+  },
+})
+```
+
+The `createActionGroup` function receives an object with 2 properties:
+- `source` - The name of the group of actions (usually that name relates to the section of the state these actions relate to).
+- `events` - An object with the actions, the key is the name of the action and the value is the props for the action.
+
+## Student Exercise - createActionGroup
+
+In this exercise you will need to create a group of actions using `createActionGroup`.  
+- In the `actions.ts` file you will need to create a group of actions containing 2 actions:
+	- `Set Repos` - Will be used to set the repos in the store (like the previous exercise).
+	- `Delete Repo` - Will be used to delete a repo from the store (will get the repo id in the payload).
+- In the `reducer.ts` file you will need to handle the `Delete Repo` action and remove the repo from the store based on the id that you get from the action.
+- In the `app.component.ts` you will need to dispatch the `Delete Repo` action when the user clicks the delete button.
+
+<div class="mt-5">
+<Sandpack 
+	customSetup={{ 
+		dependencies: { 			
+			"@angular/core": "^17.0.0",
+			"@angular/platform-browser": "^17.0.0",
+			"@angular/platform-browser-dynamic": "^17.0.0",
+			"@angular/common": "^17.0.0",
+			"@angular/compiler": "^17.0.0",
+			"@ngrx/store": "^17.0.0",
+    	"@ngrx/store-devtools": "^17.0.0",
+		}
+	}}
+	
+	files={{
+		"src/app/repo.service.ts": {
+			readOnly: true,
+			code: `import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Repo } from "./repo";
+
+@Injectable({
+  providedIn: "root",
+})
+export class RepoService {
+  constructor(private _httpClient: HttpClient) {}
+
+  getRepos() {
+    return this._httpClient.get<Repo[]>(
+      "https://api.github.com/users/tannerlinsley/repos?sort=updated",
+    );
+  }
+}
+`
+		},
+		"src/app/reducer.ts": {
+			code: `import { createReducer, on } from "@ngrx/store";
+import { repoActions } from "./actions";
+import { Repo } from "./repo";
+
+export const reposReducer = createReducer(
+  {
+    list: [] as Array<Repo>,
+  },
+	// TODO: notice the actions here that you need to create
+  on(repoActions.setRepos, (state, { repos }) => ({ ...state, list: repos })),
+  on(repoActions.deleteRepo, (state, { id }) => {
+    const repos = state.list.filter((repo) => repo.id !== id);
+    return { ...state, list: repos };
+  }),
+);
+`		
+		},
+		"src/app/actions.ts": {
+			code: `TODO: use createActionGroup to create a group of actions with 2 actions: setRepos and deleteRepo`	
+		},
+		"src/app/repo.ts": {
+			readOnly: true,
+			code: `export type Repo = {
+  id: number;
+  name: string;
+  description: string;
+};
+`	
+		},
+		"src/app/state.ts": {
+			readOnly: true,
+			code: `import { Repo } from './repo';
+
+export type State = {
+  repos: {
+    list: Repo[];
+  };
+};
+`
+		},
+		"src/app/app.module.ts": {
+			hidden: true,
+			readOnly: true,	
+			code: `import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { StoreModule } from "@ngrx/store";
+import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { AppComponent } from "./app.component";
+import { reposReducer } from "./reducer";
+import { HttpClientModule } from "@angular/common/http";
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    StoreModule.forRoot({
+      repos: reposReducer,
+    }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: false,
+    }),
+    HttpClientModule,
+  ],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+`
+		},		
+		
+		"src/app/app.component.ts": {
+			code: `import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { State } from "./state";
+import { RepoService } from "./repo.service";
+import { repoActions } from "./actions";
+
+@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: "app-root",
+  template: \`
+    <h1>Display the list of repos2</h1>
+    <ul>
+      <li *ngFor="let repo of repos$ | async">
+        {{ repo.name }} <button (click)="deleteRepo(repo.id)">X</button>
+      </li>
+    </ul>
+  \`,
+})
+export class AppComponent implements OnInit {
+  repos$ = this._store.select((state) => state.repos.list);
+
+  constructor(
+    private _store: Store<State>,
+    private _repo: RepoService,
+  ) {}
+
+  ngOnInit(): void {
+    this._repo.getRepos().subscribe((repos) => {
+      this._store.dispatch(repoActions.setRepos({ repos }));
+    });
+  }
+
+  deleteRepo(id: number) {
+    // TODO: dispatch the delete repo action
+  }
+}
+`
+		}
+	}}
+	
+	template="angular"
+/>
+</div>
+
+## Solution
+
+<div class="mt-5">
+<Sandpack 
+	customSetup={{ 
+		dependencies: { 			
+			"@angular/core": "^17.0.0",
+			"@angular/platform-browser": "^17.0.0",
+			"@angular/platform-browser-dynamic": "^17.0.0",
+			"@angular/common": "^17.0.0",
+			"@angular/compiler": "^17.0.0",
+			"@ngrx/store": "^17.0.0",
+    	"@ngrx/store-devtools": "^17.0.0",
+		}
+	}}
+	
+	files={{
+		"src/app/repo.service.ts": {
+			readOnly: true,
+			code: `import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Repo } from "./repo";
+
+@Injectable({
+  providedIn: "root",
+})
+export class RepoService {
+  constructor(private _httpClient: HttpClient) {}
+
+  getRepos() {
+    return this._httpClient.get<Repo[]>(
+      "https://api.github.com/users/tannerlinsley/repos?sort=updated",
+    );
+  }
+}
+`
+		},
+		"src/app/reducer.ts": {
+			code: `import { createReducer, on } from "@ngrx/store";
+import { repoActions } from "./actions";
+import { Repo } from "./repo";
+
+export const reposReducer = createReducer(
+  {
+    list: [] as Array<Repo>,
+  },
+  on(repoActions.setRepos, (state, { repos }) => ({ ...state, list: repos })),
+  on(repoActions.deleteRepo, (state, { id }) => {
+    const repos = state.list.filter((repo) => repo.id !== id);
+    return { ...state, list: repos };
+  }),
+);
+`		
+		},
+		"src/app/actions.ts": {
+			code: `import { createActionGroup, props } from "@ngrx/store";
+import { Repo } from "./repo";
+
+export const repoActions = createActionGroup({
+  source: "Repo",
+  events: {
+    "Set Repos": props<{ repos: Repo[] }>(),
+    "Delete Repo": props<{ id: number }>(),
+  },
+});
+`	
+		},
+		"src/app/repo.ts": {
+			readOnly: true,
+			code: `export type Repo = {
+  id: number;
+  name: string;
+  description: string;
+};
+`	
+		},
+		"src/app/state.ts": {
+			readOnly: true,
+			code: `import { Repo } from './repo';
+
+export type State = {
+  repos: {
+    list: Repo[];
+  };
+};
+`
+		},
+		"src/app/app.module.ts": {
+			hidden: true,
+			readOnly: true,	
+			code: `import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { StoreModule } from "@ngrx/store";
+import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { AppComponent } from "./app.component";
+import { reposReducer } from "./reducer";
+import { HttpClientModule } from "@angular/common/http";
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    StoreModule.forRoot({
+      repos: reposReducer,
+    }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: false,
+    }),
+    HttpClientModule,
+  ],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+`
+		},		
+		
+		"src/app/app.component.ts": {
+			code: `import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { State } from "./state";
+import { RepoService } from "./repo.service";
+import { repoActions } from "./actions";
+
+@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: "app-root",
+  template: \`
+    <h1>Display the list of repos2</h1>
+    <ul>
+      <li *ngFor="let repo of repos$ | async">
+        {{ repo.name }} <button (click)="deleteRepo(repo.id)">X</button>
+      </li>
+    </ul>
+  \`,
+})
+export class AppComponent implements OnInit {
+  repos$ = this._store.select((state) => state.repos.list);
+
+  constructor(
+    private _store: Store<State>,
+    private _repo: RepoService,
+  ) {}
+
+  ngOnInit(): void {
+    this._repo.getRepos().subscribe((repos) => {
+      this._store.dispatch(repoActions.setRepos({ repos }));
+    });
+  }
+
+  deleteRepo(id: number) {
+    this._store.dispatch(repoActions.deleteRepo({ id }));
+  }
+}
+`
+		}
+	}}
+	
+	template="angular"
+/>
+</div>
+
+## Summary
+
+Actions allow us to tell NGRX about something that happened in the app which might cause a state change.  
+We learned about the 2 api's that NGRX supplies us for creating an action (`createActionGroup` and `createAction`).  
+For the majority of cases you will need to create a group of actions and will therefore use `createActionGroup`.
+
