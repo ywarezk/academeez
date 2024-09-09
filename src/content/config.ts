@@ -36,6 +36,7 @@ export const collections = {
         preview: z.boolean().optional().default(true),
         authors: z.array(z.string()).optional(),
         source: z.string().optional(),
+        publishDate: z.date(),
       }),
     }),
   }),
