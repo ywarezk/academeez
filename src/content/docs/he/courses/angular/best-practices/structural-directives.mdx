@@ -1,6 +1,7 @@
 ---
 title: "Structural Directives"
-description: Repeating *ngIf is often a sign to use a structural directive.
+description: כאשר יש שימוש חוזר באותו התנאי *ngIf זה סימן לשימוש ב- structural directive.
+video: "https://www.youtube.com/embed/7MPiRy8IPa8?si=Kl3sLth-QE1C8tGB"
 publishDate: 2023-11-15
 ---
 
@@ -19,14 +20,14 @@ import {Sandpack} from '@codesandbox/sandpack-react';
 	/>
 </div>
 
-[Structural Directives](https://angular.dev/guide/directives/structural-directives) in Angular is a powerful feature which is often underused in my opinion.  
-Let's try to change this and show you a repeating pattern which is better to solve with a structural directive.
+[Structural Directives](https://angular.dev/guide/directives/structural-directives) ב-Angular היא תכונה חזקה שלא נעשה בה שימוש מספיק לדעתי.  
+בואו ננסה לשנות את זה ולהראות לכם דוגמא חוזרת שניתן לפתור בצורה טובה יותר עם structural directive.
 
-## The Problem
+## הבעיה
 
-DRY violation with repeating [*ngIf](https://angular.dev/guide/directives#adding-or-removing-an-element-with-ngif)
+קוד שחוזר על עצמו עם [*ngIf](https://angular.dev/guide/directives#adding-or-removing-an-element-with-ngif)
 
-Let's examine the following example:
+בואו נבחן את הדוגמא הבאה:
 
 <div className="mt-5 not-content">
 <Sandpack
@@ -95,16 +96,16 @@ export class AppComponent {
 />
 </div>
 
-In the following example we have a `user.service.ts` that will hold our logged in user or `null` if the user is not logged in.  
-In the `app.component.ts` we are using the `userService` to display the user's name if the user is logged in.
+בדוגמא הנ"ל יש לנו `user.service.ts` שיחזיק את המשתמש המחובר או `null` אם המשתמש לא מחובר.  
+ב- `app.component.ts` אנו משתמשים ב- `userService` כדי להציג את שם המשתמש אם המשתמש מחובר.
 
-A similar case was taken from a real world large project, where this kind of logic of checking if the user is logged in was repeated in many places, or in general not even checking if logged in but simple displaying data that we have on the logged in user.
+מקרה דומה נלקח מפרוייקט גדול בעולם האמיתי, שם סוג הלוגיקה של בדיקה האם המשתמש מחובר חוזר במקומות רבים, או בכלל לא בדיקה האם מחובר אלא פשוט הצגת נתונים שיש לנו על המשתמש המחובר.
 
-If you have a repeating `ngIf` or a repeating need for some grabbing some data from a service and having that data available in component template, then you should consider using a structural directive.
+אם יש לכם `ngIf` חוזר או צורך חוזר לקבל נתונים משירות ולהציג אותם בקומפוננטה, אז כדאי לשקול להשתמש ב- structural directive.
 
-## The Solution
+## הפתרון
 
-Let's create a structural directive that will handle the logic of checking if the user is logged in and if so, will display the template and pass the user to that template.
+בואו ניצור structural directive שתטפל בלוגיקה של בדיקה האם המשתמש מחובר ואם כן תציג את ה template ותעביר את המשתמש לאותו ה template
 
 <div class="mt-5 not-content">
 <Sandpack 
@@ -215,7 +216,8 @@ export class AppComponent {}
 />
 </div>
 
-Notice that we create a structural directive that will only render the template if we have a logged in user, the directive will also provide that user to the `$implicit` allowing the `app.component.ts` to use it like so:
+נשים לב שיצרנו structural directive שירנדר את ה template רק אם המשתמש מחובר, ה directive גם מספק את המשתמש ל template באמצעות המשתנה `$implicit` ולכן ניתן להשתמש במשתמש בקומפוננטה כך:
+
 
 ```html
 <span *withUser="let user">
@@ -223,5 +225,5 @@ Notice that we create a structural directive that will only render the template 
 </span>
 ```
 
-now every place I need the `user` I don't have to inject the `user.service.ts` and simply use my structural directive.  
-Handy isn't it? structural directives are an amazing shortcut to avoid repeating logic in your components.
+כעת כל מקום שאני צריך את ה `user` אני לא צריך להכניס את ה `user.service.ts` ופשוט להשתמש ב- structural directive שיצרנו.  
+יעיל לא? structural directives הם דרך מדהימה לחסוך בלוגיקה חוזרת בקומפוננטות שלכם.

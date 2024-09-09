@@ -17,7 +17,8 @@ export default defineConfig({
     components: {
       Sidebar: './src/components/Sidebar.astro',
       PageSidebar: './src/components/PageSidebar.astro',
-      SocialIcons: './src/components/SocialIcons.astro'
+      SocialIcons: './src/components/SocialIcons.astro',
+      PageTitle: './src/components/PageTitle.astro',
     },
     sidebar: [{
       label: 'Angular',
