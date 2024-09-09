@@ -1,0 +1,155 @@
+---
+title: Injection Functions לאתחולים חוזרים
+description: ניתן להשתמש ב Injection Functions לאתחולים חוזרים. בואו נראה איך זה עובד עם NGRX
+publishDate: 2022-11-14
+authors:
+  - yariv-katz
+---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/AqXHyIfxC5U?si=t2QnnrvOWbzKm1x5"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+בואו ניתן דוגמא פשוטה של שימוש ב Injection Functions, ומהם נבין טיפ כללי לשימוש ב Injection Functions.
+
+## DI
+
+בדרך כלל אנו משתמשים ב- `DI` על ידי הזרקת השירותים באמצעות constructor.
+
+```typescript
+import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+
+@Component({...})
+export class AppComponent {
+	counter$ = this._store.select((state) => state.counter);
+	
+	constructor(private _store: Store) {}
+}
+``` 
+
+בדוגמא זו אנו מזריקים את ה- `Store` באמצעות ה- constructor, ואז משתמשים בשירות `Store` כדי לבחור נתונים מה- `State`.
+
+## בעיה
+
+מה קורה אם נרצה לקרוא ל- `counter` ברבים מה Components, מה קורה אם נרצה לבצע פעולות חוזרות על אותם הנתונים?  
+האם עלינו לשכפל את הלוגיקה בכל ה Components?
+
+נכון שניתן להשתמש ב-[NGRX Selectors](https://ngrx.io/guide/store/selectors) וב- RXJS pipe כדי ליצור אופרטור RXJS מותאם אישית לחילוץ הנתונים, אך עדיין עלינו להזריק את שירות ה- `Store` ולקרוא ל- `store.pipe`.  
+
+באופן כללי עם `NGRX` יש לנו הרבה מאוד מקרים שבהם נצטרך אתחולים שנרשמים לחלק מה - state.
+
+## Injection Functions
+
+כאשר יש לך אתחולים חוזרים זה סימן טוב לשימוש ב- injection functions.  
+דרך נוספת שבה ניתן לבקש מה- `DI` לתת לך את השירות `Store` היא באמצעות הפונקציה `inject`:
+
+```typescript
+import { Component, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
+
+@Component({...})
+export class AppComponent {
+	private _store: Store;
+	counter$ = this._store.select((state) => state.counter);
+	
+	constructor() {
+		this._store = inject(Store);
+	}
+}
+```
+
+למעשה ניתן לקרוא לפונקציית ההזרקה מתוך [הקונטקסט של ההזרקה](https://angular.io/guide/dependency-injection-context) שכולל את המאפיינים של המחלקה כמו `counter$`.  
+
+עם `injection function` אותו הקוד יכול להפוך ל:
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	customSetup={{ 
+		dependencies: { 
+			"@ngrx/store": "^16.3.0",
+			"@angular/core": "^16.2.0",
+			"@angular/platform-browser": "^16.2.0",
+			"@angular/platform-browser-dynamic": "^16.2.0",
+			"@angular/common": "^16.2.0",
+			"@angular/compiler": "^16.2.0"
+		}
+	}}
+	
+	files={{
+		"src/app/counter.selector.ts": {
+			readOnly: true,	
+			code: `import { inject } from '@angular/core';
+import { Store } from '@ngrx/store';
+
+export function useCounter() {
+	return inject(Store).select((state) => state.counter);
+}
+			`
+		},
+		"src/app/app.module.ts": {
+			hidden: true,
+			readOnly: true,
+			code: `import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+
+import { AppComponent } from "./app.component";
+import { StoreModule } from "@ngrx/store";
+
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, StoreModule.forRoot({
+		counter: () => 43
+	}, {})],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}`
+		},
+		"src/app/app.component.ts": {
+			readOnly: true,
+			code: `import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { useCounter } from './counter.selector';
+
+
+@Component({
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: "app-root",
+	template: \`<h1>{{ counter$ | async }}</h1>\`
+})
+export class AppComponent {
+	counter$ = useCounter();	
+}`
+		}
+	}}
+	
+	template="angular" 
+/>
+</div>
+
+הקוד לא רק קצר, פשוט ונקי, אלא גם עושה את הרכיב שלך קל יותר לבדיקה ולהרחבה.  
+ניתן להוסיף לוגיקה נוספת ל `useCounter` אם נרצה לשנות את הנתונים בדרך מסוימת, וכן ניתן להשתמש בטכניקה זו אם נרצה לאתחל שאילתת שרת לרכיב.
+
+## סיכום
+
+לסיכום אם יש לך אתחולים חוזרים במחלקה שלך כמו:
+- קריאות לשרת
+- קריאות לשירות
+- קריאות לנתונים מ- ngrx או ממקום אחר
+
+במקום לשכפל את הלוגיקה ולהזריק את השירות ב constructor, ניתן להשתמש ב- injection functions ולהזריק את השירות באמצעות הפונקציה `inject`.
+
+
