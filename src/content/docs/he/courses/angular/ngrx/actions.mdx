@@ -21,22 +21,22 @@ import {Sandpack} from '@codesandbox/sandpack-react';
 	/>
 </div>
 
-To study api's it's best to code it yourself, so let's go over the proper way to create actions using NGRX.  
-This lesson has 2 student execises, below each exercise you will find the solution for that exercise.
+על מנת ללמוד איך לעבוד עם api's זה נכון לכתוב את הקוד בעצמך, אז בואו נלמד איך ליצור actions באמצעות NGRX.  
+בשיעור זה יש 2 תרגילים לתלמיד, מתחת לכל תרגיל תמצאו את הפתרון לתרגיל זה.
 
-## What are actions?
+## מהן actions?
 
-- Actions are sent to the store using `store.dispatch(someAction)`
-- The store will send that actions to the reducers which often will result in a state change.
+- Actions נשלחים ל store באמצעות `store.dispatch(someAction)`
+- ה store ישלח את ה actions ל reducers שישנם ב store שלנו, וכאשר הם מתבצעים ישנה שינוי ב state.
 
-The meaning of an action is to say that something happened in the app, a lot of the times it's something that the user did like clicking a button or activating some sort of event.  
-An action will often send additional data, for example if there is an action we want to send after a server response, we will often send the server response as the payload for the action.  
-Action contains an identifier and optional payload data `{ type: string, additionalData?: ..., moreData?: ... }`.
+המשמעות של action היא להגיד שמשהו קרה באפליקציה, רוב הפעמים זה משהו שהמשתמש עשה כמו ללחוץ על כפתור או להפעיל אירוע מסוים.  
+לעתים ה action ישלח גם מידע נוסף, לדוגמא אם יש לנו action שאנחנו רוצים לשלוח אחרי תגובה מהשרת, נשלח לעיתים תגובת השרת כ payload ל action.  
+Action מכיל מזהה ונתונים אופציונליים `{ type: string, additionalData?: ..., moreData?: ... }`.
 
 ## createAction
 
-There are 2 creator functions in `@ngrx/store` for actions `createAction` and `createActionGroup`.  
-Let's start with `createAction` which is used to create a single action.
+ישנם 2 פונקציות יצירת actions ב `@ngrx/store` `createAction` ו `createActionGroup`.  
+נתחיל עם `createAction` שמשמשת ליצירת action יחיד.
 
 ```ts
 import { createAction, props } from '@ngrx/store';
@@ -47,24 +47,24 @@ export const setRepos = createAction(
 );
 ```
 
-Notice that our action contains a unique identifier, it's common to group actions together and name the actions with square brackets and the name of the group (in the above example `[GroupName]`).  
-You can also add any optional data that you want with your action.
+שימו לב שה action שלנו מכיל מזהה ייחודי, נהוג לקבץ actions יחד ולתת להם שם קבוצה בסוגריים מרובעים ושם הקבוצה (בדוגמא לעיל `[GroupName]`).  
+בנוסף ניתן להוסיף נתונים אופציונליים עם ה action.
 
-## Student Exercise - createAction
+## תרגיל לתלמיד - createAction
 
-Time for you to practice the `createAction` api.  
+זמן לתרגול על ה api של `createAction`.
 
-- You can write code in the editor here in the site (notice that the editor starts with an error cause the code is not completed).
-- This angular app contains a single component `app.component.ts` which will display a list of repositories from github.
-- The app contains `actions.ts` where you will need to create a single action
-- The app contains `reducer.ts` which responds to the action you will create.
-- The file `repos.service.ts` contains a service that will fetch the repositories from github.
-- The files you will modify in the exercise are: `app.component.ts`, `actions.ts` and `reducer.ts` (maybe), the rest of the files will be read only files.
-- You goal is that the `app.component.ts` will display the list of repositories from github, but grab that list from the store.
-- The `app.component.ts` will `implement OnInit` and in the `ngOnInit` method you will need to use the `repos.service.ts` to grab the repos and then populate the ngrx state with those repos.
-- You will need to create an action in `actions.ts` that will be dispatched from the `app.component.ts` and will be handled by the reducer in `reducer.ts`.
+- ניתן לרשום קוד בעורך הקוד כאן באתר (שימו לב שהעורך מתחיל עם שגיאה כי הקוד לא הושלם).
+- האפליקציה האנגולרית הזו מכילה רק קומפוננטה אחת `app.component.ts` שתציג רשימת ריפוזיטוריות מגיטהאב.
+- האפליקציה מכילה `actions.ts` שם תצטרכו ליצור action יחיד.
+- האפליקציה מכילה `reducer.ts` שמטפל ב action שתיצרו.
+- הקובץ `repos.service.ts` מכיל שירות שיביא את הריפוזיטוריות מגיטהאב.
+- הקבצים שתצטרכו לשנות בתרגיל הם: `app.component.ts`, `actions.ts` ואולי `reducer.ts`, שאר הקבצים יהיו קריאה בלבד.
+- המטרה שה `app.component.ts` תציג את הרשימת הריפוזיטוריות מגיטהאב, אך תקבל את הרשימה מה store.
+- ה `app.component.ts` תממש את הפונקציה `ngOnInit` ותשתמש בשירות `repos.service.ts` כדי לקבל את הריפוזיטוריות ולאחר מכן תשלח action להכניס את הריפוזיטוריות ל store.
+- תצטרכו גם ליצור action ב `actions.ts` שיקרא מ `app.component.ts` ויטפל בו ה reducer שנמצא ב `reducer.ts`.
 
-<div class="mt-5 not-content">
+<div class="mt-5 not-content" dir="ltr">
 <Sandpack 
 	client:load
 	customSetup={{ 
@@ -206,11 +206,11 @@ export class AppComponent {
 />
 </div>
 
-## Solution
+## פתרון
 
-Here is the solution for the exercise:
+להלן הפתרון לתרגיל:
 
-<div class="mt-5 not-content">
+<div class="mt-5 not-content" dir="ltr">
 <Sandpack 
 	client:load
 	customSetup={{ 
@@ -360,14 +360,14 @@ export class AppComponent implements OnInit {
 />
 </div>
 
-- In the `actions.ts` file, we are defining an action using `createAction`, we are also using the `props` to specify that our action needs the fetched repos.
-- In the `app.component.ts` `ngOnInit` we are fetching the repos and calling `store.dispatch` to set the repos in the store using the action we created. 
-- In the `app.component.ts` we are using the `store.select` to select the repos from the store.
-- In the `reducer.ts` we are handling the action and setting the repos in the store.
+- בקובץ `actions.ts` אנחנו מגדירים action באמצעות `createAction`, אנחנו משתמשים ב `props` כדי לציין שה action שלנו צריך את הריפוזיטוריות שהתקבלו.
+- בקובץ `app.component.ts` בפונקציה `ngOnInit` אנחנו מביאים את הריפוזיטוריות ושולחים את ה action שיצרנו ל store.
+- בקובץ `app.component.ts` אנחנו משתמשים ב `store.select` כדי לבחור את הריפוזיטוריות מה store.
+- בקובץ `reducer.ts` אנחנו מטפלים ב action שלנו ומכניסים את הריפוזיטוריות ל state.
 
 ## createActionGroup
 
-The `createActionGroup` is used to create multiple actions at once, it's useful when you want to create a group of actions that are related to each other (Usually we have groups of actions so you would probably use this function to create an action even more than `createAction`).  
+ה `createActionGroup` משמש ליצירת קבוצה של actions בו זמנית, זה נוח כאשר יש לנו קבוצה של actions שקשורות זו לזו (בדרך כלל יש לנו קבוצות של actions ולכן תשתמשו בפונקציה זו יותר מ `createAction`).  
 
 ```ts
 import { createActionGroup, props } from '@ngrx/store';
@@ -381,20 +381,20 @@ export const repoActions = createActionGroup({
 })
 ```
 
-The `createActionGroup` function receives an object with 2 properties:
-- `source` - The name of the group of actions (usually that name relates to the section of the state these actions relate to).
-- `events` - An object with the actions, the key is the name of the action and the value is the props for the action.
+ה `createActionGroup` מקבל אובייקט עם 2 פרופרטיז:
+- `source` - שם הקבוצה של ה actions (בדרך כלל שם זה קשור לאיזור ב state שה actions מתייחסות אליו).
+- `events` - אובייקט עם ה actions, המפתח הוא שם ה action והערך הוא הפרופס של ה action.
 
-## Student Exercise - createActionGroup
+## תרגיל לתלמיד - createActionGroup
 
-In this exercise you will need to create a group of actions using `createActionGroup`.  
-- In the `actions.ts` file you will need to create a group of actions containing 2 actions:
-	- `Set Repos` - Will be used to set the repos in the store (like the previous exercise).
-	- `Delete Repo` - Will be used to delete a repo from the store (will get the repo id in the payload).
-- In the `reducer.ts` file you will need to handle the `Delete Repo` action and remove the repo from the store based on the id that you get from the action.
-- In the `app.component.ts` you will need to dispatch the `Delete Repo` action when the user clicks the delete button.
+בתרגיל זה תצטרכו ליצור קבוצת actions באמצעות `createActionGroup`.
+- בקובץ `actions.ts` תצטרכו ליצור קבוצת actions שמכילה 2 actions:
+  - `Set Repos` - תשמש להכניס את הריפוזיטוריות ל store (כמו בתרגיל הקודם).
+  - `Delete Repo` - תשמש למחוק ריפוזיטוריה מה store (תקבל את המזהה של הריפוזיטוריה ב payload).
+- בקובץ `reducer.ts` תצטרכו לטפל ב action של `Delete Repo` ולהסיר את הריפוזיטוריה מה store בהתבסס על המזהה שקיבלתם.
+- בקובץ `app.component.ts` תצטרכו לשלוח את ה action של `Delete Repo` כאשר המשתמש לוחץ על כפתור מחיקה.
 
-<div class="mt-5 not-content">
+<div class="mt-5 not-content" dir="ltr">
 <Sandpack 
 	client:load
 	customSetup={{ 
@@ -547,9 +547,9 @@ export class AppComponent implements OnInit {
 />
 </div>
 
-## Solution
+## פתרון
 
-<div class="mt-5 not-content">
+<div class="mt-5 not-content" dir="ltr">
 <Sandpack 
 	client:load
 	customSetup={{ 
@@ -711,9 +711,9 @@ export class AppComponent implements OnInit {
 />
 </div>
 
-## Summary
+## סיכום
 
-Actions allow us to tell NGRX about something that happened in the app which might cause a state change.  
-We learned about the 2 api's that NGRX supplies us for creating an action (`createActionGroup` and `createAction`).  
-For the majority of cases you will need to create a group of actions and will therefore use `createActionGroup`.
+Actions מאפשרים לנו לספר ל NGRX על משהו שקרה באפליקציה שעשוי לגרום לשינוי ב state.  
+למדנו על 2 ה api's שמספק NGRX ליצירת action (`createActionGroup` ו `createAction`).  
+במרבית המקרים תצטרכו ליצור קבוצת actions ולכן תשתמשו ב `createActionGroup`.
 
