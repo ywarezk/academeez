@@ -1,0 +1,321 @@
+---
+title: "ngrx/store@ - זרימת נתונים"
+description: "הבנת היסודות של זרימת הנתונים ב-@ngrx/store והתבנית של Redux"
+publishDate: 2023-11-19
+authors:
+	- yariv-katz
+---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/vcY2963JyEU?si=w7dzhtV7MhzFxzhS"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+ננסה לשמור על פשטות ולהתמקד בליבת `@ngrx/store` ובזרימת הנתונים הבסיסית באפליקציה של Angular עם `NGRX`.  
+מטרתנו בשיעור זה היא להבין 3 אלמנטים מרכזיים מ-`@ngrx/store`:
+- `Store`
+- `Action`
+- `Reducer`
+
+עם אלמנטים אלו ועם הרכיבים שלנו באנגולר, יש זרימת נתונים פשוטה שמתוארת בתרשים הבא:
+
+![@ngrx/store - data flow](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/data-flow.gif?raw=true)
+
+הדיאגרמה אינה מתארת את הדיאגרמה המלאה של `NGRX`, חשוב לראות אותה כמנוע של הרכב, לדיאגרמה זו נוסיף בהדרגה חלקים נוספים עד שנבין את הרכב כולו, אבל כדאי להתחיל מגרסה פשוטה ולבנות את הדרך משם.
+
+## Store
+
+נבחן את הדיאגרמה ונתחיל עם ה-`Store`.
+ה - `Store` הוא Service שמסופק על ידי `@ngrx/store`.  
+כאשר אנחנו מתקינים את `@ngrx/store` אנחנו יכולים להזריק את ה-`Store` כ - Service באמצעות [DI של Angular](https://angular.io/guide/dependency-injection-overview).
+
+```bash
+npx ng add @ngrx/store@latest
+```
+
+```typescript title="some.component.ts"
+import {Component} from '@angular/core'
+import {Store} from '@ngrx/store'
+
+@Component({
+		selector: 'some-component',
+		...
+})
+export class SomeComponent {
+		constructor(private store: Store) {}
+}
+```
+
+בדוגמא זו ה- `Component` מבקש את ה- `Store` Service.
+
+ישנו רק instance אחד של ה- `Store` בכל האפליקציה שלנו.
+ה - `Store` מחזיק את ה - `State` של האפליקציה, והשימוש העיקרי ב- `Store` הוא:
+- מזריקים את ה- `Store` לקריאת ה - `State`
+- מזריקים את ה- `Store` כדי לשנות את ה - `State`
+
+## קריאת ה - `State`
+
+Component של אנגולר שקורא את ה - `State` מיוצג בחלק זה של הדיאגרמה:
+
+![@ngrx/store - data flow - reading the state](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/store-state-angular.png?raw=true)
+
+ניתן לקרוא את ה - `State` על ידי הזרקת ה - `Store` ושימוש בפעולת ה - `select`.
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	customSetup={{ 
+		dependencies: { 
+			"@ngrx/store": "^16.3.0",
+			"@angular/core": "^16.2.0",
+			"@angular/platform-browser": "^16.2.0",
+			"@angular/platform-browser-dynamic": "^16.2.0",
+			"@angular/common": "^16.2.0",
+			"@angular/compiler": "^16.2.0"
+		}
+	}}
+	files={{
+		"src/app/app.module.ts": { code: `import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+
+import { AppComponent } from "./app.component";
+import { StoreModule } from "@ngrx/store";
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, StoreModule.forRoot({
+		counter: () => 42
+	}, {})],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+`, readOnly: true},
+		"src/app/app.component.ts": { code: `import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { State } from "./state";
+
+@Component({
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: "app-root",
+	template: \`<h1>Reading counter from state: {{ counter$ | async }}</h1>\`
+})
+export class AppComponent {
+	counter$ = this._store.select((state) => state.counter);
+	constructor(private _store: Store<State>){}
+}
+		`},
+	"src/app/state.ts": { readOnly: true, code: `export type State = {
+	counter: number;
+}
+	`}
+	}
+	}
+	template="angular" 
+/>
+</div>
+
+שימו לב שכאשר אתם משתמשים ב - `store.select` כדי לקרוא נתונים מה - `State`, אתם מקבלים `Observable` של הנתונים, ולכן עליכם להשתמש ב - `async` pipe ב -
+
+:::tip[טיפ]
+מומלץ לקרוא מה - `State` באמצעות <a className="text-green/80 underline" href="/he/courses/angular/ngrx/selectors">`NGRX Selectors`</a>
+:::
+
+## שינוי ה - `State`
+
+אחרי שהזרקנו את ה - `Store` וקראנו את ה - `State`, נוכל לשנות את ה - `State` על ידי שימוש ב - `store.dispatch`. החלק הזה של הזרימה קצת מורכב, אז נפרק אותו לפרטים.
+
+![Trigger state change](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/trigger-change.png?raw=true)
+
+שינוי יתחיל ממשהו שמפעיל את תהליך השינוי (בדוגמא של הדיאגרמה שלמעלה זה לחיצת כפתור).
+
+דברים פופולריים שיפעילו את תהליך השינוי הם:
+- פעולות משתמש (כמו לחיצת כפתור)
+- בקשות או תגובות מהשרת
+- אירועי טיימר
+- אפקטים שמהווים שינוי שנובע משינוי אחר (על זה נדון בשיעור על <a className="text-green/80 underline" href="/he/courses/angular/ngrx/effects">אפקטים</a>)
+
+נשמור על פשטות בדוגמא זו ונשתמש בלחיצת כפתור כדי להפעיל את תהליך השינוי. תצפו בדוגמא הבאה שמגדילה מונה בכל לחיצת כפתור.
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	customSetup={{ 
+		dependencies: { 
+			"@ngrx/store": "^16.3.0",
+			"@angular/core": "^16.2.0",
+			"@angular/platform-browser": "^16.2.0",
+			"@angular/platform-browser-dynamic": "^16.2.0",
+			"@angular/common": "^16.2.0",
+			"@angular/compiler": "^16.2.0"
+		}
+	}}
+	files={{
+		"src/app/app.module.ts": { hidden: true, code: `import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+
+import { AppComponent } from "./app.component";
+import { StoreModule } from "@ngrx/store";
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, StoreModule.forRoot({
+		counter: (state, action) => {
+			if (action.type === 'INCREMENT') {
+				return state + 1;
+			} else {
+				return 0;
+			}
+		}
+	}, {})],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+`, readOnly: true},
+		"src/app/app.component.ts": { code: `import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { State } from "./state";
+
+@Component({
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: "app-root",
+	template: \`<button (click)="increment()">Increment: {{ counter$ | async }}</button>\`
+})
+export class AppComponent {
+	counter$ = this._store.select((state) => state.counter);
+	constructor(private _store: Store<State>){}
+	
+	increment() {
+		this._store.dispatch({ type: 'INCREMENT' });
+	}
+}
+		`},
+	"src/app/state.ts": { readOnly: true, code: `export type State = {
+	counter: number;
+}
+	`}
+	}
+	}
+	template="angular" 
+/>
+</div>
+
+אנחנו משתמשים ב - `this._store.dispatch({ type: 'INCREMENT' })` כדי לשלוח `Action`, יש שיעור מלא על `Action` בקישור <a className="text-green/80 underline" href="/he/courses/angular/ngrx/action">כאן</a>, אבל כרגע נראה על `Action` כ - `Object` פשוט שמתאר מה קרה עם זיהוי (במקרה שלנו הזיהוי הוא: `type: 'INCREMENT'`) ונתונים אופציונליים `payload` אם האירוע צריך לשלוח מידע נוסף.  
+
+:::caution
+מטרת השיעור היא להתמקד בזרימת הנתונים, במציאות האמיתית של NGRX לא תיצורו `Actions` או `Reducers` כמו בדוגמא כאן.
+:::
+
+![store.dispatch](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/store-dispatch.png?raw=true)
+
+כאשר נרצה להתחיל שינוי ב - `State`, אנחנו מזריקים את ה - `Store` וקוראים ל - `store.dispatch(action)` ושולחים מידע על האירוע שקרה.
+
+### Reducer
+
+ה- `Reducer` מקבל את ה - `State` הנוכחי ואת ה - `Action` שקרה ומחזיר את ה - `State` החדש. נסתכל על `Reducer` פשוט:
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	customSetup={{ 
+		dependencies: { 
+			"@ngrx/store": "^16.3.0",
+			"@angular/core": "^16.2.0",
+			"@angular/platform-browser": "^16.2.0",
+			"@angular/platform-browser-dynamic": "^16.2.0",
+			"@angular/common": "^16.2.0",
+			"@angular/compiler": "^16.2.0"
+		}
+	}}
+	
+	files={{
+		"src/app/reducer.ts": {
+			code: `export function counterReducer(state, action) {
+	if (action.type === 'INCREMENT') {
+		return state + 1;
+	} else {
+		return 0;
+	}
+}
+			`,
+			active: true
+		},
+		"src/app/app.module.ts": {
+			readOnly: true,
+			code: `import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+
+import { AppComponent } from "./app.component";
+import { StoreModule } from "@ngrx/store";
+import { counterReducer } from './reducer';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, StoreModule.forRoot({
+		counter: counterReducer
+	}, {})],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}`
+		},
+		"src/app/app.component.ts": {
+			code: `import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { State } from "./state";
+
+@Component({
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: "app-root",
+	template: \`<button (click)="increment()">Increment: {{ counter$ | async }}</button>\`
+})
+export class AppComponent {
+	counter$ = this._store.select((state) => state.counter);
+	constructor(private _store: Store<State>){}
+	
+	increment() {
+		this._store.dispatch({ type: 'INCREMENT' });
+	}
+}`
+		},
+		"src/app/state.ts": {
+			hidden: true, readOnly: true,
+			code: `export type State = {
+	counter: number;
+}`
+		}
+	}}
+	
+	
+	template="angular" 
+/>
+</div>
+
+ה- `Reducer` הוא פונקציה שמקבלת את ה - `State` הנוכחי ואת ה - `Action` שקרה ומחזירה את ה - `State` החדש.
+
+![reducer](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/reducer.png?raw=true)
+
+וזהו החלק האחרון בזרימת הנתונים של `NGRX`.
+
+## סיכום
+
+בשיעור זה למדנו על זרימת הנתונים ב-`NGRX` שמורכבת מהחלקים הבאים:
+
+1. `Store` - המחזיק את ה - `State` של האפליקציה
+2. Component יכול לקרוא את ה - `State` על ידי הזרקת ה - `Store` ושימוש ב - `store.select`
+3. Component יכול לשנות את ה - `State` על ידי שימוש ב - `store.dispatch(Action)`
+4. ה- `store.dispatch(Action)` מקבל `Action` שמתאר מה קרה.
+5. ה- `Reducer` מקבל את ה - `State` הנוכחי ואת ה - `Action` שקרה ומחזיר את ה - `State` החדש.
+6. ה- `Store` משנה את ה - `State` לפי ה - `State` החדש שהוחזר על ידי ה - `Reducer`
+7. ה - Component יקבל את ה - `State` החדש וירנדר את ה- template עם המידע החדש.
