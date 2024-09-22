@@ -5,7 +5,7 @@ import { getCollection, getEntry } from 'astro:content';
 import { AvatarFull } from './Avatar';
 
 const writers = Astro.props.entry.data.authors;
-const source = Astro.props.entry.data.source
+const sources = Astro.props.entry.data.sources || [];
 const allAuthors = await getCollection('authors');
 
 // from allAuthors find the authors that are in the writers array
@@ -41,24 +41,39 @@ const i18n = await getEntry('i18n', locale)
 }
 
 {
-	source && source.includes('github') ? (
-		<hr />
-		<div class="p-4 not-content">
-			<h3 class="mb-2">{i18n?.data['pagesidebar.source']}</h3>			
-			<a class="github-button" href={source} data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star" data-size="large" aria-label="Star ywarezk/academeez-k8s-flux on GitHub">Star</a>
-		</div>
-		<script async defer src="https://buttons.github.io/buttons.js"></script>
-	) : null
+	sources && sources.length > 0 &&
+	(<hr />
+	<div class="p-4 not-content">
+		<h3 class="mb-2">{i18n?.data['pagesidebar.source']}</h3>
+	</div>)
 }
 
-{
-	source && source.includes('codesandbox') ? (
-		<hr />
-		<div class="p-4 not-content">
-			<h3 class="mb-2">{i18n?.data['pagesidebar.source']}</h3>
-			<a href={source}>
-				<img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="Edit in CodeSandbox" />
-			</a>
-		</div>
-	) : null
-}
+
+<ul class="list-none">
+	{
+		sources.map((source: { title: string, url: string}) => {
+			return (
+				
+					<li class="mt-2 first:mt-0">
+						{
+							source.url.includes('github') && (
+								<a class="github-button" href={source.url} data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star" data-size="large" aria-label="Star ywarezk/academeez-k8s-flux on GitHub">{source.title}</a>
+							)
+						}
+						{
+							source.url.includes('codesandbox') && (
+								<a href={source.url} class="flex">
+									<img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="Edit in CodeSandbox" />
+									<h5 class="ml-2">{source.title}</h5>								
+								</a>
+							)
+						}
+					</li>
+				
+			)
+		})
+	}
+</ul>
+	
+
+<script async defer src="https://buttons.github.io/buttons.js"></script>
