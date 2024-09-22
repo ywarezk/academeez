@@ -1,0 +1,241 @@
+---
+title: NGRX State
+description: Facts you need to know about the state that is managed by NGRX.
+publishDate: 2023-10-23
+sources:
+  - title: "Counter App"
+    url: "https://codesandbox.io/p/sandbox/empty-glitter-j625vk"
+  - title: "Books App"
+    url: "https://codesandbox.io/p/sandbox/ecstatic-cdn-25c6wt"
+---
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/N3z4ivBJqr0?si=9O6KYcjxAiJEnYaG"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+`NGRX` is a **STATE** management library, in this lesson we will learn the basic rules about the state that is managed by `NGRX`.
+
+## About NGRX State
+
+The state in an `Object` that `NGRX` holds.  
+Components can choose to subscribe to state change, and get notified when the state is changing, they will then render the UI with the new data.  
+Components can also tell `NGRX` to replace the state with a new state, so a state can always be replaced with a new state.  
+We can look at the state as the data snapshot at a certain time point, and NGRX holds the current present state.
+
+## Counter app example
+
+Let's examine the state in this simple counter app:
+
+![counter app](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/state/state.gif?raw=true)
+
+The app will increase the counter every button click.  
+The counter value is taken from `NGRX`.  
+Using [Redux Dev Tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) we can examine the state the `NGRX` holding at the right side of the screen.  
+From that simple state we can understand a few facts about the state that is managed by `NGRX`, which is rules that are also derived from the base of `Redux` which `NGRX` is an implementation of.
+
+## State is an Object
+
+Our state is a simple `Javascript` `Object`
+
+## State has an initial value
+
+Notice that the state is a simple object that looks like so:
+
+```json
+{
+  "counter": 0
+}
+```
+
+That object starts with an initial value of 0.  
+`NGRX` state has an initial value that we will have to supply when we configure `NGRX` (Same with `Redux` we have to supply the initial value of the state)
+
+## State is immutable
+
+Our state is starting with:
+
+```json
+{
+  "couter": 0
+}
+```
+
+and after the user is clicking the _+ Increment_ button, the state is changing to:
+
+```json
+{
+  "couter": 1
+}
+```
+
+When we examine this state, one might think that the state is mutable, but it's not.  
+It's not like we are changing the value of the `counter` property, we are actually replacing the entire state with a new state.  
+To explain with psuedo code:
+
+```javascript
+// lets imaging we have the following imaginary function from ngrx
+import {getState, setState} from '@ngrx/store';
+
+/**
+ * this is an imaginary function called from pressing the increment button
+ */
+function increment() {
+  const currentState = getState();
+
+  // we are not doing
+  // currentState['counter'] = currentState['counter'] + 1
+
+  // we are doing
+  const newState = {
+    ...currentState,
+    counter: currentState.counter + 1,
+  };
+  setState(newState);
+}
+```
+
+In this example we have a function to get the current state, and a function to set a new state.  
+We are not changing the `counter` key in the current state, rather we are constructing a new state object from scratch, by copying the current state, and overriding the `counter` property with a new value (In this simple example since the counter is the only key, we don't even have to use the spread operator, but usually the state has more keys then that and then the spread operator becomes handy).
+
+The state in `NGRX` is immutable, we can use the spread operator to copy values that stay the same, while overriding fields we want to change.
+
+## We can look at the state change with RXJS lens
+
+There is a `Service` in the `NGRX` main package called <a href="/courses/angular/ngrx/store">Store</a> which we will discuss in future lesson.  
+We can look at this `Service` as an `Observable` that emits the state every time the state is changing.
+
+![state as observable](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/state/state-rxjs.gif?raw=true)
+
+## Recommendation: State should be serializable
+
+Serialized object means that we can convert the object to a string, and then convert the string back to an object, and get a similar object.  
+A good trick to check if an object is serializable or not is to use `JSON.stringify` and `JSON.parse` and see if we get the same object back.  
+For example:
+
+```javascript
+// this is an example of a serializable object
+const obj = {
+  name: 'Yariv',
+  age: 37,
+  myBooks: [
+    {
+      title: 'The Hobbit',
+      author: 'J.R.R Tolkien',
+    },
+  ],
+};
+
+const objString = JSON.stringify(obj);
+const objFromString = JSON.parse(objString);
+
+console.log(objFromString); // this will return the same obj
+```
+
+In this example we took an object, converted it to a string, and then converted the string back to an object, and we got the same object back.
+
+Here's an example of a non serializable object:
+
+```typescript
+class Book {
+  constructor(public title: string, public author: string) {}
+}
+
+const obj = {
+  name: 'Yariv',
+  age: 37,
+  myFunctions: [function hello() {}],
+};
+
+const objString = JSON.stringify(obj);
+const objFromString = JSON.parse(objString);
+
+console.log(objFromString); // this will return an object without the functions in the array
+```
+
+so basically an object that is created from simple primitives (string, number, boolean) and arrays and objects that are created from simple primitives is serializable.
+
+It's only a recommendation and you can use `NGRX` to store functions, classes, etc... but things like: time travel, storing the state of the user to restore him to the same state, will probably not work as good.
+
+## State should be organized
+
+The state is not a global variable that you throw all your data into. I'm guessing the before `NGRX` you stored your application data using `Services`, in that case you didn't create a single `Service` to store all the data, you created a `Service` according to a certain logic. If you had `User` information, you probably created a `UserService` to store the user data along with certain methods like grabbing the user from server, updating the user, and other.  
+The same rule is applied here, you should organize your state according to the logic of your application.  
+Let's examine the following example:
+
+![books app](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/state/state-organized.gif?raw=true)
+
+Notice that in this example the state looks like so:
+
+```json
+{
+  "user": {
+    "firstName": "Yariv",
+    "lastName": "Katz",
+    "avatar": "..."
+  },
+  "books": {
+    list: [
+      {
+        "title": "The Hobbit",
+        "author": "J.R.R Tolkien"
+        "year": "1937"
+      }
+    ]
+  }
+}
+```
+
+Notice how the state is organized according to the logic of the application. In addition the state organization is also enforced with an `Interface`.
+
+## State can be lazy loaded / removed
+
+Take another look at the books app:
+
+![books app](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/state/state-organized.gif?raw=true)
+
+Notice that the state is starting with:
+
+```json
+{
+  "user": null
+}
+```
+
+and only after the user logs in do we have the books in the state:
+
+```json
+{
+  "user": {
+    "firstName": "Yariv",
+    "lastName": "Katz",
+    "avatar": "..."
+  },
+  "books": {
+    list: [
+      {
+        "title": "The Hobbit",
+        "author": "J.R.R Tolkien"
+        "year": "1937"
+      }
+    ]
+  }
+}
+```
+
+just like we have lazy loaded modules, usually those lazy loaded module load their state in a lazy fashion.  
+This means that our state can grow and shrink according to the data we currently need.
+
+## Summary
+
+In this lesson we learned the basic rules about the state that is managed by `NGRX`.  
+Probably the most important rule that you need to take with you to the next lessons, is the fact that the state is `immutable`.  
+Let's take all this info to the next lesson where we will learn about the `Service` that holds the state - The `Store`
