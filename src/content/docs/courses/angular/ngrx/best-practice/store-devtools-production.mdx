@@ -1,0 +1,195 @@
+---
+title: Remove `@ngrx/store-devtools` in production
+description: If you are using `@ngrx/store-devtools` in your application, you should remove it in production.
+publishDate: 2023-10-30
+authors:
+	- yariv-katz
+sources:
+  - title: "Remove `@ngrx/store-devtools`"
+    url: "https://codesandbox.io/p/sandbox/silent-pine-3vrfhs"
+---
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/yKrHj9AEjxU?si=n47onbdHG3EsPaa1"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+In production `@ngrx/store-devtools` should be completly removed from the bundle.  
+Let's see an example:
+
+<div class="[&>h3]:step steps mb-12 ml-4 border-l pl-8 [counter-reset:step]">
+### Start a new angular application
+
+```bash
+npx @angular/cli@latest new ngrx-remove-devtools --style css --routing false --minimal
+```
+
+### Install `@ngrx/store` and `@ngrx/store-devtools`
+
+```bash
+cd ngrx-remove-devtools
+npx ng add @ngrx/store --skip-confirmation
+npx ng add @ngrx/store-devtools@latest --skip-confirmation
+```
+
+### Populate your state
+
+```typescript title="app.module.ts"
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    StoreModule.forRoot(
+      {
+        counter: () => 0,
+      },
+      {}
+    ),
+    StoreDevtoolsModule.instrument({maxAge: 25, logOnly: !isDevMode()}),
+  ],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+
+```
+
+### Examine the state
+
+If you have the [Redux dev tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) installed you can now examine your state.
+
+```bash
+ng serve
+```
+
+![Redux dev tools](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/best-practices/store-devtools-production/examine-state.png?raw=true)
+
+### Problem examine state in Production
+
+It's best to disable redux dev tools in production.
+
+```bash
+npx ng build
+cd dist/ngrx-remove-devtools
+npx http-server
+```
+
+Redux dev tools still works in production
+
+### Solution 1
+
+If on production do not place the `StoreDevtoolsModule.instrument` in the imports array.  
+
+```bash
+npx ng generate environments
+```
+
+add a `production` key to the environments files:
+
+```json title="src/environments/environment.development.ts"
+export const environment = {
+  production: false,
+};
+```
+
+```json title="src/environments/environment.ts"
+export const environment = {
+  production: true,
+};
+```
+
+```typescript title="app.module.ts"
+import {environment} from '../environments/environment';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    StoreModule.forRoot(
+      {
+        counter: () => 0,
+      },
+      {}
+    ),
+    !environment.production ? StoreDevtoolsModule.instrument({maxAge: 25, logOnly: !isDevMode()}) : [],
+  ],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
+
+### Problem
+
+`@ngrx/store-devtools` is still in the bundle
+
+```bash
+npx ng build --source-map
+npx source-map-explorer dist/ngrx-remove-devtools/main.4a92d461e97ce051.js
+```
+
+![source-map-explorer](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/best-practices/store-devtools-production/examine-bundle.png?raw=true)
+
+it will add around `16kb` of unused code to your bundle.
+
+### Replace app.module.ts
+
+We can achieve the same result with `fileReplacement`.  
+
+```typescript title="src/app/imports.common.ts"
+import {BrowserModule} from '@angular/platform-browser';
+import {StoreModule} from '@ngrx/store';
+
+export const commonImports = [
+  BrowserModule,
+  StoreModule.forRoot(
+    {
+      counter: () => 0,
+    },
+    {}
+  ),
+];
+```
+
+```typescript title="src/app/imports.development.ts"
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import {commonImports} from './imports.common';
+import {isDevMode} from '@angular/core';
+
+export const imports = [
+	...commonImports, 
+	StoreDevtoolsModule.instrument({maxAge: 25, logOnly: !isDevMode()})
+];
+```
+
+```typescript title="src/app/imports.ts"
+import {commonImports} from './imports.common';
+
+export const imports = [...commonImports];
+```
+
+```typescript title="src/app/app.module.ts"
+import {NgModule} from '@angular/core';
+import {AppComponent} from './app.component';
+import {imports} from './imports';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [...imports],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
+
+</div>
+
+`@ngrx/store-devtools` is completly removed from the bundle.  
