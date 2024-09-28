@@ -1,0 +1,306 @@
+---
+title: Placing a component
+description: Your React component turns to a new tag.
+publishDate: 2023-12-06
+preview: false
+---
+
+In the <Link className="duration-100 leading-normal transition ease-in hover:border-opacity-100 border-opacity-0 inline border-link border-b text-green" href="/en/course/react/component">previous lesson</Link> we learned that React is a library that helps us create a UI components.
+We also learned that to create a component in React, we need to create a function that returns how that component looks like.
+React components are reusable ui, which can be placed on desired places in the screen (can also be placed multiple times in different places).
+When you create a component, you can place it in the screen by using its function name as a tag inside another React component.
+
+Let's give a simple example, in the following example we have two components that are located in two different files:
+- `App.js` - This is the component that represents the entire screen.
+- `Login.js` - This is a component that represents the login form (same one we created in the previous lesson).
+
+<div className="mt-5">
+<Sandpack 
+	
+	files={{
+		"App.js": {
+			readOnly: true,
+			code: `
+import Login from "./Login"
+
+export default function App() {
+  return (
+		<div>
+			<header>
+				<h1>This is the header of the screen</h1>				
+			</header>
+			<Login />
+			<footer>
+				<h5>This is the footer</h5>
+			</footer>
+		</div>
+  )
+}`
+		},
+		"Login.js": {
+			readOnly: true,
+			code: `export default function Login() {
+	return (
+		<form>
+			<div>
+				<label>Username</label>
+				<input type="text" />
+			</div>
+			<div>
+				<label>Password</label>
+				<input type="password" />
+			</div>
+			<div>
+				<button type="submit">Login</button>
+			</div>
+		</form>
+	)
+}
+`
+		}
+	}}
+	template="react" 
+/>
+</div>
+
+Few things to note in the following example:
+
+### Component tree
+
+React application is made from a tree of components, usually the root of the component represents the entire application, or the root represents the current screen from the web application that we are visiting. This means that a screen like this:
+
+![React component tree](https://raw.githubusercontent.com/ywarezk/academeez/main/content/en/course/react/component-tag/tree.png)
+
+We can create this screen with the following components:
+
+![React component tree](https://raw.githubusercontent.com/ywarezk/academeez/main/content/en/course/react/component-tag/components.png)
+
+When we create a React application we are building a tree of components (this is the popular way of creating a web application today, and this approach is the common way in other popular frameworks as well).
+
+### Splitting files
+
+It's common to split your application to multiple files, and you will often place a component in a seperate file (like in this example where we had 2 components splitted to 2 files: `App.js` and `Login.js`).
+When splitting files we use [ES6 Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). so one syntax is to use `export default`:
+
+<div className="mt-5">
+<Sandpack 
+	
+	files={{
+		"App.js": {
+			readOnly: true,
+			code: `
+import Hello from "./Hello"
+
+export default function App() {
+  return (
+		<div>			
+			<Hello />			
+		</div>
+  )
+}`
+		},
+		"Hello.js": {
+			readOnly: true,
+			code: `export default function Hello() {
+	return (
+		<h1>
+			hello world
+		</h1>
+	)
+}
+`
+		}
+	}}
+	template="react" 
+/>
+</div>
+
+Or you can use `export`
+
+<div className="mt-5">
+<Sandpack 
+	
+	files={{
+		"App.js": {
+			readOnly: true,
+			code: `
+import { Hello } from "./Hello"
+
+export default function App() {
+  return (
+		<div>			
+			<Hello />			
+		</div>
+  )
+}`
+		},
+		"Hello.js": {
+			readOnly: true,
+			code: `export function Hello() {
+	return (
+		<h1>
+			hello world
+		</h1>
+	)
+}
+`
+		}
+	}}
+	template="react" 
+/>
+</div>
+
+Few things to note here:
+- If you place a component in a seperate file, you need to import it in the file that you want to use it.
+- The name of the component is the name of the function.
+- That name has to be in PascalCase (camelCase but with the first letter capitalized, otherwise React will not recognize it as a component - but a tag name).
+
+## Exercise - component tree
+
+In this exercise we will create the following component tree:
+
+![React component tree](https://raw.githubusercontent.com/ywarezk/academeez/main/content/en/course/react/component-tag/tree.png)
+
+![React component tree](https://raw.githubusercontent.com/ywarezk/academeez/main/content/en/course/react/component-tag/components.png)
+
+Where the focus is to simply place those components, and not on the styling of those components which we will cover in the next lesson.
+You can write the code right here in the site: 
+
+<div className="mt-5">
+<Sandpack 
+	
+	files={{
+		"App.js": {			
+			code: `
+
+
+export default function LoginPage() {
+  return (
+		<div>			
+			<h1>Place the components here:</h1>
+		</div>
+  )
+}`
+		},
+		"Header.js": {			
+			code: ``
+		},
+		"Logo.js": {			
+			code: ``
+		},
+		"Menu.js": {			
+			code: ``
+		},
+		"LoginForm.js": {			
+			code: ``
+		},		
+		"Footer.js": {			
+			code: ``
+		},		
+	}}
+	template="react" 
+/>
+</div>
+
+## Solution
+
+And here is the solution for the exercise:
+
+<div className="mt-5">
+<Sandpack 
+	
+	files={{
+		"App.js": {
+			readOnly: true,	
+			code: `
+import Header from "./Header"
+import LoginForm from "./LoginForm"
+import Footer from "./Footer"
+
+export default function LoginPage() {
+  return (
+		<div>			
+			<Header />
+			<LoginForm />
+			<Footer />
+		</div>
+  )
+}`
+		},
+		"Header.js": {
+			readOnly: true,		
+			code: `import Logo from "./Logo"
+import Menu from "./Menu"
+
+export default function Header() {
+	return (
+		<header>
+			<Logo />
+			<Menu />
+		</header>
+	)				
+}
+			
+			`
+		},
+		"Logo.js": {
+			readOnly: true,	
+			code: `export default function Logo() {
+	return (
+		<img height={64} width={64} src="https://raw.githubusercontent.com/ywarezk/academeez/main/content/en/course/react/video/thumbnail.png" />
+	)
+}
+			`
+		},
+		"Menu.js": {
+			readOnly: true,		
+			code: `export default function Menu() {
+	return (
+		<nav>
+			<a href="#">Home</a>
+			<a href="#">About</a>
+			<a href="#">Contact</a>
+		</nav>	
+	)				
+}`
+		},
+		"LoginForm.js": {
+			readOnly: true,			
+			code: `export default function LoginForm() {
+	return (
+		<form>
+			<div>
+				<label>Username</label>
+				<input type="text" />
+			</div>
+			<div>
+				<label>Password</label>
+				<input type="password" />
+			</div>
+			<div>
+				<button type="submit">Login</button>
+			</div>
+		</form>
+	)				
+}
+			`
+		},		
+		"Footer.js": {
+			readOnly: true,		
+			code: `export default function Footer() {
+	return (
+		<footer>
+			<h5>This is the footer</h5>
+		</footer>	
+	)
+}
+`
+		},		
+	}}
+	template="react" 
+/>
+</div>
+
+## Summary
+
+In this lesson we learned that a React web site is simply a component tree, a component can be placed in seperate file, and it can be imported in other components and placed as a tag.
