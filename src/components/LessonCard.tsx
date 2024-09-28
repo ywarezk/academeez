@@ -12,7 +12,7 @@ import {Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter} f
 import {buttonVariants} from './Button'
 import {cn} from './utils'
 
-// https://github.com/ywarezk/academeez4/blob/main/src/content/docs/courses/angular/best-practices/new-control-flow-syntax/for/thumbnail.png?raw=true
+// https://github.com/ywarezk/academeez4/blob/main/src/content/docs/courses/angular/best-practice/new-control-flow-syntax/for/thumbnail.png?raw=true
 
 export const LessonCard: FC<{article: any, locale: string}> = ({
   article, locale

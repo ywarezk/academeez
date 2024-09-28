@@ -38,6 +38,12 @@ export default defineConfig({
         directory: 'courses/git',
         collapsed: true
       }
+    }, {
+      label: 'React',
+      autogenerate: {
+        directory: 'courses/react',
+        collapsed: true
+      }
     }],
     title: 'academeez',
     logo: {
