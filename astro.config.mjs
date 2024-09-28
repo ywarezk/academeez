@@ -32,6 +32,12 @@ export default defineConfig({
         directory: 'courses/kubernetes',
         collapsed: true
       }
+    }, {
+      label: 'Git',
+      autogenerate: {
+        directory: 'courses/git',
+        collapsed: true
+      }
     }],
     title: 'academeez',
     logo: {
