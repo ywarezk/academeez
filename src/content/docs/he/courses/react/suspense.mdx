@@ -1,0 +1,140 @@
+---
+title: Suspense
+description: בפרק זה נלמד כל מה שצריך לדעת על React Suspense.
+publishDate: 2023-12-21
+authors:
+  - yariv-katz
+---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/BRJu0GGCBbI?si=-VoW_lVJD4pCuqBy"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+כאשר חלק מה - component tree שלך צריך מידע אסינכרוני כדי להציג, תוכל לעטוף את ה - components האלו ב - `<Suspense>` component. זה יאפשר לך להציג `fallback` עד שתוכל להציג את ה - components האסינכרוניים.
+
+## טעויות של מפתחים עם components אסינכרוניים
+
+נדמיין שאנחנו צריכים ליצור את ה - components הבאים ב - React:
+- `<Table />` - component שמציג נתונים מה - API ומציג אותם בטבלה
+- `<TableSummary />` - סיכום של הנתונים בטבלה - נתונים אלו מגיעים מ - API אחר ולא מה - API שה - `<Table />` משתמש בו
+
+שני ה - components האלו יצטרכו לשלוח 2 שאילתות לשרת, ואנחנו רוצים להציג ספינר עד ש - **שני** ה - components יהיו מוכנים.  
+לדוגמא אם שאילתת ה - `<Table />` לוקחת 5 שניות ושאילתת ה - `<TableSummary />` לוקחת 2 שניות, אנחנו רוצים להציג ספינר למשך 5 שניות ואז להציג את הנתונים של שני ה - components האלו.
+
+## פתרון נאיבי
+
+הפתרון הנאיבי יהיה ליצור `<Parent />` component שיציב את ה - `<Table />` וה - `<TableSummary />`, component זה ישלח את שתי השאילתות לשרת ויעביר את הנתונים ל - children components.
+
+![Naive solution](https://github.com/ywarezk/academeez/blob/main/content/en/course/react/suspense/parent-tree.png?raw=true)
+
+## הבעיה עם הפתרון הנאיבי
+
+לעתים זה עוזר לראות שהפתרון אינו אידיאלי כאשר מנסים להגדיל את הבעיה, נניח במקום 2 components שצריכים לשלוח שאילתה, יש לנו 50 components אסינכרוניים, כל אחד בעומק אחר.
+
+![Naive solution problem](https://github.com/ywarezk/academeez/blob/main/content/en/course/react/suspense/larger-tree.png?raw=true)
+
+אם ננסה לשלוח את כל הנתונים מה - `<Parent />` ל - 50 components האלו זה יהיה מסובך, נצטרך ליצור משהו בסגנון `Context` כדי להעביר את הנתונים, והעובדה שה - `<Parent />` צריך להתמודד עם המון נתונים שלא באמת קשורים אליו (למעט כאשר להציג את הספינר) לא עושה את הקוד שלנו להיראות יותר טוב (גם פוגע ב - single resposibility של ה - `<Parent />`).
+
+## שליחת מידע ל - parent באמצעות throw
+
+האם ידעתם שבתנאים מסוימים ניתן לשלוח מידע ל - parent באמצעות `throw`?
+
+ישנם כמה תנאים לשימוש ב - `throw` כדי לשלוח מידע ל - parent:
+- ה - `throw` חייב להיות ב - `render` function או ב - lifecycle hooks
+- ה - `throw` לא יכול להיות ב - events, או ב - timer, או ב - async calls
+- יש להיות parent שמקיים כמה תנאים כדי לתפוס את ה - `thrown` data
+
+### איזה parent יתפוס את ה - `thrown` data?
+
+ה - parent שיתפוס את ה - `thrown` data הוא ה - parent הראשון שמקיים את התנאים הבאים:
+- אם ה - `thrown` data היא instance של `Promise` היא תתפס על ידי ה - `<Suspense>` הראשון שמעלה בעץ
+- כל שאר סוגי המידע, או לחילופין Promise אשר אין לו `<Suspense>` שיתפוס אותו, יתפס על ידי `<ErrorBoundary>` הראשון שמעלה בעץ (נדבר על `ErrorBoundary` בשיעורים הבאים)
+
+אם אין מי שיתפוס את ה - `thrown` data, יתרחש ה - Javascript uncaught exception הרגיל (שבדרך כלל יגרום לקריסה).
+
+## מה זה `<Suspense>`
+
+ה - `<Suspense>` הוא component שמאפשר לך לעטוף חלק מה - component tree שלך, כאשר חלק מה - components שעטופים ב - `<Suspense>` יכולים לזרוק `Promise`.  
+`Promise` יכול להיות ב - 3 states:
+- `pending` - ה - promise עדיין מחכה לנתונים וה - `<Suspense>` יציג את ה - `fallback`
+- `resolved` - ה - promise נפתר וה - `<Suspense>` יציג את ה - components שעטופים בו
+- `rejected` - ה - promise נכשל וה - `<Suspense>` יעביר את השגיאה ל - error boundary הבא
+
+:::tip[טעות נפוצה]
+ודאו שאתם לא מחדשים את ה - promise בכל פעם שה - component מתרנדר, אם כן, `<Suspense>` יחשוב שה - promise עדיין ב - `pending` ויציג את ה - `fallback`.
+:::
+
+## דוגמא ל - Suspense
+
+בדוגמא הבאה אנחנו רוצים ש - component יתרנדר רק אחרי 5 שניות.  
+לכן אנחנו יוצרים `Promise` שיפתור אחרי 5 שניות, ומזריקים את ה - `Promise` הזה ב - `render` function של ה - component.
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	files={{
+	"App.js": {
+		readOnly: true,
+		code: `/**
+ * This component will wrap with <Suspense /> to display
+ * a fallback until AsyncComponent is loaded
+ */
+
+import { Suspense } from "react";
+import AsyncComponent from "./AsyncComponent";
+
+export default function App() {
+  return (
+    <Suspense fallback={<h1>Loading...</h1>}>
+      <AsyncComponent />
+    </Suspense>
+  );
+}`
+	},
+	"AsyncComponent.js": {
+		readOnly: true,
+		code: `/**
+ * This component needs 5 seconds before it can load
+ */
+
+let isFulfilled = false;
+
+const promise = new Promise((resolve) => {
+  setTimeout(() => {
+    isFulfilled = true;
+    resolve();
+  }, 5000);
+});
+
+export default function AsyncComponent() {
+  if (!isFulfilled) {
+    throw promise;
+  }
+
+  return <h1>Only after 5 seconds I can load this view</h1>;
+}`
+	}
+}} template="react" />
+</div>
+
+שימו לב ש - `App.js` מקיף את ה - `<AsyncComponent />` ב - `<Suspense>` ומעביר לו את ה - `fallback`.
+
+## סיכום
+
+- `<Suspense>` מאפשר לך לעטוף חלק מה - component tree שלך
+- `<Suspense>` מאפשר לך להציג `fallback` עד שה - promise שנזרק על ידי ה - components שעטופים בו יפתור
+- `<Suspense>` יציג את ה - components שהוא עוטף רק כאשר כל ה - promises שנזרקו על ידי ה - components האלו נפתרו
+
+זהו רק קצה הקרחון, נקדיש פרק זה ללמוד על השימושים השונים של `<Suspense>`, ביניהם lazy loading, שאילתות לשרת, הפונקציה `use`, השלפות על צד השרת ועוד.  
+אז קפצו לשיעור הבא כדי ללמוד עוד על `<Suspense>`.
