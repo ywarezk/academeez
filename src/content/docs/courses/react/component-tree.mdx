@@ -7,7 +7,9 @@ sidebar:
   hidden: true
 ---
 
-In the <Link className="duration-100 leading-normal transition ease-in hover:border-opacity-100 border-opacity-0 inline border-link border-b text-green" href="/en/course/react/component">previous lesson</Link> we learned that React is a library that helps us create a UI components.
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+In the <a className="duration-100 leading-normal transition ease-in hover:border-opacity-100 border-opacity-0 inline border-link border-b text-green" href="/en/course/react/component">previous lesson</a> we learned that React is a library that helps us create a UI components.
 We also learned that to create a component in React, we need to create a function that returns how that component looks like.
 React components are reusable ui, which can be placed on desired places in the screen (can also be placed multiple times in different places).
 When you create a component, you can place it in the screen by using its function name as a tag inside another React component.
@@ -16,9 +18,9 @@ Let's give a simple example, in the following example we have two components tha
 - `App.js` - This is the component that represents the entire screen.
 - `Login.js` - This is a component that represents the login form (same one we created in the previous lesson).
 
-<div className="mt-5">
+<div className="mt-5 not-content">
 <Sandpack 
-	
+	client:load
 	files={{
 		"App.js": {
 			readOnly: true,
@@ -84,9 +86,9 @@ When we create a React application we are building a tree of components (this is
 It's common to split your application to multiple files, and you will often place a component in a seperate file (like in this example where we had 2 components splitted to 2 files: `App.js` and `Login.js`).
 When splitting files we use [ES6 Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). so one syntax is to use `export default`:
 
-<div className="mt-5">
+<div className="mt-5 not-content">
 <Sandpack 
-	
+	client:load
 	files={{
 		"App.js": {
 			readOnly: true,
@@ -119,9 +121,9 @@ export default function App() {
 
 Or you can use `export`
 
-<div className="mt-5">
+<div className="mt-5 not-content">
 <Sandpack 
-	
+	client:load
 	files={{
 		"App.js": {
 			readOnly: true,
@@ -168,9 +170,9 @@ In this exercise we will create the following component tree:
 Where the focus is to simply place those components, and not on the styling of those components which we will cover in the next lesson.
 You can write the code right here in the site: 
 
-<div className="mt-5">
+<div className="mt-5 not-content">
 <Sandpack 
-	
+	client:load
 	files={{
 		"App.js": {			
 			code: `
@@ -210,7 +212,7 @@ And here is the solution for the exercise:
 
 <div className="mt-5">
 <Sandpack 
-	
+	client:load
 	files={{
 		"App.js": {
 			readOnly: true,	
