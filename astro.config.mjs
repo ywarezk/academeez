@@ -2,8 +2,9 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
-
 import sitemap from "@astrojs/sitemap";
+
+import vercel from "@astrojs/vercel/serverless";
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,7 +19,7 @@ export default defineConfig({
       Sidebar: './src/components/Sidebar.astro',
       PageSidebar: './src/components/PageSidebar.astro',
       SocialIcons: './src/components/SocialIcons.astro',
-      PageTitle: './src/components/PageTitle.astro',
+      PageTitle: './src/components/PageTitle.astro'
     },
     sidebar: [{
       label: 'Angular',
@@ -73,5 +74,7 @@ export default defineConfig({
   }), sitemap()],
   prefetch: true,
   site: 'https://www.academeez.com',
-  trailingSlash: 'never'
+  trailingSlash: 'never',
+  output: "server",
+  adapter: vercel()
 });
