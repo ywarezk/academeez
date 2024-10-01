@@ -16,7 +16,7 @@ export const CourseCarousel: FC<{
     getCollection('docs', content => {   
       let prefix = '';
       if (locale) {
-        prefix = `${locale}/courses/${courseLink}`;
+        prefix = `${locale.substring(1)}/courses/${courseLink}`;
       } else {
         prefix = `courses/${courseLink}`;
       }
@@ -31,7 +31,7 @@ export const CourseCarousel: FC<{
   return (
     <div className="not-content">
       <h4>
-        <a href={`/${locale}/courses/${courseLink}`}>{title}</a>
+        <a href={`${locale}/courses/${courseLink}`}>{title}</a>
       </h4>
       <br />
       <Carousel>
