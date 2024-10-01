@@ -19,7 +19,7 @@ export const LessonCard: FC<{article: any, locale: string}> = ({
 }) => {
 	let imageLink = article.slug;
 	if (locale) {		
-		imageLink = imageLink.replace(`${locale}/`, '');
+		imageLink = imageLink.replace(`${locale.substring(1)}/`, '');
 	}	
   return (
     <Card>
