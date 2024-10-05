@@ -77,5 +77,9 @@ export default defineConfig({
   site: 'https://www.academeez.com',
   trailingSlash: 'never',
   output: "server",
-  adapter: vercel()
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true,
+    }
+  })
 });
