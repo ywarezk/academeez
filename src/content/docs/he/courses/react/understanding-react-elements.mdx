@@ -1,0 +1,554 @@
+---
+title: הבנת React Elements
+description: יצירת hello world עם React והבנת היסודות של אפליקציית React
+authors:
+	- yariv-katz
+publishDate: 2024-10-01
+---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/8HHXZcoovt4?si=91cgdzxiphQfNdsr"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+בואו נקח את הצעד הראשון להפוך למפתחי [React](https://react.dev/).  
+בשיעור הזה נלמד את היסודות של **React**, וניצור אתר ראשון בעזרת **React**.  
+כדי להיות מומחה ב **React** עלינו להבין את היסודות, אז פתחו את המחשב ונסו לעקוב ולכתוב את הקוד איתנו.
+
+## מה נלמד
+
+בשיעור זה נלמד את הנושאים הבאים:
+
+- המטרה העיקרית של ספריית React
+- יצירת hello world עם React
+- React Components
+- JSX
+
+## יצירת hello world
+
+נלמד את הבסיס של React על ידי יצירת אתר פשוט שמציג הודעת hello world למשתמש (כמה מקורי שלנו?).
+
+לא באמת צריך ספריית UI מתקדמת כמו React כדי ליצור אתר שמציג hello world נכון!?  
+אפשר ליצור אתר כזה עם HTML פשוט.
+
+בדוגמא הבאה יצרנו קובץ HTML פשוט שמציג הודעת hello world:
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	template="vanilla"
+	options={{
+		visibleFiles: ["/index.html"],
+		activeFile: "/index.html"
+	}}
+	files={{
+		
+		"index.html": {
+			code: `
+<html>
+	<body>
+		<div id="container">
+			<h1>Hello world with HTML</h1>
+		</div>		
+	</body>
+</html>
+			`
+		},
+		"index.js": {
+			code: ``,			
+		},
+	}}
+/>
+</div>
+
+## DOM
+
+הדפדפן עיבד את ה-HTML שלנו ומהקובץ הזה יצר עץ של אובייקטים ב-Javascript שנקרא [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model).
+
+אחרי שהדפדפן יצר את ה-DOM, מה שקובע איך האתר נראה הוא ה-DOM ולא ה-HTML.  
+ה - HTML הוא רק המתכון ליצירת ה-DOM הראשוני, לאחר שה-DOM נוצר הדפדפן לא יסתכל על ה-HTML שוב.
+
+ניתן גם לפתוח את כלי הפיתוח של הדפדפן ובכלי הפיתוח של כרום יש את הכרטיסייה **Elements** שמראה לנו את ה-DOM הנוכחי שאנחנו רואים במסך.  
+ניתן לראות את העץ של ה-DOM עם המשתנה הגלובלי `document`.  
+
+ניתן גם ללחוץ על אלמנט בכרטיסייה **Elements**, לדוגמא לבחור את האלמנט `<h1>`, ולראות את האובייקט של ה-DOM בכרטיסייה **Console** על ידי הקלקה על האלמנט והקלדת:
+
+```javascript
+$0
+```
+
+זה יקח את האובייקט של ה-DOM של האלמנט שנבחר מהכרטיסייה **Elements**.  
+נתפוס את האלמנט עם `$0` ונוכל לשנות את האלמנט `<h1>` ולראות את השינויים במסך.
+ב - developer tools בכרטיסייה **Console** נכתוב:
+
+```javascript
+$0.innerText = 'i can change the text with javascript'
+```
+
+שימו לב שהטקסט במסך השתנה.
+
+כאשר משתמשים ב - React העבודה העיקרית של `React` בדפדפן היא:
+- יצירת אלמנטי DOM
+- מחיקת אלמנטי DOM
+- עדכון אלמנטי DOM
+
+`React` יכולה אפילו ליצור את ה-HTML הראשוני שלכם אבל נדון בזה בשיעורים מאוחרים.
+
+## יצירת DOM בלי HTML
+
+ה - HTML הוא המתכון ליצירת עץ של אובייקטים ב-Javascript שנקרא DOM שמייצג איך האתר שלנו נראה.  
+אז את אותו **Hello World** אפשר ליצור גם באמצעות Javascript ולא באמצעות HTML.  
+
+תסתכלו על הדוגמא הבאה שבה ה-HTML ריק וה-Javascript יוצר את ה-Hello World:
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	template="static"
+	options={{	
+		visibleFiles: ["/index.html"],	
+		activeFile: "/index.html"
+	}}
+	files={{
+		
+		"index.html": {
+			code: `
+<html>
+	<body>
+		<div id="container">			
+		</div>
+		<script>
+			// create h1 element
+			const h1 = document.createElement('h1');
+			h1.innerText = 'Hello world with JS';
+
+			// append h1 to container
+			const container = document.getElementById('container');
+			container.appendChild(h1);
+		</script>		
+	</body>
+</html>
+			`
+		},
+		"index.js": {
+			code: `
+
+			`,			
+		},
+	}}
+/>
+</div>
+
+## Hello world עם React
+
+עכשיו בואו ננסה ליצור את אותו אתר של hello world בעזרת `React`.  
+אנחנו נטען את ספריית `React` מ-CDN (בדרך כלל `React` לא נטען מ-CDN אלא מותקנת בפרוייקט אבל בדוגמא הפשוטה שלנו זה מושלם).
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	template="static"
+	options={{		
+		activeFile: "/index.html",
+		visibleFiles: ["/index.html"],
+	}}
+	files={{
+		
+		"index.html": {
+			code: `
+<html>
+	<head>
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+	</head>
+	<body>
+		<div id="container">			
+		</div>	
+		<script>
+			// create h1 element
+			const h1 = React.createElement('h1', null, 'Hello world with React!');
+			
+			// render to dom
+			const root = ReactDOM.createRoot(document.getElementById('container'));
+			root.render(h1);
+		</script>
+	</body>
+</html>
+			`
+		},
+		"index.js": {
+			code: `
+			`,			
+		},
+	}}
+/>
+</div>
+
+חשוב לציין שזה לא כך אנחנו מתחילים אפליקציית React אמיתית, אלא אנחנו יוצרים פלטפורמת למידה מינימלית ללמידת React.  
+קל יותר כשאתם מתמקדים רק בקבצים המינימליים שנדרשים ללמידת React.  
+
+בקוד זה אנחנו טוענים את `react` ואת `react-dom` ב-`<head>`, טעינת שני הסקריפטים האלה יוצרת אותם כגלובליים.
+
+לאחר מכן ה- api מזכיר לנו את ה- api שהשתמשנו בו כדי ליצור אלמנטי DOM ב-Javascript.  
+אנחנו משתמשים ב - `React.createElement` ב-`React` כשב-Javascript השתמשנו ב-`document.createElement` זה יוצר את ה-`h1` שלנו ובמקום לצרף ל-DOM כמו שעשינו ב-Javascript צרפנו ל-DOM בעזרת `ReactDOM.createRoot` שיצר את ה-`root` שלנו ואנחנו יכולים להציג אלמנטים בתוך ה-`root` שיצרנו.
+
+## DOM וירטואלי
+
+ננתח את הדוגמא של React שיצרנו.  
+שימו לב שלא פנינו ישירות ל-DOM, פשוט קיבלנו את React למקום שבו רצינו ש-React יתקשר עם ה-DOM:
+
+```javascript
+const root = ReactDOM.createRoot(document.getElementById('container'));
+```
+
+כאשר משתמשים ב-React אין צורך להתעסק ישירות עם ה-DOM, פשוט משתמשים ב-React והוא יעשה את העבודה.  
+
+לא יצרנו אלמנטי DOM אלא יצרנו אלמנטי React:
+
+```javascript
+const h1 = React.createElement('h1', null, 'Hello world with React!');
+```
+
+כאשר עובדים עם React אין צורך ליצור אלמנטי DOM, פשוט יוצרים אלמנטי React, כאשר משנים את האלמנטים האלה בדרך מסוימת אז React יעדכן את האלמנטים האלה וישווה את ה-DOM ל-DOM הוירטואלי ויעדכן את ה-DOM אם נדרש.
+
+React יצר שכבת אבסטרקציה בין המפתח ל - DOM, זה דבר נפוץ בתכנות ליצור שכבת אבסטרקציה, לדוגמא במקום לעבוד ישירות עם בסיס נתונים נשתמש ב-ORM שיאפשר לנו לעבוד עם מספר בסיסי נתונים באמצעות קלאסים ב-Javascript.
+
+React יספק לכם כלים ליצירת ועדכון של דום וירטואלי, ואז יקח את הדום הוירטואלי הזה ויעדכן את ה-DOM האמיתי בדרך מהירה ויעדכן את ה-DOM האמיתי כך שיתאים ל-DOM הוירטואלי שיצרנו.
+
+אז בעצם ספריית `React` נותנת לכם כלים ליצירת ועדכון של דום וירטואלי ו-`ReactDOM` יקח את הדום הוירטואלי המותאם לאתר ויצור אתר.  
+
+דפוס זה נקרא Adapter Pattern וזה נותן ל - React את היכולת ליצור UI לא רק לאתר אינטרנט.  
+ניתן להשתמש ב-`React` ליצירת אפליקציות לסמארטפונים, ניתן ליצור דום וירטואלי עבור אפליקציות לסמארטפונים ואז `react-native` יקח את הדום הוירטואלי ויבנה אפליקציה סמארטפון עבור ios ואנדרואיד. 
+
+## JSX
+
+בואו ננסה להרחיב את הדוגמא שלנו קצת.  
+מתחת לאלמנט `<h1>` שיצרנו נוסיף `<span>` ותחתיו `<u>` ונציב קו תחתי.
+
+להלן מימוש של הדוגמא:
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	template="static"
+	options={{		
+		activeFile: "/index.html",
+		visibleFiles: ["/index.html"],
+	}}
+	files={{
+		
+		"index.html": {
+			code: `
+<html>
+	<head>
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+	</head>
+	<body>
+		<div id="container">			
+		</div>	
+		<script>
+			// create h1 element
+			const h1 = React.createElement(
+				'h1', 
+				null, 
+				React.createElement(
+					'span', 
+					null, 
+					React.createElement(
+						'u', 
+						null, 
+						'Hello world with React!'
+					)
+				)
+			);
+			
+			// render to dom
+			const root = ReactDOM.createRoot(document.getElementById('container'));
+			root.render(h1);
+		</script>
+	</body>
+</html>
+			`
+		},
+		"index.js": {
+			code: `
+			`,			
+		},
+	}}
+/>
+</div>
+
+נשים לב שהארגומנט השלישי של `React.createElement` לא חייב להיות טקסט, אלא יכול להיות פריט או מערך של `ReactNode` (נדבר על `ReactNode` בשיעור של `jsx`).  
+אז להרחיב את `<h1>` שלנו עם `<span>` ו-`<u>` זה אומר להוסיף עוד `React.createElement` לארגומנט השלישי.  
+
+מפרך מאוד ליצור את כל המסך, את כל ה-DOM הזה בצורה כזו, אבל גם לפני `React` כשהייתם צריכים ליצור את המסך שלכם לא הייתם יוצרים את כל המסך באמצעות `document.createElement(...)` אלא באמצעות `HTML` שנעבד לעץ ה-DOM הראשוני.  
+בדומה לזה יהיה נחמד אם נקבל דרך כתיבה דומה ל-`HTML` ליצירת `React.createElement`.
+
+## JSX
+
+כאשר עובדים עם `React` ניתן לבחור שפה שונה לפיתוח האפליקציה שלכם. לדוגמא ניתן לבחור בין `Javascript`, `Typescript`, `CoffeeScript` ועוד. אבל התוצאה הסופית תהיה `Javascript` (הדפדפן יכול להריץ רק `Javascript`). גם כדאי שה-`Javascript` שנוצר יהיה בגרסה שתתמוך בכל הדפדפנים המודרניים.  
+לכן נפוץ לקחת את הקוד שכתבתם ולהמר אותו ל-`Javascript` נתמך.  
+לדוגמא:
+- אם עובדים עם `Javascript` נשתמש ב- [Babel](https://babeljs.io/) להמרת הקוד ל-`Javascript` רגיל שנתמך בדפדפנים.
+- אם עובדים עם [Typescript](https://www.typescriptlang.org/) אז `Typescript` מגיע עם מהדר שממיר את הקוד שלי ל-`Javascript`.
+
+בגלל שאנחנו עובדים עם מהדר כדי לעבד את הקוד שלנו זה אומר שנוכל להתקין הרחבות לשפת התכנות שלנו.  
+לדוגמא נוכל לתמוך בתכונות של `EcmaScript` שהדפדפנים עדיין לא תומכים בהן, לכתוב אותן בקוד שלי ולתת למהדר ליצור את התכונות האלה ב-`Javascript` רגיל שיתמך בדפדפנים.
+
+אני יכול להשתמש במהדרים כדי להוסיף תחביר נוסף שלא נתמך ב-`Javascript`, לדוגמא אני יכול להשתמש במהדר כדי להוסיף תחביר של `XML` שלא נתמך ב-`Javascript`, לדוגמא אני יכול להשתמש בתחביר של `XML` שהמהדר יהמיר לקוד שלי ויהפוך אותו למשהו אחר.
+
+`JSX` זה ראשי תיבות של **Javascript as XML** זה מאפשר לנו לכתוב תחביר של `XML` שיתורגם ל-`Javascript` תקין.  
+לדוגמא אני יכול לכתוב את הקוד הבא:
+
+```Javascript
+const h1 = <h1>hello world with jsx</h1>
+```
+
+אני יכול לקחת את הקובץ עם הקוד הזה שכתבתי ולהשתמש במהדר שיתרגם את הקובץ הזה ל:
+
+```Javascript
+const h1 = React.createElement('h1', null, 'hello world with jsx')
+```
+
+זה יפתור את הבעיה שלנו שהייתה לנו עם יצירת `React.createElement` מקונן וקשה לקריאה כמו בדוגמא של hello world עם קו תחתי.  
+כלומר הקוד המסובך שכתבנו יכול להיות מומר לקוד פשוט יותר עם `JSX`:
+
+```javascript
+	// create h1 element
+	/*
+	// this is unreadable
+	const h1 = React.createElement(
+		'h1', 
+		null, 
+		React.createElement(
+			'span', 
+			null, 
+			React.createElement(
+				'u', 
+				null, 
+				'Hello world with React!'
+			)
+		)
+	);
+	*/
+	
+	// this is much better
+	const h1 = (
+		<h1>
+			<span>
+				<u>
+					Hello world with React!
+				</u>
+			</span>
+		</h1>
+	);
+	
+	// render to dom
+	const root = ReactDOM.createRoot(document.getElementById('container'));
+	root.render(h1);
+```
+
+## Babel
+
+Babel הוא מהדר שמתרגם את הקוד שלנו ל-`Javascript` רגיל שיתמך בדפדפנים.  
+בדרך כלל אין צורך להתקין את המהדר בעצמכם, יש סטארטרים פופולריים שמגיעים עם המהדר והם מוגדרים כבר עבורכם, אבל במקרה שלנו של יצירת סביבת למידה פשוטה עם קובץ HTML ניתן להתקין את המהדר בקובץ ה-HTML שלנו.
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	template="static"
+	options={{		
+		activeFile: "/index.html",
+		visibleFiles: ["/index.html"],
+	}}
+	files={{
+		
+		"index.html": {
+			code: `
+<html>
+	<head>
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	</head>
+	<body>
+		<div id="container">			
+		</div>	
+		<script type="text/babel">
+			// create h1 element
+			const h1 = (
+				<h1>
+					<span>
+						<u>Hello world with React and JSX!</u>
+					</span>
+				</h1>
+			);
+			
+			// render to dom
+			const root = ReactDOM.createRoot(document.getElementById('container'));
+			root.render(h1);
+		</script>
+	</body>
+</html>
+			`
+		},
+		"index.js": {
+			code: `
+			`,			
+		},
+	}}
+/>
+</div>
+
+שימו לב שאחרי שהתקנו את `Babel` כעת אנחנו יכולים להשתמש בתחביר של `JSX` במקום להשתמש ב-`React.createElement` ומאחורי הקלעים `Babel` יתרגם את הקוד שלנו ויתרגם את `JSX` ל-`React.createElement`.  
+יש עוד הרבה דברים ללמוד על `JSX` ויש לנו שיעור שלם על הנושא.
+
+## Component
+
+בין אם אתם משתמשים ב-`JSX` או קוראים ישירות ל-`React.createElement` בסופו של דבר שני הדרכים בעצם קוראות ל-`React.createElement`.  
+ל - `React.createElement` יש כמה הגדרות, הנה ההגדרה שהשתמשנו בה:
+
+```typescript
+function createElement<P extends DOMAttributes<T>, T extends Element>(
+	type: string,
+	props?: ClassAttributes<T> & P | null,
+	...children: ReactNode[]
+): DOMElement<P, T>;
+```
+
+אנסח את הנ״ל בדרך אחרת שאולי תהיה יותר ברורה (אבל לא מדוייקת בגבולות הסוגים):
+
+```typescript
+function createElement(
+	type: string, // a dom element string
+	props?: DomElementAttributes, // this is the attributes that dom element can get
+	...children: ReactNode[] // children of the element
+): DOMElement<P, T>;
+```
+
+יהיה לנו שיעור שלם על Components שבו נדבר על הארגומנט השני `props` בפרטים יותר.
+
+בואו נבחן סוג אחר של הגדרה שאנחנו יכולים להעביר ל-`React.createElement`:
+
+```typescript
+function createElement<P extends {}>(
+	type: FunctionComponent<P> | ComponentClass<P> | string,
+	props?: Attributes & P | null,
+	...children: ReactNode[]
+): ReactElement<P>;
+```
+
+או בהפשטה יותר (אבל עם שינוי שמות הסוגים להיות יותר ברורים):
+
+```typescript
+function createElement<P extends {}>(
+	type: ReactComponent, // we can place here entire component
+	props?: Props, // component props
+	...children: ReactNode[] // component children
+): ReactElement<P>;
+```
+
+הדבר החשוב שיש להתמקד בו בשיעור הזה הוא הארגומנט הראשון שיכול להיות `FunctionComponent<P> | ComponentClass<P>` או כפי שסימנתי בהמשך זה יכול להיות `ReactComponent`.  
+אנחנו נתמקד ב-`FunctionComponent<P>` כדי ליצור `ReactComponent`, והמילה להתמקד בה היא המילה `Function` כלומר אני יכול להעביר ל-`React.createElement` פונקציה כארגומנט ראשון.  
+לדוגמא במקום לעשות:
+
+```typescript
+React.createElement('h1', null, 'hello world')
+```
+
+אפשר לעשות:
+
+```typescript
+const h1 = React.createElement(() => {
+	return <h1>hello world 3</h1>
+})
+```
+
+במרבית הפעמים תשתמשו ב-`JSX` במקום לקרוא ישירות ל-`React.createElement` ולכן הדוגמא הבאה:
+
+```typescript
+const h1 = React.createElement(() => {
+	return (
+		<h1>
+			<span>
+				<u>Hello world with React and JSX!</u>
+			</span>
+		</h1>
+	);
+})
+```
+
+ניתן להחליף ב:
+
+```typescript
+const H1 = () => {
+	return (
+		<h1>
+			<span>
+				<u>Hello world with React and JSX!</u>
+			</span>
+		</h1>
+	)
+}
+```
+
+יצרנו React UI component ועכשיו בכל מקום שמקבל `React.createElement` נוכל להכניס במקום הקודם את הרכיב שיצרנו על ידי שימוש בשם הפונקציה `H1`, לדוגמא:
+
+```typescript
+const root = ReactDOM.createRoot(document.getElementById('container'));
+root.render(<H1 />);
+```
+
+אז React מאפשר לי ליצור Virtual DOM Element, גם אני יכול ליצור מספר Virtual DOM Elements, וגם אני יכול לקבץ מספר Virtual DOM Elements לרכיב UI וליצור `"<Tag />"` חדש.
+
+כאשר מפתחים עם React אנחנו מפצלים את ה-UI שאנחנו מפתחים לקבוצות לוגיות באמצעות React Components אותם ה - React Components יהפכו לטאגים חדשים שנוכל להשתמש בהם כמה פעמים.  
+בנוסף כל Component ידאג לשינוי שקורה ברכיב שלו אבל נדבר על זה בשיעור נפרד  על React Components.
+
+## עץ ה - Components
+
+יש יותר כוח ל - React Components, בעצם יהיה לנו שיעור שלם על Components, אבל כרגע נשאיר את זה פשוט ונבין שהמטרה העיקרית של הספרייה היא לתת לכם כלים ליצירת Components.  
+אותם ה - Components ייצרו את ה - React Elements שממנו יווצר ה - Virtual DOM וממנו React יצור את ה - Real DOM.  
+אותם ה - Components ידאגו לכל השינויים שקורים ב - Component שלהם וידאגו לעדכן את ה - Virtual DOM ולהעביר את השינויים ל - Real DOM.
+
+כאשר יוצרים אפליקציה ב - React אתם יוצרים עץ של Components, כל Component יכול להכיל בתוכו Components נוספים וכך יוצרים עץ של Components.  
+לדוגמא ניתן ליצור Component שמייצג את ה - **Header** של האפליקציה `<Header />`.  
+ניתן ליצור Component שמייצג את ה - **Footer** של האפליקציה `<Footer />`.  
+ניתן ליצור Component שמייצג את ה - **Login** של האפליקציה `<Login />`.  
+ניתן ליצור Component שמייצג את ה - **App** של האפליקציה `<App />` והוא ימקם את כל ה Components האחרים על המסך ויצור את המסך.
+
+```typescript
+function App() {
+	return (
+		<div>
+			<Header />
+			
+			<Login />
+			
+			<Footer />
+		</div>
+	)
+}
+```
+
+אז באפליקציה ב - React אתם תיצרו עץ של ו UI Components.
+
+## סיכום
+
+React היא ספרייה ליצירת UI Components, היא נותנת לכם כלים ליצירת Components שיצרו את ה - Virtual DOM וממנו יוצרת את ה - Real DOM. React ידאג שה - Real DOM יהיה תמיד מעודכן ויתאים ל - Virtual DOM.  
+
+כאשר מפתחים עם React תפרקו את המסך ליחידות לוגיות שייוצגו על ידי Components, כל Component ידאג לכל השינויים שקורים ב - Component שלו וידאג לעדכן את ה - Virtual DOM ולהעביר את השינויים ל - Real DOM.
+
+אפשר ללמוד הרבה על ספריית React כאשר מתחילים מ - `HTML` פשוט ומתקינים את React באמצעות CDN, ועכשיו שסיימנו את זה אפשר ללמוד איך להקים אפליקציה ב - React באמצעות כלי פיתוח שנקרא `create-react-app`.
+
+
