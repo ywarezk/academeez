@@ -46,6 +46,12 @@ export default defineConfig({
         directory: 'courses/react',
         collapsed: true
       }
+    }, {
+      label: 'Express',
+      autogenerate: {
+        directory: 'courses/express',
+        collapsed: true
+      }
     }],
     title: 'academeez',
     logo: {

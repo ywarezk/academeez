@@ -1,0 +1,428 @@
+---
+title: קובץ Declaration ב - Typescript כדי להרחיב את הטיפוס של Express Request
+description: ניתן להשתמש ב - declaration files כדי ללמד את typescript על טיפוסים שונים שיש לנו באפליקציה שלנו. ניתן גם להשתמש ב - declaration file כדי להרחיב את אובייקט הבקשה של Express. נשתמש לעתים תמיד ב - Express middlewares כדי להוסיף מידע לאובייקט הבקשה, עם קבצי ההצהרה typescript יכול לדעת על כל הנתונים שהוספנו לאובייקט הבקשה
+authors:
+  - yariv-katz
+publishDate: 2023-04-28
+---
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/W_tbNGERaKw?si=QuRaskOBqfnDRH3M"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+לעתים קרובות אנו צריכים להעביר נתונים בין middlewares או בין middleware ל - route handler ב - Express.  
+דפוס שחוזר על עצמו שאנו יכולים להשתמש בו כדי להעביר את הנתונים האלה הוא על ידי שימוש ב - `Express.Request` object, ולהוסיף את הנתונים שאנו רוצים להעביר לאובייקט הבקשה.
+
+להלן דוגמא פשוטה ל - middleware שמעביר את הנתונים `hello world` ל - middlewares אחרים או ל - route handlers:
+
+```js
+app.use((req, res, next) => {
+  req.hello = 'hello world'
+  next()
+})
+```
+
+הבעיה מתחילה כאשר אנו משתמשים ב - `Typescript` כשפת תכנות לכתוב את האפליקציה שלנו ב - `Express`.  
+איך יכול `Typescript` לדעת על כל הנתונים שהוספנו לאובייקט הבקשה.
+
+נתחיל בלמוד מה עושים middlewares פופולריים ואיך הם מתמודדים עם הבעיה.
+
+## התחלת פרוייקט Express-Typescript
+
+כדי לבחון איך middlewares אחרים מלמדים את `Typescript` על הנתונים שהוסיפו לאובייקט הבקשה, נתחיל ביצירת אפליקציית `Express` פשוטה עם `Typescript` כשפת התכנות.
+
+ניצור תיקייה ריקה בה נפתח את הפרוייקט שלנו, ונפתח את התיקייה ב - `VSCode`.
+
+נפתח את הטרמינל ב - `VSCode` ונאתחל את `npm` על ידי הקלדת:
+
+```bash
+> npm init --yes
+```
+
+נתקין את `typescript`:
+
+```bash
+> npm i -D typescript
+```
+
+נאתחל את `typescript` על ידי יצירת קובץ `tsconfig.json` עם הפקודה:
+
+```bash
+> npx tsc --init
+```
+
+נערוך את הקובץ `tsconfig.json` ונוסיף `"sourceMap": true` תחת `compilerOptions`.  
+זה יאפשר לנו להריץ את הקובץ של `typescript` ב - `VSCode` debugger.
+
+נתקין את `express` ואת הטיפוסים של express `@types/express`.
+
+```
+> npm i express
+> npm i -D @types/express
+```
+
+ניצור את הקובץ `app.ts` וניצור בו אפליקציית `express` פשוטה שמדפיסה `hello world`:
+
+```typescript
+/**
+ * Create an express application that prints hello world
+ */
+import express from 'express'
+
+const app = express()
+
+app.get('/', (_req, res) => {
+  res.send('Hello world')
+})
+
+app.listen(3000, () => {
+  console.log('Listening on port 3000')
+})
+```
+
+נקמפל את הקובץ על ידי הרצת הפקודה:
+
+```
+> npx tsc -w
+```
+
+באמצעות `VSCode` נפתח את התפריט `run and debug` ונפעיל את הקובץ `app.ts`.
+
+## חקירת middlewares ואיך הם מרחיבים את אובייקט הבקשה של Express
+
+נבחר middleware פופולרי וננסה ללמוד מה מומחים עושים.  
+[passportjs](https://www.passportjs.org/) הוא middleware פופולרי שמשמש לאימות משתמשים.  
+`passport` משתמש ב - Strategy pattern ובכך מאפשר לך לאמת עם כל הדרכים הפופולריות שיש היום.
+
+אחרי האימות `passport` ישים נתונים על המשתמש המאומת ב - `Request` object.  
+לדוגמא `passport` ישים את המשתמש המאומת ב - `req.user`.
+
+לפני התקנת `passport` אם תנסו לגשת ל - `req.user` תראו ש - `typescript` יתלונן.
+
+נתקין את `passport` על ידי הקלדת:
+
+```bash
+> npm i passport
+```
+
+אחרי התקנת `passport` עדיין נתקלים בשגיאת `typescript`, `typescript` לא מכיר את הטיפוס `user` ב - `Request` object.
+
+למעשה מאחר ו - `passport` הוא חבילה ב - `Javascript`, `typescript` לא מכיר כלום על הטיפוסים בחבילה הזו.  
+בקוד שלנו אם ננסה להוסיף:
+
+```
+import passport from 'passport';
+
+passport.authenticate('local', { session: false});
+```
+
+נשים לב ש - `typescript` מתלונן על:
+
+```
+error TS7016: Could not find a declaration file for module 'passport'
+```
+
+הדבר הראשון שצריך לעשות כאשר נתקלים בשגיאות כאלו, הוא לבדוק אם קיימת הצהרת `DefinitelyTyped` עבור החבילה הזו.  
+הכוונה במקרה שלנו היא להתקין את החבילה `@types/passport`.  
+עבור מרבית החבילות הפופולריות ב - `Javascript` קיימת הצהרת `DefinitelyTyped`, ובאמת גם ל - `passport` קיימת הצהרת `DefinitelyTyped`.  
+אז כדי ללמד את `Typescript` על החבילה `passport` נוכל להתקין את החבילה `@types/passport` על ידי הפקודה `npm i -D @types/passport`.  
+אבל לצורך למידה נעשה את זה בדרך הקשה ולא נתקין את `@types/passport`.
+
+זה אומר שמה שאנו צריכים לעשות הוא ללמד את `Typescript` על החבילה `passport`.  
+נוכל לעשות זאת על ידי יצירת קובץ declaration.
+
+## מהו קובץ Declaration
+
+> A declaration file provides a way to declare the existence of some types or values without actually providing implementations for those values.
+
+כלומר זה הדרך שבה המהדר של `Typescript` יכול לומר:
+
+> I know I'm not perfect, but you can teach me so I can get better.
+
+נוכל ללמד את המהדר של `Typescript` על טיפוסים חדשים על ידי קבצי declaration.  
+בדרך כלל קבצי declaration הם קבצים שמסתיימים ב - `*.d.ts`, אם כי declaration יכול להיות חלק מהתוכן בתוך קבצי `ts` (אבל להצהרה עם `*.d.ts` זה אומר שלא ייווצר קובץ `javascript`).
+
+בואו נעיף מבט על התיקייה `node_modules/@types`.  
+כאשר אנו מתקינים חבילת `DefinitelyTyped` אנו בעצם מוסיפים תיקייה לתיקיית `node_modules/@types`.  
+לדוגמא אם נתקין את ההצהרה של `passport` על ידי `npm i -D @types/passport`, נשים לב שיש לנו כעת תיקייה: `node_modules/@types/passport` עם קובץ הצהרה.
+
+חבילת `DefinitelyTyped` מכילה קבצי declaration.  
+במידה ונספק למהדר של `Typescript` את קבצי ההצהרה ב - `node_modules/@types/passport` המהדר ילמד על טיפוסים חדשים, במיוחד על החבילה `passport`.
+
+## איך מפנים את המהדר לקובץ Declaration 
+
+איך המהדר של `Typescript` יודע לכלול קבצי ההצהרה ב - `node_modules/@types`?
+
+ישנם מספר אופציות בתוך קובץ `tsconfig.json` (או הערך המוגדר כברירת מחדל של אותן אופציות) שמפנים את המהדר לקבצי declaration.
+
+להלן רשימת האופציות שניתן להשתמש בהן כדי לציין קבצי ההצהרה:
+
+### include
+
+> Specifies an array of filenames or patterns to include in the program. These filenames are resolved relative to the directory containing the tsconfig.json file.
+
+```json
+{
+  "include": ["src/**/*", "tests/**/*"]
+}
+```
+
+ערך ברירת המחדל של `include` הוא לכלול את כל קבצי ה - `*.ts` וכל קבצי ה - `*.d.ts`.
+
+אופציית ה - `include` תכלול את כל הקבצים חוץ מהקבצים שמופיעים ב - `exclude` - שברירת מחדל מוחק את התיקייה `node_modules`.
+
+יצרנו את קובץ ההגדרות `tsconfig.json` באמצעות `npx tsc --init` ומאחר שלא הוספנו את המאפיין `include` לקובץ `tsconfig.json` הוא נשאר בברירת המחדל.
+
+כלומר כל קובץ `typescript` וקובץ הצהרה (כל עוד לא נכניס אותו לתיקיית `node_modules` מסיבה מוזרה) יתקמפלו וכל קובץ `*.d.ts` יעובד על ידי `typescript`.
+
+### files
+
+> Specifies an allowlist of files to include in the program
+
+נוכל להשתמש ב - `files` אם אין לנו הרבה קבצים, ואנו רוצים להיות יותר מפורטים מאשר להגדיר תבנית `glob` באמצעות ה - `include`.
+
+```json
+{
+  "compilerOptions": {},
+  "files": ["core.ts", "sys.d.ts"]
+}
+```
+
+במקרה זה נצטרך לציין את הנתיב לקבצי ההצהרה שרוצים לכלול.
+
+### typeRoots
+
+אופציה זו מאפשרת לנו לציין תיקייה שבתוכה ישבו תיקיות שונות עם קבצי declaration. typescript יחפש בכל התיקיות תחת התיקייה שציינו ויחפש קבצי `package.json` או `index.d.ts` בתיקיות האלו.
+
+ברירת המחדל פה היא מה שהופך את העבודה עם `DefinitelyTyped` כל כך קלה - ברירת המחדל היא לחפש את התיקייה הקרובה ביותר `node_modules/@types`.
+
+### types
+
+האופציה הזאת תכלול declaration file ללא צורך לציין אותו בקבצי המקור.
+
+לדוגמא בוא נגיד שאני משתמש ב - `express` והתקנתי את החבילה `DefinitelyTyped` של `express`.
+
+במידה ואעשה:
+
+```typescript
+import express from 'express'
+```
+
+אז `typescript` יחפש את קובץ ההצהרה של `express` וידע על הטיפוסים שיש שם.  
+אבל נניח שבקובץ ההצהרה של `express` הם מגדירים משתנה גלובלי:
+
+```typescript
+declare global {
+  export var stam: any
+}
+```
+
+אם לא אעשה את הייבוא ל - `express` אז קובץ ההצהרה לא יכלול קובץ ההצהרה של `express` ואז `typescript` לא ידע על המשתנה `stam`.  
+מה שאני יכול לעשות זה לציין את ה - `types` בקובץ `tsconfig.json`, לדוגמא:
+
+```json
+{
+  "compilerOptions": {
+    "types": ["express"]
+  }
+}
+```
+
+`typescript` יחפש את התיקייה `node_modules/@types` ויכלול את התיקייה `express` מבלי לצריך לייבא אותה.  
+אז אם ה - `typeRoots` שלי הוא:
+
+```json
+{
+  "compilerOptions": {
+    "typeRoots": ["node_modules/@types", "my-types"]
+  }
+}
+```
+
+אז `typescript` יכלול את קבצי ההצהרה שנמצאים ב - `node_modules/@types/express` וב - `my-types/express` מבלי לצרוך לייבא אותם.
+
+זה אומר שהמשתנה `stam` יהיה מוכר בקובץ ה - `typescript` שלי.
+
+## יצירת קובץ declaration ל - passport
+
+מאחר וה - `tsconfig.json` ברירת המחדל יכלול את כל קבצי ה - `*.ts` וכל קבצי ה - `*.d.ts`, אין צורך לשנות כלום ב - `tsconfig.json`, נוכל ליצור קובץ `passport.d.ts` בתיקיית השורש ו - `typescript` ידע לכלול אותו.
+
+ניצור את הקובץ `passport.d.ts` עם התוכן הבא:
+
+```typescript
+declare module 'passport' {
+  // declare function authenticate
+  import type { Handler } from 'express'
+  export function authenticate(strategy: string, options?: any): Handler
+}
+```
+
+אנחנו מגדירים מודול `passport` עם פונקציה `authenticate` שמחזירה `Handler` מהסוג של `express`.
+
+עכשיו אם נחזור לקובץ שלנו נשים לב שהשגיאות של `typescript` על החבילה `passport` נעלמות.
+
+## DefinitelyTyped
+
+`DefinitelyTyped` הוא פרוייקט קהילתי לקבצי הצהרה ב - `typescript` שמתארים חבילות `javascript`.
+
+הכוונה שמפתח יכול לכתוב את החבילה שלו ב - `javascript`, ולהוסיף לחבילה שלו קובץ הצהרה עבור משתמשי `typescript`.  
+במידה והחבילה שלו לא כוללת את קבצי ההצהרה של `typescript`, הקהילה (או המפתח עצמו אם הוא רוצה להפריד את קבצי ההצהרה לפרוייקט נפרד) יכולים להוסיף את קבצי ההצהרה לפרוייקט `DefinitelyTyped`. ואז כל מי שרוצה להשתמש בחבילה שלו ב - `typescript` יכול להתקין את החבילה `@types/שם-החבילה`.
+
+```bash
+> npm i -D @types/declaration-file-for-some-package
+```
+
+`passport` היא דוגמא טובה, ולכן כדי לפתור את הבעיה של `typescript` שאינו מכיר את החבילה `passport` באמצעות קבצי ההצהרה של הקהילה שנמצאים בפרוייקט `DefinitelyTyped`.
+
+נמחק את קובץ ה - `passport.d.ts` שיצרנו.  
+שימו לב שהשגיאות של `typescript` על `passport` חוזרות.
+
+כעת נתקין את קבצי ההצהרה של `passport` מהפרוייקט `DefinitelyTyped`:
+
+```bash
+> npm i -D @types/passport
+```
+
+שימו לב שהשגיאות של `typescript` על `passport` נעלמות.
+
+## הרחבת טיפוס ה - Express.Request
+
+נאמר שאנחנו רוצים ליצור middleware ב- express שיסיף נתונים לאובייקט הבקשה.
+
+ה - middleware **locale** יוסיף את ה - `req.locale` עם מחרוזת שמתארת את השפה.
+
+נוסיף את הקוד הבא לקובץ `app.ts`:
+
+```typescript
+app.use((req, res, next) => {
+  req.locale = 'he'
+  next()
+})
+```
+
+למרות שהרחבת את אובייקט הבקשה עם נתונים נוספים, זהו דפוס נפוץ ב - express, אחרי שהקוד הזה יופעל נשים לב ש - typescript מתלונן על `req.locale`.
+
+> `error TS2339: Property 'locale' does not exist on type 'Request\<ParamsDictionary, any, any, ParsedQs, Record\<string, any\>\>`
+
+באמצעות קבצי ההצהרה נוכל ללמד את `typescript` על הטיפוסים החדשים שהוספנו לאובייקט הבקשה.
+
+ניצור את הקובץ `locale.d.ts` בתיקיית השורש עם התוכן הבא:
+
+```typescript
+import * as express from 'express'
+
+declare global {
+  namespace Express {
+    // Inject additional properties on express.Request
+    interface Request {
+      locale: string
+    }
+  }
+}
+```
+
+שימו לב שהשגיאה של `typescript` על `req.locale` נעלמת.
+
+Typescript מבצע משהו שנקרא [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html)
+
+אז אם אחד מקבצי ההצהרה של typescript (`@types/express-serve-static-core`) מצהיר על ה - `Express` namespace תחת `global`, אנו יכולים להוסיף שדות נוספים ל - `namespace` הזה.
+
+בתוך ה - `namespace` יש את ה - `Request` object שאנו יכולים להוסיף לו שדות.
+
+אל תדאגו אתם לא משנים את השדות הקיימים, הקבצים ממוזגים ולכן אתם פשוט מוסיפים שדות נוספים שאתם צריכים.
+
+זהו דפוס נפוץ כאשר משתמשים ב - `Express` עם `Typescript` שתצטרכו לשנות את קבצי ההצהרה של `Express`.
+
+## `req.user`
+
+ניקח דוגמא נוספת.  
+לאחר אימות המשתמש על ידי `passport` ישים את המשתמש ב - `req.user`.  
+זאת הסיבה למה ה - `@types/passport` מכיל את ההצהרה הבאה:
+
+```typescript
+declare global {
+  namespace Express {
+    interface User {}
+    interface Request {
+      user?: User | undefined
+    }
+  }
+}
+```
+
+`@types/passport` מרחיב את ה - `Express.Request` ומוסיף לו את ה - `user` property.
+
+אז עכשיו ב - `app.ts` שלנו נוכל לעשות את הבא:
+
+```typescript
+app.get('/', (req, res) => {
+  req.user
+  res.send('Hello world')
+})
+```
+
+ו - `typescript` לא יתלונן על `req.user`.
+
+העניין הוא שכאשר משתמשים ב - `passport` נצטרך להגדיר איזה סוג של משתמש יהיה ב - `req.user`.
+
+דוגמא נפוצה היא שבאפליקציה שלך הגדרת `User` class שנראה כך:
+
+```typescript
+class User {
+  firstName: string = 'academeez'
+  lastName: string = 'rulz'
+}
+export type MyUserType = typeof User
+```
+
+וכאשר אתה מאמת את המשתמש עם `passport` אתה מגדיר ל - `passport` את הטיפוס של המשתמש שלך שיהיה בתוך ה - `req.user`.
+
+כעת אם ננסה לגשת ל - `firstName` של המשתמש ב - `app.ts` שלנו:
+
+```typescript
+app.get('/', (req, res) => {
+  req.user?.firstName
+  res.send('Hello world')
+})
+```
+
+נקבל שגיאת טיפוס מ - `typescript`, מאחר ו - `typescript` לא מכיר את ה - `User` class שלנו כאותו משתמש שמוגדר ב - `@types/passport`.
+
+בואו נגדיר declaration file שיגיד ל - `typescript` שה - `req.user` שלנו הוא מסוג `User`.
+
+ניצור את הקובץ `user.d.ts` עם התוכן הבא:
+
+```typescript
+import * as express from 'express'
+
+declare global {
+  namespace Express {
+    interface User {
+      firstName: string
+      lastName: string
+    }
+  }
+}
+```
+
+אנחנו יכולים לעקוף את ההצהרה של `passport` ולהגדיר את ה - `User` שלנו.
+
+## סיכום
+
+דפוס נפוץ ב - `express` הוא להעביר מידע על ידי שימוש ב - `Express.Request` object.  
+כאשר משתמשים ב typescript ומנסים לגשת לאותו מידע נתקלים בשגיאות של `typescript` ופעמים רבות המפתחים פותרים אותם כך:
+
+```
+(req as any).locale
+```
+
+זוהי לא הדרך הנכונה לפתור את הבעיה ומומלץ להשתמש בקבצי ההצהרה כדי ללמד את `typescript` על הטיפוסים החדשים שהוספנו ל - `Express.Request`.

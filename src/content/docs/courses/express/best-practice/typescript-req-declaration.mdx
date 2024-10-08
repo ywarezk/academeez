@@ -1,0 +1,428 @@
+---
+title: Typescript declaration file for extending Express Request type
+description: We can use declaration files to teach typescript about different types we have in our app.  We can also use declaration file to extend Express Request object. We often use Express middlewares to add information to the request object, with declaration files typescript can know about all the data we added to the Request object
+authors:
+  - yariv-katz
+publishDate: 2023-04-28
+---
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/W_tbNGERaKw?si=QuRaskOBqfnDRH3M"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+We often need to pass data between middlewares or between a middleware and a route handler in Express.  
+Common pattern we can use to transfer that data is by using the `Express.Request` object, and append the data we want to transfer to the request object.
+
+A simple example of a middleware that is passing an `hello world` message to other middlewares or routes handlers would be:
+
+```js
+app.use((req, res, next) => {
+  req.hello = 'hello world'
+  next()
+})
+```
+
+the problem starts when we use `Typescript` as the programming language to write our `Express` application.  
+How can `Typescript` know about all the data we added to the `Request` object.
+
+Let's start with examining popular middlewares and how they tackle the problem.
+
+## Bootstrap Express-Typescript app
+
+To examine what how other middlewares teach typescript about added data to the `Request` object, we will start by creating a sample Express application with Typescript as the programming language.
+
+Start by creating an empty folder where we will place our project, and open that folder in `VSCode`.
+
+Open the terminal in `VSCode` and initiate `npm` by typing:
+
+```bash
+> npm init --yes
+```
+
+Install typescript:
+
+```bash
+> npm i -D typescript
+```
+
+Initiate typescript by creating a `tsconfig.json` file with the command:
+
+```bash
+> npx tsc --init
+```
+
+Edit the `tsconfig.json` and add `"sourceMap": true` under `compilerOptions`.  
+This will allow us to run the typescript file on `VSCode` debugger.
+
+Install `express` and type declarations for express `@types/express`.
+
+```
+> npm i express
+> npm i -D @types/express
+```
+
+Create the file `app.ts` and in it we will create a simple express server application that prints hello world:
+
+```typescript
+/**
+ * Create an express application that prints hello world
+ */
+import express from 'express'
+
+const app = express()
+
+app.get('/', (_req, res) => {
+  res.send('Hello world')
+})
+
+app.listen(3000, () => {
+  console.log('Listening on port 3000')
+})
+```
+
+compile your files by running in the terminal:
+
+```
+> npx tsc -w
+```
+
+Using `VSCode` run and debug menu, launch the `app.ts` file
+
+## Examining middlewares and how they extend the Express request object
+
+Let's take a popular middleware and try to learn from what the experts are doing.  
+[passportjs](https://www.passportjs.org/) is a popular express middleware that is used to authenticate users.  
+`passport` strategy pattern pretty much allows you to authenticate will all the popular authentication ways we have today.
+
+After authentication `passport` middleware will place data on the `Request` object regarding the authenticated user.  
+For example `passport` will place the authenticated user on `req.user`.
+
+Before installing `passport` if you try to access `req.user` you will notice that typescript will complain.
+
+Let's install passport by typing:
+
+```bash
+> npm i passport
+```
+
+After I install passport I still get a typescript error, typescript does not recognize `user` on the `Request` object.
+
+In fact since `passport` is a Javascript package, typescript does not know anything about the types in that package.  
+In our code if we try to add:
+
+```
+import passport from 'passport';
+
+passport.authenticate('local', { session: false});
+```
+
+we will notice that Typescript complains with the error:
+
+```
+error TS7016: Could not find a declaration file for module 'passport'
+```
+
+The first thing you need to do when you stumble on these kind of errors, is to check if there is a `DefinitelyTyped` community declaration for that library.  
+Meaning to npm install the package: `@types/passport`.  
+For most of the popular packages in javascript there would probably be a DefinitelyTyped declaration for that package, and indeed passport has one as well.  
+So to teach Typescript about the passport package one can simply run `npm i -D @types/passport`.  
+But for learning purpose let's do it the hard way and not install `@types/passport`.
+
+This means that what we need is to teach `Typescript` about the `passport` package.  
+We can do this by creating a typescript declaration file.
+
+## What is a declaration file
+
+> A declaration file provides a way to declare the existence of some types or values without actually providing implementations for those values.
+
+It's the way the typescript compiler can say:
+
+> I know I'm not perfect, but you can teach me so I can get better.
+
+We can teach the typescript compiler using declaration files.  
+Usually declaration files are files that end with `*.d.ts`, although declaration can also be part of your `ts` files (but declaring with `*.d.ts` means there will be no javascript file created).
+
+In fact, take a look at the `node_modules/@types` folder.  
+when you install a `DefinitelyTyped` package you basically add a folder to `node_modules/@types`.  
+For example if we did install the passport declaration using `npm i -D @types/passport`, we would notice that we now have a folder: `node_modules/@types/passport` with a declaration file.
+
+A `DefinitelyTyped` package contains one or more declaration files in it.  
+If we feed the typescript compiler with the decalration files in `node_modules/@types/passport` the compiler is learning now about new types, specifically about the passport module.
+ 
+## How to feed the compiler with declaration file
+
+But how did the compiler know to include declaration files in `node_modules/@types`?
+
+There are few options in the `tsconfig.json` file (or the default value of those options) which instructs the compiler to include a declaration file.
+
+Here is the list of options you can use to specify declaration files: 
+
+### include
+
+> Specifies an array of filenames or patterns to include in the program. These filenames are resolved relative to the directory containing the tsconfig.json file.
+
+```json
+{
+  "include": ["src/**/*", "tests/**/*"]
+}
+```
+
+the default of include is to compile all `*.ts` and all `*.d.ts` files.
+
+Include will include all the files except for the patterns that are specified in `exclude` - which by default excludes the `node_modules` folder.
+
+We created the project `tsconfig.json` file using `npx tsc --init` and since we didn't add an `include` property to the `tsconfig.json` it remains the default.
+
+Which means every typescript file and declaration file (as long as we don't place it in the `node_modules` for some strange reason) will be compiled, and every `*.d.ts` file will be processed by typescript.
+
+### files
+
+> Specifies an allowlist of files to include in the program
+
+We can use this if we don't have many files, and we want to be more specific then specifying a glob pattern using the include
+
+```json
+{
+  "compilerOptions": {},
+  "files": ["core.ts", "sys.d.ts"]
+}
+```
+
+In this case you will have to specify the path to the declaration files you want to include.
+
+### typeRoots
+
+In this option you can specify a folder, and typescript will examine the nesting folders in that folder, and look for `package.json` or `index.d.ts` file in that folder
+
+The default here is what makes it so easy to work with `DefinitelyTyped` - the default is to search for the nearest `node_modules/@types` folder.
+
+### types
+
+This option will include a declaration file without the need to specifing it in the source files.
+
+For example let's say I'm using express and installed the `DefinitelyTyped` package of express.
+
+If I do:
+
+```typescript
+import express from 'express'
+```
+
+Then typescript will look at the declaration file of express and will know about the types there.  
+but let's say in the declaration file of express they define a global variable:
+
+```typescript
+declare global {
+  export var stam: any
+}
+```
+
+If I'm not doing the import to express, the declaration file will not be included so typescript will not know about `stam` public variable.  
+What I can do is specify the `types` in the `tsconfig.json` file, for example:
+
+```json
+{
+  "compilerOptions": {
+    "types": ["express"]
+  }
+}
+```
+
+Typescript will then look for the `express` folder in the `typeRoots`.  
+So if my `typeRoots` is:
+
+```json
+{
+  "compilerOptions": {
+    "typeRoots": ["node_modules/@types", "my-types"]
+  }
+}
+```
+
+Typescript will include declaration packages found in `node_modules/@types/express` and `my-types/express` without the need to do an import.
+
+This means that the global `stam` will be recognized
+
+## Creating a simple passport declaration file
+
+Since the default `tsconfig.json` will include all `*.ts` and `*.d.ts`, there is no need to change anything in the `tsconfig.json`, we can simply create the file `passport.d.ts` in the root folder and typescript will know to pick it up.
+
+Create the file `passport.d.ts` with the following:
+
+```typescript
+declare module 'passport' {
+  // declare function authenticate
+  import type { Handler } from 'express'
+  export function authenticate(strategy: string, options?: any): Handler
+}
+```
+
+We are declaring a `passport` module, with an `authenticate` method that returns an express handler middleware function.
+
+Now if we return to our file we will notice that type typescript errors about the `passport` module are now gone.
+
+## DefinitelyTyped
+
+`DefinitelyTyped` is a community project for typescript declaration files describing javascript package.
+
+This means that a package author can choose to write his package in JavaScript, and can choose to include in his package a declaration file for typescript users to use his package.  
+If he doesn't include typescript declaration files in his package, the community (or him if he wants to seperate the declaration files to a different project) can do it for him and add a declaration file package which can be installed with npm:
+
+```bash
+> npm i -D @types/declaration-file-for-some-package
+```
+
+`passport` is a good example, so it's best to solve the problem of **Typescript does not recognize the passport package** using the community passport declaration files located in the `DefinitelyTyped` project.
+
+Delete the `passport.d.ts` file we created.  
+Notice that the typescript errors about `passport` are now back on.
+
+Now let's install the passport declaration files from the `DefinitelyTyped` project.
+
+```bash
+> npm i -D @types/passport
+```
+
+Now notice that those Typescript errors are gone.
+
+## Extending the Express.Request type
+
+Let's say we want to create an express middleware that will add data to the request object.
+
+The **locale** middleware will add the `req.locale` with a string describing the language.
+
+Add the following code to the `app.ts` file:
+
+```typescript
+app.use((req, res, next) => {
+  req.locale = 'he'
+  next()
+})
+```
+
+although extending the request object with additional data, is a common pattern in express, after placing this code we will notice that typescript complains about `req.locale`
+
+> `error TS2339: Property 'locale' does not exist on type 'Request\<ParamsDictionary, any, any, ParsedQs, Record\<string, any\>\>`
+
+using declaration files we can tell typescript that `Express.Request` object actually have more fields.
+
+Create the file `locale.d.ts` in the root folder with the following:
+
+```typescript
+import * as express from 'express'
+
+declare global {
+  namespace Express {
+    // Inject additional properties on express.Request
+    interface Request {
+      locale: string
+    }
+  }
+}
+```
+
+you will notice that the error from accessing `req.locale` in the `app.ts` file is now gone.
+
+Typescript is doing [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html)
+
+so if one of the typescript declaration file (`@types/express-serve-static-core`) is declaring an `Express` namespace under `global`, we can add additional fields to that namespace.
+
+In that namespace there is the `Request` object which we can add fields to.
+
+Don't worry you are not changing the existing fields, the files are merged so you are simply adding more fields you need.
+
+It's common practice when using `Express` with `Typescript` that you will have to modify express built in types.
+
+## `req.user`
+
+Let's have another example.  
+after authentication passport will populate the `req.user`.  
+This is why the `@types/passport` contains the following:
+
+```typescript
+declare global {
+  namespace Express {
+    interface User {}
+    interface Request {
+      user?: User | undefined
+    }
+  }
+}
+```
+
+`@types/passport` extended the `Express.Request` adding the user property.
+
+So now in our `app.ts` we can do the following:
+
+```typescript
+app.get('/', (req, res) => {
+  req.user
+  res.send('Hello world')
+})
+```
+
+and typescript will know that the request object contains a `user` property and give you their blessing.
+
+The thing is that when configuring `passport`, in the verify callback you decide what to populate in the `req.user` - meaning what kind of type user will be.
+
+A common example would be that in your app you defined a `User` class that looks like so:
+
+```typescript
+class User {
+  firstName: string = 'academeez'
+  lastName: string = 'rulz'
+}
+export type MyUserType = typeof User
+```
+
+and when you autheticate with passport, you configure passport to populate the `req.user` with an instance of your `User` class.
+
+currently if you try to access `firstName` in your code:
+
+```typescript
+app.get('/', (req, res) => {
+  req.user?.firstName
+  res.send('Hello world')
+})
+```
+
+you will get a typescript error, because typescript does not recognize your `User` class as the one that populate the `req.user` that is defined in the declaration of `@types/passport`.
+
+Let's create a declaration file that will clarify to typescript that `req.user` holds our user.
+
+Create the file `user.d.ts` with the following:
+
+```typescript
+import * as express from 'express'
+
+declare global {
+  namespace Express {
+    interface User {
+      firstName: string
+      lastName: string
+    }
+  }
+}
+```
+
+We can overide the `User` interface that is defined by passport to tell typescript that `req.user` is of the type that we want.
+
+## Summary
+
+A common pattern in express is to pass information by piggybacking that information on the `Express.Request` object.  
+When trying to access that information I often see developers do something like this:
+
+```
+(req as any).locale
+```
+
+This type casting of the request object is not recommended and could be avoided if you used declaration files to teach typescript how exactly the `Express.Request` looks like.
