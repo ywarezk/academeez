@@ -1,0 +1,934 @@
+---
+title: Error handling in Node.js and Express
+description: How we deal with errors and exceptions in Node.js, and how we handle them in Express
+publishDate: 2023-04-27
+authors:
+  - yariv-katz
+---
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/jYSyTiBWgW8?si=KgLojdUwYf9-O1He"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+In this lesson we will understand how `Node` deals with exceptions in your code.  
+We will focus on sync errors as well as async errors.  
+We will then see how we deal with exceptions in `Express`
+
+## Recap of Error, throw, try..catch
+
+Before we begin let's go over some basics
+
+### Error class
+
+The `Error` class describes an error with properties like message, description, error code, stack track, etc.
+
+```js
+const myError = new Error('hello error')
+```
+
+### throw
+
+There is a different between `Error` and `exception` an `Error` is a description of something that went wrong, and `exception` is an error that is currently happening and have to be dealt with.  
+We use the `throw` passing it usually an `Error` instance to report an exception.
+
+```js
+throw new Error('hello exception')
+```
+
+### try..catch
+
+Using `try` and `catch` is one way you can catch exception.
+
+```js
+try {
+  // code that can have errors in it
+} catch (err) {
+  // ... do something with the error
+}
+```
+
+This will help you describe an error, throw an exception, catch and deal with that exceptions,  
+but they will work on synchronous errors (except for try..catch in an async function).  
+Let's examine how we throw and catch errors on async code as well.
+
+
+## async and sync errors
+
+In this lesson we will divide the errors we are dealing with to 2 groups:
+
+- **Synchronous errors** - those are errors that happen when you execute you code synchronously.  
+  For example:
+
+```js
+const a = { hello: { world: 'hello world' } }
+a.foo.bar
+```
+
+In the following example we try to access a missing property in a, and we get:
+
+`Uncaught TypeError: Cannot read properties of undefined (reading 'bar')`
+
+These errors can be caught using `try..catch`
+
+- **Asynchronous errors** - those are errors that happen when you preform something asynchronously and that something fails.  
+  In the following code we try to read a file that does not exist
+
+  ```js
+  import { readFile } from 'fs/promises'
+  readFile('non-existent-file.txt')
+  ```
+
+### Type of asynchronous errors
+
+Currently built in to `Node` there are 3 kinds of async errors.
+
+#### Promise
+
+Promises can fail and trigger exception, like in the example above with the read file.  
+Let's examine different examples where a promise is throwing an exception.
+
+1. Promise can send an error by calling `reject` in the promise constructor.
+
+```js
+// throw an error in the promise constructor
+const myHelloPromise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    // resolve('hello listeners');
+    reject(new Error('something went wrong'));
+  }, 1000)
+})
+```
+
+2. Promise can reject by calling `Promise.reject`
+
+```js
+Promise.reject(new Error('something went wrong'));
+```
+
+3. you can use `throw` in a `then` block
+
+```js
+myHelloPromise.then(() => {
+	throw new Error('something happened');
+})
+```
+
+4. using `throw` in a promise catch block
+
+```js
+myHelloPromise.catch(() => {
+	throw new Error('something happened');
+})
+```
+
+5. using `try..catch` inside an async function
+
+```js
+/**
+ * @returns {Promise<string>}
+ */
+async function myPromiseFunction() {
+	try {
+		const helloMsg = await myHelloPromise;	
+	} catch(err) {
+		console.log(err);
+	}
+}
+```
+
+6. using the second function in `then` block
+
+```js
+myHelloPromise.then(() => {
+	//this can deal with success
+}, (err) => {
+	// this deal with err
+	if (err.code === 'ENOENT') {
+		console.log('file not found');
+	} else {
+		throw err;
+	}
+})
+```
+
+#### Error first callback
+
+Error first callback is a `Node.js` convention for passing function to async methods.  
+In the following example we are reading a file and passing error first callback.
+
+```js
+import { readFile } from 'fs'
+
+readFile('non-existent-file.txt', (err, data) => {
+  console.log(err)
+})
+```
+
+Error first callback is a node convention in async functions, where we pass a callback that will be called when the async event is happening.  
+In the callback that we pass the first argument is an error.
+
+Let's examine a few examples in Error first callback.  
+Ih the following example we are reading a file that does not exist, and dealing with the error.
+
+```js
+import { readFile } from 'fs';
+
+readFile('does-not-exist.txt', (err, data) => {
+  if(err) {
+    console.log('deal with the error here')
+  } else {
+    console.log(`the data is: ${data.toString()}`);
+  }
+});
+```
+
+Another example is where you have to implement you own async function the will call the callback with an error.
+
+```js
+function sayHello(cb) {
+  setTimeout(() => {
+    // cb(null, 'hello listeners')
+    cb(new Error('something happened'))
+  }, 1000)
+}
+```
+
+you are getting a callback and if something happens you call the callback with an error, if not you call it with the data you want to pass to the callback.
+
+There are cases where you can't really handle the error in the callback, and you want to propagate the error to the next level.  
+For example we failed to read the file, and we want to propagate the error to the next level.  
+In that case you will have to create a function that will get an error first callback and will propagate the error to the next level.
+
+```js
+function myReadFile(path, cb) {
+  readFile(path, (err, data) => {
+    cb(err, data)
+  });
+}
+```
+
+#### EventEmitter
+
+Let's talk about the `EventEmitter` class, and how we deal with exceptions in it.  
+using `EventEmitter` we can create custom asynchronous events.  
+When you have an instance of `EventEmitter` you can emit an exception event by calling `emit('error', new Error())`.
+
+Simple example of `EventEmitter` emitting an error event.
+
+```js
+import { EventEmitter } from 'events'
+const emitter = new EventEmitter()
+emitter.emit('error', new Error('whoops!'))
+```
+
+let's see a more complex example of `EventEmitter` emitting an hello world after 1 second.
+
+```js
+import { EventEmitter } from 'events';
+const myEmitter = new EventEmitter();
+
+myEmitter.on('message', (msg) => {
+	console.log(msg);
+});
+
+setTimeout(() => {
+  myEmitter.emit('message', 'hello world')
+}, 1000)
+```
+
+to send an error event you can use the `error` event, the event name is `error` and the first argument is the error.  
+Here is the same example of sending an error event after 1 second.
+
+```js
+import { EventEmitter } from 'events';
+const myEmitter = new EventEmitter();
+
+myEmitter.on('error', (err) => {
+	console.log(err);
+});
+
+setTimeout(() => {
+	myEmitter.emit('error', new Error('something went wrong'))
+}, 1000)
+```
+
+You can have multiple listeners to the same event, same applies for the `error` event.  
+In the following example we have 2 listeners to the `error` event, each one dealing with a different kind of error.
+
+```js
+import { EventEmitter } from 'events';
+
+const myEmitter = new EventEmitter();
+
+myEmitter.on('error', (err) => {
+  if (err.code === 'GENERAL_ERROR') {
+    // deal with it here
+  }
+})
+
+setTimeout(() => {
+  myEmitter.emit('error', new Error('something happened'))
+}, 1000)
+
+myEmitter.prependOnceListener('error', (err) => {
+  if (err.code === 'something') {
+    // deal with it here
+  }
+})
+
+```
+
+## What the Node.js process will do on an uncaught exception
+
+On an uncaught exception the `Node` process will exit and return a failing code 1.  
+The `Node` process will exit on:
+
+- uncaught sync exceptions
+- on uncaught `Promise` reject
+- on uncaught `EventEmitter` instance emitting `error`
+
+The `Node` process will not exit on an error-first-callback with an error.
+
+Remember that the `Node` process is an instance of an `EventEmitter` and it will emit a few events before exiting, we will go over in this lesson on 2 important ones:
+- `uncatchExceptionMonitor`
+- `uncaughtException`
+
+Let's examine by code example what happens to the node process when we are not catching an exception.  
+Usually when working with NodeJS you often create a webserver that means that your process is running all the time.  
+We can mimic an everlasting javascript that constantly running by creating a `setInterval` that will run every 1 second (we can imaging like our webserver is getting a request every second).
+
+```js
+setInterval(() => {
+  console.log('getting a new request');
+}, 1000);
+```
+
+Now let's imaging that our server is getting a "request" after 2 seconds that cause an exception that is uncaught:
+
+```js
+setInterval(() => {
+  console.log('getting a new request');
+}, 1000);
+
+setTimeout(() => {
+  console.log('request that triggers an exception which we are not catching');
+  throw new Error('something went wrong');  
+}, 2000)
+```
+
+Notice that if we run this script, after 2 seconds our webserver will crash and we can not respond to any requests.  
+Your webserver can crash, and in that case you will want to report that exception and restart the server, so you can still respond to requests.  
+In the express docs they recommend running your webserver in production with a process manager like `pm2` that will restart your server when it crashes [see this section in the Express docs](https://expressjs.com/en/advanced/best-practice-performance.html#using-pm2).  
+
+The crash of the server also happens when you are using `Promise` and you are not catching the promise reject.
+For example:
+
+
+```js
+setInterval(() => {
+  console.log('getting a new request');
+}, 1000);
+
+setTimeout(() => {
+  console.log('request that triggers an exception which we are not catching');
+  Promise.reject(new Error('something went wrong'));
+}, 2000)
+```
+
+Same crash will happen when you are using `EventEmitter` and you are not catching the error event.
+
+```js
+import { EventEmitter } from 'events';
+const myEmitter = new EventEmitter();
+
+setInterval(() => {
+  console.log('getting a new request');
+}, 1000);
+
+setTimeout(() => {
+  console.log('request that triggers an exception which we are not catching');
+  myEmitter.emit('error', new Error('something went wrong'));
+}, 2000)
+```
+
+uncaught `error` event will also crash the server.  
+The only exception is in Error-first-callback where it will not cause a crash for example:
+
+
+```js
+
+import { readFile } from 'fs';
+
+setInterval(() => {
+  console.log('getting a new request');
+}, 1000);
+
+setTimeout(() => {
+  console.log('request that triggers an exception which we are not catching');
+  readFile('something-that-does-exist.txt', (err, data) => {
+    console.log(err);
+  })
+}, 2000)
+```
+
+Even though the file in the `readFile` does not exist, the server will not crash.
+
+## How express is dealing with uncaught exceptions
+
+To check how express is dealing with exception we will create a simple express webserver.  
+We will need to install express so in the terminal run:
+
+```bash
+npm init --yes
+npm i express
+```
+
+at the time of this recording we are at express version `4.18.2`.  
+let's create a simple express server and using this example try to figure out how express is dealing with exceptions.  
+We will create a path for `/hello` that sends a greeting, and another path `/generate-error` that will throw an exception.
+
+```js
+import express from 'express';
+
+const app = express();
+
+app.get('/hello', (_req, res) => {
+  res.send('hello world');
+});
+
+app.get('/generate-error', (_req, res) => {
+  throw new Error('some error');
+});
+
+app.listen(3000, () => {
+  console.log('we are listening on port 3000');
+});
+```
+
+In this example we are trying to see how express is dealing with sync exceptions.  
+If we activate this app we will see that express has a default behavior for dealing with synchronous exceptions. Express will not crash rather direct us to a 500 page which displays the stacktrace in development.  
+It is recommended to set the `NODE_ENV` to `production` in production so the stacktrace will not be displayed.
+
+
+Now let's examine how express is dealing with async exceptions.  
+We will start by examining how express is dealing with `Promise` reject.
+
+Now let's change the route handler for `/generate-error` to use a `Promise` that rejects.
+
+```js
+...
+
+app.get('/generate-error', (_req, res) => {
+  Promise.reject(new Error('some error'));
+});
+
+...
+```
+
+In this example express could not deal with this uncaught promise exception properly and it caused our server to crash.  
+Regarding promise rejection is will act a bit differently in express version 5, and it will not crash the server.  
+On express version 5 the promise rejection will be caught and will be passed to the error handlers where the default will display the 500 page with the stack trace.
+
+Now let's try with `EventEmitter` what does express do when we have an uncaught error event in an event.
+
+```js
+app.get('/generate-error', (_req, res) => {
+  simpleEventEmitter.emit('error', new Error('something went wrong'));
+});
+```
+
+on this case express will catch the error and transfer us to 500 page
+
+```js
+app.get('/generate-error', (_req, res) => {
+  setTimeout(() => {
+    simpleEventEmitter.emit('error', new Error('something went wrong'));  
+  }, 1000)
+});
+```
+
+In this case express will not catch the error and the server will crash.  
+It all depends if the error is part of sync code or async code, if it's part of sync code the emit runs synchronously and express will catch it, if it's part of async code the emit still run synchronously but on async code so the entire block is async, in that case express can not catch the error and our webserver will crash.
+
+Let's check if anything special is happening when we are using `error-first-callback` in express.
+
+```js
+import { readFile } from 'fs';
+app.get('/generate-error', (_req, res, next) => {
+  readFile('non-existing-file', (err, data) => {
+    if (err) {
+      next(err)
+    } else {
+      res.send('hello world');
+    }
+  })
+});
+```
+
+express won't help you on this case as well, what is usually done is call the `next(err)` with the error you got, and only in that case express will know about the error and transfer you to the error middlewares.
+
+## academeez express-errors package
+
+To help you close the gap of express and async exceptions we created an express middleware that will catch all the async exceptions and will pass them to the error handler.  
+What we are doing in this middleware is using [Zone.js](https://github.com/angular/zone.js) to create a zone for each request, this way the request is inside an execution context which allows us to know if there are async exceptions and pass it to express error handler.
+
+To install the package run:
+
+```bash
+npm i az-express-errors
+```
+
+let's start a new express and typescript project and use this middleware and see how it helps us catch async exceptions.
+
+install typescript and `@types/express`
+
+```bash
+npm i -D typescript @types/express
+```
+
+create a `tsconfig.json` file with the following command:
+
+```bash
+npx tsc --init
+```
+
+I will constantly run the typescript compiler in watch mode so I can see the changes in the code.
+
+```bash
+npx tsc -w
+```
+
+We will create a file called `az-error-middleware.ts` and we will create express webserver and install academeez express-errors package.
+
+```ts
+import createApplication from 'express';
+import azErrors from 'az-express-errors';
+
+const app = createApplication();
+
+app.use(azErrors());
+
+app.get('/', (req, res) => {
+})
+
+app.listen(3000, () => {
+  console.log('server started on port 3000');
+})
+```
+
+After installing the `az-express-errors` let's see a few things that we now have, we will focus on the single route handler that we have and try to create async exceptions there:
+
+```ts
+app.get('/', (req, res) => {
+  Promise.reject(new Error('something went wrong'));
+})
+```
+
+Rejecting promise that would cause our server to crash the `az-express-errors` is catching and transferring us to the error handlers.
+the same will work if using `async-await` in the express route handler.
+
+Now let's see what happens with `EventEmitter`
+
+```ts
+import { EventEmitter } from 'events';
+const myErrorEmitter = new EventEmitter();
+app.get('/', (req, res) => {
+  setTimeout(() => {
+    myErrorEmitter.emit('error', new Error('something went wrong'));
+  }, 1000)
+})
+```
+
+This used to cause our server to crash, but now with the `az-express-errors` it will catch the `EventEmitter` exception and transfer us to the error handlers.
+
+With error first callback you can now simply throw the err that you are getting to pass it to the error handlers.
+
+
+```ts
+import { readFile } from 'fs';
+app.get('/', (req, res) => {
+  readFile('non-existing-file', (err, data) => {
+    (req as any).azZone.runGuarded(() => {
+      throw err;
+    })
+  })
+})
+```
+
+you have in the `req` object a refrence to the execution context and in there you can feel free to use throw even in async methods or error first callbacks.
+
+So if you need help with async exceptions in express you can use the `az-express-errors` package, which will help you with rejected promises, EventEmitter error event, throwing exceptions in async functions, and error first callbacks.
+
+## process events related to exceptions
+
+The node process that is in charge of running your code is an instance of `EventEmitter` and it will emit a few events when an exception is not caught.  
+You can access the node process by accessing global `process` object.  
+Let's examine 2 events that relate to exceptions: `uncaughtException` and `uncaughtExceptionMonitor`.
+
+```js
+setInterval(() => {
+	console.log("I'm running");
+}, 1000);
+
+setTimeout(() => {
+	throw new Error('something happened');
+}, 2000);
+
+process.on('uncaughtExceptionMonitor', function(err) {
+  console.log('this will be called before uncaughtException event')
+  console.log('it wont prevent the node process from crashing');
+  console.log('and we use this event to log the error, create a log file with the error ect.');
+});
+
+process.on('uncaughtException', function() {
+	console.log('uncaughtException');
+	if (err.code === '...') {
+		process.exit(100)
+	}
+})
+```
+
+The first section of the code is to mimic a webserver that is always running and getting some request after 2 seconds that is causing an exception.  
+We are attaching a listener to the `process` event called `uncaughtExceptionMonitor` that will be called before the `uncaughtException` event, this event is used for logging or creating a log file for the error that happened.  
+The second event we are subscribing to is the `uncaughtException` event that will be called when an exception is not caught, now usually when an exception bubbles up to the `process` it will crash the node process, but this event allows you to do custom behaviour for the uncaught exception, for example you can check the error code and exit the process with a different code. if you are subscribing to this event node will not crash and you will have to exit the `process` manually using `process.exit`.  
+Note that it is not recommended to keep going when you have an uncaught exception, it's best to crash, restart the webserver with the process manager that is used to run it, and make sure the exception is properly logged so you can debug the problem.
+Don't use this event to stop the process from crashing, use it for cleanup, proper exit code, things you need to do before exiting.
+
+## Express uncaught exceptions
+
+As we examined, express can help you catch the synchrone exceptions, but it can't help you with async exceptions.  
+On express version 5 it can help you catch rejected promises in the route handlers, but it can't help you with `EventEmitter` or `error-first-callback`.  
+If there is an uncuaght exception in express which is not transfered to express error handlers, then that exception will bubble up to the `process` and node will deal with that exception like we learned, by calling the proper events and eventually crashing the node process.
+
+## Exception journey
+
+When an exception is thrown, if there is nothing to catch that exception, that exception will bubble up the stacktrace to the parent, if the parent does not have something to catch it, it will bubble up to the parent of the parent, and so on until it reaches the `process` object.
+If it reached the `process` object, the `process` will emit the `uncaughtException` event, and if you are subscribed to that event you can do something with that exception, if not the node process will crash.
+
+you can also catch the exception somewhere in the stacktrace do something and rethrow the exception if there is something only the parent might know that is required to deal with the exception.
+
+## mental notes on dealing with exceptions
+
+We need to strive to catch all the exceptions that can happen in our code, and deal with them properly.  
+The simple example is to have a line of code that can throw an exception, and you can wrap that line of code with a `try..catch` (or equivilant in async types) and deal with the exception at the point of origin.  
+But things are not always that simple, there are times when you don't have the proper tools to deal with the exception when it happens and you have to let the exception bubble up to the parent where one of the parents can handle that exception.  
+Often we also want to create generic errors that will handle when a certain type of exception happens.  
+There are also times when there is not one place that handle the exception but multiple places, where you might catch an exception and rethrow (either that exception or some other exception).
+
+### 1. Catching the exception when it happens
+
+An express example of catching the exception when it happens might look like this:
+
+```js
+app.get('/', (req, res) => {
+
+  try {
+    // ... this code might have and exception
+    console.log('i can have an exception here')
+  } catch(err) {
+    // ... deal with the error when it happens
+  }
+})
+```
+
+### 2. Bubble up the exception
+
+In express an example of letting the exception bubble up might look like this:
+
+```js
+// 2. let the parent handle the error
+async function queryTheDb(query: string): Promise<any> {
+  // ...
+  // runs the query in the db
+  // if there is an error, it will throw an exception
+}
+
+app.get('/', async (req, res) => {
+  try {
+    await queryTheDb('some ileagal query')
+  } catch(err) {
+    res.send('some error message')
+  }
+})
+```
+
+and if you want you can bubble the exception even further up to error middlewares by calling `next(err)`.
+
+### 3. catch and the rethrow
+
+an example of express where we catch and rethrow the error might look like this:
+
+```js
+// 3. combine catching and rethrowing the error
+
+class QueryError extends Error {
+
+}
+
+app.get('/', async (req, res, next) => {
+  try {
+    await queryTheDb('some ileagal query')
+  } catch(err) {
+    const queryError = new QueryError('some error message');
+    next(queryError)
+  }
+})
+```
+
+In this example we are catching the exception and creating a custom error class that we created `QueryError` and we are rethrowing that error to the next error middleware.
+
+## Best practices for dealing with exceptions
+
+Let's give a set of best practice rules for dealing with exceptions in NodeJS and Express.
+
+### 1. Group Exceptions
+
+Similar exceptions can resurface in different places in your code.  
+For example, you might have an authorization error that can happen in multiple places in your code if the user is trying to access resource he is not permitted to.  
+In that case you would want a to group those authorization exception together and deal with them in a generic single location.  
+Some of those generic exceptions dealing can not be 100% dealt in a single location, maybe they contain generic section that applies to all those exceptions, and some specific part that needs to be addressed in the specific location where the exception happened.  
+In that case you can use the catch and rethrow technique to catch it in the specific place, create the specific logic and then rethrow the rest to the generic location where the exception should now have a similar treatment.
+
+#### Exception groups usually mean Custom error classes
+
+If you have a group of exceptions it is often also recommended to create custom error classes that represents your different group properly.  
+Those custom error classes can be tailored to your needs, and the need of the specific group that this exception represents.
+
+In the following code example we are creating different groups of exceptions:
+
+```typescript
+import type { Request } from "express";
+
+export class AcademeezError extends Error {
+  constructor(message: string, public status: number, public request: Request) {
+    super(message);
+    this.name = 'AcademeezError';
+
+    // Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
+export class AuthorizationError extends AcademeezError {
+  constructor(request: Request) {
+    super("You are not authorized to view this", 403, request);
+    this.name = 'AuthorizationError';
+  }
+}
+
+export class AutheticationError extends AcademeezError {
+  constructor(message: string, request: Request) {
+    super("You are not authenticated to view this", 401, request);
+    this.name = 'AutheticationError';
+  }
+}
+
+```
+
+We are creating a parent error class named `AcademeezError` that represents the parent of all the error custom class groups that we are going to create.  
+After that we are creating 2 custom error classes that represents two group of exceptions that are repeating in our app `AuthorizationError` that set the status to 403 and `AutheticationError` that set the status to 401.
+
+### 2. Common logic for certain/all exceptions
+
+Ask yourself when this group of exception is happening, is there a common action that i want to be performed for all those exceptions in the group?
+
+For example I might decide: on all exceptions i want to log them to my logging solution, or for all authorization exception I want to count the number of that exception for that user (is that user trying to access unauthorized resources often?).  
+
+Depending on the framework you are using, you will often get help from the framework regarding that common logic. For example `express` had [Error handlers](https://expressjs.com/en/guide/error-handling.html) to help you deal with common logic when a certain exception is happening.
+Let's see an example of adding a common logic for a group of exceptions in express by using the error middleware
+
+#### Express Error Middleware
+
+In express we can create common logic for exceptions using **Error Middlewares**.  
+Attaching an error middleware is simply taking the Express application and attach a middleware using `use`, only this middleware gets 4 arguments instead of 3, the first argument is the error that happened.
+
+```typescript
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  // place you error middleware common logic here.
+})
+```
+
+Here is an example of express app where we attach an error middleware to log our exceptions:
+
+```typescript
+import createApplication, {type Request, type Response, type NextFunction} from 'express';
+
+const app = createApplication();
+
+app.get('/', (req, res, next) => {
+  res.send('hello pm2');
+})
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  // some common logic for all exceptions to log the exception
+  console.log('we are now reporting the error to out logging server')
+  next(err)
+})
+
+app.listen(3000, () => {
+  console.log('listening on port 3000')
+})
+
+```
+
+when the error middleware is running we can either return the response, or pass it to the next error middleware.
+
+We also might have multiple error middlewares where each one might deal with certain group of exceptions, and pass the rest to the next error middleware.
+
+```typescript
+import createApplication, {type Request, type Response, type NextFunction} from 'express';
+
+const app = createApplication();
+
+app.get('/', (req, res, next) => {
+  res.send('hello pm2');
+})
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {  
+  if (err instanceof AuthorizationError) {
+    // console.log('save user info and resource to db to maybe suspend the user')
+    // ... do common logic related to authorization error
+    // return response
+    return res.status(403).send('you are not authorized to view this')
+  } else {
+    next(err)
+  }
+})
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  // some common logic for all exceptions to log the exception
+  console.log('we are now reporting the error to out logging server')
+  next(err)
+});
+
+
+
+app.listen(3000, () => {
+  console.log('listening on port 3000')
+})
+```
+
+In the following example we have a specific error middleware that works together with our custom errors to check if we have an authorization error, and create the common logic for the exception, or move the exception to the other error middlewares.  
+Notice that the order of the error middlewares matter, and they will run by the order they are organized.
+
+### 3. Be specific
+
+I often see developers just wrapping a big block of code that can fail in many places for different reasons, and they simply wrap that code in one big `try..catch` block. While they are doing that they lose the ability to know what exactly went wrong, and what they should do about it.  
+You have to be specific regarding your exceptions, usually if you have a very large code block wrapped in a single try and catch it's a bad practice, you should try to be more specific and wrap only the code that can fail in a specific way in a specific `try..catch` block.
+
+### 4. log log log
+
+The next recommendation regarding dealing with exceptions is logging your exceptions, and I don't mean here using `console.log` but using a more advanced solution like a logging server.  
+Cloud providers today will give you a logging solution that you can use to log your exceptions, and you can use that logging solution to search for exceptions, and to create alerts when a certain exception is happening too often.  
+There are also logging libraries like [winston](https://github.com/winstonjs/winston) that can connect to your logging solution making the process of logging to your logging server a breeze.  
+I do not recommend using `console.log` for your logging solution, it might be ok on development but on production you should use a more advanced logging solution. In fact I usually add a lint rule of [no console.log](https://eslint.org/docs/latest/rules/no-console).
+
+In the following example we will try to use `winston` to log our exceptions.  
+Install winston by running:
+
+```bash 
+npm i winston
+```
+
+When using `winston` we can attach `transports` which are different strategies we can use for logging.
+
+```typescript title="logger.ts"
+
+import { createLogger, transports } from 'winston';
+
+export const logger = createLogger({
+  transports: [
+      // new transports.Console()
+    ...(process.env['NODE_ENV'] === 'development' ? [new transports.Console()] : []),
+    new transports.File({ filename: 'error.log', level: 'error' }),
+  ]
+})
+```
+
+In this example we are creating a logger that will log to the console in development and to a file in production.
+
+Now i can use this logger in my error middlewares that we created before:
+
+```typescript
+import { logger } from './logger';
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  // some common logic for all exceptions to log the exception
+  logger.error(err.message);
+  next(err)
+});
+```
+
+#### PM2 and logging
+
+It's recommended to use a process manager like `pm2` to run your node process, and `pm2` can help you with logging your exceptions.
+In the Express docs they recommend to not run your application using `node` but to use a process manager like `pm2` to run your application.
+Few advantages of using `pm2` are:
+- restart the server when it crashes
+- run your app in a cluster mode where multiple instances of your app are running
+- monitoring your process
+We can take advantage of process-managers like `pm2` to help us with logging when the process is crashing:
+
+Install pm2 by running:
+
+```bash
+npm i pm2
+```
+
+We will run `pm2` using a simple launch script:
+
+```typescript
+import pm2 from 'pm2';
+
+pm2.connect(function(err) {
+  if (err) {
+    console.error(err)
+    process.exit(2)
+  }
+
+  pm2.start({
+    script    : 'error-middleware.js',
+    name      : 'error-middleware'
+  }, function(err, apps) {
+    if (err) {
+      console.error(err)
+      return pm2.disconnect()
+    }
+
+    pm2.launchBus(function(err, bus) {
+      bus.on('process:exception', function(packet: any) {
+        console.log('process:exception', packet.data)
+      });
+    });
+  })
+})
+
+```
+
+In this example `pm2` will run the file `error-middleware.js` and will log the exceptions that are happening in the process.
+
+You can also use the `uncaughtException` event to log the exception to your logging solution and after logging call `process.exit`.
+
+The most important thing to remember in this example is to log your exception, other use process manager and log when your process is crashing or use the `uncaughtException` event to log the exception and exit the process.
+
+## Summary
+
+hope this lesson gave you some insights regarding how to deal with exception.
+Remember that your node process will crash on uncuaght exception (even async exceptions).
+We usually run our node application using process manager that will restart the server when it crashes.
+Express will help you with sync exceptions, and on version 5 it will help you with rejected promises, but it won't help you with `EventEmitter` or `error-first-callback` or promise rejection of version lower than 5.
+If you want a good protection against async exceptions in express, feel free to use academeez [express-errors package](https://github.com/ywarezk/express-errors).  
+Try to group you exceptions when possible and create an express error middleware to deal with common logic in those exception groups.  
+Remember to log your exceptions, log your process state, and use a dedicated log server (the cloud providers can give you a good solution).
+
+
+
+

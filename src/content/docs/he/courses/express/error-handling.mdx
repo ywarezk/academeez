@@ -1,0 +1,923 @@
+---
+title: טיפול בשגיאות ב-Node.js ו-Express
+description: המלצות איך לטפל בשגיאות ב - NodeJS וב - Express
+publishDate: 2023-04-27
+authors:
+  - yariv-katz
+---
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/jYSyTiBWgW8?si=KgLojdUwYf9-O1He"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+בשיעור זה נבין איך `Node` מטפל בשגיאות בקוד שלכם.  
+נתמקד בשגיאות סינכרוניות ואסינכרוניות.  
+אנחנו נלמד איך אנחנו מטפלים בשגיאות נכון ב - `Express`.
+
+## חזרה על Error, throw, try..catch
+
+לפני שנתחיל נעשה חזרה זריזה על הבסיס בנושא השגיאות ב - `Node`.
+
+### Error class
+
+class ה - `Error` מתארת שגיאה עם מאפיינים כמו הודעה, תיאור, קוד שגיאה, מעקב הקוד, וכו'.
+
+```js
+const myError = new Error('hello error')
+```
+
+### throw
+
+ישנו הבדל בין `Error` לבין `exception`, `Error` היא תיאור של משהו שהשתבש, ו`exception` היא שגיאה שקורה כרגע וצריך להתמודד איתה.  
+אנחנו משתמשים ב - `throw` ומעבירים לו בדרך כלל instance של `Error` כדי לדווח על שגיאה.
+
+```js
+throw new Error('hello exception')
+```
+
+### try..catch
+
+דרך אחת שבאמצעותה אנחנו יכולים להתמודד עם שגיאות היא באמצעות `try..catch`.
+
+```js
+try {
+  // code that can have errors in it
+} catch (err) {
+  // ... do something with the error
+}
+```
+
+זה יעבוד בשגיאות סינכרוניות (למעט `try..catch` בפונקציה אסינכרונית).  
+בואו נבחן שגיאות בקוד אסינכרוני.
+
+## שגיאות סינכרוניות ואסינכרוניות
+
+בשיעור זה נחלק את השגיאות שאנחנו מתמודדים איתן ל - 2 קבוצות:
+
+- **שגיאות סינכרוניות** - שגיאות שקורות כאשר אנחנו מריצים את הקוד באופן סינכרוני.  
+  לדוגמה:
+
+```js
+const a = { hello: { world: 'hello world' } }
+a.foo.bar
+```
+
+בדוגמא זו אנחנו מנסים לגשת למאפיין שאינו קיים ב - `a`, ונקבל:
+
+`Uncaught TypeError: Cannot read properties of undefined (reading 'bar')`
+
+את אותה השגיאה ניתן לתפוס באמצעות `try..catch`.
+
+- **שגיאות אסינכרוניות** - שגיאות שקורות כאשר אנחנו מבצעים משהו באופן אסינכרוני והמשהו הזה נכשל.  
+  בקוד הבא אנחנו מנסים לקרוא לקובץ שאינו קיים
+
+  ```js
+  import { readFile } from 'fs/promises'
+  readFile('non-existent-file.txt')
+  ```
+### סוגי שגיאות אסינכרוניות
+
+נכון להיות ישנם 3 סוגי שגיאות אסינכרוניות שמובנים ב - `Node`.
+
+#### Promise
+
+Promise יכול להיכשל ולגרום לשגיאה, כמו בדוגמא שלקחנו לקרוא לקובץ.  
+נבדוק דוגמאות שונות שבהן Promise זורק שגיאה.
+
+1. Promise יכול לזרוק שגיאה על ידי קריאה ל - `reject` בבנאי ה - Promise.
+
+```js
+// throw an error in the promise constructor
+const myHelloPromise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    // resolve('hello listeners');
+    reject(new Error('something went wrong'));
+  }, 1000)
+})
+```
+
+2. Promise יכול להיכשל על ידי קריאה ל - `Promise.reject`
+
+```js
+Promise.reject(new Error('something went wrong'));
+```
+
+3. ניתן להשתמש ב - `throw` בבלוק `then` כדי לקבל Promise שנכשל
+
+```js
+myHelloPromise.then(() => {
+	throw new Error('something happened');
+})
+```
+
+4. ניתן להשתמש ב - `throw` בבלוק `catch` של ה - Promise
+
+```js
+myHelloPromise.catch(() => {
+	throw new Error('something happened');
+})
+```
+
+5 . ניתן להשתמש ב - `try..catch` בפונקציה אסינכרונית כדי לתפוס Promise שנכשל.
+
+```js
+/**
+ * @returns {Promise<string>}
+ */
+async function myPromiseFunction() {
+	try {
+		const helloMsg = await myHelloPromise;	
+	} catch(err) {
+		console.log(err);
+	}
+}
+```
+
+6. ניתן לתפוס שגיאה ב Promise באמצעות ארגומנט השני בפונקציה `then` שמקבל פונקציה שרצה כשה Promise נכשל.
+
+```js
+myHelloPromise.then(() => {
+	//this can deal with success
+}, (err) => {
+	// this deal with err
+	if (err.code === 'ENOENT') {
+		console.log('file not found');
+	} else {
+		throw err;
+	}
+})
+```
+
+#### Error first callback
+
+Error first callback הוא קונבנציה ב - `Node.js` שמאפשרת לנו להעביר פונקציה לפונקציות אסינכרוניות.  
+בדוגמא הבאה אנחנו קוראים לפונקציה שקוראת לקובץ ומעבירים לה callback שמקבל שגיאה כארגומנט ראשון.
+
+```js
+import { readFile } from 'fs'
+
+readFile('non-existent-file.txt', (err, data) => {
+  console.log(err)
+})
+```
+
+Error first callback היא קונבנציה ב - `Node` שמאפשרת לנו להעביר callback שיקרא כאשר האירוע אסינכרוני קורה.  
+ב - callback שאנחנו מעבירים הארגומנט הראשון הוא שגיאה.
+
+נבחן דוגמאות שונות ב - Error first callback.  
+בדוגמא הבאה אנחנו קוראים לקובץ שאינו קיים ומתמודדים עם השגיאה.
+
+```js
+import { readFile } from 'fs';
+
+readFile('does-not-exist.txt', (err, data) => {
+  if(err) {
+    console.log('deal with the error here')
+  } else {
+    console.log(`the data is: ${data.toString()}`);
+  }
+});
+```
+
+דוגמא נוספת היא כאשר עלינו לממש פונקציה אסינכרונית שתקרא ל - callback עם שגיאה.
+
+```js
+function sayHello(cb) {
+  setTimeout(() => {
+    // cb(null, 'hello listeners')
+    cb(new Error('something happened'))
+  }, 1000)
+}
+```
+
+בדוגמא זו אנחנו מקבלים callback ואם קרה שגיאה אנחנו קוראים ל - callback עם השגיאה, אם לא אנחנו קוראים ל - callback עם הנתונים שאנחנו רוצים להעביר.
+
+ישנם מקרים בהם אין באפשרותנו לטפל בשגיאה ב - callback, ואנחנו רוצים להעביר את השגיאה לרמה הבאה.  
+לדוגמא אם נכשלנו לקרוא לקובץ ואנחנו רוצים להעביר את השגיאה לרמה הבאה.  
+במקרה כזה עלינו ליצור פונקציה שתקבל callback מסוג error first callback ותעביר את השגיאה לרמה הבאה.
+
+```js
+function myReadFile(path, cb) {
+  readFile(path, (err, data) => {
+    cb(err, data)
+  });
+}
+```
+
+#### EventEmitter
+
+נדבר על ה class יצירת events שנקרא `EventEmitter`, ואיך אנחנו מתמודדים עם שגיאות בו.  
+באמעות `EventEmitter` אנחנו יכולים ליצור אירועים אסינכרוניים מותאמים אישית.  
+כאשר יש instance של `EventEmitter` אנחנו יכולים לזרוק אירוע שגיאה על ידי קריאה ל `emit('error', new Error())`.
+
+דוגמא פשוטה של `EventEmitter` שזורק אירוע שגיאה.
+
+```js
+import { EventEmitter } from 'events'
+const emitter = new EventEmitter()
+emitter.emit('error', new Error('whoops!'))
+```
+
+נבחן דוגמא נוספת של `EventEmitter` שזורק אירוע של `message` אחרי שנייה ובו הוא שולח הודעת `hello world`.
+
+```js
+import { EventEmitter } from 'events';
+const myEmitter = new EventEmitter();
+
+myEmitter.on('message', (msg) => {
+	console.log(msg);
+});
+
+setTimeout(() => {
+  myEmitter.emit('message', 'hello world')
+}, 1000)
+```
+
+לשליחת שגיאה על ידי `EventEmitter` נשתמש באירוע `error`, שם שם האירוע הוא `error` והארגומנט הנוסף הוא תיאור השגיאה על ידי instance של `Error`.  
+דוגמא נוספת שבה שולחים אירוע שגיאה אחרי שנייה.
+
+```js
+import { EventEmitter } from 'events';
+const myEmitter = new EventEmitter();
+
+myEmitter.on('error', (err) => {
+	console.log(err);
+});
+
+setTimeout(() => {
+	myEmitter.emit('error', new Error('something went wrong'))
+}, 1000)
+```
+
+ניתן לחבר לאירוע יותר ממאזין אחד, כך גם לאירוע `error`.  
+בדוגמא הבאה יש לנו 2 מאזינים לאירוע `error`, כל אחד מתמודד עם סוג שגיאה אחר.
+
+```js
+import { EventEmitter } from 'events';
+
+const myEmitter = new EventEmitter();
+
+myEmitter.on('error', (err) => {
+  if (err.code === 'GENERAL_ERROR') {
+    // deal with it here
+  }
+})
+
+setTimeout(() => {
+  myEmitter.emit('error', new Error('something happened'))
+}, 1000)
+
+myEmitter.prependOnceListener('error', (err) => {
+  if (err.code === 'something') {
+    // deal with it here
+  }
+})
+
+```
+
+## מה יעשה ה - Node.js process על שגיאה שלא נתפסה
+
+כאשר יש שגיאה שלא נתפסה ה - `Node` process יסיים ויחזיר קוד כישלון 1.  
+ה - `Node` process יסיים עם קוד השגיאה:
+
+- על שגיאה סינכרונית שלא נתפסה
+- על `Promise` שנכשל והכישלון לא נתפס
+- על `EventEmitter` שזרק אירוע שגיאה והכישלון לא נתפס
+
+ה - `Node` process לא יסיים על שגיאה שלא נתפסה ב - `error-first-callback`.
+
+זכרו שה - `Node` process הוא instance של `EventEmitter` והוא יזרוק אירועים לפני שהוא סיים, נבחן 2 אירועים חשובים ב - `Node` שקשורים לשגיאות שלא נתפסו:
+- `uncatchExceptionMonitor`
+- `uncaughtException`
+
+נבחן על ידי דוגמא מה יקרה כאשר יש שגיאה שלא נתפסה.  
+בדרך כלל כאשר עובדים עם `Node.js` יוצרים פעמים רבות webserver כלומר ה - node process רץ תמיד ומחכה ל - request.  
+ניתן לדמות script שרץ תמיד (בדומה למה שהשרת שלנו יעשה) על ידי יצירת `setInterval` שיריץ כל שניה (נדמה שהשרת שלנו מקבל request כל שניה).
+
+```js
+setInterval(() => {
+  console.log('getting a new request');
+}, 1000);
+```
+
+נדמה שה ״שרת״ שלנו מקבל "request" אחרי 2 שניות שגורמת לשגיאה שלא נתפסת:
+
+```js
+setInterval(() => {
+  console.log('getting a new request');
+}, 1000);
+
+setTimeout(() => {
+  console.log('request that triggers an exception which we are not catching');
+  throw new Error('something went wrong');  
+}, 2000)
+```
+
+שימו לב שאם נריץ את הסקריפט הזה, אחרי 2 שניות ה - webserver שלנו יקרוס ולא יוכל להגיב ל - request.  
+ה - webserver יכול לקרוס, ובמקרה כזה נרצה לדווח על השגיאה ולאתחל את ה - server כדי שנוכל להמשיך להגיב ל - request.  
+ב docs של express הם ממליצים להריץ את ה - webserver בסביבת production עם process manager כמו `pm2` שיתחיל מחדש את ה - server כאשר הוא קורס [ראו סעיף זה ב - Express docs](https://expressjs.com/en/advanced/best-practice-performance.html#using-pm2).  
+
+אותה הקריסה של ה - server תקרה גם כאשר אנחנו משתמשים ב - `Promise` ואנחנו לא מתפסים את ה - reject.
+לדוגמא:
+
+```js
+setInterval(() => {
+  console.log('getting a new request');
+}, 1000);
+
+setTimeout(() => {
+  console.log('request that triggers an exception which we are not catching');
+  Promise.reject(new Error('something went wrong'));
+}, 2000)
+```
+
+אותה קריסה תקרה גם כאשר אנחנו משתמשים ב - `EventEmitter` ואנחנו לא מתפסים את ה - error event.
+
+```js
+import { EventEmitter } from 'events';
+const myEmitter = new EventEmitter();
+
+setInterval(() => {
+  console.log('getting a new request');
+}, 1000);
+
+setTimeout(() => {
+  console.log('request that triggers an exception which we are not catching');
+  myEmitter.emit('error', new Error('something went wrong'));
+}, 2000)
+```
+
+אירוע ה - error יגרום לקריסה של ה - server.  
+היוצא מהכלל פה זה כאשר אנחנו משתמשים ב - `error-first-callback` ואנחנו לא מתפסים את ה - error אז קריסה לא תקרה לדוגמא:
+
+```js
+
+import { readFile } from 'fs';
+
+setInterval(() => {
+  console.log('getting a new request');
+}, 1000);
+
+setTimeout(() => {
+  console.log('request that triggers an exception which we are not catching');
+  readFile('something-that-does-exist.txt', (err, data) => {
+    console.log(err);
+  })
+}, 2000)
+```
+
+למרות שהקובץ ב - `readFile` לא קיים, ה - server לא יקרוס.
+
+## איך express מתמודדת עם שגיאות שלא נתפסו
+
+כדי לבדוק איך express מתמודדת עם שגיאות נצור webserver פשוט ב express.  
+נצטרך להתקין את express ולכן נריץ בטרמינל:
+
+```bash
+npm init --yes
+npm i express
+```
+
+בזמן כתיבת השיעור הגרסה של express היא `4.18.2`.  
+נצור webserver פשוט ונבדוק איך express מתמודדת עם שגיאות שלא נתפסו.  
+ניצור נתיב `/hello` שמחזיר ברכה, וניצור נתיב `/generate-error` שיזרוק שגיאה.
+
+```js
+import express from 'express';
+
+const app = express();
+
+app.get('/hello', (_req, res) => {
+  res.send('hello world');
+});
+
+app.get('/generate-error', (_req, res) => {
+  throw new Error('some error');
+});
+
+app.listen(3000, () => {
+  console.log('we are listening on port 3000');
+});
+```
+
+בדוגמא זו אנחנו מנסים לראות איך express מתמודדת עם שגיאות סינכרוניות.  
+אם נפעיל את האפליקציה נראה ש express יש לו התנהגות ברירת מחדל לגבי שגיאות סינכרוניות. Express לא יקרוס, אלא יעביר אותנו לעמוד 500 שבו מוצגת ה stacktrace כאשר אנחנו ב - development.  
+מומלץ להגדיר את המשתנה סביבה `NODE_ENV` ל - `production` בסביבת production כך שה stacktrace לא יוצג.
+
+עכשיו נבדוק איך express מתמודדת עם שגיאות אסינכרוניות.  
+נתחיל בלבדוק איך express מתמודדת עם `Promise` שנכשל.
+
+נשנה את השגיאה ב - `/generate-error` להיות `Promise` שנכשל.
+
+```js
+...
+
+app.get('/generate-error', (_req, res) => {
+  Promise.reject(new Error('some error'));
+});
+
+...
+```
+
+בדוגמא זו נראה ש express לא יכולה להתמודד עם השגיאה וה - server יקרוס.  
+לגבי promise שנכשל ישנה התנהגות שונה ב express גרסה 5, והיא לא תקרוס את ה - server.  
+ב express גרסה 5 הפרומיס שנכשל יתפס ויעביר אותנו לעמוד 500 עם ה stacktrace.
+
+ננסה עכשיו עם `EventEmitter` מה יעשה express כאשר יש לנו אירוע שגיאה ב - event.
+
+```js
+app.get('/generate-error', (_req, res) => {
+  simpleEventEmitter.emit('error', new Error('something went wrong'));
+});
+```
+
+בדוגמא זו express יתפוס את השגיאה ויעביר אותנו לעמוד 500 עם ה stacktrace.
+
+```js
+app.get('/generate-error', (_req, res) => {
+  setTimeout(() => {
+    simpleEventEmitter.emit('error', new Error('something went wrong'));  
+  }, 1000)
+});
+```
+
+בדוגמא זו express לא יכולה להתמודד עם השגיאה וה - server יקרוס.  
+זה הכל תלוי אם השגיאה חלק מקוד סינכרוני או אסינכרוני, אם היא חלק מקוד סינכרוני אז ה - emit ירוץ באופן סינכרוני ו express יכולה לתפוס את השגיאה, אם היא חלק מקוד אסינכרוני אז ה - emit ירוץ באופן אסינכרוני וה - server יקרוס.
+
+נבדוק האם משהו מיוחד קורה כאשר אנחנו משתמשים ב - `error-first-callback` ב express.
+
+```js
+import { readFile } from 'fs';
+app.get('/generate-error', (_req, res, next) => {
+  readFile('non-existing-file', (err, data) => {
+    if (err) {
+      next(err)
+    } else {
+      res.send('hello world');
+    }
+  })
+});
+```
+
+express לא יעזור לכם במקרה זה ונהוג להעביר את השגיא הל - `next(err)` ורק במקרה זה express תדע על השגיאה ותעביר אתכם ל - middleware של שגיאות.
+
+## חבילה שתעזור עם תפיסת שגיאות אסינכרוניות ב express
+
+כדי לעזור לכם לתפוס את השגיאות האסינכרוניות ב express יצרנו middleware שיתפוס את כל השגיאות האסינכרוניות ויעביר אותן ל - error handler.  
+ב - middleware זה אנחנו משתמשים ב - [Zone.js](https://github.com/angular/zone.js) כדי ליצור זון לכל בקשה, כך שהבקשה תהיה בהקשר ביצוע שיאפשר לנו לדעת אם ישנם שגיאות אסינכרוניות ולהעביר אותן ל express error handler.
+
+כדי להתקין את ה - middleware נריץ:
+
+```bash
+npm i az-express-errors
+```
+
+נתחיל פרוייקט Express חדש עם TypeScript ונשתמש ב - middleware ונראה איך הוא עוזר לנו לתפוס שגיאות אסינכרוניות.
+
+נתקין את TypeScript ואת `@types/express`
+
+```bash
+npm i -D typescript @types/express
+```
+
+ניצור קובץ `tsconfig.json` עם הפקודה הבאה:
+
+```bash
+npx tsc --init
+```
+
+נריץ את הקומפיילר של TypeScript במצב צפיה כך שנוכל לראות את השינויים בקוד.
+
+```bash
+npx tsc -w
+```
+
+ניצור קובץ `az-error-middleware.ts` וניצור webserver עם express ונתקין את החבילה `az-express-errors`.
+
+```ts
+import createApplication from 'express';
+import azErrors from 'az-express-errors';
+
+const app = createApplication();
+
+app.use(azErrors());
+
+app.get('/', (req, res) => {
+})
+
+app.listen(3000, () => {
+  console.log('server started on port 3000');
+})
+```
+
+אחרי שמתקנים את החבילה `az-express-errors` נראה מה יש לנו, נתמקד ב - route handler היחיד שיש לנו וננסה ליצור שגיאות אסינכרוניות בו:
+
+```ts
+app.get('/', (req, res) => {
+  Promise.reject(new Error('something went wrong'));
+})
+```
+
+Promise שנכשל יגרום לקריסת ה - server, אבל עם ה - middleware שיצרנו נראה שהשגיאה תתפס ותעביר אותנו ל - error handler של express.
+אותה התוצאה נקבל גם אם נשתמש ב - `async-await` ב - route handler.
+
+נבדוק עכשיו איך ה - middleware מתמודד עם `EventEmitter` שזורק אירוע שגיאה.
+
+```ts
+import { EventEmitter } from 'events';
+const myErrorEmitter = new EventEmitter();
+app.get('/', (req, res) => {
+  setTimeout(() => {
+    myErrorEmitter.emit('error', new Error('something went wrong'));
+  }, 1000)
+})
+```
+
+שגיאה זו ללא ה - middleware של ה - `az-express-errors` תגרום לקריסת ה - server, אבל עם ה - middleware נראה שהשגיאה תתפס ותעביר אותנו ל - error handler של express.
+
+במקרה של `error-first-callback` ניתן לזרוק את השגיאה ולראות איך ה - middleware מתמודד עם זה.
+
+```ts
+import { readFile } from 'fs';
+app.get('/', (req, res) => {
+  readFile('non-existing-file', (err, data) => {
+    (req as any).azZone.runGuarded(() => {
+      throw err;
+    })
+  })
+})
+```
+
+ה - `az-express-errors` שם בתוך ה - request את ה - zone שנוצר עבור הבקשה וכך יכול לתפוס את השגיאה ולהעביר אותה ל - error handler של express.
+
+אז במידה וצריכים עזרה עם שגיאות אסינכרוניות ב express ניתן להשתמש בחבילה `az-express-errors` שתעזור לנו לתפוס את השגיאות האסינכרוניות ב express.
+
+## events שה - process שולח עבור שגיאות
+
+ה - node process שאחראי על הרצת הקוד שלכם הוא instance של `EventEmitter` והוא יזרוק כמה אירועים כאשר יש שגיאה שלא נתפסה.  
+ניתן לגשת ל process על ידי הגישה לאובייקט הגלובלי `process`.  
+נבחן שני אירועים שקשורים לשגיאות שלא נתפסו: `uncaughtException` ו - `uncaughtExceptionMonitor`.
+
+```js
+setInterval(() => {
+	console.log("I'm running");
+}, 1000);
+
+setTimeout(() => {
+	throw new Error('something happened');
+}, 2000);
+
+process.on('uncaughtExceptionMonitor', function(err) {
+  console.log('this will be called before uncaughtException event')
+  console.log('it wont prevent the node process from crashing');
+  console.log('and we use this event to log the error, create a log file with the error ect.');
+});
+
+process.on('uncaughtException', function() {
+	console.log('uncaughtException');
+	if (err.code === '...') {
+		process.exit(100)
+	}
+})
+```
+
+החלק הראשון הוא לדמות webserver ומקבל request אחרי 2 שניות שגורמת לשגיאה שלא נתפסה.  
+אנחנו מחברים מאזין ל - event `uncaughtExceptionMonitor` שיקרא לפני ה - event `uncaughtException`, האירוע הזה משמש ל log של השגיאה או יצירת קובץ log המתאר את השגיאה.  
+ה - event השני הוא `uncaughtException` שיקרא כאשר יש שגיאה שלא נתפסה, בדרך כלל כאשר יש שגיאה שלא נתפסה ה - process יקרוס ויחזיר קוד כישלון 1, אם אנחנו מחברים ל - event `uncaughtException` אנחנו יכולים לעשות פעולות נוספות כמו לבדוק את הקוד של השגיאה ולצאת מה process עם קוד כישלון אחר. במידה ואנחנו מחברים ל - event `uncaughtException` נצטרך לצאת מה process באופן ידני עם `process.exit` היות ולאחר הצמדת מאזין ל - event `uncaughtException` ה - process לא יקרוס באופן אוטומטי.  
+לא מומלץ להמשיך את ה - process לאחר שיש שגיאה שלא נתפסה, כדאי להפסיק את ה - process ולהתחיל אותו מחדש עם process manager וחשוב לתעד ב - log את השגיאה שהתרחשה כדי שנוכל לפתור את הבעיה.
+לא לנצל את ה - event `uncaughtException` כדי למנוע מה - process לקרוס, להשתמש בו לניקוי, יציאה נכונה וכדומה.
+
+## שגיאות שלא נתפסות ב - express
+
+כמו שראינו Express עוזר לנו לתפוס את השגיאות הסינכרוניות, אבל בשגיאות האסינכרוניות Express לא ממש עוזר.  
+בגירסא 5 של Express הוא כן יעזור בתפיסת promise שנכשל אבל לא ב - `EventEmitter` או ב - `error-first-callback`.  
+במידה ויש שגיאה שלא נתפסה ב - express ו - express לא הצליח לתפוס אותה ולהעביר ל - error handler, אז השגיאה תעלה לטיפול בשגיאה שלא נתפסה על ידי ה node process כמו שכבר למדנו (ברוב המקרים קריסה של ה node process עם קוד יציאה -1)
+
+## המסע של Exception
+
+כאשר נזרקת שגיאה, במידה ואין שום תפיסה של השגיאה, השגיאה תעלה במעלה ה - stacktracke לאבא שקרא לפונקציה שזרקה את השגיאה, במידה והאבא לא תופס את השגיאה השגיאה תעלה לאבא שלו וכך הלאה עד שהשגיאה תגיע ל - process.
+במידה והשגיאה תגיע ל - process, ה- process יזרוק את ה - event `uncaughtException` ואם יש מאזין ל - event זה יכול לעשות משהו עם השגיאה, אם אין מאזין ל - event זה, ה - process יקרוס ויחזיר קוד כישלון 1.
+
+ניתן גם לתפוס את השגיאה בנקודת הכישלון או אחד האבות שלו ב stacktrace לטפל בשגיאה או לזרוק אותה שנית לאבא הבא שיתפוס אותה ויוכל להתמודד איתה.
+
+## נקודות לחשיבה בטיפול בשגיאות
+
+צריך לשאוף לתפוס את כל השגיאות שיכולות לקרות בקוד שלנו ולהתמודד איתן בצורה נכונה.  
+במקרה הפשוט ישנו קוד שיכול להיכשל ועוטפים את אותו הקוד ב - `try-catch` (או המקבילה שלו בקוד האסינכרוני) ומתמודדים עם השגיאה בנקודת הכישלון.  
+אבל לא תמיד המצב הוא פשוט וניתן להתמודד עם השגיאה בנקודת הכישלון, לעתים צריך לתת לשגיאה לעלות לאחד האבות שיטפלו בה .  
+פעמים רבות יש טיפול גנרי וקבוע לשגיאות מסוג מסויים.  
+יש גם זמנים שצריך לטפל בשגיאה במספר מקומות, ואז צריך לתפוס את השגיאה לעשות את מה שאפשר ולזרוק אותה שוב לאחד האבות.
+
+### 1. טיפול בשגיאה בנקודת הכשלון
+
+דוגמא ב - express של טיפול בשגיאה כאשר היא קוראת:
+
+```js
+app.get('/', (req, res) => {
+
+  try {
+    // ... this code might have and exception
+    console.log('i can have an exception here')
+  } catch(err) {
+    // ... deal with the error when it happens
+  }
+})
+```
+
+### 2. לתת לשגיאה לעלות לאבא שיטפל בה
+
+דוגמא ב - express כאשר יש שגיאה אבל אי אפשר לטפל בה בנקודת הכשלון וצריך להעביר לאבא:
+
+```js
+// 2. let the parent handle the error
+async function queryTheDb(query: string): Promise<any> {
+  // ...
+  // runs the query in the db
+  // if there is an error, it will throw an exception
+}
+
+app.get('/', async (req, res) => {
+  try {
+    await queryTheDb('some ileagal query')
+  } catch(err) {
+    res.send('some error message')
+  }
+})
+```
+
+במידה וצריך ניתן לתת לשגיאה לבעבע עוד על ידי קריאה ל - `next(err)` ואז השגיאה תעבור לשרשרת הטיפול בשגיאות ב - express.
+
+### 3. תפיסת השגיאה וזריקתה מחדש
+
+דוגמא ב - express של תפיסת השגיאה וזריקתה מחדש:
+
+```js
+// 3. combine catching and rethrowing the error
+
+class QueryError extends Error {
+
+}
+
+app.get('/', async (req, res, next) => {
+  try {
+    await queryTheDb('some ileagal query')
+  } catch(err) {
+    const queryError = new QueryError('some error message');
+    next(queryError)
+  }
+})
+```
+
+בדוגמא זו אנחנו מתפסים את השגיאה ומזריקים אותה מחדש לשרשרת הטיפול בשגיאות ב - express.
+
+## המלצות לטיפול נכון בשגיאות
+
+ניתן פה מספר טיפים לטיפול נכון בשגיאות ב - NodeJS וב - express.
+
+### 1. קיבוץ שגיאות
+
+שגיאות דומות יכולות לצוף במקומות שונים בקוד שלכם.  
+לדוגמא, יתכן שיהיה לכם שגיאה בהרשאה שתצפה במקומות שונים בקוד שלכם אם המשתמש מנסה לגשת למשאב שאינו מורשה.  
+במקרים כאלה תרצו לקבץ את השגיאות האלו יחד ולהתמודד איתן במקום אחד.  
+בחלק מהשגיאות הגנריות האלה אי אפשר להתמודד במקום , יתכן וזה יהיה שילוב של טיפול בשגיאה במקום אחד גנרי, ובנוסף טיפול ספציפי במקום מסויים קרוב יותר לאיפה שהשגיאה קרתה.  
+במקרים כאלה ניתן לתפוס את השגיאה ולזרוק אותה שנית כדי להתמודד איתה במספר מקומות.
+
+#### קיבוץ שגיאות ילווה פעמים רבות ביצירת Custom Error Classes
+
+במידה ויש לכם קבוצות של שגיאות פעמים רבות אותן קבוצות ילוו גם ביצירת Custom Error Classes שיתאימו לקבוצה הספציפית של השגיאות.  
+אותם ה Custom Error Classes יכולות להיות מותאמות לצרכים שלכם ולצרכי הקבוצה הספציפית של השגיאות.
+
+בדוגמא הבאה אנחנו יוצרים custom error classes לקבוצות שגיאות שונות:
+
+```typescript
+import type { Request } from "express";
+
+export class AcademeezError extends Error {
+  constructor(message: string, public status: number, public request: Request) {
+    super(message);
+    this.name = 'AcademeezError';
+
+    // Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
+export class AuthorizationError extends AcademeezError {
+  constructor(request: Request) {
+    super("You are not authorized to view this", 403, request);
+    this.name = 'AuthorizationError';
+  }
+}
+
+export class AutheticationError extends AcademeezError {
+  constructor(message: string, request: Request) {
+    super("You are not authenticated to view this", 401, request);
+    this.name = 'AutheticationError';
+  }
+}
+
+```
+
+יצרנו אבא שממנו יורשים כל ה - custom error classes והאבא נקרא `AcademeezError`.  
+לאחר מכן אנחנו יוצרים 2 custom error classes שמייצגות 2 קבוצות שגיאות שחוזרות באפליקציה שלנו `AuthorizationError` שמגדירה את ה status ל - 403 ו `AutheticationError` שמגדירה את ה status ל - 401.
+
+### 2. לוגיקה משותפת לקבוצת שגיאות מסויימת/כל השגיאות
+
+תשאלו את עצמכם כאשר קבוצת השגיאות הזאת קוראת, האם יש פעולה שחוזרת על עצמה עבור השגיאות באותה הקבוצה?
+
+לדוגמא יתכן ותחליטו שעבור כל השגיאות אתם רוצים לבצע log של השגיאה לשרת ה logים שלכם, או שתחליטו שעבור כל השגיאות של הרשאה תרצו לספור את מספר השגיאות של הרשאה שקראו למשתמש הזה (האם המשתמש מנסה לגשת למשאבים שאינם מורשים לו פעמים רבות?).  
+
+בהתאם ל -framework שאתם משתמשים, פעמים רבות ה framework יעזור לכם בהקשר של יצירת לוגיקה משותפת לקבוצת שגיאות. לדוגמא ב - `express` יש [Error handlers](https://expressjs.com/en/guide/error-handling.html) שיעזרו לכם להתמודד עם לוגיקה משותפת לקבוצת שגיאות.
+בואו נראה איך מוסיפים לוגיקה משותפת לקבוצת שגיאות ב express באמצעות error middleware.
+
+#### Express Error Middleware
+
+ב - express ניתן ליצור לוגיקה משותפת לקבוצת שגיאות באמצעות **Error Middlewares**.  
+להוספת error middleware זה פשוט לקחת את ה express application ולהוסיף middleware באמצעות `use`, רק ש middleware זה מקבל 4 ארגומנטים במקום 3, הארגומנט הראשון הוא השגיאה שקרתה.
+
+```typescript
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  // place you error middleware common logic here.
+})
+```
+
+בדוגמא הבאה אנחנו מוסיפים error middleware שמטפל בשגיאות ומציג את השגיאה ב - log:
+
+```typescript
+import createApplication, {type Request, type Response, type NextFunction} from 'express';
+
+const app = createApplication();
+
+app.get('/', (req, res, next) => {
+  res.send('hello pm2');
+})
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  // some common logic for all exceptions to log the exception
+  console.log('we are now reporting the error to out logging server')
+  next(err)
+})
+
+app.listen(3000, () => {
+  console.log('listening on port 3000')
+})
+
+```
+
+כאשר ה - error middleware רץ ניתן להחזיר את התשובה, או להעביר את השגיאה ל - next error middleware.
+
+יתכן ויהיו לנו מספר error middlewares שכל אחד מהם יטפל בקבוצת שגיאות מסויימת, ויעביר את השגיאה ל - error middleware הבא.
+
+```typescript
+import createApplication, {type Request, type Response, type NextFunction} from 'express';
+
+const app = createApplication();
+
+app.get('/', (req, res, next) => {
+  res.send('hello pm2');
+})
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {  
+  if (err instanceof AuthorizationError) {
+    // console.log('save user info and resource to db to maybe suspend the user')
+    // ... do common logic related to authorization error
+    // return response
+    return res.status(403).send('you are not authorized to view this')
+  } else {
+    next(err)
+  }
+})
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  // some common logic for all exceptions to log the exception
+  console.log('we are now reporting the error to out logging server')
+  next(err)
+});
+
+
+
+app.listen(3000, () => {
+  console.log('listening on port 3000')
+})
+```
+
+בדוגמא הבאה יש לנו error middleware ספציפי שמטפל בשגיאות של הרשאה, ומטפל בהן באופן ספציפי, ואז יש לנו error middleware כללי שמטפל בכל השגיאות ומטפל בהן באופן כללי.  
+שימו לב שסדר ה - error middlewares חשוב, והם ירוצו בסדר שהם מופיעים.
+
+### 3. להיות ספציפיים
+
+פעמים רבות אני נתקל במפתחים שעוטפים קטע קוד גדול שיכול להיכשל במספר מקומות הם פשוט עוטפים את כל הקטע הזה ב - `try-catch` אחד גדול. הם מאבדים בכך את היכולת לזהות במדויק את השגיאה שקרתה, ומה לעשות בנוגע לה ולמעשה ״יורים לעצמם ברגל״.  
+צריך להיות ספציפיים בנוגע לטיפול בשגיאות, ולא להיות ״כלליים״ יותר מדי. בדרך כלל אם לקחת קטע קוד גדול ולעטוף אותו ב - `try-catch` אחד גדול זה לא טוב, צריך להיות ספציפיים בנוגע לשגיאות, ולעטוף רק את הקטע שיכול להיכשל בדרך מסויימת ב - `try-catch` ספציפי.
+
+### 4. log log log
+
+ההמלצה הבאה בנוגע לטיפול בשגיאות היא לדאוג ל log של השגיאות שלכם, ואני לא מתכוון כאן ל - `console.log` אלא לפתרון מתקדם יותר כמו logging server.  
+ספקי ענן הפופולריים היום יספקו לכם פתרון ל log של השגיאות שלכם, ותוכלו להשתמש בפתרון הזה לחיפוש של השגיאות שלכם, וליצור התראות כאשר שגיאה מסויימת קורה יותר מדי פעמים.  
+ישנם גם ספריות ל log כמו [winston](https://github.com/winstonjs/winston) שיכולות להתחבר לפתרון ה log שלכם ולהפוך את התהליך של log לפתרון פשוט.  
+אני לא ממליץ להשתמש ב - `console.log` כפתרון ל log של השגיאות שלכם, זה יכול להיות טוב בפיתוח אבל בסביבת production כדאי להשתמש בפתרון log מתקדם יותר. בעצם אני תמיד מוסיף כלל ב - lint שלי של [no console.log](https://eslint.org/docs/latest/rules/no-console).
+
+בדוגמא הבאה אנחנו משתמשים ב - winston כדי ל log את השגיאות שלנו:
+נתקין את winston על ידי הרצת:
+
+```bash 
+npm i winston
+```
+
+כאשר אנחנו משתמשים ב - winston אנחנו יכולים לצרוך `transports` שהם אסטרטגיות שונות שאנחנו יכולים להשתמש בהן ל log.
+
+```typescript title="logger.ts"
+
+import { createLogger, transports } from 'winston';
+
+export const logger = createLogger({
+  transports: [
+      // new transports.Console()
+    ...(process.env['NODE_ENV'] === 'development' ? [new transports.Console()] : []),
+    new transports.File({ filename: 'error.log', level: 'error' }),
+  ]
+})
+```
+
+בדוגמא הבאה אנחנו יוצרים logger שיכתוב ל console בסביבת פיתוח ולקובץ בסביבת production.
+
+עכשיו אני יכול להשתמש ב logger שיצרתי בתוך ה - error middleware שיצרנו לפני כן:
+
+```typescript
+import { logger } from './logger';
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  // some common logic for all exceptions to log the exception
+  logger.error(err.message);
+  next(err)
+});
+```
+
+#### PM2 ו - log של השגיאות
+
+מומלץ להשתמש ב - process manager כמו [pm2](https://pm2.keymetrics.io/) והוא יכול גם לעזור לכם ב - log כאשר ה - process קורס.
+ב - docs של express הם ממליצים לא להריץ את האפליקציה שלכם באמצעות `node` אלא להשתמש ב - process manager כמו `pm2` להרצת האפליקציה שלכם.
+מספר יתרונות של השימוש ב - `pm2` הם:
+- אתחול מחדש של ה - process כאשר הוא קורס
+- הרצת האפליקציה במצב cluster שבו יש כמה instances של האפליקציה שלכם
+- ניטור של ה - process
+ניתן להשתמש ב - pm2 כדי לקבל חיווי על הסיבה למה ה process קרס:
+
+נתקין את pm2 על ידי הרצת:
+
+```bash
+npm i pm2
+```
+
+נריץ את pm2 על ידי יצירת קובץ הרצה פשוט:
+
+```typescript
+import pm2 from 'pm2';
+
+pm2.connect(function(err) {
+  if (err) {
+    console.error(err)
+    process.exit(2)
+  }
+
+  pm2.start({
+    script    : 'error-middleware.js',
+    name      : 'error-middleware'
+  }, function(err, apps) {
+    if (err) {
+      console.error(err)
+      return pm2.disconnect()
+    }
+
+    pm2.launchBus(function(err, bus) {
+      bus.on('process:exception', function(packet: any) {
+        console.log('process:exception', packet.data)
+      });
+    });
+  })
+})
+
+```
+
+בדוגמא זו `pm2` יריץ את הקובץ `error-middleware.js` וירשום את השגיאות שקורות בתוך ה process.
+
+ניתן גם להשתמש ב - event `uncaughtException` כדי להריץ את ה - log של השגיאה שקרתה ולאחר מכן לצאת מה process.
+
+הדבר הכי חשוב לזכור בדוגמא הזאת היא לדווח log של השגיאה , ואת זה ניתן לעשות או באמצעות ה - process manager או באמצעות ה - event `uncaughtException` ולצאת מה process.
+
+## סיכום
+
+כולי תקווה ששיעור זה נתן לכם מספר תובנות בנוגע לטיפול בשגיאות.
+תזכרו ששגיאה שאתם לא תופסים עלולה לגרור קריסה של ה - process (אפילו השגיאות האסינכרוניות).
+בדרך כלל נרצה להריץ את האפליקציה שלנו באמצעות process manager שיכול להתמודד עם קריסה של ה - process ולאחר מכן להתחיל את ה - process מחדש.
+Express יעזור לכם בשגיאות הסינכרוניות והחל מגירסא 5 הוא יעזור לכם גם עם השגיאות של promise שנכשל, אבל לא עם `EventEmitter` או `error-first-callback` או promise rejection של גירסא נמוכה מ - 5.
+במידה ותרצו הגנה טובה נגד שגיאות אסינכרוניות ב Express , אתם יכולים להשתמש ב - [express-errors](https://github.com/ywarezk/express-errors).  
+נסו לקבץ את השגיאות שלכם ולטפל באופן גנרי במידת האפשר תוך שימוש ב - express error middleware.  
+זכרו לבצע log איכותי במידה וקיימים שגיאות שלא תפסתם, ניתן להשתמש בשרתי ה - log שמספקים לכם ספקי הענן.
