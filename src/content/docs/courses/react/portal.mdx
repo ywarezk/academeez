@@ -1,0 +1,20 @@
+---
+title: Portal
+description: When a component needs to place elements in a different section in the DOM
+publishDate: 2024-04-10
+preview: false
+---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+A component in React represents a logical unit in the UI.  
+In most cases, that logical unit is located in the same place in the DOM as the component itself.  
+There are cases where a component needs to render some ui in a different place in the DOM, and not where the component is located.  
+Perhaps it's best to demonstrate with a simple example:
+
+<div className="mt-5 not-content">
+<Sandpack 
+	client:load	
+	template="nextjs" 
+/>
+</div>

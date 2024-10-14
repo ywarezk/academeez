@@ -78,7 +78,15 @@ export default defineConfig({
     customCss: ['./src/tailwind.css']
   }), tailwind({
     applyBaseStyles: false
-  }), sitemap()],
+  }), sitemap({
+    i18n: {
+      defaultLocale: 'root',
+      locales: {
+        root: 'en-US',
+        he: 'he-IL'
+      }
+    }
+  })],
   prefetch: true,
   site: 'https://www.academeez.com',
   trailingSlash: 'never',
