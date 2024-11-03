@@ -1,0 +1,458 @@
+---
+title: Opt-Out Zone.js
+description: The implications of working with angular without Zone.js
+publishDate: 2023-02-27
+preview: false
+---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/R2wjayCaw30?si=H9j-H7IzSoSo6ezL"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+When I started working with Angular, I wasn't even aware of the different change detection strategies. 
+I wrote my angular app and stumbled on performance problems, when trying to solve the performance problems I stumbled on the `OnPush` change detection strategy. 
+When working with `OnPush` I started digging in to Zone.js and discovered that angular can work without zone.js in a manual CD (In this article CD refers to Change Detection) mode.
+You can set your entire tree of components to work without Zone.js or you can work in an "Hybrid" mode where some components are working without Zone.js and some are working with Zone.js (in `OnPush` or default).
+
+## Default and OnPush CD
+
+Up until now we learned about 2 CD strategies, the default and `OnPush`.
+Let's do a short recap of those 2 strategies:
+
+### Default CD
+
+To describe the default CD strategy in a sentence: When something happens, all components are marked as dirty, and binded template values are recalculated from root component and down the tree (certain dom elements that are connected to the binded values might get updated).
+
+### OnPush CD
+
+An instance of a component is represented by a `ComponentRef` that instance holds and instance of a class representing the view that is called `ViewRef`.
+The `ViewRef` has a dirty flag that represents if the component template binded values needs to be recalculated (and view might need to be updated).
+With the default all the dirty flag of all the components are marked as dirty when something happens, with `OnPush` that flag is marked as dirty only on certain conditions (and when those conditions happen it doesn't mean the dirty is marked only on one component):
+- Event like a button click will cause CD from the root component and down the component where the event happened. it will then go down until a child with `OnPush` is found (if all components are in `OnPush` it will be from the root component until the component that triggered the event).
+- input change - if the parent is going through CD and changing the input of the child, then even if the child is in `OnPush` change detection will be triggered.
+- `async` pipe - even if something should not trigger CD, but it is changing something that is connected in the template in an `async` pipe, it will trigger CD from top to the component with the `async` pipe.
+- calling `detectChanges()` or `markForCheck()` on the `ChangeDetectorRef` service. `markForCheck()` will mark as dirty from the root component to the current component, `detectChanges()` will go down the tree from the component that called it and down the tree until it stumbles a child with `OnPush` strategy.
+
+## Zoneless
+
+We actually have a 3rd change detection strategy, and that is going zoneless on certain parts of the component tree (or all your component tree).
+In this mode you have to manually trigger CD by calling `detectChanges()` either directly or by using some sort `Pipe` or `Directive` that calls `detectChanges` for you.  
+Another way you can trigger CD in zoneless mode is by using `ApplicationRef.tick()` that will trigger CD in the entire components in the tree of components.
+
+The result of a zoneless strategy is that the amount of times a component will be marked as dirty will be reduced, and the amount of times the template will be recalculated will be reduced as well.
+
+## recommendations
+
+We highly recommend not to use the default automatic CD strategy.
+I would start by setting all the components to the OnPush strategy (you can set angular cli to create new component in `OnPush`, and there is also a lint rule to enforce components are in `OnPush`).
+After that is out of the way and all your components are in the `OnPush` you can start playing with the zoneless strategy on part of your tree, extending that part according to performance bottlenecks you might encounter.
+
+## setting angular to work zoneless
+
+We are going to do the following:
+1. start a new angular application
+2. remove zone.js from the bundle
+3. tell angular to opt-out of zone.js
+
+<div class="[&>h3]:step steps mb-12 ml-4 border-l pl-8 [counter-reset:step]">
+### Generate a new angular application
+
+```bash
+npx @angular/cli new zoneless-tutorial
+```
+
+When asked we will choose not to add **Angular routing**.  
+And when asked which **styling format** we will choose **CSS**.  
+We are not going to focus on styling or routing in this lesson.  
+After generating out project is done you can open the project in your IDE.
+
+### Comment Zone.js
+
+Open the file `src/polyfills.ts` and comment the line that imports zone.js.
+
+```typescript title="src/polyfills.ts"
+// import 'zone.js';
+```
+
+### Opt-Out Zone.js
+
+In the entry point file `src/main.ts` you can call `bootstrapModule` with an options to set `ngZone` as noop.
+
+```typescript title="src/main.ts"
+platformBrowserDynamic().bootstrapModule(AppModule, {
+	ngZone: 'noop'
+})
+	.catch(err => console.error(err));
+```
+
+### Check that angular is not working with Zone.js
+
+Let's check that our angular app is now working without Zone.js.
+In the `app.component.ts` we will create a simple counter component that increments a counter by one every time a button is clicked:
+
+```typescript title="src/app/app.component.ts"
+import {Component} from '@angular/core';
+
+@Component({
+	selector: 'app-root',
+	template: `
+		<h1>Counter: {{counter}}</h1>
+		<button (click)="increment()">Increment</button>
+	`
+})
+export class AppComponent {
+	counter = 0;
+
+	increment() {
+		this.counter++;
+	}
+}
+```
+
+Launch the app with `ng serve` and you can click the button and see that the view is **not** updated with the new value of the counter.
+
+### Manually trigger CD
+
+If we actually want the view to be updated with the new counter value, we will have to manually trigger CD.
+
+```typescript title="src/app/app.component.ts"
+import {Component, ChangeDetectorRef} from '@angular/core';
+
+@Component({
+	selector: 'app-root',
+	template: `
+		<h1>Counter: {{counter}}</h1>
+		<button (click)="increment()">Increment</button>
+	`
+})
+export class AppComponent {
+	counter = 0;
+	
+	constructor(private _cd: ChangeDetectorRef) {}
+
+	increment() {
+		this.counter++;
+		this._cd.detectChanges();
+	}
+}
+```
+
+You can also inject the `NgZone` service and you will notice that in the current application setup that service is the `NoopNgZone` service.
+</div>
+
+## How Change Detection works without Zone.js
+
+What we are going to create to check how CD works when you are zoneless, is a components tree that is made from 3 components:
+- `AppComponent` - the root component
+- `ChildComponent` - is a component that is placed by the `AppComponent`
+- `GrandChildComponent` - is a component that is placed by the `ChildComponent`
+
+based on this simple app we will try to understand how CD works when you are zoneless.
+
+<div className="mt-5 not-content">
+	<Sandpack 
+		client:load
+		options={{
+			editorHeight: 500,
+			showConsole: true,
+			visibleFiles: ['src/app/grand.component.ts', 'src/app/child.component.ts', 'src/app/app.component.ts']
+		}}
+		files={{
+			"src/app/app.module.ts": {
+				code: `
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { ChildComponent } from "./child.component";
+import { GrandComponent } from "./grand.component";
+import { AppComponent } from "./app.component";
+      
+@NgModule({
+  declarations: [
+		AppComponent,
+		ChildComponent,
+		GrandComponent
+	],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}      
+				`
+			},
+			"src/app/grand.component.ts": {
+				code: `
+import { Component } from "@angular/core";
+
+@Component({
+  selector: "app-grand",
+  template: \`
+    <h1>grand works {{ log() }}</h1>
+  \`
+})
+export class GrandComponent {
+  log() {
+		console.log("CD GrandComponent")
+	}
+}				
+`
+			},
+			"src/app/child.component.ts": {
+				code: `
+import { Component, ChangeDetectorRef, ApplicationRef } from "@angular/core";
+
+@Component({
+  selector: "app-child",
+  template: \`
+	  <h1>child works {{ log() }}</h1>
+    <button (click)="triggerCd()">Trigger CD in child with ChangeDetectorRef.detectChanges()</button>
+		<button (click)="triggerCdWithAppRef()">Trigger CD in child with ApplicationRef.tick()</button>
+    <app-grand></app-grand>
+  \`
+})
+export class ChildComponent {
+  constructor(
+    private _cd: ChangeDetectorRef,
+		private _app: ApplicationRef
+  ) {}
+	
+  triggerCd() {
+    this._cd.detectChanges();
+  }
+	
+	triggerCdWithAppRef() {
+    this._app.tick();
+	}
+	
+  log() {
+    console.log("CD ChildComponent")
+  }
+}				
+`
+			},
+			"src/app/app.component.ts": {
+				code: `
+import { Component } from "@angular/core";
+
+@Component({
+  selector: "app-root",
+  template: \`
+    <h1>hello app component {{ log() }}</h1>
+    <app-child></app-child>					
+  \`
+})
+export class AppComponent {
+  log() {
+    console.log("CD AppComponent")
+  }
+}           
+				
+				`
+			},
+			"src/main.ts": {
+				code: `
+import { enableProdMode } from "@angular/core";
+import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
+      
+import { AppModule } from "./app/app.module";      
+
+
+
+platformBrowserDynamic()
+  .bootstrapModule(AppModule, {
+    ngZone: 'noop'
+  })
+  .catch(err => console.log(err));
+      				
+				`
+			},
+			"src/polyfills.ts": {
+				code: `
+import "core-js/proposals/reflect-metadata";   
+// import "zone.js/dist/zone";
+				`
+			}
+		}}
+		template="angular"
+	/>
+</div>
+
+Take a look at the editor above, the following app is zoneless, we have 3 components and the `ChildComponent` has 2 buttons to trigger CD.  
+The 2 buttons trigger CD in different ways, one will use `ChangeDetectorRef.detectChanges()` and the other button will use `ApplicationRef.tick()`.
+When CD happens the template binded values needs to be recalculated so we have a `log()` method in each component that will log to the console when the component is being recalculated.
+
+When you click the button that trigger CD with `detectChanges()` in the `ChildComponent` you will see that the `ChildComponent` and the `GrandComponent` are being recalculated, but the `AppComponent` is not being recalculated. When calling `detectChanges()` on the `ChangeDetectorRef` service it will trigger CD from the component that called it and down the tree of components.
+
+Is it always that `detectChanges()` will go down the tree? Go to the editor and try and set the `GrandComponent` to `changeDetection: ChangeDetectionStrategy.OnPush` and see what happens when you click the button that triggers CD with `detectChanges()`.
+
+`detectChanges()` works the same here like `OnPush` it will go down the tree if it stumbles on an `OnPush` component (and non of the other conditions that trigger CD in OnPush are happening) it will stop there. Remember that if the component is not in `OnPush` it simply means that if my parent is marked as dirty I will be marked as dirty as well, with the `OnPush` the parent marked as dirty does not necessarily mean that the child will be marked as dirty as well.
+
+When you click the button that triggers CD with `ApplicationRef.tick()` you will see that the CD starts from the `AppComponent` and down the tree of components until it reaches the component that triggered the `tick()` method, from there if the `GrandComponent` is in `OnPush` it will stop there (if not the `GrandComponent` will be marked as dirty).
+So even if you work in zoneless there are still benefits to setting all your components to `OnPush` strategy if you want to minimize the components that will recalculate their template binded values.
+
+Play a bit with the playground we created above to fully understand how `tick()` and `detectChanges()` works in a angular app (zoneless or not)
+
+to summarize if all components are in `OnPush` and you are working in zoneless mode, then you will have to trigger the CD manually with `detectChanges()` or `tick()`.  
+`tick()` will go from the root component down the tree to the component that called `tick()` and stop at that component (remember that all the components are set to `OnPush`).  
+`detectChanges()` will trigger CD in the component that called it and only on that component (in this case where all are in `OnPush`).
+
+## bundle size reduce
+
+a benefit of working without zone.js is that the bundle size will be reduced.  
+Let's examine how much reduction we get when we remove zone.js from the bundle.
+
+So what we are going to do is build our angular app with zone.js and check the bundle size, and build without zone.js and check the bundle size and compare between the 2.
+We will build the same application we created above with the 3 components to check the change detection.
+That app already has zone.js removed, so to build that app we can run:
+
+```bash
+npx ng build
+```
+
+After the build is done it prints the file size for us, we got the following result:
+
+| Names | Raw Size | Estimated Transfer Size |
+| --- | --- | --- |
+| main | 89.13 kB | 26.69 kB |
+| runtime | 912 bytes | 515 bytes |
+| polyfills | 132 bytes | 100 bytes |
+| styles | 0 bytes | - |
+
+Now let's restore zone.js to our bundle and check the file size again:
+
+| Names | Raw Size | Estimated Transfer Size |
+| --- | --- | --- |
+| main | 89.12 kB | 26.68 kB |
+| runtime | 1.06 kB | 607 bytes |
+| polyfills | 33.09 kB | 10.63 kB |
+| styles | 0 bytes | - |
+
+The main benefit in terms of file size is in the `polyfills` file, the `polyfills` file is reduced by a little more than 32 kB when zone.js is removed from the bundle.
+Reduction in bundle size is not that significant.
+
+## Library support in zoneless
+
+If we are working with zoneless and we are using 3rd party library that is relying on zone.js for change detection, we might encounter problems.  
+We will examine the problem and the solution to the problem in the next example.
+In the following example we removed zone.js, we then installed [@angular/material](https://material.angular.io/) and we are trying to use angular material checkbox component and see how it works in zoneless.
+
+<div className="mt-5 not-content">
+	<Sandpack 
+		client:load
+		customSetup={{ 
+			dependencies: { 
+				"@angular/cdk": "^16.2.0",
+				"@angular/forms": "^16.2.0",		
+				"@angular/animations": "^16.2.0",		
+				"@angular/core": "^16.2.0",
+				"@angular/platform-browser": "^16.2.0",
+				"@angular/platform-browser-dynamic": "^16.2.0",
+				"@angular/common": "^16.2.0",
+				"@angular/compiler": "^16.2.0",
+				"@angular/material": "^16.2.0",
+				"rxjs": "~7.8.0",
+			}
+		}}
+		options={{
+			editorHeight: 500,
+			showConsole: true,
+			visibleFiles: ['src/app/app.component.ts']
+		}}
+		files={{
+			"src/index.html": {
+				code: `
+<!doctype html>
+<html lang="en">
+      
+<head>
+  <meta charset="utf-8">
+  <title>Angular</title>
+  <base href="/">
+      
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+      
+<body>
+   <app-root></app-root>
+</body>
+      
+</html>
+				`
+			},
+			"src/app/app.module.ts": {
+				code: `
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { AppComponent } from "./app.component";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+      
+@NgModule({
+  declarations: [
+		AppComponent,
+	],
+  imports: [
+		BrowserModule,
+		BrowserAnimationsModule,
+		MatCheckboxModule
+	],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}      
+				`
+			},						
+			"src/app/app.component.ts": {
+				code: `
+import { Component } from "@angular/core";
+
+@Component({
+  selector: "app-root",
+  template: \`
+    <h1>Check angular/material</h1>
+		<mat-checkbox>Check me!</mat-checkbox>
+  \`
+})
+export class AppComponent {
+  
+}           
+				
+				`
+			},
+			"src/main.ts": {
+				code: `
+import { enableProdMode } from "@angular/core";
+import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";      
+import { AppModule } from "./app/app.module";      
+
+platformBrowserDynamic()
+  .bootstrapModule(AppModule, {
+    ngZone: 'noop'
+  })
+  .catch(err => console.log(err));
+      				
+				`
+			},
+			"src/polyfills.ts": {
+				code: `
+import "core-js/proposals/reflect-metadata";   
+// import "zone.js/dist/zone";
+				`
+			}
+		}}
+		template="angular"
+	/>
+</div>
