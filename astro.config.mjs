@@ -13,6 +13,13 @@ export default defineConfig({
   integrations: [react({
     experimentalReactChildren: true
   }), starlight({
+    head: [{
+      tag: 'meta',
+      attrs: {
+        name: "google-site-verification",
+        content: "ZLdedo-l5mm1TcXoJ4Ikyasbj8wnH4iHMyMuWu2do9s"        
+      }
+    }],
     favicon: '/favicon-32x32.png',
     editLink: {
       baseUrl: 'https://github.com/ywarezk/academeez/edit/main/docs/'
@@ -23,8 +30,7 @@ export default defineConfig({
       SocialIcons: './src/components/SocialIcons.astro',
       PageTitle: './src/components/PageTitle.astro',
       ThemeSelect: './src/components/ThemeSelect.astro',
-      MarkdownContent: './src/components/MarkdownContent.astro',
-      Header: './src/components/Head.astro',
+      MarkdownContent: './src/components/MarkdownContent.astro',      
     },
     sidebar: [{
       label: 'Angular',
