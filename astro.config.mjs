@@ -37,6 +37,7 @@ export default defineConfig({
       PageTitle: './src/components/PageTitle.astro',
       ThemeSelect: './src/components/ThemeSelect.astro',
       MarkdownContent: './src/components/MarkdownContent.astro',      
+      Pagination: './src/components/Pagination.astro',      
     },
     sidebar: [{
       label: 'Angular',
