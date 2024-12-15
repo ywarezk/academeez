@@ -16,8 +16,9 @@ import {cn} from './utils'
 
 export const LessonCard: FC<{article: any, locale: string}> = ({
   article, locale
-}) => {
-	let imageLink = article.slug;
+}) => {	
+	const slug = article.id.replace(/\.mdx$/, '');
+	let imageLink = slug	
 	if (locale) {		
 		imageLink = imageLink.replace(`${locale.substring(1)}/`, '');
 	}	
@@ -31,7 +32,7 @@ export const LessonCard: FC<{article: any, locale: string}> = ({
 				<img src={`https://github.com/ywarezk/academeez/blob/main/src/content/docs/${imageLink}/thumbnail.png?raw=true`} className="object-cover my-2 rounded-xl h-40" />
 			</CardContent>
 			<CardFooter>
-				<a className={cn(buttonVariants(), 'w-full no-underline text-black')} href={`/${article.slug}`}>
+				<a className={cn(buttonVariants(), 'w-full no-underline text-black')} href={`/${slug}`}>
 					Read
 				</a>
 			</CardFooter>
