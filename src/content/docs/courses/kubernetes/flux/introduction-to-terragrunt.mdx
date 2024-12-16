@@ -28,7 +28,7 @@ This lesson will be an introduction to [Terragrunt](https://terragrunt.gruntwork
 
 ## Lesson Plan
 
-In this lesson we will have an introduction to Terragrunt, and using terragrunt we will start arranging the permissions of our IAC project.
+In this lesson we will have an introduction to Terragrunt, and using terragrunt we will start arranging our IAC project.
 We will cover the following topics:
 - Introduction to Terragrunt
 - Folder structure of IAC project
@@ -42,7 +42,7 @@ We will cover the following topics:
 Creating an infrastructure gigantic super module is a really bad idea and should be avoided at all costs.  
 this point is explained even better in [The following lecutre](https://blog.gruntwork.io/5-lessons-learned-from-writing-over-300-000-lines-of-infrastructure-code-36ba7fadeac1) but let me summarize the main points:
 - very slow - as the infrastructure grows, a simple `terragrunt plan` might take forever to be calculated
-- plan output impossible to understand - you get a gigantic plan which is hard to understand, follow, and it's really easy to miss important stuff in the plan like important stuff that are going to be deleted (if you have hundreds of changes it will be easy to miss)
+- `plan/output` impossible to understand - you get a gigantic plan which is hard to understand, follow, and it's really easy to miss important stuff in the plan like important stuff that are going to be deleted (if you have hundreds of changes it will be easy to miss)
 - hard to test
 - hard to reuse the code
 - security - you will need to supply god permissions to whomever is running that code
@@ -157,39 +157,47 @@ Create the root `terragrunt.hcl` file with the following content:
 
 ```hcl
 /**
- * Root terragrunt configuration file
- * will contain common configuration for all modules
+ * The root terragrunt will contain:
+ *    - common provider configurations
+ *    - remote state configuration
+ *    - impersonation logic
+ *
  */
  
 locals {
-  common_vars     = yamldecode(file(find_in_parent_folders("common_vars.yaml")))
-  region          = local.common_vars.region
-  billing_project = local.common_vars.billing_project
+  region_vars = yamldecode(file(find_in_parent_folders("region_vars.yaml")))
+  billing_vars = yamldecode(file(find_in_parent_folders("billing_vars.yaml")))
+  common_vars = yamldecode(file(find_in_parent_folders("common_vars.yaml")))
+  region = local.region_vars.region
+  billing_project = local.billing_vars.billing_project
 }
 
-/**
- * This provider will authenticate to the gcp using the user's credentials
- */
+# configure common providers
 generate "provider" {
-  path      = "provider.tf"
-  if_exists = "overwrite_terragrunt"
-  contents  = <<EOF
-provider "google" {
-	region = "${local.region}"	
-	user_project_override = true
+	path = "provider.tf"
+	if_exists = "overwrite"
+	contents = <<EOF
+provider "google" {	
+	region  = "${local.region}"
 	billing_project = "${local.billing_project}"
+	user_project_override = true
 }
 EOF
 }
 ``` 
 
 Few things to note in this simple configuration:
-- There are certain variables that will repeat in many modules, we are placing those variables in a file called `common_vars.yaml` and we are loading those variables using the `locals` block.
-Example of those variables are in the repository in a file called `common_vars.example.yaml` (the `common_vars.yaml` file is in the `.gitignore` file so it won't be commited to the repository).
-The `common_vars.yaml` represents variables that will not change, but if needed we can override them by creating an internal `common_vars.yaml` in one of the folders `find_in_parent_folders` will find the first parent `common_vars.yaml`.
+- There are certain variables that will repeat in many modules, we are placing those variables in a files that end with `_vars.yaml` and we are loading those variables using the `locals` block.
+some of those file are ignored and examples of them you can find with `.example` suffix.
+You can always override if you place a file with the same name in a inner module
 - We are generating a provider configuration that will authenticate to the GCP cloud using the user's credentials, this means we can define this `provider` info only once and other modules will reuse this logic.
 
 This simple configuration will help us start creating some basic resources that we need before we begin.
+You need to make sure to login to GCP by running:
+
+```bash
+> gcloud auth application-default login
+```
 
 ## _env - Folder, Project
 
@@ -202,48 +210,42 @@ Inside the `/iac/gcp/tofu/_env` we will create the files: `folder.hcl`, `project
   <TabItem value="folder.hcl" label="folder.hcl">
 ```hcl
 /**
- * create folder using terraform-google-modules/folders/google module
- * we can hardcode the repeating values here 
+ * terragrunt function to create a folder
  */
  
 locals {
-	common_vars = yamldecode(file(find_in_parent_folders("common_vars.yaml")))	
+	org_id = yamldecode(file(find_in_parent_folders("common_vars.yaml"))).org_id
 }
- 
+
 terraform {
-	source = "tfr:///terraform-google-modules/folders/google?version=5.0.0"	
+	source = "tfr:///terraform-google-modules/folders/google?version=5.0.0"
 }
 
 inputs = {
-	parent              = "organizations/${local.common_vars.org_id}"
-  deletion_protection = false
+	parent = "organizations/${local.org_id}"
 }
 ```
   </TabItem>
   <TabItem value="project.hcl" label="project.hcl">
 ```hcl
 /**
- * Create a project using terraform-google-modules/project-factory/google module
- * we can hardcode the repeating values for project here
+ * terragrunt function to create a project
  */
  
 locals {
-	common_vars = yamldecode(file(find_in_parent_folders("common_vars.yaml")))	
+	org_id = yamldecode(file(find_in_parent_folders("common_vars.yaml"))).org_id
+	billing_account = yamldecode(file(find_in_parent_folders("billing_vars.yaml"))).billing_account
 }
- 
+
 terraform {
-	source = "tfr:///terraform-google-modules/project-factory/google?version=17.0.0"
+	source = "tfr:///terraform-google-modules/project-factory/google?version=17.1.0"
 }
 
 inputs = {
-	random_project_id = true
-  org_id            = local.common_vars.org_id
-  billing_account   = local.common_vars.billing_account
-  deletion_policy   = "ABANDON"
-  create_project_sa = false
-  activate_apis = [
-    "cloudbilling.googleapis.com"
-  ]
+	random_project_id    = true
+	org_id = local.org_id
+	billing_account = local.billing_account
+	budget_amount = 20
 }
 ```
   </TabItem>  
@@ -253,7 +255,7 @@ After we created those simple reusable terraform configurations, based on `terra
 
 ## Common - Folder, Project
 
-We will use the `_env` modules we just created to create the `common` folder with module for the folder, project, and bucket.
+We will use the `_env` modules we just created to create the `common` folder with module for the folder, and project.
 We will create a few files:
 - `common/folders/root/terragrunt.hcl` - this will create the root folder `academeez-k8s-flux`
 - `common/folders/shared/terragrunt.hcl` - under the root folder we will create a folder called `shared` for the shared resources
@@ -263,71 +265,69 @@ We will create a few files:
   <TabItem value="common/folder/terragrunt.hcl" label="common/folder/root/terragrunt.hcl">
 ```hcl
 /**
- * Create the root folder
- * All the resources will be created under this folder
+ * Create the root folder, all the resources will be created under this folder
  */
 
-include {
-	path = find_in_parent_folders()
+include "root" {
+  path   = find_in_parent_folders()
 }
 
-// create a folder using the _env/folder module
 include "folder" {
 	path = "${dirname(find_in_parent_folders())}/_env/folder.hcl"
 }
 
-// input to the folder module
 inputs = {
-	names = ["academeez-k8s-flux"]
+	names = [ "academeez-k8s-flux" ]
 }
 ```
   </TabItem>
   <TabItem value="common/folder/shared/terragrunt.hcl" label="common/folder/shared/terragrunt.hcl">
 ```hcl
 /**
- * The shared folder will contain resources that are shared between the environments
+ * The shared folder will contain all the shared resources between environments
  */
 
-include {
-	path = find_in_parent_folders()
+include "root" {
+	path   = find_in_parent_folders()
 }
 
 include "folder" {
 	path = "${dirname(find_in_parent_folders())}/_env/folder.hcl"
 }
 
-// since this folder is under the root, it depends on the root folder creation and will take the output folder id from it
-dependency "root" {
+# since this folder is under the root folder we will use dependency to get the parent folder
+dependency "root_folder" {
 	config_path = "../root"
 }
 
 inputs = {
-	parent = dependency.root.outputs.id
-  names  = ["shared"]
+	parent = dependency.root_folder.outputs.id
+	names = [ "shared" ]
 }
 ```
   </TabItem>
   <TabItem value="common/project/terragrunt.hcl" label="common/project/terragrunt.hcl">
 ```hcl
 /**
- * Create a project to hold the common resources
+ * The common resources that are shared between the environments will be under the common project
  */
 
-include {
-	path = find_in_parent_folders()
-}
-
-dependency "common_folder" {
-	config_path = "../folders/shared"
+include "root" {
+	path   = find_in_parent_folders()
 }
 
 include "project" {
 	path = "${dirname(find_in_parent_folders())}/_env/project.hcl"
 }
 
+# since the project will be under the shared folder we will grab it using the dependency block
+dependency "shared_folder" {
+	config_path = "../folders/shared"
+}
+
 inputs = {
-	name      = "academeez-k8s-flux-common"
-  folder_id = dependency.common_folder.outputs.id
+	folder_id = dependency.shared_folder.outputs.id
+	name = "academeez-k8s-flux-common"
 }
 ```
   </TabItem>  
@@ -353,32 +353,33 @@ terragrunt run-all apply -input=true
 
 By default terragrunt will place the terraform state locally on disk under the `.terragrunt-cache` folder.
 We need to configure things to be more secure, state to be shared between developers, and to have a backup of the state in case of a disaster, also versioning of the states will be useful as well in cases we need to roll back a certain change.
-It's recommended to store the state in a remote location, and we will use the bucket we created to store the state.
+It's recommended to store the state in a remote location, we will store the state in a GCP bucket.
 Instead of repeating the configuration to store the state in the bucket, we will configure it in the root `terragrunt.hcl` file.
 This way that configuration will be shared between all the modules.
 Modify the root `terragrunt.hcl` file to include the following:
 
 ```hcl title="iac/gcp/tofu/terragrunt.hcl"
 locals {
-	common_vars     = yamldecode(file(find_in_parent_folders("common_vars.yaml")))
-  region          = local.common_vars.region
-  billing_project = local.common_vars.billing_project
-  state_bucket    = local.common_vars.state_bucket
-  common_project  = local.common_vars.common_project
+	region_vars = yamldecode(file(find_in_parent_folders("region_vars.yaml")))
+	billing_vars = yamldecode(file(find_in_parent_folders("billing_vars.yaml")))
+	common_vars = yamldecode(file(find_in_parent_folders("common_vars.yaml")))
+	region = local.region_vars.region
+	billing_project = local.billing_vars.billing_project
+	common_project = local.common_vars.common_project
 }
-
+ 
+# configure remote state in bucket
 remote_state {
   backend = "gcs"
-  generate = {
-    path      = "backend.tf"
-    if_exists = "overwrite"
-  }
-  disable_dependency_optimization = true
+	generate = {
+		path = "backend.tf"
+		if_exists = "overwrite"		
+	}
   config = {
-    location = "US"
     project  = local.common_project
-    bucket   = local.state_bucket
-    prefix   = "${path_relative_to_include()}/tofu.tfstate"		
+    location = "eu"
+    bucket   = "academeez-k8s-flux-terragrunt-state"
+    prefix   = "${path_relative_to_include()}/tofu.tfstate"
   }
 }
 
