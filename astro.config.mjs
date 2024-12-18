@@ -10,29 +10,21 @@ import icon from 'astro-icon';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [sitemap({
-    i18n: {
-      defaultLocale: 'root',
-      locales: {
-        root: 'en-US',
-        he: 'he-IL'
-      }
-    }
-  }), react({
+  integrations: [react({
     experimentalReactChildren: true
-  }), starlight({
+  }), starlight({  
     head: [{
       tag: 'meta',
       attrs: {
         name: "google-site-verification",
-        content: "ZLdedo-l5mm1TcXoJ4Ikyasbj8wnH4iHMyMuWu2do9s"
+        content: "ZLdedo-l5mm1TcXoJ4Ikyasbj8wnH4iHMyMuWu2do9s"        
       }
     }, {
       tag: 'meta',
       attrs: {
         name: "msvalidate.01",
         content: "9EEEA5142FA10331B8194AC8059955E9"
-      }
+      }      
     }],
     favicon: '/favicon-32x32.png',
     editLink: {
@@ -44,8 +36,8 @@ export default defineConfig({
       SocialIcons: './src/components/SocialIcons.astro',
       PageTitle: './src/components/PageTitle.astro',
       ThemeSelect: './src/components/ThemeSelect.astro',
-      MarkdownContent: './src/components/MarkdownContent.astro',
-      Pagination: './src/components/Pagination.astro',
+      MarkdownContent: './src/components/MarkdownContent.astro',      
+      Pagination: './src/components/Pagination.astro',      
     },
     sidebar: [{
       label: 'Angular',
@@ -111,12 +103,12 @@ export default defineConfig({
     applyBaseStyles: false
   }), icon()],
   markdown: {
-    remarkPlugins: [mermaid],
+    remarkPlugins: [mermaid],    
   },
   prefetch: true,
   site: 'https://www.academeez.com',
   trailingSlash: 'never',
-  output: "server",
+  output: "server",  
   adapter: vercel({
     webAnalytics: {
       enabled: true,
