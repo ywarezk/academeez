@@ -311,13 +311,13 @@ I can use the compilers to add additional syntax which is not supported by Javas
 `JSX` stands for **Javascript as XML** it allows us to write `XML` syntax which will be translated to `Javascript`.  
 For example I can create the following code in the file: `jsx-example.js`
 
-```Javascript
+```javascript
 const h1 = <h1>hello world with jsx</h1>
 ```
 
 I can then take that file and use a compiler which will translate that file to:
 
-```Javascript
+```javascript
 const h1 = React.createElement('h1', null, 'hello world with jsx')
 ```
 
