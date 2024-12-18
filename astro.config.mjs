@@ -2,11 +2,10 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
-import sitemap from "@astrojs/sitemap";
 import { mermaid } from "./src/plugins/mermaid"
 import vercel from "@astrojs/vercel/serverless";
-
 import icon from 'astro-icon';
+import { sitemapCopier } from './src/integrations/sitemap-copier';
 
 // https://astro.build/config
 export default defineConfig({
@@ -101,7 +100,7 @@ export default defineConfig({
     customCss: ['./src/tailwind.css']
   }), tailwind({
     applyBaseStyles: false
-  }), icon()],
+  }), icon(), sitemapCopier()],
   markdown: {
     remarkPlugins: [mermaid],    
   },
