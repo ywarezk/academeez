@@ -11,6 +11,19 @@ sources:
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
+<div class="not-content flex">
+  <iframe
+    className="mx-auto"
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/CBgJ5iTXLFY?si=5616DzHU9n45AWf8"
+    title="YouTube video player"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+  />
+</div>
+
 בשיעור קודם קיבלנו היכרות עם פרוייקט ה - infrastructure as code שלנו, יצרנו פרוייקט GCP, VPC, GKE, והפעלנו את FluxCD בקלאסטר שלנו באמצעות OpenTofu.  
 במהלך קורס זה אנחנו מתמקדים על best practices, זהו למה כל המשאבים בענן שלנו צריכים להיות נוצרים באמצעות IAC (במקרה שלנו Terraform/OpenTofu), עלינו להתרגל להשתמש ב IAC ליצירת המשאבים בענן שלנו, ותיקיית הקורס מתמקדת לא רק להיות קוד המקור של השיעורים שלנו אלא גם ערכת הכלים שאתה יכול לבסס עליה את הפרוייקטים האמיתיים שלך.  
 כאשר עובדים על פרוייקטים אמיתיים יש לנו לעיתים קרובות יותר מסביבות אחת, ויותר מקלסטר אחד, ואנחנו צריכים לנהל אותם בדרך שתהיה קלה לתחזוקה ולהתרחבות.  
