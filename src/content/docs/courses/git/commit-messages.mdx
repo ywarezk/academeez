@@ -1,0 +1,370 @@
+---
+title: commit messages
+description: Change commit message, proper conventions, and more
+publishDate: 2024-12-25
+authors:
+  - yariv-katz
+---
+
+Let's talk about commit messages.  
+When writing code and using Git, Git will tell the story of your software evolution.
+commit messages are the way to tell that story.
+Now let's imagine a reader reading that story, if you read a story that is told by 100 different authors where each one has it's own style of writing, it will be hard to follow the story, and impossible to understand the progress of your software.
+This is often the case when a team i working on a project, everyone writes his own style of writing commits, and the history becomes an unreadable mess.
+So commit messages should be written in a consistent way, and follow some conventions, and by following a convention the story will be consistent like it's being told by a single author (even though many developers wrote the messages).
+Did you know that there is a convention for writing those git messages? It's called [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+
+## Conventional Commits
+
+Conventional Commits is a specification for adding human and machine readable meaning to commit messages.
+Not only does it provide consistency to the commit messages which makes them more readable to everyone, but it also allows for automatic versioning and changelog generation.
+But first let's start by understanding the structure of a conventional commit message, and give a few examples of each structure.
+
+## Structure of a commit message
+
+In conventional commits the structure of a commit message is as follows:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+Let's try and understand the structure with an example that includes a full commit message:
+we can create a file then add it by running:
+
+```bash
+touch file.txt
+git add file.txt
+git commit
+```
+
+notice that if I want to create a multiple line commit message it would be easier to run `git commit` without the `-m` flag (if I only have in the commit message a type, scope, description then it would probably be easier using the `-m` flag).
+You can configure your default editor by running:
+
+```bash
+git config --global core.editor "nano"
+```
+
+Now let's write a commit message:
+
+### type
+
+The type is a mandatory field, it can vary between teams but if going by the [conventional commits recommendations](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional) which are based on the [Angular commit conventions](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines), the following types are recommended:
+* **build**: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
+* **ci**: Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
+* **docs**: Documentation only changes
+* **feat**: A new feature
+* **fix**: A bug fix
+* **perf**: A code change that improves performance
+* **refactor**: A code change that neither fixes a bug nor adds a feature
+* **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+* **test**: Adding missing tests or correcting existing tests
+
+### scope
+
+The scope is an optional field, it can be anything specifying the place of the commit change.
+For example if you have a project with frontend app and backend app, a type with scope might be: `fix(frontend): ...` the scope is optional so there are times when you will drop it for example: `fix: ...`.
+
+### Breaking changes
+
+If the commit introduced a breaking change, it can be marked in the footer (will be shown later) or it can be marked with an exclamation mark after the `type(scope)!: ...`.
+For example following the previous example: `fix(frontend)!: ...`, would indicate that the commit introduced a breaking change in the frontend project.
+
+### description
+
+The description is a mandatory field, it should be a short description of the change. There are times when we end the commit message after the description and in that case we will probably use the `-m` flag when committing.
+
+### body
+
+The body is an optional field, it should be used when the description is not enough to explain the change. The body will begin one blank line after the description, so it is easier to input body with `git commit` without the `-m` flag.
+The body can have multiple paragraphs and each paragraph should be separated by a blank line.
+
+### footer
+
+The footer is an optional field, it should be one blank line after the body (or blank line after the description if there is no body). We need to distinguish between the body and the footer cause there can be multiple footers, each footer will begin with a word token followed by a colon and a space.
+Let's go over the common footer tokens:
+* **BREAKING CHANGE**: this will indicate that this commit has a breaking change, personally I like to write it with the exclamation mark in the type, but it's up to you.
+* **Fixes**: This commit is fixing something, we will place the issue number after the colon.
+* **Closes**: Close an issue with the issue number.
+* **Resolves**: Similar to the `Closes` with the issue number after.
+* **Related**: Place an related issue number of pr after
+* **References**: Reference to an issue
+* **Co-authored-by**: this commit is written with a team member.
+* **Reviewed-by**: This commit is reveiwed by a team member.
+* **See-also**: Will point to a pr or issue that is related to this commit.
+
+## Examples
+
+Now that we understand the structure of a commit message, let's see a few examples of commit messages:
+
+```bash
+feat(frontend): add a new feature
+
+this is a body that explains the feature
+On automatic versioning this will be a minor version bump
+
+Closes: #123
+```
+
+```bash
+feat(backend)!: some new feature with a breaking change
+
+this is a body that explains the feature
+
+we can extend the body to say what it actually break
+
+A body can have multiple paragraphs
+
+Co-authored-by: @ywarezk
+```
+
+## Reap the benefits
+
+Following the conventional commits will make your commit messages more readable and consistent, It will also give you the added bonus of adding automations to your release process. 
+[semantic-release](https://github.com/conventional-changelog/conventional-changelog?tab=readme-ov-file) can help us with automatic release.
+**semantic-release** can track the version with tags, know what the next version should be based on the commit messages, create a new tag, publish to npm, create `CHANGELOG.md` and update `package.json` version (it's recommended if possible to not push new commits by the CI so we won't show this step), publish to slack and more.
+In the following example we will use **semantic-release** to automatically release new version of an npm package.
+
+Create a new empty directory and run and init git and npm:
+
+```bash
+mkdir my-package
+cd my-package
+git init
+npm init -y
+```
+
+In github we will create a new repository and push the code to the repository, the aim is to combine github actions, semantic-release and out commit messages to automate the npm publish releases and tags.
+We will go to github and open a new repository and add that repository as a remote to our local repository:
+
+```bash
+git remote add origin <git repo url>
+```
+
+Let's add our first conventional commit and push it to the remote repository we just created:
+
+```bash
+git add -A
+git commit -m "chore: created package.json"
+git push origin main
+```
+
+Let's install semantic-release:
+
+```bash
+npm install --save-dev semantic-release
+```
+
+this will create a `node_modules` directory and install the packages there.
+It's best to add the `node_modules` to the `.gitignore` file.
+
+```bash
+echo "node_modules" >> .gitignore
+```
+
+let's create another commit with the changes to the `.gitignore` file:
+
+```bash
+git add .gitignore
+git commit -m "chore: added node_modules to .gitignore"
+```
+
+And another commit with the installation of semantic-release:
+
+```bash
+git add package.json package-lock.json
+git commit -m "chore: added semantic-release to the project"
+```
+
+We need to configure semantic-release, we can place that configuration in the `package.json` file.
+
+```json
+{
+  "name": "my-package",
+  ...
+	"release": {
+		"branches": ["main"]
+	}
+}
+```
+
+We set the release branch to be `main` so semantic-release will only release from the `main` branch.
+We can also add more functional branches like maintenance branches and pre-release branches, and you have different examples of those flows [here](https://semantic-release.gitbook.io/semantic-release/recipes/release-workflow).
+For now we will keep things simple and create a tag and publish a new version of the package.
+
+Let's create our simple package by creating the file `index.js` with a simple hello world function:
+
+```javascript title="index.js"
+module.exports = function hello() {
+	return "hello world";
+}
+```
+
+Now let's commit the changes:
+
+```bash
+git add index.js
+git commit -m "feat: added hello world function"
+```
+
+Notice that we commited the file with the `feat` type, this will bump the version to a minor version, if we would have used a `fix` type it would have been a patch version, and if we had a `BREAKING CHANGE` in the footer it would have been a major version.
+
+What we will do now is add a github action workflow that will run semantic-release on every push to the `main` branch.
+We will create a new directory `.github/workflows` and create a new file `release.yml` with the following content:
+
+```yaml title=".github/workflows/release.yml"
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+		
+permissions: write-all
+    	
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+      - name: install dependencies
+        run: npm ci
+      - name: release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+
+The workflow here is simple:
+- It will run on every push to the `main` branch.
+- It will checkout the code.
+- It will setup node and install the dependencies.
+- It will run **semantic-release**
+
+when running **semantic-release** in this example we will also publish the package to npm (this can be disabled if you prefer not to publish to npm), to publish to npm we will need
+to create a secret in github actions that is called `NPM_TOKEN` (the other secret we are using is `GITHUB_TOKEN` which is already populated by github actions).
+Create a new repository secret in the url: `https://github.com/<username>/<repo>/settings/secrets/actions/new` and add the `NPM_TOKEN` there.
+
+Let's commit the changes and push them to the remote repository:
+
+```bash
+git add .github/workflows/release.yml
+git commit -m "feat(ci): added release workflow"
+git push origin main
+```
+
+If you visit the github actions: `https://github.com/<user>/<repo>/actions` you should see the release workflow running.
+The end result should be a new tag is released at: `https://github.com/<user>/<repo>/releases/tag` and clicking the tag you should see a all the commits that the tag is including.
+Let's create another commit this time with breaking change, add a change to the `index.js` file:
+
+```javascript title="index.js"
+module.exports = function hello() {
+	return "hello new major release";
+}
+```
+
+commit the file with conventional commit major change:
+
+```bash
+git add index.js
+git commit
+```
+
+When the git editor opens write the following commit message:
+
+```
+feat: breaking change of a new message
+
+BREAKING CHANGE: the message of the hello function has changed
+```
+
+if you push this commit to the remote repository you should see a new major version released and a new tag of `v2.0.0` is added.
+
+The release process is fully customizable, but automating the release process is a must and will greatly improve the development process, while reducing human errors.
+
+## Change commit message
+
+This is a question I often get, can we change a commit message?
+Let's try and tackle this problem.
+
+We need to distinguish between 2 cases:
+* Changing a commit message in my local repository.
+* Changing a commit message in a remote repository.
+
+If you want to alter a message of a pushed commit, that really depends on the branch policy, if you are working on a branch that is shared with other developers, it's best to not change the commit message, but if you are working on a feature branch that is not shared with other developers, you can change the commit message.
+Changing a commit message of a pushed commit will require a force push, usually on some of the developers shared branches it is best to disable the option to force push.
+For example if the release branch is **main** and it is shared between the developers it is probably best to prevent force push to **main** by going to the branch protection `https://github.com/<user>/<repo>/settings/branches`.
+The thing is we would really want to avoid messing the git history on those shared branched and creating a mess for the other developers.
+So in that case if the commit you are trying to change is already pushed to **main** it's probably a good idea to leave it as is.
+
+If you are on your own pr/feature branch you can change that commit regardless if it's pushed or not.
+If it's pushed to your branch it will require a force push.
+The command we will use to change the commit message it `git rebase -i HEAD~n` where `n` is how many commits back is the commit we want to change (if you just want to change the last commit you can also use the `--amend` flag in the `git commit`).
+Let's create 3 new commit and then circle back to the last commit and change it's message (every commit i will do a simple text change in `index.js`):
+
+```bash
+# after change to index.js
+git add index.js
+git commit -m "feature: this is a mistake commit and it should be with type feat"
+# after another change to index.js
+git add index.js
+git commit -m "chore: some changes in message"
+# after another change to index.js
+git add index.js
+git commit -m "fix: some bug fix"
+```
+
+Now we noticed that we have a mistake in the first commit with the message: `feature: this is a mistake commit and it should be with type feat`. Since we didn't push those commits and they are in our local repository we can safely change the commit message using `git rebase -i HEAD~3`
+Change the `pick` to `edit` or `e` in the commit you want to change, then run: 
+
+```bash
+git commit --amend
+# change the message of the commit
+git rebase --continue
+```
+
+You commit message is now changed.
+
+## Protect your commit messages
+
+Since release automation is now being done based on the commit messages, and if we accidently push a wrong commit message it could affect the release process, it is recommended to force developers
+to write proper commit messages (doing that would protect us from the wrong commit message we just fixed).
+We can use a tool called [commitlint](https://commitlint.js.org/#/) to enforce commit message rules on a pre-commit hook (we can use [husky](https://typicode.github.io/husky/)).
+Another popular solution is to use [commitizen](https://commitizen-tools.github.io/commitizen/) which is a cli tool that helps us write commit messages following rules defined in the project. (we do recommend using a pre-commit hook even if commitizen is used cause it can be bypassed).
+
+Install commitizen:
+
+```bash
+npm install --save-dev commitizen
+```
+
+Init commitizen with the adapter of choice:
+
+```bash
+npx commitizen init cz-conventional-changelog --save-dev --save-exact
+```
+
+Now if we add our changes a commit can be done using `npx cz` and it will guide us through the commit message.
+
+```bash
+git add -A
+npx cz
+```
+
+## Conclusion
+
+You have to look at commit messages as more than just an annoying step in the development process, they are the story of your software, and they can be used to automate the release process, and to keep the history clean and readable.
+Base on proper conventions to the commit messages using conventional commits, we can automate the release process with semantic-release, and enforce the commit message rules with commitlint and commitizen.
+Let's stop doing those junior commits like `fixed bug` or `added feature` and start writing meaningful commit messages that will help us in the long run.
+
