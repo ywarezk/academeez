@@ -1,0 +1,392 @@
+---
+title: הודעת תיאור הקומיט
+description: "מומלץ לעבוד עם קונבנציות כאשר רושמים את ההודעות של הקומיט. נהוג לעבוד עם קונבנציה שנקראית Conventional Commits, על ידי כך ניתן לשפר באופן משמעותי את קריאות ההודעות ואת האוטומציה של שחרורי הגירסאות."
+publishDate: 2024-12-25
+authors:
+  - yariv-katz
+sources:
+  - title: הודעות הקומיט
+    url: https://github.com/ywarezk/academeez-commit-messages
+---
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/tZKw8-SdBwU?si=yhXbQhrrTSJCLMkZ"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+בשיעור זה נדבר על הודעות הקומיט.  
+כאשר אנו כותבים קוד ומשתמשים ב-Git, Git יספר את סיפור התפתחות התוכנה שלך. 
+הודעות הקומיט הן הדרך לספר את הסיפור הזה.
+בואו נדמיין קורא אשר קורא את הסיפור, אם תקראו סיפור שנכתב על ידי 100 סופרים שונים, כאשר כל אחד מהם כותב בסגנון שלו, זה יהיה קשה לעקוב אחר הסיפור, ובלתי אפשרי להבין את התקדמות התוכנה שלך.
+לעתים קרובות זהו המקרה כאשר צוות עובד על הפרוייקט, כל אחד כותב בסגנון שלו, וההיסטוריה הופכת להיות פחות קריאה.
+הודעות הקומיט צריכות להיכתב בצורה קבועה, ובקונבנציות זהות, ועל ידי כך הסיפור יהיה קבוע כאילו נכתב על ידי סופר אחד (אף על פי שהודעות הקומיט נכתבו על ידי כמה מפתחים).
+האם ידעתם שיש קונבנציות לכתיבת הודעות הקומיט? זה נקרא [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+
+## Conventional Commits
+
+Conventional Commits היא תקן לכתיבת הודעות קומיט.
+התקן לא רק שמביא עקביות להודעות הקומיט שמקלות על קריאתם לכולם, אלא גם מאפשר אוטומציה של גרסאות ויצירת קובץ שינויים.
+ראשית נתחיל בהבנת המבנה של הודעת הקומיט הקונבנציונלית, ונציג כמה דוגמאות לכל מבנה.
+
+### מבנה הודעת הקומיט
+
+ב - Conventional Commits מבנה הודעת הקומיט הוא כך:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+ננסה להבין את המבנה בדוגמא שכוללת הודעת קומיט מלאה:
+ניצור קובץ ונוסיף אותו על ידי הרצת:
+
+```bash
+touch file.txt
+git add file.txt
+git commit
+```
+
+נשים לב שאם נרצה ליצור הודעת קומיט רב שורתית זה יהיה קל יותר להריץ `git commit` בלי הדגל `-m` (אם יש בהודעת הקומיט רק סוג, תחום ותיאור זה יהיה קל יותר להשתמש בדגל `-m`).
+ניתן להגדיר את העורך המועדף על ידי הרצת:
+
+```bash
+git config --global core.editor "nano"
+```
+
+פקודה זו תקנפג את **nano** כעורך ברירת המחדל של git, אישית אני אוהב שהעורך של git יהיה ה-IDE שלי שהוא **VSCode** ולכן אני אגדיר אותו כך:
+
+```bash
+git config --global core.editor "code --wait"
+```
+
+בואו נכתוב הודעת קומיט:
+
+### type - סוג
+
+ה - type מייצג את סוג הקומיט וזהו שדה חובה, סוג הקומיט יכול להיות שונה בין צוותים אך אם נצא לפי [המלצות Conventional Commits](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional) שמבוססות על [הקונבנציות של Angular](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines), הסוגים הבאים מומלצים:
+
+* **build**: שינויים שמשפיעים על מערכת הבנייה או על תלויות חיצוניות (לדוגמא: gulp, broccoli, npm)
+* **ci**: שינויים בקבצי התצורה של מערכת הבנייה והסקריפטים (לדוגמא: Travis, Circle, BrowserStack, SauceLabs)
+* **docs**: שינויים בתיעוד בלבד
+* **feat**: מימוש תכונה חדשה
+* **fix**: תיקון באג
+* **perf**: שינוי שמשפר ביצועים
+* **refactor**: שינוי בקוד שאינו מתקן באג ולא מוסיף תכונה
+* **style**: שינויים שאינם משפיעים על המשמעות של הקוד משפיעים יותר על עיצוב
+* **test**: הוספת בדיקות חסרות או תיקון בדיקות קיימות
+
+### scope - תחום
+
+ה- scope הוא שדה אופציונלי, זה יכול להיות כל דבר שמציין את המקום של השינוי בקוד.
+לדוגמא אם יש פרוייקט עם אפליקציית Frontend ואפליקציית Backend, סוג עם תחום יכול להיות: `fix(frontend): ...` התחום הוא אופציונלי ולכן יש פעמים שנוותר עליו לדוגמא: `fix: ...`.
+
+### Breaking changes - שינויים שוברים
+
+במידה והקומיט הציג שינוי ששובר את גירסאות אחורה, ניתן לסמן את זה בכותרת התחתונה (שתוצג בהמשך) או ניתן לסמן זאת עם סימן קריאה אחרי הסוג, לדוגמא: `fix(frontend)!: ...`, זה יסמן שהקומיט הציב שינוי ששובר גירסאות אחורה בפרוייקט Frontend.
+
+### description - תיאור
+
+התיאור הוא שדה חובה, זה צריך להיות תיאור קצר של השינוי. יש פעמים שאנו מסיימים את ההודעת קומיט אחרי התיאור ובמקרה כזה נכניס כנראה את הדגל `-m` בעת הקומיט.
+
+### body - קומיט עם גוף
+
+ה - body הוא שדה רשות, משתמשים בו כאשר ה - description לא מספיק לתיאור השינוי. ה - body יתחיל בשורה ריקה אחרי התיאור, כך יהיה קל יותר להכניס גוף עם `git commit` בלי הדגל `-m`.
+ה - body יכול להכיל מספר פסקאות וכל פסקה תהיה מופרדת בשורה ריקה.
+
+### footer - תחתון
+
+ה - footer הוא שדה אופציונלי, משאירים שורה ריקה אחרי ה - body ואחריה מגיע ה - footer (או שורה ריקה אחרי התיאור אם אין גוף) . ניתן להבחין בין footer ל- body על ידי זה שה footer יכיל word token ואחריה נקודתיים ורווח ואז התוכן.
+ניתן מספר דוגמאות ל - word token ב - footer:
+
+* **BREAKING CHANGE**: זה יציין שהקומיט הציב שינוי ששובר גירסאות אחורה, אני אוהב לכתוב את זה עם סימן קריאה בסוג, אך זה תלוי בכם.
+* **Fixes**: תיקון, נכניס את מספר הבעיה אחרי הנקודתיים.
+* **Closes**: סגירת בעיה עם מספר הבעיה.
+* **Resolves**: דומה ל - Closes עם מספר הבעיה אחרי.
+* **Related**: קישור ל - issue אחר או ל - PR.
+* **References**: קישור ל - issue.
+* **Co-authored-by**: הקומיט נכתב עם עוד חבר צוות.
+* **Reviewed-by**: הקומיט נבדק על ידי חבר צוות.
+* **See-also**: יצביע על PR או בעיה שקשורה לקומיט.
+
+## דוגמאות
+
+עכשיו שאנחנו מבינים את מבנה הודעת הקומיט, בואו נראה כמה דוגמאות להודעות קומיט:
+
+```bash
+feat(frontend): add a new feature
+
+this is a body that explains the feature
+On automatic versioning this will be a minor version bump
+
+Closes: #123
+```
+
+```bash
+feat(backend)!: some new feature with a breaking change
+
+this is a body that explains the feature
+
+we can extend the body to say what it actually break
+
+A body can have multiple paragraphs
+
+Co-authored-by: @ywarezk
+```
+
+## קצירת הפירות משמירה על קונבנציות בהודעות קומיט
+
+אם נעקוב אחרי ההנחיות של Conventional Commits זה יהפוך את הודעות הקומיט שלכם לקריאות ועקביות יותר, זה גם יאפשר לכם להוסיף אוטומציה לתהליך שחרור הגירסאות.
+[semantic-release](https://github.com/conventional-changelog/conventional-changelog?tab=readme-ov-file) יכול לעזור לנו עם שחרור אוטומטי של גירסאות.
+**semantic-release** יכול לעקוב אחרי הגירסאות עם תגים, לדעת מה הגירסה הבאה על פי הודעות הקומיט, ליצור תג חדש, לפרסם ל-npm, ליצור קובץ שינויים ולעדכן את הגירסה ב - `package.json` (מומלץ אם אפשר לא להעלות קוד חדש על ידי CI כדי שלא נראה את השלב הזה), לפרסם ל-slack ועוד.
+בדוגמא הבאה נשתמש ב **semantic-release** כדי לשחרר גירסאות חדשות של חבילת npm.
+
+ניצור תיקייה חדשה ונאתחל git ו npm:
+
+```bash
+mkdir my-package
+cd my-package
+git init
+npm init -y
+```
+
+בגיטהאב ניצור ריפוסיטורי חדש ונדחוף את הקוד לריפוסיטורי, המטרה היא לשלב בין github actions, semantic-release והודעות הקומיט שלנו כדי ליצור אוטומציה שלחרור החבילה ב npm ולנהל טגים עם גירסאות.
+נגלוש לגיטהאב וניצור ריפוסיטורי חדש ונוסיף את הריפוסיטורי החדש כרימוט לריפוסיטורי המקומי:
+
+```bash
+git remote add origin <git repo url>
+```
+
+ניצור את קומיט הראשון לפי הקונבנציות של Conventional Commits ונדחוף אותו לריפוסיטורי המרוחק שיצרנו:
+
+```bash
+git add -A
+git commit -m "chore: created package.json"
+git push origin main
+```
+
+נתקין את **semantic-release**:
+
+```bash
+npm install --save-dev semantic-release
+```
+
+זה ייצור תיקיית `node_modules` ויתקין את החבילות שם.
+מומלץ להוסיף את `node_modules` לקובץ `.gitignore`.
+
+```bash
+echo "node_modules" >> .gitignore
+```
+
+ניצור קומיט נוסף עם השינויים בקובץ `.gitignore`:
+
+```bash
+git add .gitignore
+git commit -m "chore: added node_modules to .gitignore"
+```
+
+ועוד קומיט עם התקנת **semantic-release**:
+
+```bash
+git add package.json package-lock.json
+git commit -m "chore: added semantic-release to the project"
+```
+
+כדי לקנפג את **semantic-release** נצטרך להגדיר את הקונפיגורציה שלו, נוכל לשים את הקונפיגורציה בקובץ `package.json`.
+
+```json
+{
+  "name": "my-package",
+  ...
+	"release": {
+		"branches": ["main"]
+	}
+}
+```
+
+קבענו את ה branch שמשמש לשחרור גירסאות להיות `main` כך ש **semantic-release** ישחרר רק מה branch `main`.
+ניתן להוסיף branch נוספים כמו branch של תחזוקה ו branch של גרסאות לפני שחרור, יש דוגמאות נוספות לזרמים פונקציונליים כמו זרם של תחזוקה וזרם של גרסאות לפני שחרור [כאן](https://semantic-release.gitbook.io/semantic-release/recipes/release-workflow).
+לעת עתה נשמור על פשטות וניצור תג ונשחרר גירסא חדשה של החבילה (ללא תפעול ענפים נוספים).
+
+ניצור את חבילת ה npm הפשוטה עם קובץ `index.js` שמכיל פונקציה שמחזירה `hello world`.
+
+```javascript title="index.js"
+module.exports = function hello() {
+	return "hello world";
+}
+```
+
+נבצע קומיט לשינויים:
+
+```bash
+git add index.js
+git commit -m "feat: added hello world function"
+```
+
+שימו לב שביצענו את הקומיט עם סוג `feat`, זה יגרום לקפיצה בגירסאת ה - minor (המספר האמצעי בגירסא המורכבת משלושה מספרים) , במידה והיינו משתמשים בסוג `fix` זה היה גורם לקפיצה בגירסאת ה - patch, ובמידה והיינו משתמשים ב - `BREAKING CHANGE` בכותרת התחתונה זה היה גורם לקפיצה בגירסאת ה - major.
+
+המשימה הבאה היא ליצור github action workflow שיריץ את **semantic-release** בכל פוש ל branch `main`.
+ניצור תיקייה חדש בשם `.github/workflows` וניצור בתוכה קובץ בשם `release.yml` עם התוכן הבא:
+
+```yaml title=".github/workflows/release.yml"
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+		
+permissions: write-all
+    	
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+      - name: install dependencies
+        run: npm ci
+      - name: release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+
+נסביר את פעולת ה workflow:
+- ה - workflow ירוץ בכל פוש ל branch `main`.
+- הוא יבצע checkout לקוד.
+- יכין את הסביבה עם node ויתקין את חבילות ה - npm.
+- יריץ את **semantic-release**.
+
+בדוגמא זו כאשר ה- workflow יריץ את הפקודה של **semantic-release** ישחרר גירסא חדשה ויפרסם אותה ל npm (ניתן לבטל את הפרסום ל npm אם זה לא נדרש), כדי לפרסם ל npm נצטרך ליצור סוד בריפוסיטורי שנקרא `NPM_TOKEN` (הסוד השני שאנו משתמשים בו הוא `GITHUB_TOKEN` שמוצפן על ידי github actions).
+ניצור סוד חדש בריפוסיטורי בכתובת: `https://github.com/<username>/<repo>/settings/secrets/actions/new` ונוסיף את ה `NPM_TOKEN` שם.
+
+נבצע קומיט לשינויים ונדחוף אותם לריפוסיטורי המרוחק:
+
+```bash
+git add .github/workflows/release.yml
+git commit -m "feat(ci): added release workflow"
+git push origin main
+```
+
+אם תבקרו ב - github actions: `https://github.com/<user>/<repo>/actions` תראו את ה workflow רץ.
+התוצאה הסופית תהיה תג חדש שנוצר ב: `https://github.com/<user>/<repo>/releases/tag` ובלחיצה על התג תראו את כל הקומיטים שהתג כולל.
+ניצור קומיט נוסף עם שינוי בקובץ `index.js`:
+
+```javascript title="index.js"
+module.exports = function hello() {
+	return "hello new major release";
+}
+```
+
+נבצע קומיט עם שינוי למספר הגירסא של ה major:
+
+```bash
+git add index.js
+git commit
+```
+
+כאשר יפתח ה editor של git נכתוב את הודעת הקומיט הבאה:
+
+```
+feat: breaking change of a new message
+
+BREAKING CHANGE: the message of the hello function has changed
+```
+
+אם נדחוף את הקומיט הזה לריפוסיטורי המרוחק אנחנו נראה גירסאת major חדשה עם תג `v2.0.0` וכל הקומיטים שהגיעו אליה.
+
+את תהליך ה release ניתן לקסטם על פי צרכי הפרוייקט, אבל לבצע אוטומציה של תהליך זה זה בגדר חובה וישפר משמעותית את תהליך הפיתוח ויוריד את טעויות האנוש.
+
+## שינוי הודעות קומיט
+
+שאלה שאני שומע לעתים קרובות, האם אפשר לשנות הודעת קומיט?
+ננסה להתמודד עם שאלה זו.
+
+צריך להבחין בין 2 מקרים:
+* שינוי הודעת קומיט במאגר המקומי שלי.
+* שינוי הודעת קומיט במאגר מרוחק.
+
+במידה ונרצה לשנות הודעה של קומיט שנדחף, אז הדבר תלוי ב policy של ה branch, במידה ועובדים על branch שמשותף עם מפתחים אחרים בצוות, אז עדיף לא לשנות את ההודעה של הקומיט כי זה יעוות את היסטוריית הגיט של המפתחים האחרים, אבל אם עובדים על branch שפתחתי בשביל עבודה אישית שלי, והוא לא משותף עם מפתחים אחרים אז אפשר לשנות הודעות גם של קומיטים שכבר נדחפו.
+שינוי של הודעת קומיט שכבר נדחף יצריך force push, בדרך כלל על branch שמשותף עם מפתחים אחרים עדיף לא לאפשר force push ולמנוע את זה בהגדרות ההגנה על branch.
+לדוגמא אם ה - release branch הוא **main** והוא משותף בין המפתחים אז מומלץ למנוע force push ל **main** על ידי הגדרת הגנה על branch `https://github.com/<user>/<repo>/settings/branches`.
+הסיבה שנמנע force push ב branch משותפים היא מכיוון שאנחנו נבלגן את היסטוריית הגיט למפתחים האחרים.
+אז אם הקומיט אותו אתם רוצים לשנות כבר נדחף ל **main** כנראה שכדאי להשאיר אותו כפי שהוא.
+
+במידה ואתם על branch שלכם המשמש אותכם בלבד לפיתוח pr/feature אז אתם יכולים לשנות את הודעת הקומיט בין אם דחפתם את אותו הקומיט או לא.
+במידה והקומיט שאתם רוצים לשנות כבר נדחף זה יצריך ממכם לעשות force push.
+פקודת הקומיט שבה נשתמש לשינוי הודעת הקומיט היא `git rebase -i HEAD~n` כאשר `n` הוא כמה קומיטים אחורה הקומיט שאתם רוצים לשנות (אם רק רוצים לשנות את הקומיט האחרון ניתן להשתמש בדגל `--amend` בפקודת `git commit`).
+ניצור 3 קומיטים חדשים ונחזור לקומיט האחרון ונשנה את ההודעה שלו (בכל קומיט אני עושה שינוי קטן ב `index.js`):
+
+```bash
+# after change to index.js
+git add index.js
+git commit -m "feature: this is a mistake commit and it should be with type feat"
+# after another change to index.js
+git add index.js
+git commit -m "chore: some changes in message"
+# after another change to index.js
+git add index.js
+git commit -m "fix: some bug fix"
+```
+
+אחרי שביצענו את הקומיטים שמנו לב שעשינו טעות בקומיט עם ההודעה `feature: this is a mistake commit and it should be with type feat`. היות ולא דחפנו את הקומיטים האלו והם נמצאים במאגר המקומי שלנו אז אנחנו יכולים לשנות את ההודעה שלהם בקלות עם `git rebase -i HEAD~3`.
+נשנה את ה - pick ל - edit או ל - e בקומיט שאנחנו רוצים לשנות את ההודעה שלו, ואז נריץ:
+
+```bash
+git commit --amend
+# change the message of the commit
+git rebase --continue
+```
+
+הודעת הקומיט השתנתה.
+
+## אכיפת conventional commits
+
+היות ואוטומציה של שחרורי הגירסאות מתבססת עכשיו על הודעות הקומיט, ואם נדחפו בטעות הודעת קומיט שגויה זה יכול להשפיע על תהליך השחרור, כדאי לכם לאכוף על מפתחים לכתוב הודעות קומיט תקינות.
+אפשר להשתמש בכלים כמו [commitlint](https://commitlint.js.org/#/) כדי לאכוף כללים על הודעות הקומיט בעזרת ה - `commit-msg` git hook.
+ניתן להכין את ה git hooks עם [husky](https://typicode.github.io/husky/) שהוא כלי פשוט שמאפשר לנו להכין git hooks בקלות.
+
+נתקין את commitlint ואת husky:
+
+```bash
+npm install --save-dev @commitlint/{config-conventional,cli} husky
+```
+
+נאתחל את husky:
+
+```bash
+npx husky init
+```
+
+ניצור `commit-msg` hook שיריץ את commitlint:
+
+```bash
+echo "npx --no -- commitlint --edit \$1" > .husky/commit-msg
+```
+
+עכשיו בכל פעם שנעשה קומיט ירוץ commitlint ויבדוק אם ההודעה עומדת בכללי Conventional Commits.
+
+## סיכום
+
+אנחנו צריכים להסתכל על הודעות הקומיט כמשהו בעל חשיבות ולא כמטרד, הודעות הקומיט מתארות את סיפור האבולוציה של התוכנה שלנו, והן יכולות לשמש ככלי לאוטומציה של תהליך השחרור ולשמור על היסטוריה נקייה וקריאה.
+בהתבסס על הודעות קומיט על פי קונבנציה שהוגדרה ב conventional commits, ניתן ליצור אוטומציה של שחרור הגירסאות באמצעות semantic-release ולאכוף על מפתחים לכתוב הודעות קומיט תקינות עם commitlint ו husky.
+בואו נפסיק עם כתיבת הודעות קומיט של ג׳וניורים כגון `fixed bug` או `added feature` ונתחיל לכתוב הודעות קומיט משמעותיות שיעזרו לנו בעתיד.
+
