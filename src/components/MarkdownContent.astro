@@ -1,7 +1,5 @@
 ---
-
 import Default from '@astrojs/starlight/components/MarkdownContent.astro';
-
 ---
 
 <Default {...Astro.props as any}>
@@ -9,38 +7,42 @@ import Default from '@astrojs/starlight/components/MarkdownContent.astro';
 </Default>
 
 <script>
-    /**
-     * @params {HTMLCollectionOf<HTMLElement>} graphs
-     */
-		//  @ts-ignore
-    async function renderDiagrams(graphs) {
-      const {default: mermaid} = await import("mermaid")
-      mermaid.initialize({
-        startOnLoad: false,
-        fontFamily: "var(--sans-font)",
-        // @ts-ignore This works, but TS expects a enum for some reason
-        theme: "neutral"
-      })
-			
-			mermaid.registerIconPacks([{
+	/**
+	 * @params {HTMLCollectionOf<HTMLElement>} graphs
+	 */
+	//  @ts-expect-error -- TS doesn't know about the mermaid import
+	async function renderDiagrams(graphs) {
+		const { default: mermaid } = await import('mermaid');
+		mermaid.initialize({
+			startOnLoad: false,
+			fontFamily: 'var(--sans-font)',
+			theme: 'neutral',
+		});
+
+		mermaid.registerIconPacks([
+			{
 				name: 'material-symbols',
-				loader: () => fetch('https://unpkg.com/@iconify-json/material-symbols@1/icons.json').then((res) => res.json()),
-			}]);
+				loader: () =>
+					fetch('https://unpkg.com/@iconify-json/material-symbols@1/icons.json').then((res) =>
+						res.json()
+					),
+			},
+		]);
 
-      for (const graph of graphs) {
-        const content = graph.getAttribute("data-content")
-        if (!content) continue
-        let svg = document.createElement("svg")
-        const id = (svg.id = "mermaid-" + Math.round(Math.random() * 100000))
-        graph.appendChild(svg)
-        mermaid.render(id, content).then(result => {
-          graph.innerHTML = result.svg
-        })
-      }
-    }
+		for (const graph of graphs) {
+			const content = graph.getAttribute('data-content');
+			if (!content) continue;
+			const svg = document.createElement('svg');
+			const id = (svg.id = 'mermaid-' + Math.round(Math.random() * 100000));
+			graph.appendChild(svg);
+			mermaid.render(id, content).then((result) => {
+				graph.innerHTML = result.svg;
+			});
+		}
+	}
 
-    const graphs = document.getElementsByClassName("mermaid")
-    if (document.getElementsByClassName("mermaid").length > 0) {
-      renderDiagrams(graphs);
-    }
-  </script>
+	const graphs = document.getElementsByClassName('mermaid');
+	if (document.getElementsByClassName('mermaid').length > 0) {
+		renderDiagrams(graphs);
+	}
+</script>
