@@ -1,0 +1,78 @@
+---
+title: Terraform Authentication and Impersonation
+description: Work with a team while focusing on security best practices, giving each team memeber the minimum required permissions.
+publishDate: 2024-12-23
+authors:
+  - yariv-katz
+---
+
+In this lesson we will learn how to manage permissions properly in our team.
+We will focus on a few key guidelines and best practices:
+- **Groups** - we will strive to avoid giving personal permissions to users, instead we will focus on placing users in groups and giving permissions to the group.
+- **Minimal Permissions** - Each of our groups will get the minimum permissions required to perform their tasks.
+- **Impersonation** - We will use service accounts and impersonation to create our cloud resources
+- **Short lived token** - We will impersonate service accounts using short lived generated tokens, this will be defined in our project so the developer will not have to manually impersonate the service account.
+- **No basic roles** - We will avoid using basic roles and instead use predefined roles or custom roles.
+
+Everything will be defined in our Terragrunt Tofu/Terraform project, so a user who wants to create resource will automatically impersonate the proper service account without needing to manually impersonation to the service account.
+There are a few advantages to dealing with permissions properly:
+- Damage control - user has certain restrictions so there mistakes and damage will be limited.
+- Security - security breach can have limited damage.
+- No Cinderella complex - Cinderella complex is when we have a single devops user that is in charge of opening all the gcp resources for the entire organization, (like Cinderalla step sisters asking: do this Cinderella, do that Cinderella), there is also a management problem when we have a single user that is in charge of all the resources, if that user leaves the organization, we will have a problem.
+
+Let's learn how to manage properly permissions in a Terragrunt project.
+
+## Principals
+
+In GCP we give permissions to [principals](https://cloud.google.com/iam/docs/overview#concepts_related_identity) in our case we will look at a smaller window in the principal list and we will focus on these 3 principals:
+- User
+- Group
+- Service Account
+
+We will give permissions to these principals and they will be able to perform certain actions in GCP.
+Often we don't have to give permissions to a user, we simply place that user in a group and give permissions to the group.
+In this example we will create 3 groups:
+- **Admin** - The admin group can create other groups and assign permissions to them.
+- **DevOps** - The devops group will have access to the **common** resources, they will also have access to all the environments: prod and non-prod.
+- **Developers** - The developers group will have access to the non-prod environments only.
+
+We will create a folder in: `iac/gcp/tofu/iam` inside this folder we will create a folder called `groups` where we will define the different groups.
+Each of those groups will be able to create/view/edit certain resources in GCP, we won't give the permissions directly to the group but we will allow each group to impersonate certain service accounts that have the proper permissions to GCP resources.
+
+## Impersonation
+
+[Impersonation](https://cloud.google.com/iam/docs/service-account-impersonation) is when an authenticated principal, such as user or another service account, authenticate as a different service account to gain the service account's permissions.
+Impersonation in GCP is similar to AWS [AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html) and Azure [On-Behalf-Of](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-on-behalf-of-flow) flow.
+Using the impersonation tricks we will create several service accounts with different gcp resource creation privilages, we can then give impersonation permissions to our groups to impersonate certain service accounts according to the permissions we want to grant the team memebers in the group.
+
+## Why do we need impersonation
+
+If we are using impersonation it means the GCP user is not directly creating the resources, instead the user is impersonating a service account that has the proper permissions to create the resources and then the service account will create those resources.
+This is a good practice because:
+
+
+## Auth project
+
+Those gcp
+
+## Basic roles
+
+[Basic roles](https://cloud.google.com/iam/docs/understanding-roles#basic) are highly permissive roles that existed prior to the introduction of IAM.
+We recommend to avoid using these roles and instead use the predefined roles (or fine tuned and limited [custom roles](https://cloud.google.com/iam/docs/creating-custom-roles)).
+
+## Predefined roles
+
+[Predefined roles](https://cloud.google.com/iam/docs/understanding-roles#predefined) will focus on a certain GCP service and give you some sort of logical permission on that service.
+These roles are created and maintained by Google.
+In this course we will learn to use the Predefined roles to give limited permissions based on service.
+
+The GCP IAM docs have a [search for predefined roles](https://cloud.google.com/iam/docs/understanding-roles#predefined) which we will use
+
+### How to find the right predefined role
+
+First step is to figure what is the service we want to give permissions to, each service has a service permission prefix.
+For example if we want to give a principal permission to create a K8S cluster than then to find the service permission prefix
+
+If we need a permission and we want to find the roles that include that permission we can goto gcp [IAM permissions reference](https://cloud.google.com/iam/docs/permissions-reference)
+
+
