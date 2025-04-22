@@ -54,17 +54,16 @@ sidebar:
 ## התחזות - Impersonation
 
 [התחזות - Impersonation](https://cloud.google.com/iam/docs/service-account-impersonation) היא כאשר ישות מזוהה כמו user או service account, יוצרים טוקן זמני כדי לבצע פעולה בשם Service Account אחר, הפעולה מזוהה עם Service Account אחר עם כל ההרשאות של אותו ה Service Account.
+הקונספט של Impersonation ב - GCP קיים גם בספקי הענן הפופולריים האחרים רק שהוא נקרא בשמות שונים. ב - AWS הוא נקרא [AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html) וב - Azure הוא נקרא [On-Behalf-Of](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-on-behalf-of-flow).
+באמצעות טריק ה Impersonation ניתן את האחריות ליצור משאבי ענן רק ל Service Accounts, ולא למשתמשים או קבוצות. למשתמשים ולקבוצות ניתן הרשאות להתחזות לאותן ה Service Accounts באמצעות Impersonation.
 
-Impersonation in GCP is similar to AWS [AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html) and Azure [On-Behalf-Of](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-on-behalf-of-flow) flow.
-Using the impersonation tricks we will create several service accounts with different gcp resource creation privilages, we can then give impersonation permissions to our groups to impersonate certain service accounts according to the permissions we want to grant the team memebers in the group.
-
-So a user is can not run our terraform code, he is placed in a group so he is getting more permissions but even with those permissions he can't directly run 
-the terraform code, but the group might contains permissions to impersonate certain service accounts that are dedicated to IAC, and then using impersonation the user can create the cloud resources.
-Now that sounds really complicated right? 
-Does that mean every time I want to run terraform code I need to remember which service account is allowed to run that code? 
-Does it mean I need to start generating tokens to impersonate the service account?
-No, and it is actually simpler than you think. 
-In the code itself we will define in each folder which service account should be impersonated to and the impersonation will happen automatically.
+למעשה יוזרים אינם מורשים להריץ קוד Terraform היות ואין להם הרשאות ליצירות משאבי ענן. אבל אותו היוזר נמצא בקבוצה אבל אפילו עם ההרשאות שהוא מקבל מהקבוצה עדיין אין לו הרשאות ליצירת משאבי ענן כלומר הוא עדיין לא יוכל להריץ את קוד ה - Terraform.
+אבל יתכן ולקבוצה תיהיה הרשאה לעשות Impersonation ל- Service Account שיכול ליצור משאבי ענן ודרך ההתחזות הזאת הוא יוכל להריץ את קוד ה - Terraform.  
+נשמע קצת מסובך נכון?
+האם המשמעות של זה שכל פעם שאני רוצה להריץ קוד Terraform אני צריך לזכור איזו Service Account מותר לי להריץ את הקוד הזה?
+האם זה אומר שאני צריך להתחיל לייצר טוקנים כדי להתחפש ל - Service Account?
+לא, והאמת שזה הרבה יותר פשוט ממה שזה נשמע.  
+באמצעות טריקים עם Terragrunt אנחנו ניצור בכל תיקייה קובץ שמסמן איזה Service Account מורשה להריץ את הקוד, ובתוך הקוד של Terragrunt הוא ימצא את אותו הקובץ עם ה - Service Account ויבצע את ההתחזות באופן אוטומטי.
 
 ## Why do we need impersonation
 
