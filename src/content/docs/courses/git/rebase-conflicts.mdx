@@ -1,0 +1,23 @@
+---
+title: Git rebase conflicts
+description: does `git rebase` has more conflicts than `git merge`?
+publishDate: 2025-04-22
+authors:
+  - yariv-katz
+---
+
+I see many developers struggle with using `git rebase` and I think the main reason of the struggle is 
+caused by the conflicts that arise when rebasing.
+So right from the start let's clarify something:
+**Does `git rebase` has more conflicts than `merge`?**: The answer is neither yes or no - annoying I know, we love to hear a black and white answer, but the truth often lies in the gray area, 
+and it oftens depends on the developer plan and experience.
+
+Let's start by understanding why the usually when we start using `git rebase` we stumble on many conflicts.
+
+
+## Rebase and Merge
+
+Let's start by understanding what `git rebase` and `git merge` are doing.
+
+Our starting point is that we started from a branch called `main`.
+We wanted to work on a new feature, so we created a new branch called `feature/`.
