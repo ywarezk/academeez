@@ -44,7 +44,7 @@ Let's try and understand what each of these commands does.
 
 ### Git Merge
 
-When we run `git merge main` we are telling git to merge the `main` branch into our current branch.
+When we run `git merge main` we are **telling** git to merge the `main` branch into our current branch.
 Git will create a new commit that combines the changes from both branches.
 This new commit will have two parents: the last commit on the `main` branch and the last commit on the `feature` branch.
 
@@ -58,3 +58,4 @@ When we run `git rebase main` we are telling git to take all the commits from th
 Git will take each commit from the `feature` branch and apply it on top of the `main` branch.
 This means that the commits from the `feature` branch will be added to the `main` branch one by one.
 
+![rebase main](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/rebase-anim4.gif?raw=true)
