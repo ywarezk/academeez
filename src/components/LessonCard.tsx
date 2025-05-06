@@ -8,28 +8,28 @@
  */
 
 import type { FC } from 'react';
-import {Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter} from './Card'
-import {buttonVariants} from './Button'
-import {cn} from './utils'
+import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from './Card';
+import { buttonVariants } from './Button';
+import { cn } from './utils';
 
-// https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/angular/best-practice/new-control-flow-syntax/for/thumbnail.png?raw=true
-
-export const LessonCard: FC<{article: any, locale: string}> = ({
-  article, locale
-}) => {	
+export const LessonCard: FC<{ article: any; locale: string }> = ({ article, locale }) => {
 	const slug = article.id.replace(/\.mdx$/, '');
-	let imageLink = slug	
-	if (locale) {		
+	let imageLink = slug;
+	if (locale) {
 		imageLink = imageLink.replace(`${locale.substring(1)}/`, '');
-	}	
-  return (
-    <Card>
-			<CardHeader>				
+	}
+	return (
+		<Card>
+			<CardHeader>
 				<CardTitle className="mt-2">{article.data.title}</CardTitle>
 				<CardDescription className="mt-2 leading-snug">{article.data.description}</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<img src={`https://github.com/ywarezk/academeez/blob/main/src/content/docs/${imageLink}/thumbnail.png?raw=true`} className="object-cover my-2 rounded-xl h-40" />
+				<img
+					crossOrigin="anonymous"
+					src={`https://raw.githack.com/ywarezk/academeez/main/src/content/docs/${imageLink}/thumbnail.png`}
+					className="object-cover my-2 rounded-xl h-40"
+				/>
 			</CardContent>
 			<CardFooter>
 				<a className={cn(buttonVariants(), 'w-full no-underline text-black')} href={`/${slug}`}>
@@ -37,5 +37,5 @@ export const LessonCard: FC<{article: any, locale: string}> = ({
 				</a>
 			</CardFooter>
 		</Card>
-  )
-}
+	);
+};
