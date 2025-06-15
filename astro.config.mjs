@@ -42,7 +42,7 @@ export default defineConfig({
 				ThemeSelect: './src/components/ThemeSelect.astro',
 				MarkdownContent: './src/components/MarkdownContent.astro',
 				Pagination: './src/components/Pagination.astro',
-				ThemeProvider: null,
+				ThemeProvider: './src/components/ThemeProvider.astro',
 			},
 			sidebar: [
 				{
