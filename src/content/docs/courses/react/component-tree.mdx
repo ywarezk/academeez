@@ -1,15 +1,17 @@
 ---
-title: Placing a component
+title: 3. Placing a component
 description: Your React component turns to a new tag.
 publishDate: 2023-12-06
 preview: false
+authors:
+  - yariv-katz
 sidebar:
-  hidden: true
+  order: 3
 ---
 
 import {Sandpack} from '@codesandbox/sandpack-react';
 
-In the <a className="duration-100 leading-normal transition ease-in hover:border-opacity-100 border-opacity-0 inline border-link border-b text-green" href="/en/course/react/component">previous lesson</a> we learned that React is a library that helps us create a UI components.
+In the <a className="duration-100 leading-normal transition ease-in hover:border-opacity-100 border-opacity-0 inline border-link border-b text-green" href="/courses/react/component">previous lesson</a> we learned that React is a library that helps us create a UI components.
 We also learned that to create a component in React, we need to create a function that returns how that component looks like.
 React components are reusable ui, which can be placed on desired places in the screen (can also be placed multiple times in different places).
 When you create a component, you can place it in the screen by using its function name as a tag inside another React component.
@@ -73,11 +75,11 @@ Few things to note in the following example:
 
 React application is made from a tree of components, usually the root of the component represents the entire application, or the root represents the current screen from the web application that we are visiting. This means that a screen like this:
 
-![React component tree](https://raw.githubusercontent.com/ywarezk/academeez/main/content/en/course/react/component-tag/tree.png)
+![React component tree](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/react/component-tree/tree.png?raw=true)
 
 We can create this screen with the following components:
 
-![React component tree](https://raw.githubusercontent.com/ywarezk/academeez/main/content/en/course/react/component-tag/components.png)
+![React component tree](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/react/component-tree/components.png?raw=true)
 
 When we create a React application we are building a tree of components (this is the popular way of creating a web application today, and this approach is the common way in other popular frameworks as well).
 
@@ -163,9 +165,9 @@ Few things to note here:
 
 In this exercise we will create the following component tree:
 
-![React component tree](https://raw.githubusercontent.com/ywarezk/academeez/main/content/en/course/react/component-tag/tree.png)
+![React component tree](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/react/component-tree/tree.png?raw=true)
 
-![React component tree](https://raw.githubusercontent.com/ywarezk/academeez/main/content/en/course/react/component-tag/components.png)
+![React component tree](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/react/component-tree/components.png?raw=true)
 
 Where the focus is to simply place those components, and not on the styling of those components which we will cover in the next lesson.
 You can write the code right here in the site: 
@@ -251,7 +253,7 @@ export default function Header() {
 			readOnly: true,	
 			code: `export default function Logo() {
 	return (
-		<img height={64} width={64} src="https://raw.githubusercontent.com/ywarezk/academeez/main/content/en/course/react/video/thumbnail.png" />
+		<img height={64} width={64} src="https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/react/component/thumbnail.png?raw=true" />
 	)
 }
 			`
