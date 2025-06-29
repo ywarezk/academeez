@@ -1,6 +1,6 @@
 ---
-title: 3. Placing a component
-description: Your React component turns to a new tag.
+title: 3. Components Tree
+description: A React application is made from many components, where each UI component can place another component, forming a tree of components.
 publishDate: 2023-12-06
 authors:
   - yariv-katz
@@ -17,7 +17,7 @@ When you create a component, you can place it in the screen by using its functio
 
 Let's give a simple example, in the following example we have two components that are located in two different files:
 - `App.js` - This is the component that represents the entire screen.
-- `Login.js` - This is a component that represents the login form (same one we created in the previous lesson).
+- `MyButton.js` - This component represents a button.
 
 <div className="mt-5 not-content">
 <Sandpack 
@@ -26,7 +26,7 @@ Let's give a simple example, in the following example we have two components tha
 		"App.js": {
 			readOnly: true,
 			code: `
-import Login from "./Login"
+import MyButton from "./MyButton"
 
 export default function App() {
   return (
@@ -34,7 +34,9 @@ export default function App() {
 			<header>
 				<h1>This is the header of the screen</h1>				
 			</header>
-			<Login />
+			<MyButton />
+			<MyButton />
+			<MyButton />
 			<footer>
 				<h5>This is the footer</h5>
 			</footer>
@@ -42,23 +44,13 @@ export default function App() {
   )
 }`
 		},
-		"Login.js": {
+		"MyButton.js": {
 			readOnly: true,
-			code: `export default function Login() {
+			code: `export default function MyButton() {
 	return (
-		<form>
-			<div>
-				<label>Username</label>
-				<input type="text" />
-			</div>
-			<div>
-				<label>Password</label>
-				<input type="password" />
-			</div>
-			<div>
-				<button type="submit">Login</button>
-			</div>
-		</form>
+		<button>
+			Click me!
+		</button>
 	)
 }
 `
@@ -69,22 +61,13 @@ export default function App() {
 </div>
 
 Few things to note in the following example:
-
-### Component tree
-
-React application is made from a tree of components, usually the root of the component represents the entire application, or the root represents the current screen from the web application that we are visiting. This means that a screen like this:
-
-![React component tree](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/react/component-tree/tree.png?raw=true)
-
-We can create this screen with the following components:
-
-![React component tree](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/react/component-tree/components.png?raw=true)
-
-When we create a React application we are building a tree of components (this is the popular way of creating a web application today, and this approach is the common way in other popular frameworks as well).
+- We can separate components to different files, and then import them in the file that we want to use them.
+- We can use ES6 import syntax to import the component that we want to use.
+- A component is turning to a tag, and it can be placed inside another component.
 
 ### Splitting files
 
-It's common to split your application to multiple files, and you will often place a component in a seperate file (like in this example where we had 2 components splitted to 2 files: `App.js` and `Login.js`).
+It's common to split your application to multiple files, and you will often place a component in a seperate file (like in this example where we had 2 components splitted to 2 files: `App.js` and `MyButton.js`).
 When splitting files we use [ES6 Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). so one syntax is to use `export default`:
 
 <div className="mt-5 not-content">
@@ -159,6 +142,20 @@ Few things to note here:
 - If you place a component in a seperate file, you need to import it in the file that you want to use it.
 - The name of the component is the name of the function.
 - That name has to be in PascalCase (camelCase but with the first letter capitalized, otherwise React will not recognize it as a component - but a tag name).
+
+### Component tree
+
+React application is made from a tree of components, usually the root of the component represents the entire application, or the root represents the current screen from the web application that we are visiting. This means that a screen like this:
+
+![React component tree](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/react/component-tree/tree.png?raw=true)
+
+We can create this screen with the following components:
+
+![React component tree](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/react/component-tree/components.png?raw=true)
+
+When we create a React application we are building a tree of components (this is the popular way of creating a web application today, and this approach is the common way in other popular frameworks as well).
+
+
 
 ## Exercise - component tree
 
