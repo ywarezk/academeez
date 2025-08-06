@@ -1,6 +1,8 @@
 ---
 import Default from '@astrojs/starlight/components/Pagination.astro';
-const isComments = Astro.props.entry.data.template !== 'splash';
+
+const data = Astro.locals.starlightRoute.entry.data;
+const isComments = data.template !== 'splash';
 ---
 
 <Default {...Astro.props as any} />
