@@ -1,0 +1,21 @@
+# 
+# Vercel bot will build a preview environment for each pull request.
+# This workflow will run E2E tests against that preview environment.
+#
+# Created August 16th, 2025
+# @author: ywarezk
+# @license: MIT
+# 
+
+name: End to End Tests
+ 
+on:  
+  repository_dispatch:
+    types:
+      - 'vercel.deployment.success'
+jobs:
+  run-e2es:    
+    if: github.event_name == 'repository_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Running E2E tests against the preview environment ${{ github.event.client_payload.url }}"      
