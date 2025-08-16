@@ -1,5 +1,5 @@
 ---
-import Page from '@astrojs/starlight/components/Page.astro';
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import { getCollection, getEntry } from 'astro:content';
 
 /**
@@ -35,6 +35,13 @@ const props = {
 	}
 </style>
 
-<Page {...props}>
+<StarlightPage
+	frontmatter={{
+		title: 'hide me',
+		template: 'splash',
+		hero: {},
+		publishDate: new Date(),
+	}}
+>
 	<Content />
-</Page>
+</StarlightPage>
