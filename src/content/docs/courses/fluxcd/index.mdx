@@ -1,0 +1,63 @@
+---
+title: FluxCD
+description: Learn to manage your kubernetes cluster using FluxCD in a declarative way.
+preview: false
+publishDate: 2024-11-02
+sidebar:
+  order: 0
+authors:
+  - yariv-katz
+---
+
+Declare the state of your kubernetes cluster using GitOps with [FluxCD](https://fluxcd.io/).  
+This is an advanced kubernetes course where we will focus on managing kubernetes cluster and focus on real world scenarios.
+
+Few things that we will focus on during this course...
+
+## What you need to prepare for this course
+
+You will need to following in order to follow the lessons in this course:
+- A managed kubernetes cluster in one of the cloud providers. We are going to use [GKE](https://cloud.google.com/kubernetes-engine) in this course, but you can use any managed kubernetes cluster.
+- `kubectl` installed and configured to work with your kubernetes cluster.
+
+
+## FluxCD
+
+We will use cloud resource to open a managed kubernetes cluster, and we will learn how to manage our kubernetes cluster using [FluxCD](https://fluxcd.io/).
+This means the entire state of our kubernetes cluster will be declared in our git repository, and we will use FluxCD to make sure that our kubernetes cluster is in the desired state.
+
+## Repository
+
+Our k8s state will be declared in a git repository hosted on GitHub, and we will use FluxCD to sync our kubernetes cluster with yaml manifests pushed to that git repository.
+This means that the source of truth for our kubernetes cluster will be the remote git repository, and we will use FluxCD to make sure that our kubernetes cluster is in the desired state.
+
+The course repository is available on [GitHub](https://github.com/ywarezk/academeez-k8s-flux)
+
+Few things to note about that repository since it contains more than just the course content:
+The repository also reflects the cloud resources that we will use in this course, since it is recommended to create cloud resources using IaC (Infrastructure as Code) tools like [Terraform](https://developer.hashicorp.com/terraform) or [OpenTofu](https://opentofu.org/).
+It is important to also open those cloud resources using IAC, so this repository doesn't only teach fluxCD but also connects to another course about IaC using [Terraform/OpenTofu](https://www.academeez.com/courses/terraform).
+
+The repository is arranged as a starter kit, so even if you don't have time to follow the course, you can clone the repository and use it as a starter kit for your own k8s cluster management on GCP with FluxCD
+
+If you like the work on the repository please make sure to give it a star on GitHub, and if you have any questions or suggestions please open an issue on the repository.
+
+## Who this course is for
+
+This course is for developers who want to learn how to manage their kubernetes cluster in a declarative way, using GitOps and FluxCD.
+It is aimed for developers who already have basic knowledge of kubernetes.
+
+## Pre-requisites
+
+This course requires basic knowledge of kubernetes, which includes:
+- Pods, Deployments, Services, Ingress, ConfigMaps, Secrets
+- Basic knowledge of kubectl
+- Helm
+
+## Technologies used in this course
+
+- [FluxCD](https://fluxcd.io/)
+
+## About the instructor
+
+This course is created by the founder of Academeez, [Yariv Katz](https://www.academeez.com/authors/yariv-katz).
+
