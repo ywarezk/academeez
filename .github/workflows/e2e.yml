@@ -57,7 +57,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: `E2E`,
-              head_sha: ${{ steps.determine-ref.outputs.ref }},
+              head_sha: '${{ steps.determine-ref.outputs.ref }}',
               status: 'in_progress',
               started_at: new Date().toISOString(),
             });
