@@ -19,7 +19,7 @@ jobs:
   run-e2es:    
     runs-on: ubuntu-latest
     steps:                
-      - uses: actions/create-github-app-token@a8d616148505b5069dccd32f177bb87d7f39123b
+      - uses: actions/create-github-app-token@v2.1.1
         id: app-token
         with:
           app-id: ${{ vars.ACADEMEEZ_APP_ID }}
