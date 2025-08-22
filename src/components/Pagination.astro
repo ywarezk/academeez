@@ -5,7 +5,7 @@ const data = Astro.locals.starlightRoute.entry.data;
 const isComments = data.template !== 'splash';
 ---
 
-<Default {...Astro.props as any} />
+<Default {...Astro.props} />
 
 {
 	isComments && (
