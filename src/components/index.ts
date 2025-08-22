@@ -1,4 +1,3 @@
-
 export { default as CardContentCourse } from './CardContent.astro';
 export { Button } from './Button';
 export * from './Card';
