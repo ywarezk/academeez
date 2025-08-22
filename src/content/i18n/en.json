@@ -1,8 +1,8 @@
 {
-	"header.courses": "Courses",
-	"pagesidebar.authors": "Authors",
-	"pagesidebar.source": "Source Code",
-	"breadcrumbs.home": "Home",
-	"breadcrumbs.courses": "Courses",
-	"pagetitle.publish": "Published on"
+  "header.courses": "Courses",
+  "pagesidebar.authors": "Authors",
+  "pagesidebar.source": "Source Code",
+  "breadcrumbs.home": "Home",
+  "breadcrumbs.courses": "Courses",
+  "pagetitle.publish": "Published on"
 }
