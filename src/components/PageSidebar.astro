@@ -15,7 +15,7 @@ const locale = Astro.currentLocale || 'en';
 const i18n = await getEntry('i18n', locale);
 ---
 
-<Default {...Astro.props as any} />
+<Default {...Astro.props} />
 
 {
 	authors.length > 0 ? (

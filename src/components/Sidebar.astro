@@ -13,14 +13,17 @@ import { isRtl } from './utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro';
 import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro';
-import type { SidebarEntry } from 'node_modules/@astrojs/starlight/utils/routing/types';
+import type {
+	SidebarEntry,
+	SidebarGroup,
+} from 'node_modules/@astrojs/starlight/utils/routing/types';
 
 const locale = Astro.currentLocale || 'en';
 
 function findMyParents(
 	sidebar: Array<SidebarEntry>,
 	parents: Array<SidebarEntry> = []
-): Array<any> | null {
+): Array<SidebarEntry> | null {
 	for (let i = 0; i < sidebar.length; i++) {
 		const entry = sidebar[i];
 		if (entry.type === 'group') {
@@ -78,7 +81,7 @@ const Seperator = isRtlLocale ? ChevronLeft : ChevronRight;
 				</Breadcrumb>
 			</div>
 			<SidebarPersister>
-				<SidebarSublist sublist={(parents[0] as any).entries} />
+				<SidebarSublist sublist={(parents[0] as SidebarGroup).entries} />
 			</SidebarPersister>
 		</>
 	) : null
