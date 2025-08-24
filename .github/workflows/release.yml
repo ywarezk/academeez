@@ -24,6 +24,12 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/create-github-app-token@v2.1.1
+        id: app-token
+        with:
+          app-id: ${{ vars.ACADEMEEZ_APP_ID }}
+          private-key: ${{ secrets.ACADEMEEZ_APP_PRIVATE_KEY }}
+    
       - name: Checkout
         uses: actions/checkout@v5
         with:
@@ -40,7 +46,7 @@ jobs:
         
       - name: Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}          
         run: npx semantic-release
           
       
