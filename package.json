@@ -1,7 +1,8 @@
 {
-  "name": "academeez2",
+  "name": "academeez",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.0-PLACEHOLDER",
+  "private": true,
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -50,6 +51,8 @@
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "@playwright/test": "^1.54.2",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
     "@types/node": "^24.3.0",
     "@typescript-eslint/parser": "^8.40.0",
     "astro-eslint-parser": "^1.2.2",
@@ -59,8 +62,21 @@
     "lint-staged": "^15.4.3",
     "prettier": "^3.4.2",
     "prettier-plugin-astro": "^0.14.1",
+    "semantic-release": "^24.2.7",
     "typescript-eslint": "^8.21.0",
     "unist-util-visit": "^5.0.0"
   },
-  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
+  "packageManager": "npm@10.8.2",
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/github",
+      "@semantic-release/git"
+    ]
+  }
 }
