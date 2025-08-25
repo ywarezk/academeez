@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/ywarezk/academeez/compare/v1.0.0...v1.1.0) (2025-08-25)
+
+
+### Features
+
+* updated nodejs to version 22.18.0 ([#24](https://github.com/ywarezk/academeez/issues/24)) ([4175cda](https://github.com/ywarezk/academeez/commit/4175cdaea468e0d3aa2b061cc2079246fe4c9ca1))
+
 # 1.0.0 (2025-08-24)
 
 
