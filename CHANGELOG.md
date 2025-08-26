@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/ywarezk/academeez/compare/v1.1.0...v1.2.0) (2025-08-26)
+
+
+### Features
+
+* enabling sourcemaps on preview environments ([#25](https://github.com/ywarezk/academeez/issues/25)) ([083ebd3](https://github.com/ywarezk/academeez/commit/083ebd396aa678eafff971a316360b6078ec635d))
+
 # [1.1.0](https://github.com/ywarezk/academeez/compare/v1.0.0...v1.1.0) (2025-08-25)
 
 
