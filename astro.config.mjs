@@ -9,6 +9,11 @@ import { sitemapCopier } from './src/integrations/sitemap-copier';
 
 // https://astro.build/config
 export default defineConfig({
+	vite: {
+		build: {
+			sourcemap: process.env.VERCEL_ENV === 'preview' || process.env.NODE_ENV === 'development',
+		},
+	},
 	integrations: [
 		react({
 			experimentalReactChildren: true,
