@@ -10,7 +10,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "prepare": "husky",
-    "check": "npm run check:astro && npm run check:eslint && npm run check:prettier",
+    "check": "npm run check:astro && npm run check:eslint && npm run check:prettier && npm audit",
     "check:astro": "astro check",
     "check:eslint": "eslint .",
     "check:prettier": "prettier --check ."
