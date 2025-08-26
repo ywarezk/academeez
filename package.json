@@ -60,11 +60,13 @@
     "globals": "^15.14.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
+    "nyc": "^17.1.0",
     "prettier": "^3.4.2",
     "prettier-plugin-astro": "^0.14.1",
     "semantic-release": "^24.2.7",
     "typescript-eslint": "^8.21.0",
-    "unist-util-visit": "^5.0.0"
+    "unist-util-visit": "^5.0.0",
+    "vite-plugin-istanbul": "^7.1.0"
   },
   "packageManager": "npm@10.8.2",
   "release": {
