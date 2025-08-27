@@ -6,13 +6,30 @@ import { mermaid } from './src/plugins/mermaid';
 import vercel from '@astrojs/vercel';
 import icon from 'astro-icon';
 import { sitemapCopier } from './src/integrations/sitemap-copier';
+import istanbul from 'vite-plugin-istanbul';
+
+const isPreview = process.env.VERCEL_ENV === 'preview';
 
 // https://astro.build/config
 export default defineConfig({
 	vite: {
 		build: {
-			sourcemap: process.env.VERCEL_ENV === 'preview' || process.env.NODE_ENV === 'development',
+			sourcemap: isPreview || process.env.NODE_ENV === 'development',
 		},
+		plugins: [
+			...(isPreview
+				? [
+						istanbul({
+							include: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.astro', 'src/**/*.js'],
+							exclude: ['node_modules', 'tests/'],
+							extension: ['.js', '.ts', '.astro', '.tsx'],
+							requireEnv: false, // we already guard with `isPreview`
+							checkProd: false,
+							forceBuildInstrument: true,
+						}),
+					]
+				: []),
+		],
 	},
 	integrations: [
 		react({

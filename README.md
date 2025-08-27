@@ -12,6 +12,12 @@
   <br>
 </p>
 
+<p align="center">
+  <a href="https://codecov.io/github/ywarezk/academeez" >
+    <img src="https://codecov.io/github/ywarezk/academeez/graph/badge.svg?token=HWFK0337XR"/>
+  </a>
+</p>
+
 <hr>
 
 ## What Does Academeez Offer?

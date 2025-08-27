@@ -91,6 +91,11 @@ jobs:
             playwright-report/
           retention-days: 7
           if-no-files-found: warn
+          
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
       
       - name: Set e2e check to success
         if: ${{ success() }}
