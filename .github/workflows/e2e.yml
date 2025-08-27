@@ -92,12 +92,18 @@ jobs:
           retention-days: 7
           if-no-files-found: warn
           
+      - name: Get latest commit on main
+        id: main-commit
+        run: |
+          git fetch origin main
+          echo "sha=$(git rev-parse origin/main)" >> "$GITHUB_OUTPUT"
+          
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           override_branch: main
-          override_commit: ${{ inputs.ref }}
+          override_commit: ${{ steps.main-commit.outputs.sha }}
           flags: e2e-preview
           name: E2E Coverage from Preview
           verbose: true
