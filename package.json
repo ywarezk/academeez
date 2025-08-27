@@ -53,12 +53,18 @@
     "@playwright/test": "^1.54.2",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
+    "@types/istanbul-lib-coverage": "^2.0.6",
+    "@types/istanbul-lib-report": "^3.0.3",
+    "@types/istanbul-reports": "^3.0.4",
     "@types/node": "^24.3.0",
     "@typescript-eslint/parser": "^8.40.0",
     "astro-eslint-parser": "^1.2.2",
     "eslint-plugin-astro": "^1.3.1",
     "globals": "^15.14.0",
     "husky": "^9.1.7",
+    "istanbul-lib-coverage": "^3.2.2",
+    "istanbul-lib-report": "^3.0.1",
+    "istanbul-reports": "^3.2.0",
     "lint-staged": "^15.4.3",
     "nyc": "^17.1.0",
     "prettier": "^3.4.2",
@@ -85,5 +91,31 @@
     "@astrojs/vercel": {
       "esbuild": "0.25.0"
     }
+  },
+  "nyc": {
+    "temp-dir": ".nyc_output",
+    "report-dir": "coverage",
+    "reporter": [
+      "lcov"
+    ],
+    "extension": [
+      ".ts",
+      ".tsx",
+      ".js",
+      ".jsx"
+    ],
+    "exclude": [
+      "**/*.spec.*",
+      "**/*.test.*",
+      "playwright.config.*",
+      "tests/**"
+    ],
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.tsx",
+      "src/**/*.js",
+      "src/**/*.jsx"
+    ],
+    "all": true
   }
 }
