@@ -97,7 +97,11 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           override_branch: main
-          override_commit: ${{ github.sha }}
+          override_commit: ${{ inputs.ref }}
+          flags: e2e-preview
+          name: E2E Coverage from Preview
+          verbose: true
+          fail_ci_if_error: false
 
       - name: Set e2e check to success
         if: ${{ success() }}
