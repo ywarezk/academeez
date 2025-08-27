@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/ywarezk/academeez/compare/v1.3.0...v1.3.1) (2025-08-27)
+
+
+### Bug Fixes
+
+* ci - running e2e tests in main as well ([#28](https://github.com/ywarezk/academeez/issues/28)) ([bb389b1](https://github.com/ywarezk/academeez/commit/bb389b11137240d181937f47ba33f27c6f761d2f))
+
 # [1.3.0](https://github.com/ywarezk/academeez/compare/v1.2.0...v1.3.0) (2025-08-27)
 
 
