@@ -1,3 +1,11 @@
+# [1.3.0](https://github.com/ywarezk/academeez/compare/v1.2.0...v1.3.0) (2025-08-27)
+
+
+### Features
+
+* code coverage ([#27](https://github.com/ywarezk/academeez/issues/27)) ([af6f88b](https://github.com/ywarezk/academeez/commit/af6f88bd93c311ce3441e080092076afa134513d))
+* in the ci added an audit check ([#26](https://github.com/ywarezk/academeez/issues/26)) ([48b8b1c](https://github.com/ywarezk/academeez/commit/48b8b1cccae18c0d0458afde318a6fba8a8a9c99))
+
 # [1.2.0](https://github.com/ywarezk/academeez/compare/v1.1.0...v1.2.0) (2025-08-26)
 
 
