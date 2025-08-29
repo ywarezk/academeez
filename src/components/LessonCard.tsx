@@ -10,7 +10,7 @@
 import type { FC } from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from './Card';
 import { buttonVariants } from './Button';
-import { cn } from './utils';
+import { cn, getThumbnailBySlug } from './utils';
 import type { CollectionEntry } from 'astro:content';
 
 export const LessonCard: FC<{ article: CollectionEntry<'docs'>; locale: string }> = ({
@@ -18,10 +18,8 @@ export const LessonCard: FC<{ article: CollectionEntry<'docs'>; locale: string }
 	locale,
 }) => {
 	const slug = article.slug;
-	let imageLink = slug;
-	if (locale) {
-		imageLink = imageLink.replace(`${locale.substring(1)}/`, '');
-	}
+	const imageLink = getThumbnailBySlug(slug, locale.substring(1));
+
 	return (
 		<Card>
 			<CardHeader>
@@ -29,11 +27,14 @@ export const LessonCard: FC<{ article: CollectionEntry<'docs'>; locale: string }
 				<CardDescription className="mt-2 leading-snug">{article.data.description}</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<img
-					crossOrigin="anonymous"
-					src={`https://raw.githack.com/ywarezk/academeez/main/src/content/docs/${imageLink}/thumbnail.png`}
-					className="object-cover my-2 rounded-xl h-40"
-				/>
+				{imageLink && (
+					<img
+						data-testid="lesson-thumbnail"
+						crossOrigin="anonymous"
+						src={imageLink.src}
+						className="object-cover my-2 rounded-xl h-40"
+					/>
+				)}
 			</CardContent>
 			<CardFooter>
 				<a className={cn(buttonVariants(), 'w-full no-underline text-black')} href={`/${slug}`}>

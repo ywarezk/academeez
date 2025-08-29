@@ -18,4 +18,12 @@ test.describe('homepage', () => {
 		expect(response.status()).not.toBe(404);
 		expect(response.ok()).toBeTruthy();
 	});
+
+	test('bug - image on LessonCard in locale', async ({ page }) => {
+		await page.goto('/he');
+		// All lesson thumbnails on the page
+		const thumbs = page.getByTestId('lesson-thumbnail');
+		const count = await thumbs.count();
+		expect(count).toBeGreaterThan(0);
+	});
 });
