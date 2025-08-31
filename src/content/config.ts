@@ -48,6 +48,14 @@ export const collections = {
 					)
 					.optional(),
 				publishDate: z.date(),
+				video: z
+					.object({
+						videoUrl: z.string().url(),
+						duration: z.number(),
+						publishDate: z.coerce.date(),
+						tags: z.array(z.string()).optional(),
+					})
+					.optional(),
 			}),
 		}),
 	}),
