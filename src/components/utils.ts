@@ -1,3 +1,4 @@
+import type { CollectionEntry } from 'astro:content';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -32,4 +33,11 @@ export function getThumbnailBySlug(slug: string, locale: string): { src: string 
 		return path.includes(`/docs/${normalizedSlug}/thumbnail.png`);
 	});
 	return entry?.[1]; // the built URL
+}
+
+export function getLocaleFromDoc(doc: CollectionEntry<'docs'>): string {
+	const id = doc.id; // e.g., 'he/docs/foo/bar' or 'docs/foo/bar'
+
+	const match = id.match(/^([a-z]{2})\/docs\//);
+	return match ? match[1] : 'en';
 }
