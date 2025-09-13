@@ -17,16 +17,22 @@ video:
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
+		class="mx-auto mb-10"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/_hw7I8XdcbU?si=dMdbUKd-Mz24v02N"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="Angular course introduction - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="Angular course introduction - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video provides an introduction to the Angular course, outlining what will be covered and the skills you will gain by completing the course.
+</span>
 
 [Angular](https://angular.dev) is a framework for building single-page web applications using TypeScript.  
 In this course we will learn how to use Angular to create a web application, we will interact with server, and learn about the popular libraries and frameworks that are used with Angular, such as RxJS, Angular Material, and NgRx.

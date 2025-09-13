@@ -16,16 +16,23 @@ video:
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
-		width="560"
-		height="315"
-		src="https://www.youtube.com/embed/W_tbNGERaKw?si=QuRaskOBqfnDRH3M"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-		allowFullScreen
+    class="mx-auto mb-10"
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/W_tbNGERaKw?si=QuRaskOBqfnDRH3M"
+    title="Typescript declaration file for extending Express Request type - video"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+    loading="lazy"
+    referrerPolicy="strict-origin-when-cross-origin"
+    aria-label="Typescript declaration file for extending Express Request type - video"
+    aria-describedby="iframe-video-description"
 	/>
 </div>
+
+<span id="iframe-video-description" class="sr-only">
+This video explains how to use Typescript declaration files to extend the Express Request type, allowing developers to add custom properties to the request object in a type-safe manner, with practical examples and best practices.
+</span>
 
 We often need to pass data between middlewares or between a middleware and a route handler in Express.  
 Common pattern we can use to transfer that data is by using the `Express.Request` object, and append the data we want to transfer to the request object.

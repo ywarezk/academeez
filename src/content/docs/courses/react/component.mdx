@@ -19,16 +19,22 @@ import {Sandpack} from '@codesandbox/sandpack-react';
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
+		class="mx-auto mb-10"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/n1a9okB6nkw?si=5Xl1mcQ36GjX6Thq"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="React Component - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="React Component - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video introduces the concept of components in React, explaining how to create and use them to build reusable and modular user interfaces, with practical examples and best practices.
+</span>
 
 [React](https://react.dev/) is a simple library with main goal of giving you tools to create UI components. A component represents part of your user interface. Let's take this image of academeez homepage as example:
 

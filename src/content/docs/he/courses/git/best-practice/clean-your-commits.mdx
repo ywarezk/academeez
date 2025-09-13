@@ -14,16 +14,22 @@ video:
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
+		class="mx-auto mb-10"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/bZpiVijzd2g?si=pdLWYegphM9kMQVU"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="Git - Clean your commits - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="Git - Clean your commits - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video provides a comprehensive tutorial on cleaning up your Git commits before pushing them to a remote repository, including practical steps and best practices for maintaining a clear and understandable commit history.
+</span>
 
 כאשר אתם מביטים בהיסטוריית הקוד שלכם, אתם רוצים לראות היסטוריה נקייה וקריאה. 
 חשבו על ה - version control שלכם, בשיעור זה נדגים עם [git](https://git-scm.com/), כמספרת סיפור התפתחות התוכנה שלכם.

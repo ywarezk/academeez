@@ -15,16 +15,23 @@ import {Sandpack} from '@codesandbox/sandpack-react';
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
+		class="mx-auto mb-10"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/R2wjayCaw30?si=H9j-H7IzSoSo6ezL"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="Angular - Opt-Out Zone.js - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="Angular - Opt-Out Zone.js - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+
+<span id="iframe-video-description" class="sr-only">
+This video explains the implications of working with Angular without Zone.js, including how to manually trigger change detection and optimize performance.
+</span>
 
 When I started working with Angular, I wasn't even aware of the different change detection strategies. 
 I wrote my angular app and stumbled on performance problems, when trying to solve the performance problems I stumbled on the `OnPush` change detection strategy. 

@@ -19,16 +19,22 @@ import {Sandpack} from '@codesandbox/sandpack-react';
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
+		class="mx-auto mb-10"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/OVTWdnGOlbE?si=UQc200B9UIgirhTi"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="React - Component Tree - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="React - Component Tree - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video explains the concept of a component tree in React, detailing how React applications are structured using reusable components that can be nested within each other to build complex user interfaces, with practical examples and best practices.
+</span>
 
 In the <a className="duration-100 leading-normal transition ease-in hover:border-opacity-100 border-opacity-0 inline border-link border-b text-green" href="/courses/react/component">previous lesson</a> we learned that React is a library that helps us create a UI components.
 We also learned that to create a component in React, we need to create a function that returns how that component looks like.

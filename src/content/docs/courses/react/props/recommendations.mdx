@@ -19,16 +19,22 @@ import {Sandpack} from '@codesandbox/sandpack-react';
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
+		class="mx-auto mb-10"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/krpGUmiCIEU?si=XPXEkzqSK4X5aizM"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="React Props Recommendations - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="React Props Recommendations - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video provides recommendations for using props in React components, covering best practices for prop naming, type definitions, avoiding prop drilling, and optimizing component performance, with practical examples and tips.
+</span>
 
 Props are data that is passed to a component from it's parent component.  
 Here is a list of tips how to use props properly in `React`

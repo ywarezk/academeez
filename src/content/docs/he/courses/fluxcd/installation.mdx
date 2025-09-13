@@ -23,16 +23,22 @@ video:
 
 <div class="not-content flex">
   <iframe
-    className="mx-auto"
+    class="mx-auto"
     width="560"
     height="315"
     src="https://www.youtube.com/embed/vp-oFksFoZs?si=6XALIufPOMTq7rxG"
-    title="YouTube video player"
-    frameBorder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    title="Installing Flux with flux-cli - video"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowFullScreen
+    loading="lazy"
+    referrerPolicy="strict-origin-when-cross-origin"
+    aria-label="Installing Flux with flux-cli - video"
+    aria-describedby="iframe-video-description"
   />
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video provides a comprehensive guide on installing FluxCD using the flux-cli tool, covering prerequisites, setup steps, and best practices for managing Kubernetes clusters with GitOps principles.
+</span>
 
 כדי להתקין את flux על הקלאסטר שלנו נצטרך לבצע את השלבים הבאים:
 

@@ -23,16 +23,22 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <div class="not-content flex">
   <iframe
-    className="mx-auto"
+    class="mx-auto"
     width="560"
     height="315"
     src="https://www.youtube.com/embed/CBgJ5iTXLFY?si=5616DzHU9n45AWf8"
-    title="YouTube video player"
-    frameBorder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    title="Introduction to Terragrunt - video"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowFullScreen
+    loading="lazy"
+    referrerPolicy="strict-origin-when-cross-origin"
+    aria-label="Introduction to Terragrunt - video"
+    aria-describedby="iframe-video-description"
   />
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video provides an introduction to Terragrunt, explaining its purpose and how it can be used to manage infrastructure as code projects with multiple small modules, while avoiding repetition and managing dependencies effectively.
+</span>
 
 The previous lesson was an intro to our infrastructure as code project, where we created a GCP Project, VPC, GKE, and bootstraped our FluxCD into the cluster using OpenTofu.  
 During this course we focus on best practices, this is why our cloud resources has to be created using IAC (in our case Terraform/OpenTofu), we have to get used to using IAC to create our cloud resources, and the course repository is aiming not only to be the source code of our lessons but also a starter kit you can base your real projects on.  

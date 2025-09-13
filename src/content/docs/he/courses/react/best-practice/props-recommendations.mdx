@@ -10,16 +10,22 @@ import {Sandpack} from '@codesandbox/sandpack-react';
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
+		class="mx-auto mb-10"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/krpGUmiCIEU?si=XPXEkzqSK4X5aizM"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="React Props Best Practices - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="React Props Best Practices - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video explains best practices for using props in React, including tips on prop drilling, naming conventions, optional props, default values, and using TypeScript for type safety with practical examples.
+</span>
 
 Props הם נתונים שמועברים לרכיב מהרכיב האב שלו.  
 הנה רשימה של טיפים כיצד להשתמש ב-props בצורה נכונה ב-`React`

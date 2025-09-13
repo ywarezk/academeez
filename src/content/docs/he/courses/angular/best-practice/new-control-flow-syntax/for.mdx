@@ -18,16 +18,22 @@ import {Sandpack} from '@codesandbox/sandpack-react';
 
 <div class="not-content flex mb-10">
 	<iframe
-		className="mx-auto"
+		class="mx-auto"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/Jd4zY9RfIHA?si=6tABeXpji0SReSlD"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="Angular - new @for control flow syntax - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="Angular - new @for control flow syntax - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video explains the new @for control flow syntax in Angular 17, highlighting its advantages over the traditional *ngFor directive, with practical examples and best practices.
+</span>
 
 הסינטקס החדש של `@for` שניתן להשתמש בו כדי להחליף את `*ngFor` זמין מ-**Angular 17**.
 הסינטקס החדש הוא הרבה יותר נקי וקל לקריאה וכתיב, וגם עוצמתי יותר.  

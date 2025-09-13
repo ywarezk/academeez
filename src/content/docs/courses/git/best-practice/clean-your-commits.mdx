@@ -14,16 +14,22 @@ video:
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
+		class="mx-auto mb-10"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/bZpiVijzd2g?si=pdLWYegphM9kMQVU"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="Git - Clean your commits - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="Git - Clean your commits - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video explains how to clean your commits in Git before pushing them to the remote repository, covering techniques such as amending commits, interactive rebasing, and resetting commits to maintain a clear and organized commit history.
+</span>
 
 When you look at your version control history, you want to see a clean and readable history. 
 Think of your version control, in this lesson we will demonstrate with [git](https://git-scm.com/), as telling a story, the story of evolution of your software.

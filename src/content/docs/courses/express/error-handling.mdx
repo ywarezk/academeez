@@ -15,16 +15,23 @@ video:
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
-		width="560"
-		height="315"
-		src="https://www.youtube.com/embed/jYSyTiBWgW8?si=KgLojdUwYf9-O1He"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-		allowFullScreen
+    class="mx-auto mb-10"
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/jYSyTiBWgW8?si=KgLojdUwYf9-O1He"
+    title="Error handling in Node.js and Express - video"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+    loading="lazy"
+    referrerPolicy="strict-origin-when-cross-origin"
+    aria-label="Error handling in Node.js and Express - video"
+    aria-describedby="iframe-video-description"
 	/>
 </div>
+
+<span id="iframe-video-description" class="sr-only">
+This video explains how to handle errors and exceptions in Node.js and Express, covering synchronous and asynchronous errors, best practices for error handling, and practical examples.
+</span>
 
 In this lesson we will understand how `Node` deals with exceptions in your code.  
 We will focus on sync errors as well as async errors.  
