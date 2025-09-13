@@ -16,16 +16,22 @@ import {Sandpack} from '@codesandbox/sandpack-react';
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
+		class="mx-auto mb-10"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/UHMP-26qBS4?si=l_Ym_uy3btnRKvG5"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="React - Component Single Responsibility - video"		
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="React - Component Single Responsibility - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video explains the Single Responsibility Principle in React component design, emphasizing the importance of keeping components focused on a single task to enhance maintainability and scalability, with practical examples and best practices.
+</span>
 
 [SOLID](https://simple.wikipedia.org/wiki/SOLID_(object-oriented_design)#:~:text=mnemonic%20acronym%20for%205%20principles,(rules)%20in%20computer%20programming.) is a set of five principles that help you design well-structured, maintainable, and scalable code.
 In this lesson we will focus on the `Single Responsibility Principle` which is the `S` in `SOLID`.

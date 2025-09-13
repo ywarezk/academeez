@@ -14,16 +14,22 @@ video:
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
-		width="560"
-		height="315"
-		src="https://www.youtube.com/embed/jbZIVoTxwYo?si=bxAxYFqLaxYIGX7R"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-		allowFullScreen
+    class="mx-auto mb-10"
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/jbZIVoTxwYo?si=bxAxYFqLaxYIGX7R"
+    title="Angular - OnPush in all components - video"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+    loading="lazy"
+    referrerPolicy="strict-origin-when-cross-origin"
+    aria-label="Angular - OnPush in all components - video"
+    aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video explains the best practice of using the OnPush change detection strategy in all Angular components to improve application performance, along with practical steps to implement this strategy effectively.
+</span>
 
 אם משתמש נכנס לאתר שלך, והאתר איטי , המשתמש כנראה יעזוב. אנחנו צריכים להתאמץ לעשות את האפליקציה שלנו כמה שיותר מהירה. אחת הדרכים להאיץ את האפליקציה שלך היא להשתמש באסטרטגיית `OnPush` בכל ה - Components.  
 הצעדים הבאים יחייבו אותך להגדיר את כל ה - Components שלך להשתמש באסטרטגיית `OnPush`.

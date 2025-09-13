@@ -21,16 +21,22 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <div class="not-content flex">
   <iframe
-    className="mx-auto"
+    class="mx-auto"
     width="560"
     height="315"
     src="https://www.youtube.com/embed/CBgJ5iTXLFY?si=5616DzHU9n45AWf8"
-    title="YouTube video player"
-    frameBorder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    title="Introduction to Terragrunt - video"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowFullScreen
+    loading="lazy"
+    referrerPolicy="strict-origin-when-cross-origin"
+    aria-label="Introduction to Terragrunt - video"
+    aria-describedby="iframe-video-description"
   />
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video provides a comprehensive introduction to Terragrunt, explaining its purpose, how to use it for managing infrastructure as code with Terraform/OpenTofu, and best practices for organizing and maintaining infrastructure projects with practical examples.
+</span>
 
 בשיעור קודם קיבלנו היכרות עם פרוייקט ה - infrastructure as code שלנו, יצרנו פרוייקט GCP, VPC, GKE, והפעלנו את FluxCD בקלאסטר שלנו באמצעות OpenTofu.  
 במהלך קורס זה אנחנו מתמקדים על best practices, זהו למה כל המשאבים בענן שלנו צריכים להיות נוצרים באמצעות IAC (במקרה שלנו Terraform/OpenTofu), עלינו להתרגל להשתמש ב IAC ליצירת המשאבים בענן שלנו, ותיקיית הקורס מתמקדת לא רק להיות קוד המקור של השיעורים שלנו אלא גם ערכת הכלים שאתה יכול לבסס עליה את הפרוייקטים האמיתיים שלך.  

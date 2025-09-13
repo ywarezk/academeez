@@ -17,16 +17,22 @@ import {Sandpack} from '@codesandbox/sandpack-react';
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
+		class="mx-auto mb-10"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/vcY2963JyEU?si=w7dzhtV7MhzFxzhS"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="Angular - NGRX Store Data Flow - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="Angular - NGRX Store Data Flow - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video explains the fundamentals of data flow in @ngrx/store, illustrating the Redux pattern with practical examples and best practices.
+</span>
 
 ננסה לשמור על פשטות ולהתמקד בליבת `@ngrx/store` ובזרימת הנתונים הבסיסית באפליקציה של Angular עם `NGRX`.  
 מטרתנו בשיעור זה היא להבין 3 אלמנטים מרכזיים מ-`@ngrx/store`:

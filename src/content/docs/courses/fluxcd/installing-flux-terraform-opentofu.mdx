@@ -22,16 +22,23 @@ video:
 
 <div class="not-content flex">
   <iframe
-    className="mx-auto"
-    width="560"
-    height="315"
-    src="https://www.youtube.com/embed/68YcfitcKGI?si=BlKkN8vWttUFfvG9"
-    title="YouTube video player"
-    frameBorder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    allowFullScreen
+		class="mx-auto"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/68YcfitcKGI?si=BlKkN8vWttUFfvG9"
+		title="FluxCD - Installing Flux with Terraform/OpenTofu - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="FluxCD - Installing Flux with Terraform/OpenTofu - video"
+		aria-describedby="iframe-video-description"
   />
 </div>
+
+<span id="iframe-video-description" class="sr-only">
+This video explains how to install FluxCD on a Kubernetes cluster using Terraform or OpenTofu, covering the creation of a GKE cluster, VPC, subnet, and the configuration of the Flux provider for GitOps.
+</span>
 
 In this lesson we will learn how to install [Flux](https://fluxcd.io/) on our [Kubernetes](https://kubernetes.io/) cluster using [OpenTofu](https://opentofu.org/).  
 We will write infastructure as code and run it with OpenTofu, but the same code can be used with Terraform.  

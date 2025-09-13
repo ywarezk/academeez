@@ -23,16 +23,23 @@ video:
 
 <div class="not-content flex">
   <iframe
-    className="mx-auto"
+    class="mx-auto"
     width="560"
     height="315"
     src="https://www.youtube.com/embed/aD5_OA3IEaA?si=UGUp2nH7JC0Pb85h"
-    title="YouTube video player"
-    frameBorder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    title="FluxCD - helm-controller - video"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowFullScreen
+    loading="lazy"
+    referrerPolicy="strict-origin-when-cross-origin"
+    aria-label="FluxCD - helm-controller - video"
+    aria-describedby="iframe-video-description"
   />
 </div>
+
+<span id="iframe-video-description" class="sr-only">
+This video explains how to use the helm-controller in FluxCD to manage Helm charts on a Kubernetes cluster, including subscribing to Helm repositories, installing charts, and best practices for managing Helm releases declaratively.
+</span>
 
 The `helm-controller` is a [Flux](https://fluxcd.io/flux/components/helm/) operator that works with the `HelmRelease` custom resource.
 It is used to manage helm releases on our cluster.
