@@ -28,6 +28,38 @@ A Unit represents a single instance of infrastructure managed by Terragrunt. Her
 An example of a unit in our repository: [root folder](https://github.com/ywarezk/academeez-k8s-flux/tree/main/iac/gcp/tofu/common/folders/root).
 We have a unit which creates our course root folder, this is a very minimal piece of infrastructure which other units use with dependency blocks.
 
+## terragrunt run
+
+A Unit is runnable, which means we can go inside a folder with `terragrunt.hcl` and we can run to create or update the infrastructure defined in that unit.
+For example we can cd into the a unit folder:
+
+```bash
+cd iac/gcp/tofu/common/folders/shared
+terragrunt plan
+```
+
+and we can run `terragrunt plan` to examine the changes that will be applied by running that unit, and we can run `terragrunt apply` to apply those changes.
+
+### --all flag
+
+You don't have to run these commands inside a unit folder, for example if we go one folder back:
+
+```bash
+cd iac/gcp/tofu/common/folders/
+```
+
+Inside this folder we have 2 units: `root` and `shared`.
+We can run `terragrunt plan --all` to run `plan` on all the units inside this folder and its subfolders.
+
+:::warning
+If running `terragrunt apply --all` it will not ask for confirmation before applying changes to all the units, so be careful when running this command.
+:::
+
+### Running --all from the root of the repository
+
+What if we want to see all the changes, we can go to the root of our repository and try and run `terragrunt plan --all` from there.  
+We will notice that it will fail with an error, the reason is that in the root of our repository we have a `terragrunt.hcl` file which does not represent a unit, and it is not runnable by itself.
+
 ## Bad Practice - root terragrunt.hcl
 
 In the past it was common to have a `terragrunt.hcl` file in the root of the repository.
@@ -74,7 +106,7 @@ include "root" {
 }
 ```
 
-You can examine the migration in the following [PR](https://github.com/ywarezk/academeez-k8s-flux/pull/11)
+You can examine the migration in the following [PR](https://github.com/ywarezk/academeez-k8s-flux/pull/12)
 
 ## Summary
 
