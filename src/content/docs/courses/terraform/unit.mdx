@@ -1,0 +1,115 @@
+---
+title: Terragrunt Unit
+description: A Unit represents a small part in our infrastructure and it is identified by a terragrunt.hcl file
+publishDate: 2025-09-14
+authors:
+  - yariv-katz
+sidebar:
+  order: 8
+sources:
+  - url: "https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-08"
+    title: "change root terragrunt.hcl to root.hcl"
+---
+
+We will dedicate a few lessons in our course to talk about [Terragrunt Terminology](https://terragrunt.gruntwork.io/docs/getting-started/terminology/).
+Specifically we will focus on [Units](https://terragrunt.gruntwork.io/docs/features/units/) and [Stacks](https://terragrunt.gruntwork.io/docs/features/stacks/).
+We will understand those concepts as well as learn to apply them in our codebase.
+
+In this lesson we will focus on **Units**
+
+## What is a Unit
+
+A Unit represents a single instance of infrastructure managed by Terragrunt. Here are a few characteristics:
+- It has its own state
+- It is in a folder which has a `terragrunt.hcl` file
+- It is often minimalistic and represents a small piece of infrastructure.
+- A unit can interact with another unit using [dependency blocks](https://terragrunt.gruntwork.io/docs/reference/hcl/blocks#dependency).
+
+An example of a unit in our repository: [root folder](https://github.com/ywarezk/academeez-k8s-flux/tree/main/iac/gcp/tofu/common/folders/root).
+We have a unit which creates our course root folder, this is a very minimal piece of infrastructure which other units use with dependency blocks.
+
+## terragrunt run
+
+A Unit is runnable, which means we can go inside a folder with `terragrunt.hcl` and we can run to create or update the infrastructure defined in that unit.
+For example we can cd into the a unit folder:
+
+```bash
+cd iac/gcp/tofu/common/folders/shared
+terragrunt plan
+```
+
+and we can run `terragrunt plan` to examine the changes that will be applied by running that unit, and we can run `terragrunt apply` to apply those changes.
+
+### --all flag
+
+You don't have to run these commands inside a unit folder, for example if we go one folder back:
+
+```bash
+cd iac/gcp/tofu/common/folders/
+```
+
+Inside this folder we have 2 units: `root` and `shared`.
+We can run `terragrunt plan --all` to run `plan` on all the units inside this folder and its subfolders.
+
+:::warning
+If running `terragrunt apply --all` it will not ask for confirmation before applying changes to all the units, so be careful when running this command.
+:::
+
+### Running --all from the root of the repository
+
+What if we want to see all the changes, we can go to the root of our repository and try and run `terragrunt plan --all` from there.  
+We will notice that it will fail with an error, the reason is that in the root of our repository we have a `terragrunt.hcl` file which does not represent a unit, and it is not runnable by itself.
+
+## Bad Practice - root terragrunt.hcl
+
+In the past it was common to have a `terragrunt.hcl` file in the root of the repository.
+Just like in our repository: [root terragrunt.hcl](https://github.com/ywarezk/academeez-k8s-flux/tree/main/iac/gcp/tofu).
+That root `terragrunt.hcl` did not really represent a unit, it was more of a shared configuration for all the units in the repository.
+
+Other units would include the root `terragrunt.hcl` using:
+
+```hcl
+include "root" {
+  path = find_in_parent_folders()
+}
+```
+
+And in this file we defined providers configuration, remote state configuration and impersonation logic.
+
+The [find_in_parent_folders](https://terragrunt.gruntwork.io/docs/reference/hcl/functions/#find_in_parent_folders) function would search up the directory tree from the current `terragrunt.hcl` file and return the absolute path to the first file it finds named `terragrunt.hcl` if nothing supplied to the function, or the name of the file supplied.
+It allowed us to easily find the parent `terragrunt.hcl` file without hardcoding the path and including that shared configuration.
+There are a few problems with this approach:
+- The root `terragrunt.hcl` is not really a unit, it does not represent a single piece of infrastructure, and it is not runnable by itself.
+- That fact will often break running `terragrunt run-all` commands from the root of the repository, as it will try to run the root `terragrunt.hcl` which is not a unit.
+- The pattern might break if we have parent folders that are units and have `terragrunt.hcl` files in them.
+
+This is why it is no longer recommended to name root file that represents shared logic as `terragrunt.hcl` - which usually represent a unit - but rather give it a different name like `root.hcl` or `common.hcl`.
+A name that will mark that file as shared logic and not runnable unit which defines an infrastructure piece.
+
+## Migrate to root.hcl
+
+We will follow this [migration guide](https://terragrunt.gruntwork.io/docs/migrate/migrating-from-root-terragrunt-hcl/) and change the name of our root `terragrunt.hcl` to `root.hcl`.
+After we rename the file we will need to update the `find_in_parent_folders` function to look for `root.hcl` instead of `terragrunt.hcl`.
+So from:
+
+```hcl
+include "root" {
+  path = find_in_parent_folders()
+}
+```
+
+To:
+
+```hcl
+include "root" {
+  path = find_in_parent_folders("root.hcl")
+}
+```
+
+You can examine the migration in the following [PR](https://github.com/ywarezk/academeez-k8s-flux/pull/12)
+
+## Summary
+
+A unit represents a single piece of infrastructure with its own state.
+A unit is in a folder with a `terragrunt.hcl` file.
+Since our root `terragrunt.hcl` file did not represent a unit, we renamed it to `root.hcl` and updated all the `find_in_parent_folders` functions to look for `root.hcl` instead of `terragrunt.hcl`.
