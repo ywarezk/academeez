@@ -1,22 +1,56 @@
 ---
 import Default from '@astrojs/starlight/components/PageTitle.astro';
+import { AvatarFull } from './Avatar';
 import { getEntry } from 'astro:content';
 
 const locale = Astro.currentLocale || 'en';
-const i18n = await getEntry('i18n', locale);
 
 const data = Astro.locals.starlightRoute.entry.data;
+
+// authors in frontmatter is ["yariv-katz"] -> resolve from the "authors" collection
+const authorSlugs = Array.isArray(data.authors) ? data.authors : data.authors ? [data.authors] : [];
+const authors = await Promise.all(authorSlugs.map((slug) => getEntry('authors', slug)));
+
+const publishDate = new Date(data.publishDate);
+const publishISO = publishDate.toISOString();
+const publishHuman = publishDate.toLocaleDateString(locale, {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+});
 ---
 
 <Default {...Astro.props} />
 
-<p class="text-muted-foreground">
-	{i18n?.data['pagetitle.publish']}
-	{
-		new Date(data.publishDate).toLocaleDateString(locale, {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric',
-		})
-	}
-</p>
+{
+	authors.length > 0 && (
+		<div class="mt-6 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+			{/* Avatars + names (each links to /authors/[slug] via your AvatarFull) */}
+			<div class="flex items-center gap-3">
+				{authors.map((a) => (
+					<AvatarFull
+						client:load
+						avatar={a?.data?.avatar}
+						key={a?.slug}
+						name={a?.data?.name}
+						slug={a?.slug}
+						className="ring-1 ring-border"
+					/>
+				))}
+			</div>
+
+			{/* Separator dot */}
+			<span aria-hidden="true" class="hidden md:inline">
+				•
+			</span>
+
+			{/* Published date */}
+			<time
+				datetime={publishISO}
+				class="text-sm font-normal font-sans text-muted-foreground leading-none"
+			>
+				{publishHuman}
+			</time>
+		</div>
+	)
+}
