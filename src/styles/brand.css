@@ -15,6 +15,10 @@
 	--sl-color-bg-nav: white;
 }
 
+.site-title img {
+	height: 25px;
+}
+
 [data-has-hero] .page {
 	background:
 		linear-gradient(215deg, var(--overlay-blurple), transparent 40%),
