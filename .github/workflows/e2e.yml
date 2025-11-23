@@ -52,24 +52,27 @@ jobs:
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 1
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.2.0
           
       - name: Setup Node.js
         uses: actions/setup-node@v3.9.1
         with:
           node-version-file: '.nvmrc'   # automatically reads Node version from .nvmrc
-          cache: 'npm'                  # enables npm cache based on lock file
+          cache: 'pnpm'                  # enables pnpm cache based on lock file
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
           
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: pnpm exec playwright install --with-deps
     
       - name: run tests
         env:
           BASE_URL: ${{ inputs.url }} # 👈 preview env URL
         run: |
-          npx playwright test
+          pnpm exec playwright test
           
       # Upload *all* artifacts (videos, screenshots, traces, html report)
       - name: Upload test results
