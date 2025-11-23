@@ -1,0 +1,409 @@
+---
+title: Which Props Can I Pass?
+description: Learn which props you can pass to DOM elements, your React components, and third‑party components.
+publishDate: 2025-11-22
+authors:
+  - yariv-katz
+sidebar:
+  order: 6
+  label: 4.2 Which Props Can I Pass?
+---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+In React, **“props”** are how parents pass data down to children. In this lesson (Rule 1), we’ll answer: Which props can I pass? We’ll look at three common cases and derive the rule from them:
+
+- `DOMElements` (e.g., `<img>`) → You can pass the element’s own DOM properties (plus a few React-internal props like `key`, `ref`).
+- Your own components → You can pass whatever props the component defines in its API (Plus React-internal props like `key`, `ref`).
+- Third‑party components (e.g., MUI) → You can pass the library’s documented props (Plus React-internal props like `key`, `ref`).
+
+Let's see those three cases in our live code editor...
+
+<div className="mt-5 not-content">
+<Sandpack 
+	client:load
+	files={{
+		"Child.js": {
+			code: `
+export default function Child(props) {
+    return (
+      <div>
+          <h1>My name is: {props.name}</h1>
+          <p>My age is: {props.age} </p>
+      </div>	
+    );
+}
+			`,
+		},
+		"App.js": {			
+			code: `
+import Child from './Child';
+import Button from '@mui/material/Button';
+
+export default function App() {
+    return (
+      <div>
+        <h1>Props to DOM Elements</h1>
+        <img 
+          src="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg"
+          height="50"
+          width={ 300 }
+        />
+				
+        <h1>Props to React Components</h1>
+        <Child name="Academeez" age={ 5 } />
+				
+        <h1>Props to MUI (Third‑party components)</h1>
+        <Button variant="contained" color="primary" onClick={() => { alert('hello') }}>
+          Click me
+        </Button>
+      </div>
+    )
+}`
+		}
+	}}
+	template="react" 
+	customSetup={{
+		dependencies: {
+			"@mui/material": "latest",
+			"@emotion/react": "latest",
+			"@emotion/styled": "latest"
+		}
+	}}
+/>
+</div>
+
+
+
+The live code editor above demonstrates three examples of passing props:
+
+1. **Props to DOM Elements**: The `<img>` tag receives `src`, `width`, and `height` props. When React renders this, it creates an [`HTMLImageElement`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement) DOM element and passes these properties to it.
+
+2. **Props to React Components**: The `Child` component receives `name` and `age` props, which are then used within the component to display the values.
+
+3. **Props to MUI (Third-party components)**: The MUI `Button` component receives `variant`, `color`, and `onClick` props, demonstrating how to pass props to third-party library components.
+
+You can edit the code in the live editor above to experiment with different props and see how they affect the rendered output. Try modifying the prop values or adding new props to see what happens!
+
+## Rules of passing props
+
+When passing props to DOM Elements or React components, there are three fundamental rules you should follow:
+
+1. **Passing the right props** - Knowing which props you can pass to a DOM Element or React component.
+2. **Passing the right type for that prop** - Understanding what data types each prop expects (string, number, object, function, etc.).
+3. **Syntax rules** - Learning the correct syntax for passing props in JSX.
+
+In this lesson, we will focus on the **first rule: passing the right props**. We'll explore how to determine which props you can pass to DOM Elements, your own React components, and third-party components. The second and third rules will be covered in future lessons.
+
+## Passing the right props - How do I know which props I can pass?
+
+To understand which props you can pass, we need to understand how React processes your JSX code. When you write JSX like this:
+
+```jsx title="JSX Props to DOM Elements"
+<img 
+  src="https://example.com/image.jpg"
+  width={300}
+  height={200}
+  key="image-1"
+  ref={imageRef}
+/>
+```
+
+The JSX is first transformed by the transpiler/compiler into a [**React Element**](https://legacy.reactjs.org/docs/rendering-elements.html). This React Element contains all the props you passed: `src`, `width`, `height`, `key`, and `ref`.
+
+Next, React's internal parts process this React Element:
+
+1. **React Reconciler** - This private React internal part grabs the `key` prop for its own use (we'll learn about keys in future lessons).
+
+2. **React Renderer** - This private React internal part grabs the `ref` prop for its own use (we'll learn about refs in future lessons).
+
+3. **DOM Element or React Component** - The remaining props (like `src`, `width`, and `height` in our example) are passed to the actual DOM Element or React component.
+
+So when you pass props in JSX, you're actually passing them to the React Element. React's internal parts (Reconciler and Renderer) extract certain props like `key` and `ref` for their own use, and the remaining props are transferred to the final DOM Element or React component.
+
+This means that the props you can pass are:
+- **Child Props** - The props that the DOM Element or React component can receive (like `src`, `width`, `height` for an `<img>` tag, or `name`, `age` for your custom `Child` component).
+- **React Internal Props** - Props like `key` and `ref` that React's internal parts use and don't pass down to the DOM Element or component.
+
+## Child Props
+
+To determine which props you can pass to a child, you need to know what type of child it is. The answer depends on whether the child is:
+
+1. **A DOM Element** (e.g., `<img>`, `<div>`, `<button>`)
+2. **Your own React component** (e.g., `<Child>`, `<MyComponent>`)
+3. **A third-party component** (e.g., MUI's `<Button>`, components from other libraries)
+
+We'll go over each of these three cases to find out which props we can pass to the child component in each scenario.
+
+### 1. Props to DOM Elements
+
+When passing props to DOM Elements, the props you can pass are the same JavaScript properties that the DOM element has. For example, the `<img>` tag has properties like `src`, `width`, and `height`.
+How can you know which are those properties that you can pass to the DOMElement?
+
+There are three ways to find out which properties you can pass to a DOM Element:
+
+#### 1. Documentation (MDN)
+
+You can find the full list of properties for each HTML tag in the [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Element).
+
+**Important:** DOM Elements usually inherit properties from other elements. For example, if we want to know which props we can pass to an `<img>` tag, we need to look at [HTMLImageElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement), which inherits from [HTMLElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement), which inherits from [Element](https://developer.mozilla.org/en-US/docs/Web/API/Element).
+
+This means that some of the props you can pass (for example `style`) are actually inherited from one of the parent elements and not from the `HTMLImageElement` itself. When checking the documentation, make sure to look at the inheritance chain to see all available properties.
+
+#### 2. TypeScript and IDE Autocomplete
+
+If you are using [**TypeScript**](https://www.typescriptlang.org/), which we will learn how to work with TypeScript and React later in this course, you will have excellent IDE support and autocomplete for the props you can pass to HTML tags. Your IDE will suggest available props as you type, making it easy to discover which properties are available.
+
+#### 3. Browser Developer Tools
+
+You can inspect a DOM element instance directly in the browser to see its properties. Here's how:
+
+1. Open your browser's developer tools
+2. Select an element in the Elements/Inspector tab
+3. Go to the Console tab
+4. Type `$0` - this variable is a reference to the currently selected DOM element
+5. You can now inspect its properties and methods
+
+For example, try this with the `img` element in the live code editor above. You'll notice that the `src`, `width`, and `height` properties are set to the values we passed in the component. This gives you a real-time view of what properties are available on the actual DOM element instance.
+
+#### Common Mistake: Props are **NOT** HTML attributes
+
+Now that we know what we can pass to a DOM element, let's go over what we **cannot** pass.
+
+These are common mistakes that developers make when passing props to DOM Elements. The confusion is often caused by mistaking HTML attributes for JSX props. Although props may remind us of HTML attributes, they are actually JavaScript properties, not HTML attributes.
+
+This is a bit confusing when starting with React, but it's important to understand: props in JSX correspond to JavaScript properties on the DOM element, not HTML attributes. Let's examine a few common mistakes...
+
+#### JavaScript Reserved words
+
+When passing props to DOM elements in JSX, the props you can pass are based on the properties of the DOM element.
+This means that props should match the DOM element's properties, which follow JavaScript naming conventions.
+Properties in JavaScript are camelCased, while HTML attributes are kebab-cased.
+Additionally, JavaScript reserved words cannot be used as property names.
+For example, `class` is a reserved word in JavaScript, so it cannot be used as a property name.
+Similarly, `for` is also a reserved word in JavaScript.
+
+##### class vs className
+
+As we've mentioned, JSX looks like HTML, but it's not HTML—it's JSX.
+This can be confusing, but remember: props must match the DOM element's properties, not the HTML attributes.
+
+A common example is the `class` attribute in HTML.
+In HTML, we use the `class` attribute to set CSS classes on an element.
+In JSX, we use the `className` prop instead.
+This is because `class` is a reserved keyword in JavaScript, so DOM elements don't have a `class` property.
+Instead, the HTML `class` attribute is mapped to the `className` property in the DOM element.
+Therefore, when we want to pass a CSS class prop, we use `className` instead of `class`.
+
+```jsx title="JSX Props to DOM Elements"
+<img 
+	src="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg"
+	width={300}
+	height={300}
+	className="my-image-class"
+/>
+```
+
+##### for vs htmlFor
+
+Another common example is the `for` attribute in HTML.
+In HTML, we use the `for` attribute to associate a label with an input element.
+In JSX, we use the `htmlFor` prop instead.
+This is because `for` is a reserved keyword in JavaScript, so DOM elements don't have a `for` property.
+Instead, the HTML `for` attribute is mapped to the `htmlFor` property in the DOM element.
+Therefore, when we want to pass the `for` prop, we use `htmlFor` instead of `for`.
+
+```jsx title="JSX Props to DOM Elements"
+<label htmlFor="my-input">My Input</label>
+<input id="my-input" type="text" />
+```
+
+#### JavaScript is camelCased
+
+As we mentioned earlier, JavaScript properties follow camelCase naming conventions, while HTML attributes use kebab-case.
+This means that in JSX, when passing props to DOM elements, those props will match the JavaScript properties and will be camelCased, and at times will differ from HTML attributes.
+This difference is important when working with JSX, because props must match the JavaScript property names, not the HTML attribute names.
+
+Let's examine two common examples where this distinction matters: events and the `style` property.
+
+##### Events: onclick vs onClick
+
+In HTML, event attributes are written in lowercase:
+```html title="HTML Events"
+<button onclick="handleClick()">Click me</button>
+```
+
+In JSX, event props are written in camelCase to match the JavaScript property names:
+```jsx title="JSX Props to DOM Elements"
+<button onClick={handleClick}>Click me</button>
+```
+
+Notice that:
+- HTML uses `onclick` (lowercase)
+- JSX uses `onClick` (camelCase with capital C)
+
+This applies to all event handlers: `onClick`, `onChange`, `onSubmit`, `onMouseOver`, etc.
+
+##### Style: background-color vs backgroundColor
+
+In HTML, CSS properties in the `style` attribute use kebab-case:
+```html title="HTML style attribute"
+<div style="background-color: red; font-size: 16px;">Hello</div>
+```
+
+In JSX, when passing a `style` object, CSS properties are written in camelCase:
+```jsx title="JSX Props to DOM Elements"
+<div style={{ backgroundColor: 'red', fontSize: '16px' }}>Hello</div>
+```
+
+Notice that:
+- HTML uses `background-color` (kebab-case)
+- JSX uses `backgroundColor` (camelCase)
+
+This is because the `style` prop expects a JavaScript object, and JavaScript object properties must be valid JavaScript identifiers, which means they use camelCase.
+
+### 2. Props to Your Own React Components
+
+When passing props to your own React components, it's quite simple: the props you can pass are the ones that are defined in the child component and that the child expects to receive.
+
+The component's function signature (or class component's props interface) determines which props are available. You define which props your component can receive when you create it.
+
+For example, in the live code editor above, the `Child` component accepts `name` and `age` props:
+
+```jsx
+<Child name="Academeez" age={5} />
+```
+
+The component defines its props in its function parameters:
+
+```jsx
+export default function Child(props) {
+  return (
+    <div>
+      <h1>My name is: {props.name}</h1>
+      <p>My age is: {props.age}</p>
+    </div>
+  );
+}
+```
+
+To know which props you can pass to your own components, simply check the component's definition. The props you can pass are exactly what the component expects to receive in its props parameter.
+
+#### Documenting Props with JSDoc
+
+To make it clear to other developers which props they can pass, we often add [JSDoc](https://jsdoc.app/) comments to the function describing the props that we are expecting and the types of the props.
+
+Here's an example of the same component with JSDoc comments:
+
+```jsx
+/**
+ * @param {Object} props - The component props
+ * @param {string} props.name - The name to display
+ * @param {number} props.age - The age to display
+ */
+export default function Child(props) {
+  return (
+    <div>
+      <h1>My name is: {props.name}</h1>
+      <p>My age is: {props.age}</p>
+    </div>
+  );
+}
+```
+
+JSDoc comments provide documentation that helps other developers (and your IDE) understand what props are available and what types they should be. In the next lesson, we will show examples of defining those props with TypeScript so the correct types will be enforced by TypeScript at compile time.
+
+### 3. Props to Third-Party Components
+
+When passing props to third-party components (like MUI's `<Button>`, components from other libraries, or any component you install from npm), the **source of truth** is the library's documentation.
+
+Each third-party library documents its components' props. The library's documentation tells you exactly which props are available, what types they expect, and how to use them.
+
+#### Finding Props in Documentation
+
+For example, when using Material UI (MUI) components, you can find the props documentation on the [Material UI website](https://mui.com/material-ui/getting-started/). Each component has its own documentation page that lists all available props.
+
+Let's look at MUI's `Button` component as an example:
+
+```jsx
+<Button variant="contained" color="primary" onClick={() => { alert('hello') }}>
+  Click me
+</Button>
+```
+
+To know which props you can pass to this `Button` component, you would:
+1. Visit the [MUI Button documentation](https://mui.com/material-ui/react-button/)
+2. Look at the "API" section which lists all available props
+3. Check the prop types and descriptions
+
+The documentation will show you that `Button` accepts props like:
+- `variant`: "text" | "outlined" | "contained"
+- `color`: "inherit" | "primary" | "secondary" | "error" | "info" | "success" | "warning"
+- `onClick`: A function that handles click events
+- And many more...
+
+#### TypeScript Autocomplete
+
+When using TypeScript with third-party components, you often get excellent IDE support and autocomplete for props (given that the library has good Typescript support, which is often the case in popular libraries). TypeScript reads the component's type definitions and provides:
+
+- **Autocomplete suggestions** as you type prop names
+- **Type checking** to ensure you're passing the correct types
+- **IntelliSense** showing prop descriptions and available values
+
+For example, when you type `<Button ` in a TypeScript file, your IDE will show you all available props. When you type `variant=`, it will suggest the valid values: `"text"`, `"outlined"`, or `"contained"`.
+
+This makes working with third-party components much easier, as you don't need to constantly refer back to the documentation—your IDE guides you with autocomplete and type checking.
+
+To know which props you can pass to third-party components:
+- **Check the component's official documentation** (this is the source of truth)
+- **Use TypeScript** (if available) for autocomplete and type checking
+- **Review the component's API reference** in the documentation
+
+## Summary 
+
+In this lesson, we focused on the **first rule of passing props: knowing which props you can pass**. We learned how to determine which props are available for different types of components.
+
+### Key Concepts
+
+**How React Processes Props:**
+- When you write JSX, it's transformed into React Elements
+- React's internal parts (Reconciler and Renderer) extract certain props like `key` and `ref` for their own use
+- The remaining props are passed to the actual DOM Element or React component
+
+**The Props You Can Pass:**
+- **Child Props**: The props that the DOM Element or React component can receive
+- **React Internal Props**: Props like `key` and `ref` that React uses internally
+
+### Three Cases of Passing Props
+
+**1. Props to DOM Elements:**
+- Props must match the JavaScript properties of the DOM element, not HTML attributes
+- You can find available properties by:
+  - Checking MDN documentation (remember to check the inheritance chain)
+  - Using TypeScript for IDE autocomplete
+  - Inspecting elements in browser developer tools using `$0`
+- Common mistakes to avoid:
+  - Using HTML attribute names instead of JavaScript property names
+  - Using reserved words: use `className` instead of `class`, `htmlFor` instead of `for`
+  - Using kebab-case: JavaScript properties are camelCased (e.g., `onClick` not `onclick`, `backgroundColor` not `background-color`)
+
+**2. Props to Your Own React Components:**
+- The props you can pass are the ones defined in the component's function signature
+- Simply check the component's definition to see which props it expects
+- Use JSDoc comments to document props for other developers
+- In the next lesson, we'll learn how to use TypeScript to enforce prop types
+
+**3. Props to Third-Party Components:**
+- The **source of truth** is the library's documentation
+- Check the component's official documentation to see available props
+- When using TypeScript, you get excellent IDE support with autocomplete and type checking
+- Review the component's API reference in the documentation
+
+### Important Takeaways
+
+- Props in JSX correspond to **JavaScript properties**, not HTML attributes
+- JavaScript properties follow **camelCase** naming conventions
+- JavaScript **reserved words** cannot be used as property names
+- Always refer to the appropriate documentation: MDN for DOM elements, component definition for your own components, and library docs for third-party components
+
+In the next lesson, we will learn about the **second rule: passing the right types** for props, and how to ensure you're passing the correct data types to each prop.
