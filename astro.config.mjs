@@ -57,9 +57,9 @@ export default defineConfig({
 				baseUrl: 'https://github.com/ywarezk/academeez/edit/main/docs/',
 			},
 			components: {
+				Header: './src/components/Header.astro',
 				Sidebar: './src/components/Sidebar.astro',
 				PageSidebar: './src/components/PageSidebar.astro',
-				SocialIcons: './src/components/SocialIcons.astro',
 				PageTitle: './src/components/PageTitle.astro',
 				ThemeSelect: './src/components/ThemeSelect.astro',
 				MarkdownContent: './src/components/MarkdownContent.astro',
