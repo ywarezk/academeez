@@ -1,0 +1,233 @@
+---
+import config from 'virtual:starlight/user-config';
+import { getCollection } from 'astro:content';
+
+import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
+import Search from 'virtual:starlight/components/Search';
+import SiteTitle from 'virtual:starlight/components/SiteTitle';
+import SocialIcons from 'virtual:starlight/components/SocialIcons';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+import { ExploreContainer } from './ExploreContainer';
+import type { Course } from './CourseList';
+
+/**
+ * Render the `Search` component if Pagefind is enabled or the default search component has been overridden.
+ */
+const shouldRenderSearch =
+	config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
+
+// Get all course index pages
+const currentLocale = Astro.currentLocale || 'en';
+const allDocs = await getCollection('docs');
+
+// Filter for course index pages - these are specifically index.mdx files at courses/{coursename}/index.mdx
+// that match the current locale
+const courseIndexPages = allDocs.filter((doc) => {
+	const localePrefix = currentLocale === 'en' ? '' : `${currentLocale}/`;
+	// Match only files that end with /index.mdx (i.e., index.mdx files)
+	const coursePattern = new RegExp(`^${localePrefix}courses/([^/]+)/index\\.mdx$`);
+	return coursePattern.test(doc.id) && doc.data.template === 'doc';
+});
+
+// Extract unique courses by slug (remove /index suffix and locale prefix)
+const coursesMap = new Map<string, Course>();
+const localePrefix = currentLocale === 'en' ? '' : `${currentLocale}/`;
+
+// First, add courses that have index.mdx files
+for (const doc of courseIndexPages) {
+	const match = doc.id.match(new RegExp(`^${localePrefix}courses/([^/]+)`));
+	if (match) {
+		const slug = match[1];
+		const key = `${currentLocale}-${slug}`;
+		if (!coursesMap.has(key)) {
+			// Get all lessons for this course
+			const coursePrefix =
+				currentLocale === 'en' ? `courses/${slug}` : `${currentLocale}/courses/${slug}`;
+			const courseLessons = allDocs
+				.filter((lessonDoc) => {
+					// Include lessons that start with the course prefix but exclude the index page itself
+					return (
+						lessonDoc.id.startsWith(coursePrefix) &&
+						lessonDoc.id !== `${coursePrefix}` &&
+						lessonDoc.id !== `${coursePrefix}/index` &&
+						lessonDoc.id !== `${coursePrefix}/index.mdx` &&
+						lessonDoc.data.template === 'doc' &&
+						lessonDoc.data.preview !== false
+					);
+				})
+				.sort((a, b) => {
+					return (a.data.sidebar?.order || 0) - (b.data.sidebar?.order || 0);
+				})
+				.map((lessonDoc) => ({
+					title: lessonDoc.data.title,
+					slug: lessonDoc.slug,
+				}));
+
+			coursesMap.set(key, {
+				title: doc.data.title,
+				slug,
+				description: doc.data.description,
+				locale: currentLocale,
+				lessons: courseLessons,
+			});
+		}
+	}
+}
+
+// Also find courses that have lessons but no index.mdx file
+// Get all course directories by finding all docs that are in a course directory
+const courseDirectories = new Set<string>();
+for (const doc of allDocs) {
+	const coursePattern = new RegExp(`^${localePrefix}courses/([^/]+)`);
+	if (coursePattern.test(doc.id) && doc.data.template === 'doc') {
+		const match = doc.id.match(coursePattern);
+		if (match) {
+			const slug = match[1];
+			const key = `${currentLocale}-${slug}`;
+			// Only add if we haven't already added this course (from index.mdx)
+			if (!coursesMap.has(key)) {
+				courseDirectories.add(slug);
+			}
+		}
+	}
+}
+
+// For courses without index.mdx, create course entries from the directory name
+for (const slug of courseDirectories) {
+	const key = `${currentLocale}-${slug}`;
+	const coursePrefix =
+		currentLocale === 'en' ? `courses/${slug}` : `${currentLocale}/courses/${slug}`;
+
+	// Get all lessons for this course
+	const courseLessons = allDocs
+		.filter((lessonDoc) => {
+			return (
+				lessonDoc.id.startsWith(coursePrefix) &&
+				lessonDoc.id !== `${coursePrefix}` &&
+				lessonDoc.id !== `${coursePrefix}/index` &&
+				lessonDoc.id !== `${coursePrefix}/index.mdx` &&
+				lessonDoc.data.template === 'doc' &&
+				lessonDoc.data.preview !== false
+			);
+		})
+		.sort((a, b) => {
+			return (a.data.sidebar?.order || 0) - (b.data.sidebar?.order || 0);
+		})
+		.map((lessonDoc) => ({
+			title: lessonDoc.data.title,
+			slug: lessonDoc.slug,
+		}));
+
+	// Only add course if it has at least one lesson
+	if (courseLessons.length > 0) {
+		// Capitalize first letter and format slug as title
+		const title = slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ');
+		coursesMap.set(key, {
+			title,
+			slug,
+			locale: currentLocale,
+			lessons: courseLessons,
+		});
+	}
+}
+
+const courses = Array.from(coursesMap.values());
+---
+
+<div class="header">
+	<div class="title-wrapper sl-flex">
+		<SiteTitle />
+		<div class="header-explore-wrapper">
+			<ExploreContainer courses={courses} client:load />
+		</div>
+	</div>
+	<div class="sl-flex print:hidden">
+		{shouldRenderSearch && <Search />}
+	</div>
+	<div class="sl-hidden md:sl-flex print:hidden right-group">
+		<div class="sl-flex social-icons">
+			<SocialIcons />
+		</div>
+		<ThemeSelect />
+		<LanguageSelect />
+	</div>
+</div>
+
+<style>
+	@layer starlight.core {
+		.header {
+			display: flex;
+			gap: var(--sl-nav-gap);
+			justify-content: space-between;
+			align-items: center;
+			height: 100%;
+		}
+
+		.title-wrapper {
+			/* Prevent long titles overflowing and covering the search and menu buttons on narrow viewports. */
+			overflow: visible;
+			/* Avoid clipping focus ring around link inside title wrapper. */
+			padding: 0.25rem;
+			margin: -0.25rem;
+			min-width: 0;
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+		}
+
+		.header-explore-wrapper {
+			display: flex;
+			align-items: center;
+			flex-shrink: 0;
+		}
+
+		:global(.header-explore-wrapper button) {
+			white-space: nowrap;
+			min-width: fit-content;
+			width: auto;
+		}
+
+		.right-group,
+		.social-icons {
+			gap: 1rem;
+			align-items: center;
+		}
+		.social-icons::after {
+			content: '';
+			height: 2rem;
+			border-inline-end: 1px solid var(--sl-color-gray-5);
+		}
+
+		@media (min-width: 50rem) {
+			:global(:root[data-has-sidebar]) {
+				--__sidebar-pad: calc(2 * var(--sl-nav-pad-x));
+			}
+			:global(:root:not([data-has-toc])) {
+				--__toc-width: 0rem;
+			}
+			.header {
+				--__sidebar-width: max(0rem, var(--sl-content-inline-start, 0rem) - var(--sl-nav-pad-x));
+				--__main-column-fr: calc(
+					(
+							100% + var(--__sidebar-pad, 0rem) - var(--__toc-width, var(--sl-sidebar-width)) -
+								(2 * var(--__toc-width, var(--sl-nav-pad-x))) -
+								var(--sl-content-inline-start, 0rem) - var(--sl-content-width)
+						) /
+						2
+				);
+				display: grid;
+				grid-template-columns:
+        /* 1 (site title): runs up until the main content column's left edge or the width of the title, whichever is the largest  */
+					minmax(
+						calc(var(--__sidebar-width) + max(0rem, var(--__main-column-fr) - var(--sl-nav-gap))),
+						auto
+					)
+					/* 2 (search box): all free space that is available. */
+					1fr
+					/* 3 (right items): use the space that these need. */
+					auto;
+				align-content: center;
+			}
+		}
+	}
+</style>
