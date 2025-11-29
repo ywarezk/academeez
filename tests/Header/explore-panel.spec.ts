@@ -12,20 +12,20 @@ test.describe('Explore Panel', () => {
 	test('opens and displays courses with actual content', async ({ page }) => {
 		await page.goto('/');
 
-		// Find and click the Explore button
+		// Hover over the Explore button to open the panel
 		const exploreButton = page.getByRole('button', { name: /explore/i });
 		await expect(exploreButton).toBeVisible();
-		await exploreButton.click();
+		await exploreButton.hover();
 
 		// Wait for the panel to open
 		const panel = page.getByTestId('explore-panel');
 		await expect(panel).toBeVisible();
 
-		// Check that the panel takes full screen
+		// Check that the panel is visible and has dimensions
 		const panelBox = await panel.boundingBox();
 		expect(panelBox).not.toBeNull();
 		if (panelBox) {
-			// Panel should cover the viewport
+			// Panel should have width and height
 			expect(panelBox.width).toBeGreaterThan(0);
 			expect(panelBox.height).toBeGreaterThan(0);
 		}
@@ -39,56 +39,67 @@ test.describe('Explore Panel', () => {
 		const count = await courseItems.count();
 		expect(count).toBeGreaterThan(0);
 
-		// Verify courses are arranged horizontally (check flex direction)
-		const listStyles = await courseList.evaluate((el) => {
+		// Verify courses are arranged horizontally
+		// Note: course-list is the Carousel wrapper (relative positioning)
+		// The actual flex container is CarouselContent (a child element)
+		const carouselContent = courseList.locator('> div > div'); // Carousel > div (overflow-hidden) > div (CarouselContent with flex)
+		const contentStyles = await carouselContent.evaluate((el) => {
 			const styles = window.getComputedStyle(el);
 			return {
-				flexDirection: styles.flexDirection,
 				display: styles.display,
+				flexDirection: styles.flexDirection,
 			};
 		});
-		expect(listStyles.flexDirection).toBe('row');
-		expect(listStyles.display).toBe('flex');
+		expect(contentStyles.display).toBe('flex');
+		expect(contentStyles.flexDirection).toBe('row');
 
 		// Check that at least one course has a link
 		const firstCourse = courseItems.first();
-		const courseLink = firstCourse.locator('a');
+		// Get the first link (course link), not lesson links
+		const courseLink = firstCourse.locator('a').first();
 		await expect(courseLink).toBeVisible();
 		const href = await courseLink.getAttribute('href');
 		expect(href).not.toBeNull();
 		expect(href).toMatch(/\/courses\//);
 	});
 
-	test('closes panel when close button is clicked', async ({ page }) => {
+	test('closes panel when mouse leaves the panel', async ({ page }) => {
 		await page.goto('/');
 
-		// Open the panel
+		// Open the panel by hovering over the button
 		const exploreButton = page.getByRole('button', { name: /explore/i });
-		await exploreButton.click();
+		await exploreButton.hover();
 
 		const panel = page.getByTestId('explore-panel');
 		await expect(panel).toBeVisible();
 
-		// Click close button
-		const closeButton = page.getByRole('button', { name: /close panel/i });
-		await closeButton.click();
+		// Get panel position
+		const panelBox = await panel.boundingBox();
+		expect(panelBox).not.toBeNull();
 
-		// Panel should be closed
-		await expect(panel).not.toBeVisible();
-	});
+		if (panelBox) {
+			const viewportSize = page.viewportSize();
+			expect(viewportSize).not.toBeNull();
 
-	test('closes panel when clicking outside', async ({ page }) => {
-		await page.goto('/');
+			if (viewportSize) {
+				// First, move mouse into the panel (center of the panel)
+				const panelCenterX = panelBox.x + panelBox.width / 2;
+				const panelCenterY = panelBox.y + panelBox.height / 2;
+				await page.mouse.move(panelCenterX, panelCenterY);
 
-		// Open the panel
-		const exploreButton = page.getByRole('button', { name: /explore/i });
-		await exploreButton.click();
+				// Wait a bit to ensure mouse is inside the panel
+				await page.waitForTimeout(50);
 
-		const panel = page.getByTestId('explore-panel');
-		await expect(panel).toBeVisible();
+				// Now move mouse outside the panel
+				// Calculate a position definitely outside the panel
+				// Move to bottom of viewport (panel maxHeight is 90vh, so bottom should be outside)
+				const mouseY = Math.min(viewportSize.height - 10, panelBox.y + panelBox.height + 50);
+				await page.mouse.move(viewportSize.width / 2, mouseY);
+			}
+		}
 
-		// Click outside the panel content (on the backdrop)
-		await panel.click({ position: { x: 10, y: 10 } });
+		// Wait for the close delay (100ms in ExploreContainer) plus a small buffer
+		await page.waitForTimeout(200);
 
 		// Panel should be closed
 		await expect(panel).not.toBeVisible();
@@ -97,35 +108,43 @@ test.describe('Explore Panel', () => {
 	test('displays courses horizontally in a scrollable list', async ({ page }) => {
 		await page.goto('/');
 
-		// Open the panel
+		// Open the panel by hovering over the button
 		const exploreButton = page.getByRole('button', { name: /explore/i });
-		await exploreButton.click();
+		await exploreButton.hover();
 
 		const courseList = page.getByTestId('course-list');
 		await expect(courseList).toBeVisible();
 
-		// Check overflow-x is set for horizontal scrolling
-		const listStyles = await courseList.evaluate((el) => {
+		// Verify courses are arranged horizontally
+		// The CarouselContent (child of course-list) is the actual flex container
+		const carouselContent = courseList.locator('> div > div'); // Carousel > div (overflow-hidden) > div (CarouselContent with flex)
+		const listStyles = await carouselContent.evaluate((el) => {
 			const styles = window.getComputedStyle(el);
 			return {
-				overflowX: styles.overflowX,
 				flexDirection: styles.flexDirection,
+				display: styles.display,
 			};
 		});
+		expect(listStyles.display).toBe('flex');
 		expect(listStyles.flexDirection).toBe('row');
-		// overflow-x should allow scrolling if content is too wide
-		expect(['auto', 'scroll', 'overlay']).toContain(listStyles.overflowX);
+
+		// Verify carousel navigation arrows are present
+		// The carousel uses arrows for navigation, not CSS overflow scrolling
+		// The buttons have sr-only text "Previous slide" and "Next slide"
+		const prevButton = courseList.getByRole('button', { name: /previous/i });
+		const nextButton = courseList.getByRole('button', { name: /next/i });
+		await expect(prevButton).toBeVisible();
+		await expect(nextButton).toBeVisible();
 	});
 });
 
 test.describe('Explore Panel - Large Course List', () => {
 	test('handles large list of courses with horizontal scrolling', async ({ page }) => {
 		// This test verifies that the panel can handle many courses
-		// In a real scenario, we might inject test data or use a test page
 		await page.goto('/');
 
 		const exploreButton = page.getByRole('button', { name: /explore/i });
-		await exploreButton.click();
+		await exploreButton.hover();
 
 		const panel = page.getByTestId('explore-panel');
 		await expect(panel).toBeVisible();
@@ -133,34 +152,33 @@ test.describe('Explore Panel - Large Course List', () => {
 		const courseList = page.getByTestId('course-list');
 		await expect(courseList).toBeVisible();
 
-		// Verify the list supports horizontal scrolling
-		const canScroll = await courseList.evaluate((el) => {
-			return el.scrollWidth > el.clientWidth;
-		});
-
-		// If there are enough courses, scrolling should be possible
-		// This test verifies the layout supports it even if current content doesn't require it
+		// Verify multiple courses are displayed
 		const courseItems = page.getByTestId('course-item');
 		const count = await courseItems.count();
+		expect(count).toBeGreaterThan(0);
 
-		if (count > 3) {
-			// With more than 3 courses, we should be able to scroll
-			// (assuming each course card is ~256px wide + gaps)
-			expect(canScroll || count <= 3).toBeTruthy();
-		}
+		// Verify carousel items don't shrink (CarouselItem has shrink-0 class)
+		// Check the CarouselItem elements (parent of course-item)
+		const carouselItems = courseList.locator('[role="group"][aria-roledescription="slide"]');
+		const carouselItemCount = await carouselItems.count();
+		expect(carouselItemCount).toBe(count); // Should match course-item count
 
-		// Verify all courses are in a single horizontal row
-		const items = await courseItems.all();
-		for (const item of items) {
-			const itemStyles = await item.evaluate((el) => {
+		// Verify at least one carousel item has correct flex properties
+		if (carouselItemCount > 0) {
+			const firstItemStyles = await carouselItems.first().evaluate((el) => {
 				const styles = window.getComputedStyle(el);
 				return {
 					flexShrink: styles.flexShrink,
-					width: styles.width,
 				};
 			});
-			// Items should not shrink and should have a fixed width
-			expect(itemStyles.flexShrink).toBe('0');
+			// CarouselItem should have shrink-0 (flex-shrink: 0)
+			expect(firstItemStyles.flexShrink).toBe('0');
+		}
+
+		// Verify carousel navigation is available when there are multiple courses
+		if (count > 1) {
+			const nextButton = courseList.getByRole('button', { name: /next/i });
+			await expect(nextButton).toBeVisible();
 		}
 	});
 
@@ -168,12 +186,12 @@ test.describe('Explore Panel - Large Course List', () => {
 		await page.goto('/');
 
 		const exploreButton = page.getByRole('button', { name: /explore/i });
-		await exploreButton.click();
+		await exploreButton.hover();
 
 		const panel = page.getByTestId('explore-panel');
 		await expect(panel).toBeVisible();
 
-		// Verify panel takes 100% of viewport
+		// Verify panel has proper dimensions and respects max height
 		const viewportSize = page.viewportSize();
 		expect(viewportSize).not.toBeNull();
 
@@ -181,9 +199,11 @@ test.describe('Explore Panel - Large Course List', () => {
 			const panelBox = await panel.boundingBox();
 			expect(panelBox).not.toBeNull();
 			if (panelBox) {
-				// Panel should cover the full viewport (with some tolerance for borders/padding)
+				// Panel should have full width
 				expect(panelBox.width).toBeGreaterThanOrEqual(viewportSize.width - 10);
-				expect(panelBox.height).toBeGreaterThanOrEqual(viewportSize.height - 10);
+				// Panel height should not exceed 90% of viewport (maxHeight constraint)
+				const maxExpectedHeight = viewportSize.height * 0.9;
+				expect(panelBox.height).toBeLessThanOrEqual(maxExpectedHeight + 10);
 			}
 		}
 

@@ -2,10 +2,15 @@
 import config from 'virtual:starlight/user-config';
 import { getCollection } from 'astro:content';
 
+// @ts-expect-error - Starlight virtual module
 import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
+// @ts-expect-error - Starlight virtual module
 import Search from 'virtual:starlight/components/Search';
+// @ts-expect-error - Starlight virtual module
 import SiteTitle from 'virtual:starlight/components/SiteTitle';
+// @ts-expect-error - Starlight virtual module
 import SocialIcons from 'virtual:starlight/components/SocialIcons';
+// @ts-expect-error - Starlight virtual module
 import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
 import { ExploreContainer } from './ExploreContainer';
 import type { Course } from './CourseList';
