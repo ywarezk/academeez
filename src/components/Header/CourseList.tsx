@@ -25,12 +25,20 @@ interface CourseListProps {
 	courses: Course[];
 }
 
+/**
+ * Get the locale prefix for a given locale string
+ * Returns an empty string for 'en' or undefined/null locales, otherwise returns '/{locale}'
+ */
+function getLocalePrefix(locale: string | undefined): string {
+	return locale === 'en' || !locale ? '' : `/${locale}`;
+}
+
 export const CourseList: React.FC<CourseListProps> = ({ courses }) => {
 	return (
 		<Carousel className="w-full" data-testid="course-list">
 			<CarouselContent className="-ml-2 md:-ml-4">
 				{courses.map((course) => {
-					const localePrefix = course.locale === 'en' || !course.locale ? '' : `/${course.locale}`;
+					const localePrefix = getLocalePrefix(course.locale);
 					const courseHref = `${localePrefix}/courses/${course.slug}`;
 					const iconName = course.icon || course.slug;
 					const icon = `/icons/${iconName}.svg`;
@@ -42,17 +50,21 @@ export const CourseList: React.FC<CourseListProps> = ({ courses }) => {
 						>
 							<div className="w-64" data-testid="course-item">
 								<div className="block h-full">
-									<a href={courseHref} className="block mb-4 pb-4 border-b no-underline">
+									<a
+										href={courseHref}
+										aria-label={`View ${course.title} course`}
+										className="block mb-4 pb-4 border-b no-underline"
+									>
 										<div className="flex items-center gap-3 min-w-0">
 											<img
 												src={icon}
-												alt={course.title}
+												alt=""
 												className="h-8 w-8 flex-shrink-0"
-												style={{ width: '32px', height: '32px' }}
 												onError={(e) => {
 													// Fallback to folder icon if image fails to load
 													const target = e.target as HTMLImageElement;
-													if (target.src !== '/icons/folder.svg') {
+													// Check if we've already tried the fallback (target.src is absolute URL)
+													if (!target.src.endsWith('/icons/folder.svg')) {
 														target.src = '/icons/folder.svg';
 													}
 												}}
@@ -66,7 +78,8 @@ export const CourseList: React.FC<CourseListProps> = ({ courses }) => {
 											data-testid="course-lessons"
 										>
 											{course.lessons.map((lesson) => {
-												const lessonHref = `${localePrefix}/${lesson.slug}`;
+												// Lesson slug already includes locale prefix, so use it directly
+												const lessonHref = `/${lesson.slug}`;
 												return (
 													<li key={lesson.slug} className="text-left">
 														<a

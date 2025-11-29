@@ -16,16 +16,45 @@ export const ExplorePanel: React.FC<ExplorePanelProps> = ({
 	courses,
 }) => {
 	const [headerHeight, setHeaderHeight] = React.useState(0);
+	const headerRef = React.useRef<HTMLElement | null>(null);
+	const panelRef = React.useRef<HTMLDivElement | null>(null);
 
 	React.useEffect(() => {
-		if (isOpen) {
-			// Calculate header height
-			const header = document.querySelector('.header');
-			if (header) {
-				const height = header.getBoundingClientRect().height;
-				setHeaderHeight(height);
-			}
+		if (!isOpen) return;
+
+		// Get or cache the header element
+		if (!headerRef.current) {
+			headerRef.current = document.querySelector('.header');
 		}
+
+		const header = headerRef.current;
+		if (!header) return;
+
+		// Calculate initial height
+		const updateHeight = () => {
+			setHeaderHeight(header.getBoundingClientRect().height);
+		};
+
+		updateHeight();
+
+		// Watch for header height changes using ResizeObserver
+		const resizeObserver = new ResizeObserver(updateHeight);
+		resizeObserver.observe(header);
+
+		// Focus management: make panel focusable and focus it when it opens
+		// This helps keyboard users navigate to the panel content
+		if (panelRef.current) {
+			panelRef.current.setAttribute('tabindex', '-1');
+			// Small delay to ensure the panel is rendered before focusing
+			requestAnimationFrame(() => {
+				panelRef.current?.focus();
+			});
+		}
+
+		// Cleanup
+		return () => {
+			resizeObserver.disconnect();
+		};
 	}, [isOpen]);
 
 	if (!isOpen) return null;
@@ -35,7 +64,12 @@ export const ExplorePanel: React.FC<ExplorePanelProps> = ({
 
 	return (
 		<div
-			className="fixed left-0 right-0 z-50 bg-white dark:bg-gray-950 backdrop-blur supports-[backdrop-filter]:bg-white/95 dark:supports-[backdrop-filter]:bg-gray-950/95 overflow-auto p-8"
+			ref={panelRef}
+			id="explore-panel"
+			role="region"
+			aria-label="Explore courses"
+			aria-hidden={!isOpen}
+			className="fixed left-0 right-0 z-50 bg-white dark:bg-gray-950 backdrop-blur supports-[backdrop-filter]:bg-white/95 dark:supports-[backdrop-filter]:bg-gray-950/95 overflow-auto p-8 focus:outline-none"
 			style={{ top: `${headerHeight}px`, maxHeight: maxPanelHeight }}
 			data-testid="explore-panel"
 			onMouseEnter={onMouseEnter}

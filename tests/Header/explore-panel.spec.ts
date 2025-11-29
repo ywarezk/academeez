@@ -6,7 +6,7 @@
  * @license MIT
  */
 
-import { test, expect } from '../../tests/fixtures/coverage';
+import { test, expect } from '../fixtures/coverage';
 
 test.describe('Explore Panel', () => {
 	test('opens and displays courses with actual content', async ({ page }) => {
@@ -87,8 +87,8 @@ test.describe('Explore Panel', () => {
 				const panelCenterY = panelBox.y + panelBox.height / 2;
 				await page.mouse.move(panelCenterX, panelCenterY);
 
-				// Wait a bit to ensure mouse is inside the panel
-				await page.waitForTimeout(50);
+				// Wait for panel to be visible and stable (mouse enter should keep it open)
+				await expect(panel).toBeVisible();
 
 				// Now move mouse outside the panel
 				// Calculate a position definitely outside the panel
@@ -98,10 +98,8 @@ test.describe('Explore Panel', () => {
 			}
 		}
 
-		// Wait for the close delay (100ms in ExploreContainer) plus a small buffer
-		await page.waitForTimeout(200);
-
-		// Panel should be closed
+		// Wait for panel to close - expect.not.toBeVisible() has built-in waiting
+		// It will wait up to the timeout for the panel to become hidden
 		await expect(panel).not.toBeVisible();
 	});
 
