@@ -93,7 +93,8 @@
   },
   "pnpm": {
     "overrides": {
-      "@astrojs/vercel>esbuild": "0.25.0"
+      "@astrojs/vercel>esbuild": "0.25.0",
+      "mdast-util-to-hast": "13.2.1"
     }
   },
   "nyc": {
