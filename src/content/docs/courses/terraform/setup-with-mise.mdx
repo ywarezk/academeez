@@ -1,0 +1,230 @@
+---
+title: Setup with mise
+description: Install and configure all the required tools for the IAC - Terraform/OpenTofu/Terragrunt course using mise
+publishDate: 2025-12-04
+authors:
+  - yariv-katz
+sidebar:
+  order: 1
+---
+
+Before we start our course and dig deep into infrastructure as code, and how to manage cloud resources professionally using [Terraform](https://developer.hashicorp.com/terraform)/[OpenTofu](https://opentofu.org/) or [Terragrunt](https://terragrunt.gruntwork.io/), let's first start with installations.
+
+To work on our Infrastructure as Code project, we will need to install some tools:
+
+- **pre-commit** - for code formatting before committing
+- **OpenTofu** - our Infrastructure as Code tool
+- **Terragrunt** - for managing Terraform/OpenTofu configurations
+- **kubectl** - for interacting with Kubernetes clusters
+
+## Best Practice: Define your development environment declaratively
+
+This course works differently than other courses you may have learned before. While we could sum up the installation process in a few sentences, it's important for us to not only explain what needs to be installed, but also show how to manage the tools and environment in a professional way.
+
+### Why your development environment should be declarative
+
+There are several important reasons why your development environment should be declarative:
+
+- **Easy installation** - New team members can get up and running quickly
+- **Ensures all developers have all the tools installed** - No missing dependencies
+- **Ensures the versions of the tools are identical between developers** - Eliminates "works on my machine" issues
+- **Ensures no additional or wrong tools are installed** - Prevents configuration drift
+- **Security** - All the tools are grabbed from the same source, reducing security risks
+- **CI/CD alignment** - Same tools in development and CI pipelines
+
+This course not only teaches you advanced concepts in infrastructure as code, but also organizes all the course lessons in a repository that can later be used as a good starter kit for your infrastructure projects. This is why in this lesson we will not only focus on the tools we need, but also focus on how to create the environment and tools in a declarative way, so other developers will be able to easily reproduce a similar environment.
+
+## mise-en-place
+
+We will use [mise - mise-en-place](https://mise.jdx.dev/) to define our environment declaratively. mise is a tool that helps us manage the tools and environment in a declarative way—before we start coding any project.
+
+## What is mise?
+
+mise-en-place is a French phrase that means "putting in place" or "gathering." It's commonly used in cooking to describe the process of preparing ingredients and tools before starting to cook a dish.
+
+In the programming world, [**mise-en-place**](https://mise.jdx.dev/) (or simply [**mise**](https://mise.jdx.dev/)) is a tool that helps us configure our development environment in a declarative way—before we start coding any project.
+
+After installing mise, we'll use it to install and configure the tools needed for the course. The result of this configuration process is a file called `mise.toml` that contains all the configuration for the required tools.
+
+When users fork the course repository as a starter kit for their own infrastructure projects, they can use the `mise.toml` file to easily configure the environment needed for the project. They simply enter the project directory, run `mise install` to install the tools, and then [activate mise](https://mise.jdx.dev/getting-started.html#activate-mise). Everything will be installed—OpenTofu, Terragrunt, kubectl, and more—all in the correct versions, ensuring there won't be any mismatch between the environment I'm using and the students' environments.
+
+This is also very important when working with a team. We want all developers working with the same versions so a developer won't prepare something that is supported in their version but not supported in other versions that another developer is running.
+
+## Installing mise
+
+I will start by following the installation instructions from the [official documentation](https://mise.jdx.dev/getting-started.html).
+Ran the following command to install mise:
+
+```bash
+curl https://mise.run | sh
+```
+
+We can verify that mise is installed correctly by running:
+
+```bash
+~/.local/bin/mise --version
+```
+
+After installation it is recommended to [activate mise automatically](https://mise.jdx.dev/getting-started.html#activate-mise) when starting the shell.
+I'm using zsh so I will add the following to my `.zshrc` file:
+
+```bash
+echo 'eval "$(~/.local/bin/mise activate zsh)"' >> ~/.zshrc
+```
+
+Now we can verify that mise is running correctly by running:
+
+```bash
+mise dr
+```
+
+## mise demo
+
+Let's see mise in action with a quick demonstration of how it manages different environments per directory.
+
+I'll create two separate directories, each with its own `mise.toml` file defining different tool versions:
+
+**Directory 1** - `project-a/` with `mise.toml`:
+```toml
+[tools]
+node = "20.10.0"
+```
+
+**Directory 2** - `project-b/` with `mise.toml`:
+```toml
+[tools]
+node = "18.19.0"
+```
+
+When I `cd` into `project-a/`, mise automatically activates and sets Node.js version 20.10.0. I can verify this by running `node --version`, which will show `v20.10.0`.
+
+When I `cd` into `project-b/`, mise automatically switches the environment and activates Node.js version 18.19.0. Running `node --version` now shows `v18.19.0`.
+
+This demonstrates mise's powerful directory-based environment management—each project can have its own isolated environment with different tool versions, and mise automatically switches between them as you navigate between directories.
+
+## Creating our environment
+
+Our environment will contain all the tools needed for this Infrastructure as Code course:
+
+- **pre-commit** - for code formatting before committing
+- **OpenTofu** - our Infrastructure as Code tool
+- **Terragrunt** - for managing Terraform/OpenTofu configurations
+- **kubectl** - for interacting with Kubernetes clusters
+
+All tools will be configured with:
+- **Fixed versions** - ensuring consistency across all developers
+- **Verified sources** - all tools installed from trusted, verified sources
+- **Declarative configuration** - tools and versions defined in `mise.toml`
+- **Lock file** - checksums and URLs tracked in `mise.lock` for security and reproducibility
+
+The `mise.toml` file will define which tools and versions we need, while the `mise.lock` file will contain the checksums and download URLs to ensure everyone installs the exact same binaries from the same sources. This provides both version consistency and security.
+
+### Creating the `mise.toml` file
+
+Here is a specification of how the `mise.toml` and `mise.lock` files are created.
+This is in case you are creating an infrastructure project and want the team environment to be reproducible.
+
+We started by creating the file `mise.toml` and placed the following content in that file:
+
+```toml title="mise.toml"
+[settings]
+experimental = true
+lockfile = true
+```
+
+we also created the `mise.lock` file:
+
+```bash
+touch mise.lock
+```
+
+We will install every tool that we need for the course using **mise**, and **mise** will make sure
+to update the `mise.lock` and the `mise.toml` files, which means other developers can fork 
+the repository and run `mise install` to install the tools in the correct version and from the same source.
+
+An explanation for developers on how to set up their environment and use mise in this repo is provided in the 
+[CONTRIBUTING.md](https://github.com/ywarezk/academeez-k8s-flux/blob/main/CONTRIBUTING.md)
+
+#### pre-commit
+
+We will start by installing pre-commit, which is used to format our code before committing it.
+There is a [lesson](./pre-commit) explaining about pre-commit and how to use it in our project.
+To make it part of our environment we will install it using mise:
+
+```bash
+mise use pre-commit@4.5.0
+```
+
+You will notice that our `mise.toml` and `mise.lock` files are updated with the new tool.
+```toml title="mise.toml"
+[settings]
+experimental = true
+lockfile = true
+
+[tools]
+pre-commit = "4.5.0"
+```
+
+#### OpenTofu and Terragrunt
+
+We will install OpenTofu and Terragrunt using mise:
+
+```bash
+mise use opentofu@1.10.7
+mise use terragrunt@0.93.13
+```
+
+We are using OpenTofu as our IAC tool of choice, but you can use Terraform instead.
+
+#### kubectl
+
+We will install kubectl using mise:
+
+```bash
+mise use kubectl@1.34.2
+```
+
+## Using the repository
+
+If you're working with this repository or any other repository that contains a `mise.toml` file, here's what you need to do:
+
+1. **Install mise** - Follow the installation instructions from the [official documentation](https://mise.jdx.dev/getting-started.html) if you haven't already installed mise.
+
+2. **Examine the content of `mise.toml`** - Before trusting a repository, it's important to review the `mise.toml` file to ensure it doesn't contain any suspicious code or unexpected tool installations.
+
+3. **Run `mise trust`** - After verifying the `mise.toml` file looks normal, run `mise trust` to trust the repository. This is a security feature that prevents mise from automatically executing potentially malicious configurations.
+
+4. **Run `mise install`** - Once the repository is trusted, simply `cd` into the repository directory and run `mise install`. This will install all the tools specified in `mise.toml` with their exact versions.
+
+5. **Activate mise** - Make sure mise is activated in your shell (as described in the [Installing mise](#installing-mise) section). When you `cd` into the repository, mise will automatically activate the environment defined in `mise.toml`.
+
+That's it! The environment is now set up and ready to use. All tools will be available in the correct versions whenever you're working in this repository.
+
+## Summary
+
+In this lesson, we've learned how to set up a declarative development environment using **mise** for our Infrastructure as Code course.
+
+### Key Takeaways
+
+- **Declarative environments** - We define our development environment in configuration files (`mise.toml` and `mise.lock`) rather than installing tools manually
+- **mise tool** - A powerful tool that manages development environments declaratively, automatically switching between environments as you navigate directories
+- **Our environment** - We configured our environment with:
+  - pre-commit (4.5.0)
+  - OpenTofu (1.10.7)
+  - Terragrunt (0.93.13)
+  - kubectl (1.34.2)
+- **Reproducibility** - All tools are installed with fixed versions from verified sources, ensuring consistency across all developers
+- **Easy setup** - New team members can simply run `mise install` to get the exact same environment
+
+### Using the Repository
+
+For developers joining this project or any repository with `mise.toml`:
+
+1. Install mise
+2. Examine `mise.toml` for security
+3. Run `mise trust`
+4. Run `mise install`
+
+This ensures everyone works with the same versions of all tools, eliminating environment-related issues and version mismatches across your team.
+
+This course not only teaches advanced IAC concepts using Terragrunt and OpenTofu, but also provides the course materials as a reusable starter kit for your own infrastructure projects. The declarative environment setup ensures that whether you're following the course or using this repository as a foundation for your team, everyone will have a consistent, reproducible development environment.

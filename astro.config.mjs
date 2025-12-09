@@ -107,19 +107,23 @@ export default defineConfig({
 							slug: 'courses/terraform',
 						},
 						{
-							label: '2. Introduction to Terragrunt',
+							label: '2. Setup with mise',
+							slug: 'courses/terraform/setup-with-mise',
+						},
+						{
+							label: '3. Introduction to Terragrunt',
 							slug: 'courses/terraform/introduction-to-terragrunt',
 						},
 						{
-							label: '3. pre-commit',
+							label: '4. pre-commit',
 							slug: 'courses/terraform/pre-commit',
 						},
 						{
-							label: '4. Security - Permissions, Roles, Groups, Impersonation',
+							label: '5. Security - Permissions, Roles, Groups, Impersonation',
 							slug: 'courses/terraform/permissions-roles-groups-impersonation',
 						},
 						{
-							label: '5. Unit',
+							label: '6. Unit',
 							slug: 'courses/terraform/unit',
 						},
 					],
