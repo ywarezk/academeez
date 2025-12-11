@@ -1,5 +1,5 @@
 ---
-title: academeez
+title: ""
 description: Open Source Learning Platform for Coders
 head:
   - tag: title
@@ -9,67 +9,19 @@ next: false
 prev: false
 editUrl: false
 publishDate: 2024-09-09
-hero:
-  title: פלטפורמת למידה, קוד פתוח, למתכנתים
-  tagline: תוכן חינמי, מנוהל על ידי קהילת הקוד הפתוח, מומחים בתחום. <br/> לא צריך להירשם, תוכן פשוט, חינמי, מקצועי.
-  image:
-    dark: "../../../assets/logo-dark.svg"
-    light: "../../../assets/logo-light.svg"
-    alt: Open Source Learning Platform for Coders
 ---
 
 import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 import CardContentCourse from '~/components/CardContent.astro';
 import LocalCourseCarousel  from '~/components/LocaleCourseCarousel.astro';
+import Hero from '~/components/Hero/Hero.astro';
+import HideTitle from '~/components/HideTitle.astro';
 
+<HideTitle />
 
-## [הקורסים שלנו](/courses)
-
-<CardGrid stagger>  
-  <Card>
-    <CardContentCourse title="Flux" slug="fluxcd" img="flux">
-      Flux מסייע לנו לנהל את ה Cluster שלנו עם K8S בצורה מקצועית ודקלרטיבית באמצעות דחיפת ה State של ה Cluster שלנו ל Repository.
-      <br />
-      באמצעות Flux אנחנו יכולים להתקין Helm Charts, לנהל התקנת manifests באמצעות kustomize, והכל מוגדר בקבצי Yaml שנדחפים ל Repository שלנו.
-      <br/>
-      דחיפת הקבצים ל Repository שלנו תגרום ל Flux לוודא שה Cluster שלנו יהיה במצב הרצוי.      
-    </CardContentCourse>    
-  </Card>
-  <Card>
-    <CardContentCourse title="Terraform / OpenTofu" slug="terraform" img="terraform">
-      למדו כיצד לנהל משאבי ענן על גבי <strong>Google Cloud Platform</strong> 
-      באמצעות <a href="https://developer.hashicorp.com/terraform" target="_blank">Terraform</a>, 
-      <a href="https://opentofu.org/" target="_blank">OpenTofu</a>, ו־
-      <a href="https://terragrunt.gruntwork.io/" target="_blank">Terragrunt</a>. 
-      קורס מעשי זה מציג את מיטב השיטות בתחום <em>תשתיות כקוד (Infrastructure as Code)</em> 
-      ומספק מאגר התחלתי מוכן לשימוש.
-    </CardContentCourse>    
-  </Card>
-  <Card>
-    <CardContentCourse title="React">
-      React היא ספריית UI שפותחה ב Facebook כדי לסייע ביצירת רכיבי UI אינטראקטיביים, משמרי סטטוס וניתנים לשימוש מחדש.  
-      React היא הספרייה הפופולרית ביותר ומשמשת במגוון רחב של אפליקציות Web ואפליקציות לטלפונים חכמים. <br />
-      
-      בקורס החינמי והפתוח הזה, תלמד את היסודות של React, כולל React Hooks, JSX, props, state, events, ועוד.  
-      נשתמש ב React כדי ליצור אפליקציה Web, נתקשר עם שרת, ונלמד על הספריות והפריימוורקים הפופולריים שמשמשים עם React, כגון Redux, React Router, ו- Next.js.<br />
-      
-      נלמד את React בצעדים קטנים, עם הרבה תרגולים בכל שיעור. התרגולים יכולים להתבצע באתר בעזרת העורך המקוון שלנו.
-      כל שיעור יכלול סרטון, מדריכים שלב אחרי שלב, קוד מקור, ותרגולים מקוונים.
-    </CardContentCourse>    
-  </Card>
-  <Card>
-    <CardContentCourse title="Angular">
-    Angular היא ספריית קוד פתוח, שפותחה על ידי Google, ליצירת אפליקציות Web.<br/>
-    בקורס החינמי, הפתוח והמלא הזה, תלמד את היסודות של Angular למתחילים, ונושאים מתקדמים יותר למתכנתים מנוסים.    
-    </CardContentCourse>
-  </Card>
-  <Card>
-    <CardContentCourse title="Git">
-      שלטו ב־Git וקחו שליטה מלאה על הקוד שלכם. בקורס חינמי וקוד פתוח זה תלמדו את יסודות ניהול הגרסאות, 
-      ניהול סניפים (Branches) וזרימות עבודה שיתופיות באמצעות GitHub — מהקומיט הראשון ועד לניהול מתקדם של מאגרים.
-    </CardContentCourse>
-  </Card>
-</CardGrid>
+<div class="hero-wrapper" style="margin-top: -4rem;">
+	<Hero />
+</div>
 
 ## תוכן חדש
 

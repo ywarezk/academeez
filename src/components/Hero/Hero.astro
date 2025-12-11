@@ -1,0 +1,17 @@
+---
+import { Hero as HeroComponent } from './Hero';
+import { getEntry } from 'astro:content';
+
+const locale = Astro.currentLocale || 'en';
+const i18n = await getEntry('i18n', locale);
+
+const translations = {
+	title: (i18n?.data['hero.title'] as string) || 'Learn to Code',
+	description:
+		(i18n?.data['hero.description'] as string) ||
+		'Free, open-source courses on React, Angular, Terraform, Git, and more. Start your coding journey today.',
+	buttonText: (i18n?.data['hero.buttonText'] as string) || 'Explore Courses',
+};
+---
+
+<HeroComponent client:load translations={translations} locale={locale} />
