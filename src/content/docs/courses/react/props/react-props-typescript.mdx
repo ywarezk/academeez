@@ -1,20 +1,20 @@
 ---
-title: React Props with Typescript
+title: React Props with TypeScript
 description: When passing props we need to make sure we are passing the right type that the prop expects.
 publishDate: 2025-12-19
 authors:
   - yariv-katz
 sidebar:  
   order: 7
-  label: 4.3 Props with Typescript
+  label: 4.3 Props with TypeScript
 ---
 
 import {Sandpack} from '@codesandbox/sandpack-react';
 
-We are going the dedicate this lesson to working with Typescript and React, and we will focus on
-declaring the types of the props using Typescript.
+We are going to dedicate this lesson to working with TypeScript and React, and we will focus on
+declaring the types of the props using TypeScript.
 
-Here is a live code editor of a simple demonstration of how to declare the types of the props using Typescript.
+Here is a live code editor of a simple demonstration of how to declare the types of the props using TypeScript.
 
 <div className="mt-5 not-content">
 <Sandpack 
@@ -45,8 +45,8 @@ You can type code in the live editor above to experiment with different props an
 
 ## What happens when we pass the wrong type of prop?
 
-Let's examine what will happen when we use typescript and pass the wrong type of prop to the `<Child />` component.
-In the following example we will create a new React with Typescript project using [**create-react-app**](https://create-react-app.dev/docs/getting-started/).
+Let's examine what will happen when we use TypeScript and pass the wrong type of prop to the `<Child />` component.
+In the following example we will create a new React with TypeScript project using [**create-react-app**](https://create-react-app.dev/docs/getting-started/).
 Open a terminal or wsl if using windows.
 Make sure you have [**node**](https://nodejs.org/en) installed and type:
 
@@ -80,8 +80,8 @@ In the `App.tsx` try and play with the props you are passing to the `<Child />` 
 
 You will notice the following: 
 - Your IDE will show you an error when you pass the wrong type of prop.
-- The IDE will summarize all the typescript errors
-- When running **build** to build the app using the command `npm run build` you will see the typescript errors in the console.
+- The IDE will summarize all the TypeScript errors
+- When running **build** to build the app using the command `npm run build` you will see the TypeScript errors in the console.
 
 Using JavaScript for example you could have called the `<Child />` component like this:
 ```javascript
@@ -89,9 +89,9 @@ Using JavaScript for example you could have called the `<Child />` component lik
 ```
 And you would not have seen any errors, the build would have succeeded and you would have been able to run the app and see the correct result.
 
-When working with Typescript you add another layer of check to your code, that extra layer checks your code for errors and will alert you on those compilation errors.
-On Javascript that code would pass but if the `<Child />` would do some kind math calculation with the age then that error would have shown during runtime.
-This means that when using Typescript you are taking some of the errors and you throw them at compile time instead of runtime.
+When working with TypeScript you add another layer of check to your code, that extra layer checks your code for errors and will alert you on those compilation errors.
+On Javascript that code would pass but if the `<Child />` would do some kind of math calculation with the age then that error would have shown during runtime.
+This means that when using TypeScript you are taking some of the errors and you throw them at compile time instead of runtime.
 
 ## Declare prop types using Type Alias or Interface
 
@@ -103,7 +103,7 @@ export default function Child(props: { name: string, age: number }) {
 ```
 
 When the props are short you can decide to declare them as part of the function signature, but for some developers the syntax is not very readable and it's not very easy to understand, especially
-when using [destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring) to get the props content which might look like this:
+when using [destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring) to extract the prop values, which might look like this:
 ```typescript
 export default function Child({ name, age }: { name: string, age: number }) {
     return <h1>Hello {name} {age}</h1>
@@ -143,13 +143,13 @@ The rule of thumb that we recommend in academeez is:
 Use **Interface** until you need Type Alias.
 :::
 
-We based this rule on the [following part in Typescript documentation](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#differences-between-type-aliases-and-interfaces):
+We based this rule on the [following part in TypeScript documentation](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#differences-between-type-aliases-and-interfaces):
 
 > If you would like a heuristic, use interface until you need to use features from type
 >
 > — TypeScript Documentation
 
-Typescript error messages might be more readable when using `interface` in addition
+TypeScript error messages might be more readable when using `interface` in addition,
 declaration merging can provide a way to extend those props, and that is especially useful when 
 your component is part of a library.
 
@@ -164,7 +164,7 @@ some feature that can only be achieved with a type alias, you can switch to a ty
 ## `ReactNode` and `JSX.Element`
 
 You probably noticed in our examples that while we defined the props and what type each prop is, we did not define the return type of the component.
-[Typescript will infer](https://www.typescriptlang.org/docs/handbook/type-inference.html) the return type of the component based on the return statement, so there is actually no need to define the return type of the component.
+[TypeScript will infer](https://www.typescriptlang.org/docs/handbook/type-inference.html) the return type of the component based on the return statement, so there is actually no need to define the return type of the component.
 But just for clarity you can define the return type of the component using the `ReactNode` type or the `JSX.Element` type.
 
 ```typescript
@@ -179,12 +179,12 @@ export default function Child({ name, age }: ChildProps): React.JSX.Element {
 }      
 ```
 
-`ReactNode` is a bit more broad of a type than `JSX.Element`, and you can say that `JSX.Element` is included in `ReactNode`.
+`ReactNode` is a bit more broad of a type than `JSX.Element`, `JSX.Element` is one of the types included in the `ReactNode` union.
 `ReactNode` includes all the types that can be returned by a component and that can be placed in JSX which includes for example `string` and `number`, while `JSX.Element` includes the return type of the function `React.createElement` which is the result of the JSX syntax in our code.
 So if you do want to write the return type of the component `JSX.Element` can help you restrict the return type if you are expecting jsx and not `null` or `undefined` or other types that are included in `ReactNode`.
-For the most part you won't need to specify the return type of the component functions, but if you do perhaps it's best to start with a smaller type like `JSX.Element` and expend it to `ReactNode` if the need arises.
+For the most part you won't need to specify the return type of the component functions, but if you do perhaps it's best to start with a smaller type like `JSX.Element` and expand it to `ReactNode` if the need arises.
 
-Actuallly those types might be more usable in cases where your component is getting a `children` prop, in that case you can specifically assign the `children` as `JSX.Element` if you want the `children` to be a jsx element.
+Actually those types might be more usable in cases where your component is getting a `children` prop, in that case you can specifically assign the `children` as `JSX.Element` if you want the `children` to be a jsx element.
 The `children` prop is a prop that React will populate when placed between the opening and closing tags of the component.
 In the following example our `<Child />` component is getting a `children` prop:
 
@@ -196,7 +196,12 @@ type ChildProps = {
 }
 
 export default function Child({ name, age, children }: ChildProps) {
-    return <h1>Hello {name} {age}</h1>
+    return (
+      <>
+        <h1>Hello {name} {age}</h1>
+        { children }
+      </>
+    )
 }      
 ```
 
@@ -206,14 +211,14 @@ Although we see this type often being used, there is really no longer a need to 
 The type `FC` (or `FunctionComponent` they are the same) is a type that is used to declare a function component that accepts the props as a generic type and returns a `ReactNode`.
 There are some examples of developers that [discourage the usage of this type](https://github.com/facebook/create-react-app/pull/8177) and specifying reasons, many of those reasons are no longer relevant or are pretty minor, so it's not the end of the world if you do use it.
 The reasons we discourage the usage of this type:
-1. If your props are using generic types and you still want to use the `FC` type you will have to do some typescript gymnastics to get it to work. While you will be able to make it work, it's not a good practice and it's not very readable.
+1. If your props are using generic types and you still want to use the `FC` type you will have to do some TypeScript gymnastics to get it to work. While you will be able to make it work, it's not a good practice and it's not very readable.
 2. The `FC` return type is `ReactNode` which is a bit too broad of a type and you might prefer to be more specific with the return type of the component.
 As mentioned those reasons are pretty minor so it's not the end of the world if you do use it, but we should also mention that there are really no real benefits to using it.
 
 ## Generic types
 
 Let's do a bit of a challenging exercise to wrap up this lesson.
-Before diving to the exercise we recommend reading about [typescript generic types](https://www.typescriptlang.org/docs/handbook/2/generics.html).
+Before diving into the exercise we recommend reading about [TypeScript generic types](https://www.typescriptlang.org/docs/handbook/2/generics.html).
 In this exercise we will create a React Component that will expose an event to the parent.
 This means the parent will be able to send a function to the child to subscribe to the event.
 The child can also get a prop called `data` which the child does not know which type it is, it could be any type the parent wants to send to the child.
@@ -235,8 +240,8 @@ export default function Child({ data, onEvent }: ChildProps) {
 }
 ```
 
-The problem with this solution is that typescript will not do too much checking on the `data` prop, it will just assume that it is any type.
-So by typescript this code is acceptable:
+The problem with this solution is that TypeScript will not do too much checking on the `data` prop, it will just assume that it is any type.
+So according to TypeScript this code is acceptable:
 
 ```typescript title="App.tsx"
 import Child from './Child';
@@ -254,7 +259,7 @@ export default function App(): React.JSX.Element {
 
 ```
 
-Typescript does not know that the `data` in the function is of type `string` and does not alert us on the fact that we are multiplying a string by 2.
+TypeScript does not know that the `data` in the function is of type `string` and does not alert us on the fact that we are multiplying a string by 2.
 A better solution might be:
 
 ```typescript title="Child.tsx"
