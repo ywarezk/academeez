@@ -116,3 +116,37 @@
 	margin: 0;
 	padding: 0;
 }
+
+blockquote {
+	@apply border-l-4 border-muted-foreground/30 bg-muted/30 pl-4 py-2 my-4 italic;
+}
+
+.content-panel details {
+	@apply my-4 rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30;
+}
+
+.content-panel details summary {
+	@apply cursor-pointer px-4 py-3 font-medium text-blue-900 dark:text-blue-100 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors;
+	list-style: none;
+}
+
+.content-panel details summary::-webkit-details-marker {
+	display: none;
+}
+
+.content-panel details summary::before {
+	content: '▶';
+	@apply inline-block mr-2 text-blue-600 dark:text-blue-400 transition-transform;
+}
+
+.content-panel details[open] summary::before {
+	@apply rotate-90;
+}
+
+.content-panel details[open] summary {
+	@apply border-b border-blue-200 dark:border-blue-800;
+}
+
+.content-panel details > *:not(summary) {
+	@apply px-4 py-3 text-foreground;
+}
