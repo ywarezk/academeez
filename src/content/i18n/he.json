@@ -8,5 +8,12 @@
   "pagetitle.publish": "פורסם בתאריך",
   "hero.title": "למד לתכנת",
   "hero.description": "קורסים חינמיים בקוד פתוח. אין צורך ברישום, אין קליקבייט, אין שטויות.",
-  "hero.buttonText": "חקור קורסים"
+  "hero.buttonText": "חקור קורסים",
+  "footer.siteDescription": "קורסים חינמיים בקוד פתוח. אין צורך ברישום, אין קליקבייט, אין שטויות.",
+  "footer.courses": "קורסים",
+  "footer.donation": "תרומה",
+  "footer.community": "קהילה",
+  "footer.legal": "משפטי",
+  "footer.dropUsALine": "צור קשר",
+  "footer.copyright": "academeez. כל הזכויות שמורות."
 }

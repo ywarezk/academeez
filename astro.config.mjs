@@ -65,6 +65,7 @@ export default defineConfig({
 				MarkdownContent: './src/components/MarkdownContent.astro',
 				Pagination: './src/components/Pagination.astro',
 				ThemeProvider: './src/components/ThemeProvider.astro',
+				Footer: './src/components/Footer.astro',
 			},
 			sidebar: [
 				{
