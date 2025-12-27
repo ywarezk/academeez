@@ -1,0 +1,9 @@
+---
+import DefaultFooter from '@astrojs/starlight/components/Footer.astro';
+
+// Check if we're on the homepage (splash template)
+const starlightRoute = Astro.locals.starlightRoute;
+const isHomepage = starlightRoute?.entry?.data?.template === 'splash';
+---
+
+{!isHomepage && <DefaultFooter {...Astro.props} />}
