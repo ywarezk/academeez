@@ -59,7 +59,7 @@ At times it helps to see that a solution is not ideal if you try to enlarge the 
 
 ![Naive solution problem](https://github.com/ywarezk/academeez/blob/main/content/en/course/react/suspense/larger-tree.png?raw=true)
 
-Now making the parent send 50 queries and passing all that data to those components will be cumbersome to say the least, we would need to create some kind of `Context` probably to pass that data, and the fact that the `<Parent />` needs to deal with a lot of data that doesn't really concern him (except when to display the spinner) does not make our code look any better (also violates the single resposibility of the `<Parent />`).
+Now making the parent send 50 queries and passing all that data to those components will be cumbersome to say the least, we would need to create some kind of `Context` probably to pass that data, and the fact that the `<Parent />` needs to deal with a lot of data that doesn't really concern him (except when to display the spinner) does not make our code look any better (also violates the single responsibility of the `<Parent />`).
 
 ## Notify parent using throw
 
@@ -73,10 +73,10 @@ There are few conditions to use `throw` as means for sending data to parent:
 ### So which parent will grab the thrown data?
 
 The parent that will grab the thrown data is the first parent that satisfies the following conditions:
-- If the `thrown` data is an instance of `Promise` it will be catched by the first `<Suspense>` up the tree
-- All other types or promise instance with no `<Suspense>` to catch it will be catched by the first `<ErrorBoundary>` up the tree (We will talk on `ErrorBoundary` in future lessons)
+- If the `thrown` data is an instance of `Promise` it will be caught by the first `<Suspense>` up the tree
+- All other types or promise instance with no `<Suspense>` to catch it will be caught by the first `<ErrorBoundary>` up the tree (We will talk on `ErrorBoundary` in future lessons)
 
-If there is no one to catch the thrown data, the usuall Javascript uncaught exception will happen (usually resulting in a crash).
+If there is no one to catch the thrown data, the usual Javascript uncaught exception will happen (usually resulting in a crash).
 
 ## What is `<Suspense>`
 

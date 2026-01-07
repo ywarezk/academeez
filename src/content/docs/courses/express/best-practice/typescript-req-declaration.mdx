@@ -171,7 +171,7 @@ when you install a `DefinitelyTyped` package you basically add a folder to `node
 For example if we did install the passport declaration using `npm i -D @types/passport`, we would notice that we now have a folder: `node_modules/@types/passport` with a declaration file.
 
 A `DefinitelyTyped` package contains one or more declaration files in it.  
-If we feed the typescript compiler with the decalration files in `node_modules/@types/passport` the compiler is learning now about new types, specifically about the passport module.
+If we feed the typescript compiler with the declaration files in `node_modules/@types/passport` the compiler is learning now about new types, specifically about the passport module.
  
 ## How to feed the compiler with declaration file
 
@@ -222,7 +222,7 @@ The default here is what makes it so easy to work with `DefinitelyTyped` - the d
 
 ### types
 
-This option will include a declaration file without the need to specifing it in the source files.
+This option will include a declaration file without the need to specifying it in the source files.
 
 For example let's say I'm using express and installed the `DefinitelyTyped` package of express.
 
@@ -290,7 +290,7 @@ Now if we return to our file we will notice that type typescript errors about th
 `DefinitelyTyped` is a community project for typescript declaration files describing javascript package.
 
 This means that a package author can choose to write his package in JavaScript, and can choose to include in his package a declaration file for typescript users to use his package.  
-If he doesn't include typescript declaration files in his package, the community (or him if he wants to seperate the declaration files to a different project) can do it for him and add a declaration file package which can be installed with npm:
+If he doesn't include typescript declaration files in his package, the community (or him if he wants to separate the declaration files to a different project) can do it for him and add a declaration file package which can be installed with npm:
 
 ```bash
 > npm i -D @types/declaration-file-for-some-package
@@ -399,7 +399,7 @@ class User {
 export type MyUserType = typeof User
 ```
 
-and when you autheticate with passport, you configure passport to populate the `req.user` with an instance of your `User` class.
+and when you authenticate with passport, you configure passport to populate the `req.user` with an instance of your `User` class.
 
 currently if you try to access `firstName` in your code:
 
@@ -429,7 +429,7 @@ declare global {
 }
 ```
 
-We can overide the `User` interface that is defined by passport to tell typescript that `req.user` is of the type that we want.
+We can override the `User` interface that is defined by passport to tell typescript that `req.user` is of the type that we want.
 
 ## Summary
 

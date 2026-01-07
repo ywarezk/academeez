@@ -127,7 +127,7 @@ We also specified the tofu version that we are using (to force similar versions 
 
 ## terraform-google-modules
 
-[terraform-google-modules](https://registry.terraform.io/namespaces/terraform-google-modules) is a collection of terraform/tofo modules created by google.
+[terraform-google-modules](https://registry.terraform.io/namespaces/terraform-google-modules) is a collection of terraform/tofu modules created by google.
 Those modules are highly maintained while focusing on best practices in creating google cloud resources. We will use those modules as much as we can for creating cloud resources.
 
 ## Google Provider authentication
@@ -147,10 +147,10 @@ Make sure that your gcp users has enough permissions to create all the resources
 
 A [Project in GCP](https://cloud.google.com/resource-manager/docs/creating-managing-projects) is an organizational unit that can help you organize resources in GCP.
 You can place the resources under a project, the project will be connected to a billing account, you can set a budget if you don't want the cost of the project running out of control.
-The projects will also help us with isolation, so we will place different environments in different projects, and that isolation will also help us with permissions to different team memebers.
+The projects will also help us with isolation, so we will place different environments in different projects, and that isolation will also help us with permissions to different team members.
 
 We will place all the resources in a new project, so let's create a new project on GCP.
-Create a new file `iac/main.tf`, we will place all infastructure code there (another bad practice - no modules no dependencies, this will be fixed in the next lesson).
+Create a new file `iac/main.tf`, we will place all infrastructure code there (another bad practice - no modules no dependencies, this will be fixed in the next lesson).
 
 ```terraform
 /**
@@ -235,7 +235,7 @@ Resources in the VPC can also communicate with GCP services.
 
 [Subnet](https://cloud.google.com/vpc/docs/subnets) is a range of IP addresses in your VPC. it allows you to create certain sections within the VPC which are region associated.
 It allows you to create further isolation within the VPC along with adding firewall rules to the subnet.
-Although the subnet is in a region it doesn't mean that the resources in the subnet are in the exact same location, they can be spreaded across different zones in that region.
+Although the subnet is in a region it doesn't mean that the resources in the subnet are in the exact same location, they can be spread across different zones in that region.
 
 Let's create VPC and a subnet for our cluster.  
 At the bottom of the `main.tf` file add the following code:
@@ -360,7 +360,7 @@ We need to init and run our code again, so run `terraform init` or `tofu init`, 
 
 ## Install Flux
 
-Flux can be installed using terraform/tofo. For that we will need to use the [Flux Provider](https://registry.terraform.io/providers/fluxcd/flux/latest/docs).
+Flux can be installed using terraform/tofu. For that we will need to use the [Flux Provider](https://registry.terraform.io/providers/fluxcd/flux/latest/docs).
 We will have to configure the Flux provider and give information on our k8s cluster as well as information about our git repository.
 
 ### Advantages of using IAC for installing Flux
@@ -381,7 +381,7 @@ In case you are managing one cluster, and you are the only one managing it, then
 
 If tofu will need to create resources in our k8s cluster, it will need to authenticate with the cluster.
 There are different ways to authenticate with the cluster, for example tofu can use our `kubectl` and the `kubectl` has to authenticate before running tofu with the right cluster.
-But this sort of authentication can be problematic, mistakes can be made and it can accidently run not on the cluster that you want it to. Also it will be even harder if multiple team memebers are using that IAC project.
+But this sort of authentication can be problematic, mistakes can be made and it can accidentally run not on the cluster that you want it to. Also it will be even harder if multiple team members are using that IAC project.
 Each one of them will need to make sure to authenticate to the right cluster, things will get more messy as you have more clusters and more developers.
 It's best to authenticate as declarative as possible where the cluster is mentioned in the authentication logic.
 It would also be best to use a short lived token for the authentication. 

@@ -10,10 +10,10 @@ sidebar:
 Our advanced k8s Flux and Terraform course repository
 is also aimed to be a starter kit filled with best practices.
 
-It's important that our code would be prettified before it's commited.
+It's important that our code would be prettified before it's committed.
 (Video editor needs to place the first sequence with an X)
 
-To make sure that non-prettified code is not commited, we will use `pre-commit` to help us generate the git pre commit hook and install the rules that are defined in `pre-commit-terraform`
+To make sure that non-prettified code is not committed, we will use `pre-commit` to help us generate the git pre commit hook and install the rules that are defined in `pre-commit-terraform`
 
 - install `pre-commit` with pip
 - define pre-commit configuration

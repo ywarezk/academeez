@@ -93,7 +93,7 @@ In the following example we try to access a missing property in a, and we get:
 
 These errors can be caught using `try..catch`
 
-- **Asynchronous errors** - those are errors that happen when you preform something asynchronously and that something fails.  
+- **Asynchronous errors** - those are errors that happen when you perform something asynchronously and that something fails.  
   In the following code we try to read a file that does not exist
 
   ```js
@@ -578,7 +578,7 @@ app.get('/', (req, res) => {
 })
 ```
 
-you have in the `req` object a refrence to the execution context and in there you can feel free to use throw even in async methods or error first callbacks.
+you have in the `req` object a reference to the execution context and in there you can feel free to use throw even in async methods or error first callbacks.
 
 So if you need help with async exceptions in express you can use the `az-express-errors` package, which will help you with rejected promises, EventEmitter error event, throwing exceptions in async functions, and error first callbacks.
 
@@ -600,7 +600,7 @@ setTimeout(() => {
 process.on('uncaughtExceptionMonitor', function(err) {
   console.log('this will be called before uncaughtException event')
   console.log('it wont prevent the node process from crashing');
-  console.log('and we use this event to log the error, create a log file with the error ect.');
+  console.log('and we use this event to log the error, create a log file with the error etc.');
 });
 
 process.on('uncaughtException', function() {
@@ -621,7 +621,7 @@ Don't use this event to stop the process from crashing, use it for cleanup, prop
 
 As we examined, express can help you catch the synchrone exceptions, but it can't help you with async exceptions.  
 On express version 5 it can help you catch rejected promises in the route handlers, but it can't help you with `EventEmitter` or `error-first-callback`.  
-If there is an uncuaght exception in express which is not transfered to express error handlers, then that exception will bubble up to the `process` and node will deal with that exception like we learned, by calling the proper events and eventually crashing the node process.
+If there is an uncuaght exception in express which is not transferred to express error handlers, then that exception will bubble up to the `process` and node will deal with that exception like we learned, by calling the proper events and eventually crashing the node process.
 
 ## Exception journey
 
@@ -633,7 +633,7 @@ you can also catch the exception somewhere in the stacktrace do something and re
 ## mental notes on dealing with exceptions
 
 We need to strive to catch all the exceptions that can happen in our code, and deal with them properly.  
-The simple example is to have a line of code that can throw an exception, and you can wrap that line of code with a `try..catch` (or equivilant in async types) and deal with the exception at the point of origin.  
+The simple example is to have a line of code that can throw an exception, and you can wrap that line of code with a `try..catch` (or equivalent in async types) and deal with the exception at the point of origin.  
 But things are not always that simple, there are times when you don't have the proper tools to deal with the exception when it happens and you have to let the exception bubble up to the parent where one of the parents can handle that exception.  
 Often we also want to create generic errors that will handle when a certain type of exception happens.  
 There are also times when there is not one place that handle the exception but multiple places, where you might catch an exception and rethrow (either that exception or some other exception).

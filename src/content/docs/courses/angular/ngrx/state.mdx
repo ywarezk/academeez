@@ -79,7 +79,7 @@ Our state is starting with:
 
 ```json
 {
-  "couter": 0
+  "counter": 0
 }
 ```
 
@@ -87,13 +87,13 @@ and after the user is clicking the _+ Increment_ button, the state is changing t
 
 ```json
 {
-  "couter": 1
+  "counter": 1
 }
 ```
 
 When we examine this state, one might think that the state is mutable, but it's not.  
 It's not like we are changing the value of the `counter` property, we are actually replacing the entire state with a new state.  
-To explain with psuedo code:
+To explain with pseudo code:
 
 ```javascript
 // lets imaging we have the following imaginary function from ngrx

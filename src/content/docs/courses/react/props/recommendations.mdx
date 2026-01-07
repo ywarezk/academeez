@@ -249,11 +249,11 @@ For example: `variant`, `sx`, `disabled`, `color`, etc.
 When you create an application, you have to imagine that you not only creating an application, but you are creating an entire language.  
 That language reflects how your application looks like: repeating style guide, repeating components and ux.  
 That language also reflects how your code looks like: reusing functions, class, creating your own libraries, creating toolset that you will use throughout your application.  
-That language you create enforces you to build your application like lego blocks using good infastructure, and reusing your code.
+That language you create enforces you to build your application like lego blocks using good infrastructure, and reusing your code.
 
 That same language will apply to certain convention you will have to follow, those conventions will help you reuse your language.
 
-For example in your database, in the tables columns, strive to use similar naming for similar columns, if for example a certain **entity** (A) contains a **name** colum, and another **entity** (B) contains also a **name** keeping the same conventions will direct you to place the column for **B** that is named `name` and not for examle using in **A** the column `name` and in **B** the column `title`.  
+For example in your database, in the tables columns, strive to use similar naming for similar columns, if for example a certain **entity** (A) contains a **name** column, and another **entity** (B) contains also a **name** keeping the same conventions will direct you to place the column for **B** that is named `name` and not for example using in **A** the column `name` and in **B** the column `title`.  
 
 Why is it so important to keep naming similar?  
 In one word **Grouping**  
@@ -400,14 +400,14 @@ Actually in our example we don't have to pass those generic too, and we could ha
 
 typescript can infer the generic types based on the other props we are passing, that is why usually you don't need to pass those generics to `mui`.  
 
-Generics are just a subset of the power of typescript which I see a lot of experianced developers miss out when writing their components.
+Generics are just a subset of the power of typescript which I see a lot of experienced developers miss out when writing their components.
 
 ## \#6 To memo or not to memo?
 
 You should understand when you should memoize the props you are passing.  
 As a general rule you should memoize the props you are passing in the following cases:
 
-1. When the component you are transfering the props to is a pure component that is wrapped with `React.memo`, and the components you are passing are non primitives, and you want to avoid rendering this component when the parent renders:
+1. When the component you are transferring the props to is a pure component that is wrapped with `React.memo`, and the components you are passing are non primitives, and you want to avoid rendering this component when the parent renders:
 
 ```js title="Child.js"
 import {memo} from 'react';
@@ -494,7 +494,7 @@ The more props you will have to pass down the harder it is to understand you com
 # Summary
 
 We learn about props very early when we started learning about `React`.  
-Seems like such a simple topic, yet I see so much bad practices and mistakes of even the most experianced `React` developers.
+Seems like such a simple topic, yet I see so much bad practices and mistakes of even the most experienced `React` developers.
 Not following best practices for props will lead to more bugs, more renders, components api which is not clear and thus less used by other developers, it's even effects testing and making your components hard to test.
 
 Hopefully this lesson will improve you `React` prop passing ability.
