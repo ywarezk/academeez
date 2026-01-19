@@ -1,0 +1,20 @@
+---
+title: Merge Queue
+description: When multiple developers work on the same repository, CI checks take time to run and must pass against the latest main branch. This creates a race condition where developers wait for their CI checks, only to find that another developer merged their PR first, requiring them to update their branch and restart the CI process all over again. To solve this PR race condition, we will learn how to create a merge queue. GitHub Merge Queue automatically queues approved pull requests and ensures they pass CI checks against an up-to-date main branch before merging, eliminating the race condition by processing PRs sequentially.
+authors:
+  - yariv-katz
+sources:
+	- url: "https://github.com/Nerdeez/github-merge-queue"
+	  title: "github-merge-queue"
+---
+
+A healthy software project relies on a clear, enforced development process supported by automated checks and tests that validate code quality and ensure the team follows the agreed workflow.
+This is the job of your CI — it’s like the strict sergeant who makes sure everyone stays in line and follows the rules.
+After your CI sergeant gives approval, you can take it a step further by automatically merging the code and releasing a new version—that's the CD (Continuous Deployment) process.
+Our CI sergeant in this case, and in fact in this entire course is github actions. and we want
+
+
+## conflict
+
+Let's try and examine what will happen if 2 pr's will have a conflict 
+one of the pr's will bbe merged successfully and the other one will have a conflict and will not be merged.
