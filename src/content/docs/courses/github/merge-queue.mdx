@@ -11,7 +11,53 @@ sources:
 A healthy software project relies on a clear, enforced development process supported by automated checks and tests that validate code quality and ensure the team follows the agreed workflow.
 This is the job of your CI — it’s like the strict sergeant who makes sure everyone stays in line and follows the rules.
 After your CI sergeant gives approval, you can take it a step further by automatically merging the code and releasing a new version—that's the CD (Continuous Deployment) process.
-Our CI sergeant in this case, and in fact in this entire course is github actions. and we want
+In this course, our CI sergeant is GitHub Actions. Since we're automatically releasing updates when CI checks pass, we should make this process as accurate and reliable as possible.
+
+## Ruleset - Protecting the Release Branch
+
+In this course's examples, the release branch is our default branch `main`.
+This means that CI automations and checks must protect that branch and ensure high-quality code, since everything pushed to that branch will be released to production.
+Certain rules regarding that branch needs to be enforced, we can't just let any developer push code to that branch without enforcing the quality of his
+code.
+To enforce restrictions on the main branch, navigate to the repository settings, expand the rules section, and click **Rulesets** (in most cases, it's best to use the new branch rulesets over the older branch protection rules).
+Click the green **New ruleset** button and on the menu that pops choose **New branch ruleset**.
+We are not going to go over each and every option here, but let's emphasize a few of the important ones that relate to the topic of this lesson: 
+
+1. **Target branches** - Make sure the rules apply to the branch you want to protect. In this course, we are protecting the **main** branch, which is the **Default** branch.
+2. **Require a pull request before merging** - This means we cannot push directly to the `main` branch. Instead, we must create a [pull request](https://docs.github.com/en/pull-requests) to suggest changes, get approval from reviewers, and pass the checks and tests. This option has additional suboptions:
+   2.1. **Required approvals** - We will set this to one to verify that each pull request is reviewed by another developer.
+   2.2. **Allowed merge methods** - We recommend keeping just a single option: **Squash**.
+3. **Require status checks to pass** - This ensures that a PR can only be merged if it passes the required checks. This option also expands:
+   3.1. **Require branches to be up to date before merging**
+   3.2. **Add checks** - We will later add checks that are required for the pull request to pass before it can be merged.
+4. **Block force pushes**
+
+Our **main** branch is better protected now, but these rules can introduce a new problem—one that a merge queue can help us solve.
+
+## The PR Race Condition
+
+To enforce CI on every pull request, we enabled **Require status checks to pass**.
+We also enabled **Require branches to be up to date before merging**.
+
+It’s not enough for checks to pass on your PR branch in isolation—they need to pass when your PR is tested against the latest `main`.
+For example, imagine your PR and another developer’s PR both pass the test suite on their own. If the other PR merges first, the *combined* code (their changes + yours) might cause tests to fail. In other words: each PR is “green” alone, but together they introduce a bug.
+
+That’s why we enabled **Require branches to be up to date before merging**: it forces your PR to rebase/merge the latest `main` and run the checks again before it can be merged, keeping CI results accurate and reliable.
+
+The problem starts in a busy repo, where a team creates multiple PRs every day and everyone is trying to merge while still complying with **Require branches to be up to date before merging**.
+At peak times, CI ends up running many checks in parallel across several PRs.
+
+Each developer has to wait for checks to finish before merging their code. But while they’re waiting, another PR merges and pushes new commits to `main`.
+Now their PR is no longer up to date, so they need to bring in the latest `main` and run the checks again—from scratch.
+And while they wait again, yet another PR might merge, forcing the same cycle one more time.
+
+This creates a race where developers keep rebasing and re-running CI just to stay mergeable. It wastes time, and some PRs can even get “starved”, staying pending for a long time.
+
+## Demo: The PR Race Condition
+
+## change to branch that is in the queue
+
+we cannot push to a branch that is currently in the queue
 
 
 ## conflict
