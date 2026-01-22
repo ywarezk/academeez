@@ -55,6 +55,189 @@ This creates a race where developers keep rebasing and re-running CI just to sta
 
 ## Demo: The PR Race Condition
 
+A demo of the problem is available in the [github-merge-queue repository](https://github.com/Nerdeez/github-merge-queue).
+This repository contains 2 workflows in [.github/workflows](https://github.com/Nerdeez/github-merge-queue/tree/main/.github/workflows).
+The `build.yaml` workflow runs on every PR and simulates the build process (represented by a 3-minute sleep).
+After the build finishes, it triggers the `test.yaml` workflow, which simulates the tests that run on the build result (also represented by a 3-minute sleep).
+The `build.yaml` workflow looks like this:
+
+```yaml title=".github/workflows/build.yaml"
+#
+# simulates a build workflow
+# this workflow will run when a pull request is created
+# it will sleep for a period of time and then pass or fail based on the content of the build.result.txt file.
+# if there is no build.result.txt file, the workflow will pass.
+#
+
+name: Build
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  # we will talk about this trigger later on in this lesson
+  merge_group:
+
+jobs:
+  build:
+    runs-on: ubuntu-slim
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
+
+      - name: Sleep for 3 minutes
+        run: sleep 180
+
+      - name: Check build result
+        id: check_result
+        run: |
+          if [ -f build.result.txt ]; then
+            RESULT=$(cat build.result.txt | tr -d '[:space:]')
+            echo "result=$RESULT" >> $GITHUB_OUTPUT
+          else
+            echo "result=pass" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Pass or fail based on result
+        run: |
+          if [ "${{ steps.check_result.outputs.result }}" = "fail" ]; then
+            echo "Build failed based on build.result.txt content"
+            exit 1
+          else
+            echo "Build passed"
+          fi
+
+      - name: Call test workflow
+        if: success()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const ref = context.payload.pull_request
+              ? context.payload.pull_request.head.ref
+              : context.ref;
+
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'test.yaml',
+              ref: ref,
+              inputs: {
+                commit_sha: context.sha
+              }
+            });
+```
+
+It checks out the code and, based on the content of the `build.result.txt` file, will fail if the file contains `fail`.
+Upon success, it triggers the `test.yaml` workflow.
+
+The `test.yaml` workflow looks like this:
+
+```yaml title=".github/workflows/build.yaml"
+#
+# the build workflow will call this workflow with the commit sha of the head commit of the pr.
+# it will check the test.result.txt file to determine if the test passed or failed.
+# it will create a check on head commit of the pr with the result.
+#
+
+name: Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: 'The commit SHA to test'
+        required: true
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-slim
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
+        with:
+          ref: ${{ inputs.commit_sha }}
+
+      - name: Create check run
+        id: create_check
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { data: checkRun } = await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'E2E Check',
+              head_sha: context.payload.inputs.commit_sha,
+              status: 'in_progress',
+              output: {
+                title: 'Test is running',
+                summary: 'Test workflow is executing'
+              }
+            });
+            
+            core.setOutput('check_run_id', checkRun.id);
+
+      - name: Sleep for 3 minutes
+        run: sleep 180
+
+      - name: Check test result
+        id: check_result
+        run: |
+          if [ -f test.result.txt ]; then
+            RESULT=$(cat test.result.txt | tr -d '[:space:]')
+            echo "result=$RESULT" >> $GITHUB_OUTPUT
+          else
+            echo "result=pass" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update check run with result
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const result = '${{ steps.check_result.outputs.result }}';
+            const conclusion = result === 'fail' ? 'failure' : 'success';
+            const title = result === 'fail' ? 'Test failed' : 'Test passed';
+            const summary = result === 'fail' 
+              ? 'Test failed based on test.result.txt content'
+              : 'Test passed successfully';
+            
+            await github.rest.checks.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              check_run_id: ${{ steps.create_check.outputs.check_run_id }},
+              status: 'completed',
+              conclusion: conclusion,
+              output: {
+                title: title,
+                summary: summary
+              }
+            });
+
+      - name: Pass or fail based on result
+        run: |
+          if [ "${{ steps.check_result.outputs.result }}" = "fail" ]; then
+            echo "Test failed based on test.result.txt content"
+            exit 1
+          else
+            echo "Test passed"
+          fi
+```
+
+The test workflow is triggered after the build finishes successfully.
+It creates a check, sleeps for 3 minutes, determines the test result based on the `test.result.txt` file, and updates the check accordingly.
+
+Let's imagine two developers working on that repository.
+Developer A pushes their PR at 12:00.
+Developer B pushes their PR at 12:01.
+Developer A's checks finish at 12:06, but they're on their lunch break.
+Developer B merges their PR at 12:07.
+Developer A needs to rebase their branch with `main` and run the checks again (because we enabled the ruleset option **Require branches to be up to date before merging**).
+Developer A finish lunch at 13:00 only to discover they need to restart the checks.
+That's one hour of delay—time when their PR could have already been running in production.
+
+This might seem like a minor problem, but multiply it by 20 developers and you'll quickly get frustrated. You'll start seeing messages in Slack like: `Everybody please do not merge your PR's I need to push something...`
+More importantly, developers waste a lot of time babysitting their PR checks.
+
+
 ## change to branch that is in the queue
 
 we cannot push to a branch that is currently in the queue
