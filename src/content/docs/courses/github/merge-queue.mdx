@@ -237,6 +237,22 @@ That's one hour of delay—time when their PR could have already been running in
 This might seem like a minor problem, but multiply it by 20 developers and you'll quickly get frustrated. You'll start seeing messages in Slack like: `Everybody please do not merge your PR's I need to push something...`
 More importantly, developers waste a lot of time babysitting their PR checks.
 
+## Merge Queue
+
+Now let's try and describe a different workflow.
+Developer A pushes their PR at 12:00.
+Right away he is going to the PR page and he is presented with this option:
+
+![Merge when ready option](merge-queue/merge-when-ready.png)
+
+He doesn't have to wait for the checks to finish, he can schedule the PR to be merged automatically.
+When all the requirements for the PR have passed, the PR automatically transfered to a different branch, where the required checks needs to pass on
+that branch and the PR will be merged automaticaly
+
+On 12:01 developer B push his PR and also clicks the **Merge when ready**.
+Which means the first PR od developer A will be finished at 12:06 and the second PR of developer B will finish running all the checks.
+Given that they both pass all the checks they will both be transfered to the branch 
+
 
 ## change to branch that is in the queue
 
