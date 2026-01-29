@@ -13,9 +13,8 @@ sources:
 [Merge Queue](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue) helps you manage and merge automatically a queue of PRs. 
 It automatically merges your PR when the required checks and workflows pass. 
 It runs those checks and workflows while upholding the branch ruleset setting **Require branches to be up to date before merging**. 
-It solves the problem of developers having to go to the PR page, rebase their branch with the latest main, and run the checks again.
+It solves the problem of developers having to go to the PR page when `main` is changing, rebase their branch with the latest main, and run the checks again.
 Crucial component when managing team of developers that are frequently creating PRs to the same branch.
-
 
 A healthy software project relies on a clear, enforced development process supported by automated checks and tests that validate code quality and ensure the team follows the agreed workflow.
 This is the job of your CI — it’s like the strict sergeant who makes sure everyone stays in line and follows the rules.
@@ -24,10 +23,14 @@ In this course, our CI sergeant is GitHub Actions. Since we're automatically rel
 
 ## Ruleset - Protecting the Release Branch
 
-In this course's examples, the release branch is our default branch `main`.
+Merge Queue will target certain branches usually branches that have large amount
+of PR's from different developers that wants to merge code to them.
+In our course we will have a single special branch which is `main` which will function as our release branch.
+Everything that will be pushed to that branch will eventually reach production.
 This means that CI automations and checks must protect that branch and ensure high-quality code, since everything pushed to that branch will be released to production.
 Certain rules regarding that branch needs to be enforced, we can't just let any developer push code to that branch without enforcing the quality of his
 code.
+
 To enforce restrictions on the main branch, navigate to the repository settings, expand the rules section, and click **Rulesets** (in most cases, it's best to use the new branch rulesets over the older branch protection rules).
 Click the green **New ruleset** button and on the menu that pops choose **New branch ruleset**.
 We are not going to go over each and every option here, but let's emphasize a few of the important ones that relate to the topic of this lesson: 
