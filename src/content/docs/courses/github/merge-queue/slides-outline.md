@@ -16,3 +16,13 @@ Source: [merge-queue.mdx](../../merge-queue.mdx)
 - Solves the problem of developers having to go to the PR page, rebase their branch with the latest main, and run the checks again
 
 **Speaker note:** This slide introduces GitHub Merge Queue and why it matters. Each bullet can be a separate line on the slide or combined into short phrases.
+
+---
+
+## Slide 2: Coding time — Demo
+
+**Title:** Coding time...
+
+**Subtitle:** Demo: PR Race Condition
+
+**Content:** Transition slide — live demo of the PR race condition (e.g., using [github-merge-queue](https://github.com/Nerdeez/github-merge-queue)).

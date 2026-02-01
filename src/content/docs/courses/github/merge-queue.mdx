@@ -251,21 +251,26 @@ More importantly, developers waste a lot of time babysitting their PR checks.
 
 ## Merge Queue
 
-Now let's describe a different workflow using GitHub Merge Queue.
+The way we will solve the presented problem is by using GitHub Merge Queue.
+First let's look at a very high level how Developer A and Developer B would interact with the merge queue after it is enabled.
+
+### Merge Queue High Level Overview
+
+After Merge Queue is enabled this is how Developer A and Developer B would interact with the merge queue and merge their PRs.
 
 Developer A pushes their PR at 12:00. Immediately, they navigate to the PR page and are presented with this option:
 
 ![Merge when ready option](merge-queue/merge-when-ready.png)
 
 They don't have to wait for the checks to finish—they can schedule the PR to be merged automatically by clicking **Merge when ready**. When all the requirements for the PR have passed, their work is transitioned to the merge queue, where the checks will be run again (not necessarily right away, but eventually). If the checks pass successfully in the merge queue, the PR will be merged automatically.
+The order of the merge is determined by the Merge Queue, it might get merged after another PR of another developer.
 
 At 12:01, Developer B pushes their PR and also clicks **Merge when ready**. This means Developer A's PR will finish its initial checks at 12:06 (and be transferred to the merge queue), while Developer B's PR will finish running all checks around 12:07 (and also be transferred to the merge queue). Developer B's work will enter the queue after Developer A's PR.
+The checks will run again in the Merge Queue, and it could run in parallel for developer A and developer B
+so the checks can run in parallel but the actual merge order the queue will maintain and if developer A's PR is the first in line it will be merged first.
+Even though developer A's PR was merged first it did not require developer B to do anything with his PR, before we enabled merge queue developer B had to rebase his PR with the latest main and run the checks again before he can merge his PR.
 
-Here's where it gets interesting: when you hear "queue," you might think that since PR B entered the queue after PR A, it will have to wait in the queue doing nothing. Well, not exactly! In the merge queue, both PRs will run their checks perhaps in parallel (without waiting for each other—this parallelism depends on the merge queue settings), also they might be wrapped in a single branch and the cheks will run once for both of them (depends on the group limits and wait time in the settings). The entrance to the queue does determine the merge order (and there can be some waiting required for that order to be enforced)
-
-The important part is that Developer A and Developer B don't have to worry about rebasing their work with the latest main branch once another PR is merged. Their work will be automatically merged once their checks pass in the queue and all the PRs before them have been merged.
-
-## Merge Queue availability
+## Enable Merge Queue
 
 We talked about different options in the **Settings** -> **Rules** --> **Rulesets** where we can protect and set rules for our main branch.
 In that same place you can enable **Merge Queue** and set options for it.
