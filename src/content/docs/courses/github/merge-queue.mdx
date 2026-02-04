@@ -252,9 +252,21 @@ More importantly, developers waste a lot of time babysitting their PR checks.
 ## Merge Queue
 
 The way we will solve the presented problem is by using GitHub Merge Queue.
+And before we talk about how Merge Queue is going to solve our problem let's start by enabling it.
+
+## Enable Merge Queue
+
+We talked about different options in the **Settings** -> **Rules** --> **Rulesets** where we can protect and set rules for our main branch.
+In that same place you can enable **Merge Queue** and set options for it.
+However there is a chance that you won't see it there, the reason is that **Merge Queue** is only available for:
+
+:::note
+Pull request merge queues are available in any public repository owned by an organization, or in private repositories owned by organizations using GitHub Enterprise Cloud.
+:::
+
 First let's look at a very high level how Developer A and Developer B would interact with the merge queue after it is enabled.
 
-### Merge Queue High Level Overview
+### Development flow with Merge Queue
 
 After Merge Queue is enabled this is how Developer A and Developer B would interact with the merge queue and merge their PRs.
 
@@ -270,20 +282,18 @@ The checks will run again in the Merge Queue, and it could run in parallel for d
 so the checks can run in parallel but the actual merge order the queue will maintain and if developer A's PR is the first in line it will be merged first.
 Even though developer A's PR was merged first it did not require developer B to do anything with his PR, before we enabled merge queue developer B had to rebase his PR with the latest main and run the checks again before he can merge his PR.
 
-## Enable Merge Queue
-
-We talked about different options in the **Settings** -> **Rules** --> **Rulesets** where we can protect and set rules for our main branch.
-In that same place you can enable **Merge Queue** and set options for it.
-However there is a chance that you won't see it there, the reason is that **Merge Queue** is only available for:
-
-:::note
-Pull request merge queues are available in any public repository owned by an organization, or in private repositories owned by organizations using GitHub Enterprise Cloud.
-:::
-
 ## How merge queue works
 
 Let's try to be a bit more technical and understand exactly how the merge queue works.
 To undertstand this let's define a concept called a merge group.
+
+### Order of merge
+
+First, the order of merge is determined. A PR enters the merge queue and will be merged based on its position in the queue. Let's look at a few examples:
+
+1. Three PRs are in the queue in the following order: PR 123, PR 120, PR 115. They all pass their checks in the merge queue, so they will be automatically merged in that order: PR 123, PR 120, PR 115.
+
+2. Three PRs are in the queue in the following order: PR 123, PR 120, PR 115. PR 120 fails its checks in the merge queue. The other two PRs pass their checks and will be merged in the following order: PR 123, PR 115.
 
 ### Merge Group
 
