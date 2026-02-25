@@ -72,3 +72,36 @@ Source: [merge-queue.mdx](../../merge-queue.mdx)
 
 - **Example 1:** Three PRs in order: PR 123, PR 120, PR 115 — all pass → merged in that order
 - **Example 2:** Same three PRs — PR 120 fails → PR 123 and PR 115 merged in order
+
+---
+
+## Slide 6: Merge Group
+
+**Title:** Merge Group
+
+**Description:** A merge group is the read-only branch GitHub creates for each PR in the queue.
+
+**Content (bullets):**
+
+- The branch contains latest `main` plus every PR before yours in the queue
+- Checks run on this branch so they reflect the state when your PR will actually merge
+- Multiple merge groups can run checks in parallel (**Build concurrency**)
+- The branch is read-only — you cannot push to it or to your PR branch while in the queue
+- Branch name: `gh-readonly-queue/main/pr-<prId>-<ref head sha>`
+- If a PR before you fails, it’s removed and merge groups for you and everyone after are recreated; checks restart on the new branches
+
+---
+
+## Slide 7: Merge Queue Settings
+
+**Title:** Merge Queue Settings
+
+**Description:** You configure the merge queue in **Settings** → **Rules** → **Rulesets**. Open the ruleset for your branch, enable **Require merge queue**, then use the options below.
+
+**Content (bullets):**
+
+- **Merge method** — How the merge group branch is built (Squash, Merge commit, or Rebase). Match this to your **Allowed merge methods**; Squash is a common choice.
+- **Build concurrency** — Max number of merge groups that can run checks in parallel. Higher = faster queue, more CI cost and more impact from flaky failures.
+- **Maximum group size** — Max PRs merged in one batch to the base branch. Larger queues are merged in batches of this size with no wait between batches. Useful to limit deployment size.
+- **Minimum group size** — Don’t merge until this many PRs are ready (e.g. 2 = wait for a second PR). **Wait time** is how long to wait for more PRs before merging with fewer than the minimum.
+- **Require all queue entries to pass required checks** — If enabled, every PR in the group must pass; if disabled, a failed PR can still merge when the last PR in the group passes (helps with flakiness, but can merge code that failed on its own).

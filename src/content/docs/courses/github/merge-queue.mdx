@@ -285,7 +285,6 @@ Even though developer A's PR was merged first it did not require developer B to 
 ## How merge queue works
 
 Let's try to be a bit more technical and understand exactly how the merge queue works.
-To undertstand this let's define a concept called a merge group.
 
 ### Order of merge
 
@@ -295,25 +294,42 @@ First, the order of merge is determined. A PR enters the merge queue and will be
 
 2. Three PRs are in the queue in the following order: PR 123, PR 120, PR 115. PR 120 fails its checks in the merge queue. The other two PRs pass their checks and will be merged in the following order: PR 123, PR 115.
 
+In the second scenario, where PR 120 fails its checks, the other two PR's will be merged but the PR that came after the failing PR (in this case PR 115) will be delayed a bit from that failure (all the PR's after the failing PR will have to wait for the failing PR to be removed from the queue and the merge group to be recreated).
+
 ### Merge Group
 
 Our merge queue is a queue of the order of PR's that needs to be merged.
 So if PR with ID `#123` is pushed to the queue before PR with ID `#120` the order of the merge is set to first merge PR with ID `#123` and then PR with ID `#120`.
-So in this case we have 2 PR's in the queue and those PR's might generate one or two merge groups.
-If we have 3 PR's in the queue, there can be 1-3 merge groups created for them (depends on the Merge Queue settings that we will discuss later on in this lesson).
+So in this case we have 2 PRs in the queue and 2 merge groups will be created for them.
+If we have 3 PRs in the queue, 3 merge groups will be created for them.
+There are other Merge Queue implementations that allow you to have a single merge group for multiple PRs (for example Mergify [Merge Queue Batches](https://docs.mergify.com/merge-queue/batches/)), but this is not the case with GitHub Merge Queue.
 
 So what is a **Merge Group**?
-A merge group represents one or more PR's that are grouped in a single branch, and checks and workflows will be run on that branch - and those PR's will be merged in the same order as they are in the merge group.
-A merge group is represented by a branch, that branch is not exactly a regular branch in the sense that it is a readonly branch that is created and managed by github merge queue.
-The name of the branch looks like this: `gh-readonly-queue/main/pr-<prId>-<ref head sha>` (if there is more than one PR to merge in that group the `prId` will be the first PR in the group)
-It contains the pr id as well as the head sha in the readonly branch.
-This is a mistake I made so I feel like I need to emphasize this point: The `HEAD` of the PR branch is not the same as the `HEAD` of the merge group branch.
-The branch that is created is aligned with the main branch and it will also contain other merge groups that created before the current merge group.
+The order of the PRs that needs to be merged is determined by the order of the PRs in the queue.
+So if the order is known, now we need to make sure that the PRs will be merged in the right order but also as fast as possible.
+So if PR with ID `#123` enters the queue and right after it is added to the queue PR with ID `#120` is added to the queue, we want to run in parallel the checks and workflows of the two PRs.
+It will be very slow if PR `#120` will have to wait for PR `#123` to finish its checks and workflows before it can start its own checks and workflows.
+But we also want the checks to be reliable we turned on the **Require branches to be up to date before merging** option in the ruleset, which means I can't just run the checks for PR `#120` by placing it after the latest `main` because by the time it will need to be merged `main` will contain the changes
+made by PR `#123`. So running the checks for PR `#120` after the latest `main` will not be reliable.
+Since we know the order of the merge of PRs we know that if PR `#120` is passing the checks it will be merged first so we can prepare a new branch for PR `#120` that contains the latest `main` and the changes of PR `#120`.
+This is what we call a **Merge Group**.
+That branch that contains the latest `main` plus every PR before the current PR in the queue.
+So github will create a readonly branch for each PR in the queue.
+That branch is readonly so you cannot push changes to it, in addition you cannot make changes to the PR branch while the PR is in the queue (You can manually remove the PR from the queue and push changes to the PR branch).
+The Merge Group branch is named like this: `gh-readonly-queue/main/pr-<prId>-<ref head sha>`.
+Now after making that branch I can run in parallel the checks and workflows of PR `#120` and PR `#123` in the merge group.
+But what happens if PR `#123` which is in the Merge Queue before PR `#120` fails the checks?
+If PR `#123` fails the checks it will be removed from the merge queue.
+This means that after it is removed the Merge Queue is changed and the first PR in the queue is PR `#120`.
+But the Merge Group branch that was created contains the latest `main` plus PR `#123` and then PR `#120`.
+That merge group branch no longer represents the order of the PRs in the merge queue, which means we need to recreate the merge group branch for PR `#120` to contain only the latest `main` and not PR `#123`.
+This is basically true for **ALL** the PRs in the merge queue that are after PR `#123` - their merge group branches will need to be recreated, and the checks will need to restart of the new merge group branch.
 
-Let's examine a simple example of merge group where each merge group represents a single PR.
+Let's examine a simple example of merge group.
 So you created a PR with ID `123`, and you clicked the **Merge when ready** button, and your PR passed all the checks, so there will be a merge group branch created with the name `gh-readonly-queue/main/pr-123-<sha>`.
 2 developers also created PR's with ID's `120` and `115` and a merge group was created for each of those PR's.
-The branch of your merge group might look like the following:
+The order of the PRs in the merge queue is: PR `#120`, PR `#115`, PR `#123`.
+The branch of your merge group of PR `#123` (the last PR in the queue) might look like the following:
 
 <div class="not-content">
 ```mermaid
@@ -334,7 +350,7 @@ gitGraph
 
 Notice that we represented each PR before my PR as a single commit, if it's a single commit or merge commit or rebase of the commits in the PR depends on the ruleset setting: **Merge method**, which we will discuss later on in this lesson.
 
-PR 115 that was pushed before will also have a branch created for him which might look like the following:
+PR 115 that was pushed before (the second PR in the queue) will also have a branch created for him which might look like the following:
 <div class="not-content">
 ```mermaid
 gitGraph
@@ -370,51 +386,6 @@ gitGraph
 After these branches are created, the checks are run on each of the branches, and they can actually run in parallel depending on **Build concurrency** setting.
 Now if everyone is passing the checks the merge queue will automatically merge the changes in the order of the queue, so first PR 120 will be merged, then PR 115 and finally PR 123.
 Let's cover different scenarios that can happen other than the happy path.
-
-### Scenario 1: Merge Group can contain more than one PR
-
-In the settings you have a bit more control over the merge group size, for example you can say i want a single merge group branch created
-for 2 PR's.
-Now let's say the following PR's are in the queue:
-- PR 123
-- PR 120
-- PR 115
-- PR 100
-
-
-we will have 1 branch called `gh-readonly-queue/main/pr-123-16664ece2953d0875eb7f20a9880f79ba46adfb3` and it will contain the commits of PR 123, PR 120.
-we will have 1 branch called `gh-readonly-queue/main/pr-115-3d5232c932b725d745179e4eec41ea7cfd39ec86` and it will contain the commits of PR 115 and PR 100.
-
-the checks and workflows will run on those branches and they might look like this:
-<div class="not-content">
-```mermaid
-gitGraph
-    commit id: "1"
-    commit id: "2"
-    commit id: "3"
-    commit id: "4"
-    branch gh-readonly-queue/main/pr-123-16664ece2953d0875eb7f20a9880f79ba46adfb3
-    checkout gh-readonly-queue/main/pr-123-16664ece2953d0875eb7f20a9880f79ba46adfb3
-    commit id: "PR 123"
-    commit id: "PR 120"    
-```
-</div>
-
-and the other branch might look like this:
-<div class="not-content">
-```mermaid
-gitGraph
-    commit id: "1"
-    commit id: "2"
-    commit id: "3"
-    commit id: "4"
-    branch gh-readonly-queue/main/pr-123-16664ece2953d0875eb7f20a9880f79ba46adfb3
-    branch gh-readonly-queue/main/pr-115-3d5232c932b725d745179e4eec41ea7cfd39ec86
-    checkout gh-readonly-queue/main/pr-115-3d5232c932b725d745179e4eec41ea7cfd39ec86
-    commit id: "PR 115"
-    commit id: "PR 100"
-```
-</div>
 
 ### Scenario 1: PR 120 fails checks
 
@@ -475,7 +446,7 @@ or rebase your PR branch manually on the PR and solve the conflicts with the fir
 
 ### Scenario 3: Manual queue changes
 
-After your PR will enter the merge queue, you will have a link in the PR page to view the merge queue under the url: `https://github.com/<org>/<repo>/queue/test/merge-queue`
+After your PR will enter the merge queue, you will have a link in the PR page to view the merge queue under the url: `https://github.com/<org>/<repo>/queue/<branch>`
 In there you will have the option to view the checks of each merge group and also jump certain PR  to be the first in line.
 Jumping will require additional confirmation since it will change the order of the queue and affect the check runs of every merge group in the queue.
 Same goes for removing PR from the queue, this will also cause the merge groups after that PR in the queue to be recreated and the checks will have to rerun on the new merge groups.
@@ -494,7 +465,7 @@ Let's enter the ruleset settings and see the options for the merge queue.
 ![Merge Queue Settings](merge-queue/settings.png)
 
 We will have to enable the **Require merge queue** option, and we can open the collapsable of that option for the following options:
-- **Merge method** - This will determine how the merge group branch will be created - It is recommended that this setting will be equal to one of
+- **Merge method** - This will determine how the merge group branch will be created, specifically how the PR's before you in the queue will be represented on the merge group branch - It is recommended that this setting will be equal to one of
 the options you choose in **Allowed merge methods** (under the collapsable of **Require a pull request before merging**).
 A good value that I recommend to choose there is to only allow **Squash** merge method, and adapt the **Merge method** to the option **Squash and merge**.
 Using **Squash and merge** will create merge group branches like the example in this lesson where every PR before you in the queue will be represented by 
@@ -507,12 +478,40 @@ This setting is a trade of of the speed, price and flakiness of the checks.
 If i set the **Build concurrency** to 5 this means that the first 5 merge groups in the queue can run the workflows in parallel, if number 2 in line fails it will need
 to remove the second merge group and remove that PR from the queue and rebuild the merge group branch of the 3 after it, but if we set the **Build concurrency** to 3 it will only
 stop the execution of a single merge group.
-But if i set to 3 it will take longer for 5 merge groups to finish, I would say if you have more percentage of flakiness don't keep it soo high,
+But if i set to 3 it will take longer for 5 merge groups to finish, I would say if you have more percentage of flakiness don't keep it too high,
 perhaps 3 is enough, but if you have less flakiness you can set it to 5 or even more if you have a large team with frequent PR's.
-- 
+- **Maximum group size** - This caps how many PRs are merged to the base branch in one batch. For example, if you set it to 3 and there are 7 PRs in the queue that have all passed their merge-group checks, the queue will merge the first 3, then immediately merge the next 3, then the last 1. There is no extra wait between batches—each batch is merged as soon as the previous one is done. This is useful when merges trigger a deployment and you want to avoid deploying too many changes at once.
+- **Minimum group size** - This setting is useful if you prefer to merge several PRs at once, for example if you set it to 2 even if the merge queue has a single PR with checks passed, it will not merge that PR yet
+rather it will wait for another PR to enter the queue and pass the checks and then it will merge the two PRs together. **Wait time** (in the same merge limits section) is how long the queue will wait for more PRs before giving up and merging with fewer than the minimum—so if no new PR joins within that timeout, it will merge the current group even if it's smaller than the minimum.
+- **Wait time** - This is how long the queue will wait for more PRs before giving up and merging with fewer than the minimum—so if no new PR joins within that timeout, it will merge the current group even if it's smaller than the minimum.
+- **Require all queue entries to pass required checks** - When **enabled**, every PR in a merge group must pass its required checks; if any PR in the group fails, that PR is removed from the queue and the group does not merge. When **disabled**, a PR that failed its checks can still be included in a group as long as the *last* PR in that group passes—because each merge group runs checks on the combined changes (base + all PRs in the group), a passing result on the last PR means the whole combined set passed. Disabling this can help with flaky tests: a PR might fail once on its own but pass when re-run as part of a group, so the queue is less likely to get stuck on intermittent failures. The tradeoff is reliability: with this disabled, you may merge a PR that failed its own checks, relying only on the combined-group pass, so use it when you trust that flakiness is the main cause of failures rather than real bugs.
 
-## downsides of merge queue
+
+## Downsides of merge queue
+
+Merge Queue is great for correctness and developer experience, but it comes with tradeoffs.
+
+- **Checks can run twice for every PR** - Your PR usually runs checks on the PR branch, and then it will run checks again on the `merge_group` (the `gh-readonly-queue/...` branch) before it actually merges. Even if your PR is first in line, GitHub still needs the merge-group checks to satisfy the “up to date” guarantee.
+- **Higher CI cost (especially when something fails)** - If a PR fails or is removed from the queue, merge groups behind it are recreated and their checks often need to run again. In busy repositories (or with flaky tests), this can noticeably increase total CI minutes and time-to-merge.
+- **Added latency due to queuing** - A PR might be “ready” (approved + green) but still wait behind other entries in the queue, so the time from approval to merge can be longer.
+- **Flakiness is amplified** - Intermittent failures don’t just block one PR; they can force rebuilds/re-runs for many entries behind it, creating churn.
+- **Harder debugging** - When a `merge_group` fails, it’s failing on a temporary branch that represents “base + other queued changes”, so reproducing and figuring out which PR caused the failure can take more effort.
+- **Conflicts can block you even if you’re clean vs `main`** - Your branch can be conflict-free with `main`, but still conflict with changes from PRs ahead of you in the queue, which prevents your merge group from being created/validated until the conflict is resolved.
+- **Less flexibility while queued** - While a PR is in the merge queue, you generally can’t push new commits to the PR branch; you have to remove it from the queue, update it, then re-enter the queue (and wait again).
 
 
 ## other solutions
 
+We wanted to compare the github native merge queue with other solutions that are available in the market.
+What other features does each solution offer?
+Specifically we are targeting the features in Merge Queue, some of the solutions offer more than just Merge Queue, but in this lesson we are focusing only on Merge Queue.
+
+### Mergify
+
+Mergify is a popular solution for managing merge queues.
+It offers a lot of features that are not available in the github native merge queue.
+Some of the features are:
+- Merge Queue
+- Merge Queue Batches
+- Merge Queue Groups
+- Merge Queue Groups
