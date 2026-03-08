@@ -1,6 +1,6 @@
 ---
 title: Merge Queue
-description: When multiple developers work on the same repository, CI checks take time to run and must pass against the latest main branch. This creates a race condition where developers wait for their CI checks, only to find that another developer merged their PR first, requiring them to update their branch and restart the CI process all over again. To solve this PR race condition, we will learn how to create a merge queue. GitHub Merge Queue automatically queues approved pull requests and ensures they pass CI checks against an up-to-date main branch before merging, eliminating the race condition by processing PRs sequentially.
+description: GitHub Merge Queue queues approved pull requests, predicts how main will look based on merge order, and runs checks in parallel against that predicted future state before merging—removing the race condition while keeping checks parallel.
 publishDate: 2026-01-24
 authors:
   - yariv-katz
@@ -486,7 +486,6 @@ rather it will wait for another PR to enter the queue and pass the checks and th
 - **Wait time** - This is how long the queue will wait for more PRs before giving up and merging with fewer than the minimum—so if no new PR joins within that timeout, it will merge the current group even if it's smaller than the minimum.
 - **Require all queue entries to pass required checks** - When **enabled**, every PR in a merge group must pass its required checks; if any PR in the group fails, that PR is removed from the queue and the group does not merge. When **disabled**, a PR that failed its checks can still be included in a group as long as the *last* PR in that group passes—because each merge group runs checks on the combined changes (base + all PRs in the group), a passing result on the last PR means the whole combined set passed. Disabling this can help with flaky tests: a PR might fail once on its own but pass when re-run as part of a group, so the queue is less likely to get stuck on intermittent failures. The tradeoff is reliability: with this disabled, you may merge a PR that failed its own checks, relying only on the combined-group pass, so use it when you trust that flakiness is the main cause of failures rather than real bugs.
 
-
 ## Downsides of merge queue
 
 Merge Queue is great for correctness and developer experience, but it comes with tradeoffs.
@@ -499,19 +498,46 @@ Merge Queue is great for correctness and developer experience, but it comes with
 - **Conflicts can block you even if you’re clean vs `main`** - Your branch can be conflict-free with `main`, but still conflict with changes from PRs ahead of you in the queue, which prevents your merge group from being created/validated until the conflict is resolved.
 - **Less flexibility while queued** - While a PR is in the merge queue, you generally can’t push new commits to the PR branch; you have to remove it from the queue, update it, then re-enter the queue (and wait again).
 
-
 ## other solutions
 
 We wanted to compare the github native merge queue with other solutions that are available in the market.
 What other features does each solution offer?
 Specifically we are targeting the features in Merge Queue, some of the solutions offer more than just Merge Queue, but in this lesson we are focusing only on Merge Queue.
+There are 2 solutions that stand out from the competition: [Mergify](https://mergify.com/) and (Trunk)[https://trunk.io/]
+We want to explain the main features that are offered that are currently not implemented in Github native merge queue.
+The benefits are significant, and while going with Github Merge Queue has a very easy adoption and it quite sufficient for smaller team, as your team grows
+as the number of PRs each day grows, as test flakiness grows, you might want to consider a more robust Merge Queue tool.
+Let's go over some of the main features that they offer...
+
+### Direct merge to main
+
+This is only supported in [Trunk](https://docs.trunk.io/merge-queue/administration/advanced-settings#direct-merge-to-main)
+and it will merge to main if your PR is already on the latest main and the checks have passed.
+
+### Flaky test
+
+Flaky tests are especially annoying in github Merge Queue.
+Flaky test can cause a check to fail and in the merge queue it can mean a delay for merging the PR along with rerun of checks
+of the PRs after that failing PR.
+This could be especially annoying as your flaky tests increase.
+Large amount of flaky test is a strong incentive for using other solutions like Mergify or Trunk.
+Trunk has a bit more tools to detect and quarantine those flaky tests.
+While Mergify has the ability to [retry check on failure](https://docs.mergify.com/ci-insights/auto-retry/#how-auto-retry-works)
+which means if a workflow fails it will rerun the failing job.
+In addition both trunk and mergify have another protection that if `PR #1` entered the queue and `PR #2` entered the queue after number 1
+then the merge group created for `PR #2` contains also the changes of `PR #1`
+which means if `PR #1` is failing but `PR #2` is passing we can still merge both of them.
+In mergify it's called [Skip Intermediate Results](https://docs.mergify.com/merge-queue/parallel-checks/#skip-intermediate-results-anti-flake-protection)
+and in trunk it's [Pending Failure Depth](https://docs.trunk.io/merge-queue/optimizations/pending-failure-depth)
+
 
 ### Mergify
 
-Mergify is a popular solution for managing merge queues.
+Mergify is a popular solution for managing merge queues and probably the oldest one.
 It offers a lot of features that are not available in the github native merge queue.
 Some of the features are:
-- Merge Queue
-- Merge Queue Batches
-- Merge Queue Groups
-- Merge Queue Groups
+- Auto queue
+- clear draft pr of parallel
+- skip intermediate results means that if pr 1 failed checks but pr 2 draft which includes pr 1 passed then pr 1 is considered as a pass
+- max_check_retries
+- more easy to manage multiple queues - i can use labels
