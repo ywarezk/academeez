@@ -118,7 +118,8 @@
       "chevrotain>lodash-es": "4.17.23",
       "@chevrotain/cst-dts-gen>lodash-es": "4.17.23",
       "@chevrotain/gast>lodash-es": "4.17.23",
-      "mermaid>dompurify": "3.3.2"
+      "mermaid>dompurify": "3.3.2",
+      "yaml": "2.8.3"
     }
   },
   "nyc": {
