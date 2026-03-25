@@ -8,8 +8,9 @@
  */
 
 import { docsSchema, i18nSchema } from '@astrojs/starlight/schema';
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const authors = defineCollection({
 	loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/authors' }),
@@ -53,7 +54,7 @@ export const collections = {
 				publishDate: z.date(),
 				video: z
 					.object({
-						videoUrl: z.string().url(),
+						videoUrl: z.url(),
 						duration: z.number(),
 						publishDate: z.coerce.date(),
 						tags: z.array(z.string()).optional(),
