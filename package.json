@@ -3,6 +3,10 @@
   "type": "module",
   "version": "0.0.0-PLACEHOLDER",
   "private": true,
+  "engines": {
+    "node": "22.18.0",
+    "pnpm": "10.23.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
