@@ -144,6 +144,13 @@ export default defineConfig({
 					},
 				},
 				{
+					label: 'GitHub',
+					autogenerate: {
+						directory: 'courses/github',
+						collapsed: true,
+					},
+				},
+				{
 					label: 'React',
 					items: [
 						{
