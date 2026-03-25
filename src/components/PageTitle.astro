@@ -34,9 +34,9 @@ const publishHuman = publishDate.toLocaleDateString(locale, {
 					<AvatarFull
 						client:load
 						avatar={a.data.avatar}
-						key={a.slug}
+						key={a.id}
 						name={a.data.name}
-						slug={a.slug}
+						slug={a.id}
 						className="ring-1 ring-border"
 					/>
 				))}
