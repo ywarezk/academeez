@@ -23,7 +23,12 @@ const collections = await getCollection('docs', (content) => {
 	} else {
 		prefix = `courses/${courseLink}`;
 	}
-	return content.data.template === 'doc' && content.id.startsWith(prefix) && content.data.preview;
+
+	// Match either the exact course root (`courses/git`) or its direct descendants
+	// (`courses/git/...`), but avoid prefix collisions like `courses/github`.
+	const isInCourse = content.id === prefix || content.id.startsWith(`${prefix}/`);
+
+	return content.data.template === 'doc' && isInCourse && content.data.preview;
 }).then((allCollections) => {
 	return allCollections.sort(
 		(a: (typeof allCollections)[number], b: (typeof allCollections)[number]) => {

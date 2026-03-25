@@ -7,11 +7,13 @@
  * @version 0.0.1
  */
 
-import { defineCollection } from 'astro:content';
 import { docsSchema, i18nSchema } from '@astrojs/starlight/schema';
-import { z } from 'zod';
+import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const authors = defineCollection({
+	loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/authors' }),
 	schema: z.object({
 		name: z.string(),
 		description: z.string(),
@@ -22,7 +24,7 @@ const authors = defineCollection({
 export const collections = {
 	authors,
 	i18n: defineCollection({
-		type: 'data',
+		loader: glob({ pattern: '**/*.json', base: './src/content/i18n' }),
 		schema: i18nSchema({
 			extend: z.object({
 				'header.courses': z.string(),
@@ -36,6 +38,7 @@ export const collections = {
 		}),
 	}),
 	docs: defineCollection({
+		loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/docs' }),
 		schema: docsSchema({
 			extend: z.object({
 				preview: z.boolean().optional().default(true),
@@ -51,7 +54,7 @@ export const collections = {
 				publishDate: z.date(),
 				video: z
 					.object({
-						videoUrl: z.string().url(),
+						videoUrl: z.url(),
 						duration: z.number(),
 						publishDate: z.coerce.date(),
 						tags: z.array(z.string()).optional(),

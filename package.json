@@ -3,6 +3,9 @@
   "type": "module",
   "version": "0.0.0-PLACEHOLDER",
   "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -16,14 +19,14 @@
     "check:prettier": "prettier --check ."
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.4",
-    "@astrojs/markdown-remark": "^6.3.9",
-    "@astrojs/mdx": "^4.0.7",
-    "@astrojs/react": "^4.2.0",
-    "@astrojs/starlight": "^0.35.2",
-    "@astrojs/starlight-tailwind": "^3.0.0",
-    "@astrojs/tailwind": "^5.1.5",
-    "@astrojs/vercel": "8.0.4",
+    "@astrojs/check": "^0.9.8",
+    "@astrojs/markdown-remark": "^7.0.1",
+    "@astrojs/mdx": "^5.0.2",
+    "@astrojs/react": "^5.0.1",
+    "@astrojs/starlight": "^0.38.2",
+    "@astrojs/starlight-tailwind": "^3.0.1",
+    "@astrojs/tailwind": "^6.0.2",
+    "@astrojs/vercel": "10.0.2",
     "@codesandbox/sandpack-react": "^2.18.2",
     "@fontsource/inter": "^5.0.18",
     "@fortawesome/fontawesome-free": "^6.6.0",
@@ -35,7 +38,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "astro": "^5.1.10",
+    "astro": "^6.0.8",
     "astro-expressive-code": "^0.38.3",
     "astro-icon": "^1.1.2",
     "class-variance-authority": "^0.7.0",
@@ -94,7 +97,29 @@
   "pnpm": {
     "overrides": {
       "@astrojs/vercel>esbuild": "0.25.0",
-      "mdast-util-to-hast": "13.2.1"
+      "mdast-util-to-hast": "13.2.1",
+      "@mapbox/node-pre-gyp>tar": "7.5.11",
+      "@iconify/tools>tar": "7.5.11",
+      "@iconify/tools>axios": "1.13.5",
+      "astro>svgo": "4.0.1",
+      "@iconify/tools>svgo": "3.3.3",
+      "undici": "6.24.0",
+      "vite>rollup": "4.59.0",
+      "eslint>minimatch": "3.1.4",
+      "@typescript-eslint/typescript-estree>minimatch": "9.0.7",
+      "glob>minimatch": "3.1.4",
+      "test-exclude>minimatch": "9.0.7",
+      "flatted": "3.4.2",
+      "yaml-language-server>ajv": "8.18.0",
+      "semantic-release>lodash-es": "4.17.23",
+      "@semantic-release/changelog>lodash": "4.17.23",
+      "@semantic-release/git>lodash": "4.17.23",
+      "mermaid>lodash-es": "4.17.23",
+      "chevrotain>lodash-es": "4.17.23",
+      "@chevrotain/cst-dts-gen>lodash-es": "4.17.23",
+      "@chevrotain/gast>lodash-es": "4.17.23",
+      "mermaid>dompurify": "3.3.2",
+      "yaml": "2.8.3"
     }
   },
   "nyc": {

@@ -28,7 +28,7 @@ function getCourseLessons(
 		})
 		.map((lessonDoc) => ({
 			title: lessonDoc.data.title,
-			slug: lessonDoc.slug,
+			slug: lessonDoc.id,
 		}));
 }
 

@@ -2,7 +2,7 @@
 import StarlightPage, {
 	type StarlightPageProps,
 } from '@astrojs/starlight/components/StarlightPage.astro';
-import { getCollection, getEntry } from 'astro:content';
+import { getCollection, getEntry, render } from 'astro:content';
 
 /**
  * Generate static pages based on the authors collection
@@ -10,15 +10,16 @@ import { getCollection, getEntry } from 'astro:content';
 export async function getStaticPaths() {
 	const authors = await getCollection('authors');
 	return authors.map((author) => ({
-		params: { name: author.slug },
+		params: { name: author.id.replace(/\/index$/, '') },
 	}));
 }
 
 export const prerender = true;
 
 const { name } = Astro.params;
-const authorEntry = await getEntry('authors', name);
-const result = await authorEntry?.render();
+const authorEntry =
+	(await getEntry('authors', name)) ?? (await getEntry('authors', `${name}/index`));
+const result = authorEntry ? await render(authorEntry) : undefined;
 
 const props = {
 	frontmatter: {
