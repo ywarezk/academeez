@@ -94,7 +94,28 @@
   "pnpm": {
     "overrides": {
       "@astrojs/vercel>esbuild": "0.25.0",
-      "mdast-util-to-hast": "13.2.1"
+      "mdast-util-to-hast": "13.2.1",
+      "@mapbox/node-pre-gyp>tar": "7.5.11",
+      "@iconify/tools>tar": "7.5.11",
+      "@iconify/tools>axios": "1.13.5",
+      "astro>svgo": "4.0.1",
+      "@iconify/tools>svgo": "3.3.3",
+      "undici": "6.24.0",
+      "vite>rollup": "4.59.0",
+      "eslint>minimatch": "3.1.4",
+      "@typescript-eslint/typescript-estree>minimatch": "9.0.7",
+      "glob>minimatch": "3.1.4",
+      "test-exclude>minimatch": "9.0.7",
+      "flatted": "3.4.2",
+      "yaml-language-server>ajv": "8.18.0",
+      "semantic-release>lodash-es": "4.17.23",
+      "@semantic-release/changelog>lodash": "4.17.23",
+      "@semantic-release/git>lodash": "4.17.23",
+      "mermaid>lodash-es": "4.17.23",
+      "chevrotain>lodash-es": "4.17.23",
+      "@chevrotain/cst-dts-gen>lodash-es": "4.17.23",
+      "@chevrotain/gast>lodash-es": "4.17.23",
+      "mermaid>dompurify": "3.3.2"
     }
   },
   "nyc": {
