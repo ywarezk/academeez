@@ -72,9 +72,12 @@ jobs:
               }
             }
 
-            // Fork PR commits are often not on a local branch in the base repo.
-            // In that case, use GitHub's pull ref if we have the PR number.
-            if (!checkoutRef && prNumber) {
+            // For PR previews (especially forks), prefer GitHub pull refs.
+            // A plain branch name in payload can refer to a fork branch that does not
+            // exist in the base repository, which breaks checkout in the downstream workflow.
+            if (prNumber && !isManual) {
+              checkoutRef = `refs/pull/${prNumber}/head`
+            } else if (!checkoutRef && prNumber) {
               checkoutRef = `refs/pull/${prNumber}/head`
             }
 
