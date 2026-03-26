@@ -660,7 +660,7 @@ async function queryTheDb(query: string): Promise<any> {
 
 app.get('/', async (req, res) => {
   try {
-    await queryTheDb('some ileagal query')
+    await queryTheDb('some illegal query')
   } catch(err) {
     res.send('some error message')
   }
@@ -682,7 +682,7 @@ class QueryError extends Error {
 
 app.get('/', async (req, res, next) => {
   try {
-    await queryTheDb('some ileagal query')
+    await queryTheDb('some illegal query')
   } catch(err) {
     const queryError = new QueryError('some error message');
     next(queryError)
