@@ -592,7 +592,7 @@ setTimeout(() => {
 process.on('uncaughtExceptionMonitor', function(err) {
   console.log('this will be called before uncaughtException event')
   console.log('it wont prevent the node process from crashing');
-  console.log('and we use this event to log the error, create a log file with the error ect.');
+  console.log('and we use this event to log the error, create a log file with the error etc.');
 });
 
 process.on('uncaughtException', function() {

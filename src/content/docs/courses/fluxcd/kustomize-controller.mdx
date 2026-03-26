@@ -343,7 +343,7 @@ You will see that a `kustomization.yaml` file was created in the `clusters/stagi
 
 Now that we understand the `kustomize-controller` and the `Kustomization` resource, let's arrange our repository, to be more fitting for larger projects.
 
-Move the `clusters/staging/namespace.yaml` to the folder: `apps/base/namespace.yaml` this will represent the namespace where we will place our apps (It's important to note that I usually recommend not to throw all the apps in a single namespace if you have a large project, more logical seperation is recommended, but for the sake of simplicity we will use a single namespace for all our apps in this course).
+Move the `clusters/staging/namespace.yaml` to the folder: `apps/base/namespace.yaml` this will represent the namespace where we will place our apps (It's important to note that I usually recommend not to throw all the apps in a single namespace if you have a large project, more logical separation is recommended, but for the sake of simplicity we will use a single namespace for all our apps in this course).
 We do need to modify the `apps/base/kustomization.yaml` file to include the `namespace.yaml` file:
 
 ```yaml

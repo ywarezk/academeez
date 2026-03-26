@@ -1,6 +1,6 @@
 ---
 title: Introduction to Terragrunt
-description: Proper IAC project is splitted to small modules, we need a proper dependency management for those small modules, while avoiding DRY violations. In this lesson we will learn how to achieve all that using Terragrunt.
+description: Proper IAC project is split to small modules, we need a proper dependency management for those small modules, while avoiding DRY violations. In this lesson we will learn how to achieve all that using Terragrunt.
 publishDate: 2024-11-03
 authors:
   - yariv-katz
@@ -40,7 +40,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 This video provides an introduction to Terragrunt, explaining its purpose and how it can be used to manage infrastructure as code projects with multiple small modules, while avoiding repetition and managing dependencies effectively.
 </span>
 
-The previous lesson was an intro to our infrastructure as code project, where we created a GCP Project, VPC, GKE, and bootstraped our FluxCD into the cluster using OpenTofu.  
+The previous lesson was an intro to our infrastructure as code project, where we created a GCP Project, VPC, GKE, and bootstrapped our FluxCD into the cluster using OpenTofu.  
 During this course we focus on best practices, this is why our cloud resources has to be created using IAC (in our case Terraform/OpenTofu), we have to get used to using IAC to create our cloud resources, and the course repository is aiming not only to be the source code of our lessons but also a starter kit you can base your real projects on.  
 When working on real projects we often have multiple environments, and multiple clusters, and we need to manage them in a way that is easy to maintain and scale.  
 Those environments will vary in the resources they have, and the configuration they use, and we need to address those differences in this course.  
@@ -83,7 +83,7 @@ Large modules in infrastructure code are harmful.
 In our case from the previous lesson we had one terraform state that was generated from one big `main.tf` file.
 We need to strive to split our project to small modules with as much isolation as possible, isolation  based on environments and isolation based on the different types of infrastructures that needs to be created.
 
-We need to define our big module to tiny modules, isolated as possible, logically seperated, and manage the dependencies for those modules.
+We need to define our big module to tiny modules, isolated as possible, logically separated, and manage the dependencies for those modules.
 
 ## Bad practice: manage small isolated iac modules with Terraform/OpenTofu
 
@@ -100,7 +100,7 @@ To help you manage those small modules it's recommended to use Terragrunt.
 ## Introduction to Terragrunt
 
 Terragrunt is a thin wrapper for Terraform/OpenTofu that provides extra tools for working with multiple Terraform/OpenTofu modules.  
-Every module will have a `terragrunt.hcl` file which can include common providers, include reusable code, load repeating variables, and basically focus on the actual thing that the module is doing istead of all those DRY violation tedious things that you need to do every time you start a new terraform module.
+Every module will have a `terragrunt.hcl` file which can include common providers, include reusable code, load repeating variables, and basically focus on the actual thing that the module is doing instead of all those DRY violation tedious things that you need to do every time you start a new terraform module.
 Every module we create will be stored in a separate terraform state, and we will use terragrunt to store that state in a gcp bucket.
 Using terragrunt will manage to create multiple environments that are consisting of small modules, with high reusable code between those environments.
 
@@ -181,7 +181,7 @@ You can still use Terraform/OpenTofu functions in terragrunt configurations, her
 ## Root terragrunt.hcl - simple configuration
 
 The root `terragrunt.hcl` is located at the root of the project at the path: `/iac/gcp/tofu/terragrunt.hcl`.
-There is a composition pattern that match the folder hyerarchy, so the root `terragrunt.hcl` will contain configurations that are shared between all the modules.
+There is a composition pattern that match the folder hierarchy, so the root `terragrunt.hcl` will contain configurations that are shared between all the modules.
 Create the root `terragrunt.hcl` file with the following content:
 
 ```hcl

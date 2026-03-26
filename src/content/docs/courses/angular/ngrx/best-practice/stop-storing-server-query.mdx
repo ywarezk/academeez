@@ -111,7 +111,7 @@ Our recommendation: **DON'T USE STATE MANAGEMENT LIBRARY AS SERVER QUERY CACHE**
 
 ## The problem with storing server query in NGRX
 
-If you are using NGRX to store server query, there is a lot of complexity you will have to face. This complexity today has led me to the believe that there is application state, and query cache, and those things should be seperated.  
+If you are using NGRX to store server query, there is a lot of complexity you will have to face. This complexity today has led me to the believe that there is application state, and query cache, and those things should be separated.  
 Using NGRX to store server query has lots of boilerplate code, and it is not easy to get it right. In short I would recommend today a side from using state management library (currently [NGRX](https://ngrx.io/) is the most popular) I would recommend to use additional library for sending server queries, which will also cache the responses (I recommend using [Angular Query - @ngneat/query](https://github.com/ngneat/query)).  
 
 Let's see what are the problems with storing server query in NGRX.

@@ -162,7 +162,7 @@ So all the content is sent in chunks, and the browser renders the HTML as it arr
 
 ## Suspense and Streaming
 
-The backend evaluates `<Suspense>` in a streaming frame, it will evaluate the `<Suspense>` promises, and if they are pending (atleast one) it will stream the fallback as a streaming HTML frame, if all the promises are resolved it will stream the children, and if atleast on promise is rejected it will stream the content of the error-boundary (or uncaught exception if there is no error-boundary).
+The backend evaluates `<Suspense>` in a streaming frame, it will evaluate the `<Suspense>` promises, and if they are pending (at least one) it will stream the fallback as a streaming HTML frame, if all the promises are resolved it will stream the children, and if at least on promise is rejected it will stream the content of the error-boundary (or uncaught exception if there is no error-boundary).
 Now that we know that `<Suspense>` is a streaming frame, we can wrap our calls under `<Suspense>` to send HTML content even after the first call.  
 let's return to our NextJS app and wrap the short and long calls with `<Suspense>`:
 

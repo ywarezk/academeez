@@ -70,7 +70,7 @@ sidebar:
 If we are using impersonation it means the GCP user is not directly creating the resources, instead the user is impersonating a service account that has the proper permissions to create the resources and then the service account will create those resources.
 This is a good practice because:
 
-* Enhanced security - we will follow the principle of least privilage, every user will get the minimum amount of permissions required.
+* Enhanced security - we will follow the principle of least privilege, every user will get the minimum amount of permissions required.
 If that user wants to create resources he will have to generate a short lived token to impersonate the service account
 which will require the user to authenticate.
 If the user account is compromised the attacker will not be able to create resources in GCP.
@@ -92,7 +92,7 @@ You can use find the api by the service name [here](https://cloud.google.com/api
 ### Permissions
 
 Based on the service that we want to give certain permission to we can have the list of permissions that are associated with that service.
-You can find the permissions [here](https://cloud.google.com/iam/docs/permissions-reference) and you find the relavant ones by searching using the service permission prefix.
+You can find the permissions [here](https://cloud.google.com/iam/docs/permissions-reference) and you find the relevant ones by searching using the service permission prefix.
 For example if I want to give permissions on **Kubernetes Engine** I will find the api `container.googleapis.com` and I will search using the permission prefix: `container.`
 And looking at the first of the list we have the `container.apiServices.create` and on the right you have the list of roles that include this permissions.
 
@@ -389,7 +389,7 @@ We need this role so we can provide roles for the other service accounts that wi
 - roles/iam.serviceAccountAdmin - this will allow us to create service accounts in the iam project (this is only needed in the iam project where the service account will be able to create other service accounts).
 - roles/iam.serviceAccountTokenCreator - we will place this role on the admin service account so the admin group can impersonate that service account (this will be added later after the group is created).
 
-Notice that we are not only giving the minimal permissions, we are also carfully assigning them to the minimal resource that requires them, for example I won't place the role `roles/iam.serviceAccountAdmin` on the organization allowing to create service accounts everywhere,
+Notice that we are not only giving the minimal permissions, we are also carefully assigning them to the minimal resource that requires them, for example I won't place the role `roles/iam.serviceAccountAdmin` on the organization allowing to create service accounts everywhere,
 rather I will place them only on the project where the service account will be able to create other service accounts (the IAM project).
 I will not place the role `roles/iam.serviceAccountTokenCreator` on the project or organization (allowing us to impersonate all service accounts in the project or organization - a very powerful role and a common mistake that is done often)
 rather I will place it only on the service account that I want to impersonate to.
@@ -614,7 +614,7 @@ resource "google_service_account_iam_binding" "impersonate" {
 ```
 
 We are not adding to much roles here, it is probably best to add them as we go along in this course.
-But what we can do is assing the common `iac/gcp/tofu/common` to the devops group, by creating `sa.yaml` file in the `iac/gcp/tofu/common` folder:
+But what we can do is assign the common `iac/gcp/tofu/common` to the devops group, by creating `sa.yaml` file in the `iac/gcp/tofu/common` folder:
 
 ```hcl title="iac/gcp/tofu/common/sa.yaml"
 email: az-k8s-flux-devops@academeez-k8s-iam-temp-c55b.iam.gserviceaccount.com

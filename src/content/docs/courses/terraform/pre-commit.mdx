@@ -23,7 +23,7 @@ This article will not cure your OCD rather we will focus on learning about prope
 [pre-commit](https://pre-commit.com/) is a framework for managing and maintaining multi-language pre-commit hooks.
 It allows the community to maintain a set of hooks that can be shared across multiple projects.
 For example instead of recreating a hook that will run `terraform fmt` and recreate this hook in every terraform project you create, the community can share a project with pre-commit hooks that will integrate with the `pre-commit` framework.
-You create a pre-commit configuration under the file `.pre-commit-config.yaml` in the root of your project, you specify in that config the repositories that are containing the hooks that you want to run before commiting your code, you run `pre-commit install` and from now on every time you commit your code the hooks will run.
+You create a pre-commit configuration under the file `.pre-commit-config.yaml` in the root of your project, you specify in that config the repositories that are containing the hooks that you want to run before committing your code, you run `pre-commit install` and from now on every time you commit your code the hooks will run.
 Pretty simple, and luckily the community already created a Terraform/OpenTofu/Terragrunt pre-commit hooks that you can use.
 
 ## pre-commit-terraform
@@ -89,7 +89,7 @@ Now every time we stage files for commit and run `git commit` the hooks will run
 
 ## Run on all the files
 
-since we already commited a lot of files before we installed the hooks we can run the hooks on all the files in the project by running the following command:
+since we already committed a lot of files before we installed the hooks we can run the hooks on all the files in the project by running the following command:
 
 ```bash
 pre-commit run --all-files

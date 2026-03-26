@@ -128,7 +128,7 @@ Let's go over the common footer tokens:
 * **Related**: Place an related issue number of pr after
 * **References**: Reference to an issue
 * **Co-authored-by**: this commit is written with a team member.
-* **Reviewed-by**: This commit is reveiwed by a team member.
+* **Reviewed-by**: This commit is reviewed by a team member.
 * **See-also**: Will point to a pr or issue that is related to this commit.
 
 ## Examples
@@ -245,7 +245,7 @@ git add index.js
 git commit -m "feat: added hello world function"
 ```
 
-Notice that we commited the file with the `feat` type, this will bump the version to a minor version, if we would have used a `fix` type it would have been a patch version, and if we had a `BREAKING CHANGE` in the footer it would have been a major version.
+Notice that we committed the file with the `feat` type, this will bump the version to a minor version, if we would have used a `fix` type it would have been a patch version, and if we had a `BREAKING CHANGE` in the footer it would have been a major version.
 
 What we will do now is add a github action workflow that will run semantic-release on every push to the `main` branch.
 We will create a new directory `.github/workflows` and create a new file `release.yml` with the following content:
@@ -373,7 +373,7 @@ You commit message is now changed.
 
 ## Protect your commit messages
 
-Since release automation is now being done based on the commit messages, and if we accidently push a wrong commit message it could affect the release process, it is recommended to force developers
+Since release automation is now being done based on the commit messages, and if we accidentally push a wrong commit message it could affect the release process, it is recommended to force developers
 to write proper commit messages (doing that would protect us from the wrong commit message we just fixed).
 We can use a tool called [commitlint](https://commitlint.js.org/#/) to enforce commit message rules on a `commit-msg` git hook.
 Preparing the git hooks with [husky](https://typicode.github.io/husky/) is the easiest solution in my opinion.
