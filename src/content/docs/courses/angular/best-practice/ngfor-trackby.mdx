@@ -134,7 +134,7 @@ export class AppComponent {
 }
 ```
 
-Notice that on every add we are completly recreating the list, we are using the `clone` function to clone the list and add a new item to the list.  
+Notice that on every add we are completely recreating the list, we are using the `clone` function to clone the list and add a new item to the list.  
 In the following case if you type something in the input and click the add button you will see that the input is recreated from scratch and you lose the state of the input.
 Regardless of losing the state, it is also a performance issue, since angular will destroy all the dom elements in the list and recreate them from scratch.
 

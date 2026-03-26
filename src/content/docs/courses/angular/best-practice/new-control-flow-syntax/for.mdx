@@ -178,8 +178,8 @@ bootstrapApplication(AppComponent)
 
 ## track
 
-in the new `@for` control flow syntax, supplying `track` is mandatory. According to angular docs, a lot of angular apps performance issues were caused by `*ngFor` loops without `trackBy`, now the `track` is mandatory with a much simpler syntax.  
-You can now choose a propery from the iterated object to track by, and angular will use it to track changes in the array.  
+In the new `@for` control flow syntax, supplying `track` is mandatory. According to angular docs, a lot of angular apps performance issues were caused by `*ngFor` loops without `trackBy`, now the `track` is mandatory with a much simpler syntax.  
+You can now choose a property from the iterated object to track by, and angular will use it to track changes in the array.  
 You can also use the `$index` context variable to track by index, but it's better if you have a primary key on the object to use that as the track property.
 
 ## empty block

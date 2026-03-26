@@ -112,7 +112,7 @@ While a lot of the api's we use are part of the JavaScript runtime, we will noti
 For example `console.log` is pretty similar no matter which JavaScript runtime you are using, same goes for `setTimeout`, `fetch`, etc.
 There are group like the help define web standards like the [WHATWG](https://whatwg.org/) and the [W3C](https://www.w3.org/) that help define the web api's that are part of the JavaScript runtime.
 And the JavaScript backend runtime like Node.js strive to follow those standards.
-Alot of those standarts are defined in the [WHATWG github](https://github.com/whatwg) for example you can find the standard defined for the fetch in the [fetch](https://github.com/whatwg/fetch) repository.
+A lot of those standards are defined in the [WHATWG github](https://github.com/whatwg) for example you can find the standard defined for the fetch in the [fetch](https://github.com/whatwg/fetch) repository.
 
 Among the popular JavaScript runtime are the browsers, and Node.js.
 The runtimes are using the JavaScript engine to execute the JavaScript code, but they also have other parts to integrate JavaScript with the actual runtime that they represent.
@@ -125,7 +125,7 @@ Now let's circle back to the original question: "Is Node.JS single-threaded?".
 While everybody I asked jumped with the answer "Yes it is!" Look even wikipedia says JavaScript is single-threaded, now we are starting to understand that while JavaScript is single-threaded, Node.js is not.  
 Let's go back to the concepts we just defined:
 
-- **JavaScript** - is JavaScript single-threaded? Remeber JavaScript is a definition of a language as defined by ECMAScript, it's not the actual implementation.
+- **JavaScript** - is JavaScript single-threaded? Remember JavaScript is a definition of a language as defined by ECMAScript, it's not the actual implementation.
 What we can do is check the ECMAScript standard, and we will see that it does not define anything about threads, processes, or anything related to that.
 So the answer is YES, JavaScript is defined by the ECMAScript standard as single-threaded.
 - **JavaScript Engine** - Is the JavaScript engine single-threaded? The answer is an easy YES, since JavaScript is single threaded and the engine is the implementation of the language, then the engine is also single-threaded.
@@ -368,10 +368,10 @@ parentPort.postMessage(result);
 
 If we activate our server and calculate a large fibonacci number we will see that the server is not stuck anymore, and we can still get random numbers while the fibonacci calculation is running.
 If we run our server using `--prof` we will see that the main thread is not stuck anymore. We will get 2 `isolate` files one for the thread which we will notice that it spend a lot of time in the fibonacci function, and the other for the main thread which should be quite free.
-What we saw is a stravation of the main thread which caused the server to be stuck, and we solved that by delegating the task to another thread and by doing so freeing the main thread to handle other requests.
+What we saw is a starvation of the main thread which caused the server to be stuck, and we solved that by delegating the task to another thread and by doing so freeing the main thread to handle other requests.
 
 Opening a new thread has a lot of overhead, so if it's something that is happening often we might consider using a thread pool.
-Opening a thread is something that is not done often in Node.js, the event driven design combined with hight performance I/O operations prevents the usage of threads in most cases.
+Opening a thread is something that is not done often in Node.js, the event driven design combined with height performance I/O operations prevents the usage of threads in most cases.
 If you find out that you have to use threads often and it's the only way for you to solve your server choking problem then you might want to consider using a different technology that is more suited for that kind of tasks.
 Understanding Node.js architecture if important for understanding if Node.js is the right tool for the job.
 

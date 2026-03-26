@@ -110,7 +110,7 @@ Same conflict scenario as before. we installed some package using `npm install <
 In the `main` branch in commit `C` another developer installed a package using `npm install <some-package3>`.
 
 Let's define 2 concepts that relate to conflicts and their value when doing a rebase - Notice that the `ours` and `theirs` are different than the merge:
-- `ours` - represet the branch that we rebase on top of (the `main` branch).
+- `ours` - represent the branch that we rebase on top of (the `main` branch).
 - `theirs` - represent the commit that we are trying to rebase (the `feature` branch).
 
 Now here is the catch:
@@ -150,7 +150,7 @@ So a commit history in your branch might look like this:
 
 ![rebase interactive1](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/rebase-interactive1.png?raw=true)
 
-That trial and error is not necessarily something you want to keep in your commit history, and at times can be sufficent just placing a trial you did in a commit body instead of creating a full commit.
+That trial and error is not necessarily something you want to keep in your commit history, and at times can be sufficient just placing a trial you did in a commit body instead of creating a full commit.
 For example that same commit history can be arranged differently using git rebase interactive mode:
 
 ![rebase interactive2](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/rebase-interactive2.png?raw=true)
@@ -189,7 +189,7 @@ This image describe the scenario, we want to examine what happens on different p
 
 ### git pull
 
-`git pull` with no additional argument will pull from the upstread branch (provided there is one) and merge the changes into the current branch.
+`git pull` with no additional argument will pull from the upstream branch (provided there is one) and merge the changes into the current branch.
 Meaning if we are on the `feature` branch and we run `git pull` it will `git fetch` to get the latest changes to the local repository and then it will merge the changes into the `feature` branch from the upstream of the `feature` branch (usually `origin/feature`).
 
 so provided that your remote name is `origin` and the upstream branch is `origin/feature`, the command will be equivalent to:
