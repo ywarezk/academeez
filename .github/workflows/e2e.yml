@@ -13,6 +13,9 @@ name: E2E Tests
 on:  
   workflow_dispatch:
     inputs:
+      repository:
+        description: "Repository to checkout (owner/name)"
+        required: false
       ref:
         description: "Commit SHA or branch to test"
         required: true
@@ -36,6 +39,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5.0.0
         with:
+          repository: ${{ inputs.repository || github.repository }}
           ref: ${{ inputs.ref }}
           fetch-depth: 1
 
