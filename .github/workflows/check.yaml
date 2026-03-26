@@ -21,15 +21,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.2
         with:          
           fetch-depth: 1
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4.2.0
+        uses: pnpm/action-setup@v5.0.0
     
       - name: Setup Node.js
-        uses: actions/setup-node@v3.9.1
+        uses: actions/setup-node@v6.3.0
         with:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
