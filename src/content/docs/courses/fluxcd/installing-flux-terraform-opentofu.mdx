@@ -41,14 +41,14 @@ This video explains how to install FluxCD on a Kubernetes cluster using Terrafor
 </span>
 
 In this lesson we will learn how to install [Flux](https://fluxcd.io/) on our [Kubernetes](https://kubernetes.io/) cluster using [OpenTofu](https://opentofu.org/).  
-We will write infastructure as code and run it with OpenTofu, but the same code can be used with Terraform.  
+We will write infrastructure as code and run it with OpenTofu, but the same code can be used with Terraform.  
 This lesson is a naive and simple approach to installing Flux with terraform, it is filled with bad practices and focuses on simplicity, but don't worry, the next lesson after we understand basic flux installation, we will go over best practices and learn how to do things right.  
 We focus on simplicity to start with something easy before jumping in to the more complex stuff.  
 So remember easy solution, simple solution, for installing Flux with Terraform/OpenTofu, and not best practice recommended solution - for this you will need to jump to the next lesson.
 
 We assume you already have basic terraform knowledge, and we will not go over the basics of terraform in this lesson.
 
-Another important point before we begin is that we will create everything on [GCP](https://cloud.google.com/), if you want an example for other clouds, or you want an example with another infastructure as code technology, submit an issue (or create a PR if you are up to the challenge).
+Another important point before we begin is that we will create everything on [GCP](https://cloud.google.com/), if you want an example for other clouds, or you want an example with another infrastructure as code technology, submit an issue (or create a PR if you are up to the challenge).
 And don't forget to star the [course repository](https://github.com/ywarezk/academeez-k8s-flux), it helps us a lot.
 
 So our emphasis in this lesson is on simplicity, and minimum requirements for bootstrapping a new gcp project, with vpc, subnet, gke cluster and flux installed on it.  
@@ -69,7 +69,7 @@ Let's get started.
 - You need to have IAM user with admin privileges (this is bad practice and we will learn how to do it right in the next lesson - with security in mind)
 - You need to have terraform or OpenTofu installed on your machine (this is another bad practice - in the next lesson we will learn how to do it with [Terragrunt](https://terragrunt.gruntwork.io/))
 
-Create a new folder called `iac` and we will place all the infastructure code there.
+Create a new folder called `iac` and we will place all the infrastructure code there.
 
 ## GCP
 
@@ -365,7 +365,7 @@ We will have to configure the Flux provider and give information on our k8s clus
 
 ### Advantages of using IAC for installing Flux
 
-Installing Flux with infastucture as code (IAC), in our example OpenTofu/Terraform (but other solutions can be used as well) has several advantages:
+Installing Flux with infrastructure as code (IAC), in our example OpenTofu/Terraform (but other solutions can be used as well) has several advantages:
 - Flux installation is declarative.
 - Flux version installed is declarative and the same in all of our cluster
 - Easier to install and update Flux in multiple clusters
@@ -486,7 +486,7 @@ We can examine all the flux pods and see that all of them are running
 
 ## Summary
 
-If you are managing a single cluster it's not that important if you install flux using CLI or terraform, but when things start to scale, and you have multiple clusters, or you have multiple teams, or you have multiple environments, then it's important to have your infastructure and flux installation using IAC.
+If you are managing a single cluster it's not that important if you install flux using CLI or terraform, but when things start to scale, and you have multiple clusters, or you have multiple teams, or you have multiple environments, then it's important to have your infrastructure and flux installation using IAC.
 As a reminder this is the minimal setup, and in the next lesson we will go over best practices and how to do things right.
 Everything in our course repo is declarative, so you can create the cluster before a lesson and also run `tofu destroy` after the lesson to save money and only use the resources on the lessons.
 During this course we will show cloud infrastructure as code examples using OpenTofu, but you can use Terraform or any other IAC technology you want, feel free to raise an issue if you want an example in another technology or cloud placed in our course repository.
