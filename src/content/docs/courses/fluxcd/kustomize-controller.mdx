@@ -121,7 +121,7 @@ kustomize build <kustomization_directory>
 ## patch
 
 It's important to go over this feature in the `Kustomization` resource since we will use it often, especially when we have similar configurations between clusters.  
-For example we might have a base infastructure configuration between the clusters, but there are some minor configuration changes in that base infastructure between the clusters, often
+For example we might have a base infrastructure configuration between the clusters, but there are some minor configuration changes in that base infrastructure between the clusters, often
 kustomization patches will allow us that distinction.
 
 There are 2 types of patches, `patchesStrategicMerge` and `patchesJson6902`.

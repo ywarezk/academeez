@@ -105,11 +105,11 @@ In fact my usage of the helm command now is to read data, installation in `--dry
 Any other command that might change the state of my cluster, is not done with the helm command but with **Flux**
 So instead of the `helm repo add` command, we let the `source-controller` manage all our helm repositories.
 we use the `HelmRepository` custom resource which instructs the `source-controller` to subscribe to the repo.
-Let's start by subscribing to the `nginx-ingress` repository, since all our clusters will need an ingress controller, we will install it in the `infastructure/base` folder. 
-In that folder create the folder `/infastructure/base/nginx` where we will place all the resources related to the nginx ingress controller.
+Let's start by subscribing to the `nginx-ingress` repository, since all our clusters will need an ingress controller, we will install it in the `infrastructure/base` folder. 
+In that folder create the folder `/infrastructure/base/nginx` where we will place all the resources related to the nginx ingress controller.
 Create the file `namespace.yaml` with the following content:
 
-```yaml title="/infastructure/base/nginx/namespace.yaml"
+```yaml title="/infrastructure/base/nginx/namespace.yaml"
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -119,9 +119,9 @@ metadata:
 We will place all nginx resources inside the `nginx` namespace.
 
 Now let's create the `HelmRepository` custom resource to subscribe to the `ingress-nginx` repository.
-Create the file `infastructure/base/nginx/repository.yaml` with the following content:
+Create the file `infrastructure/base/nginx/repository.yaml` with the following content:
 
-```yaml title="/infastructure/base/nginx/repository.yaml"
+```yaml title="/infrastructure/base/nginx/repository.yaml"
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
@@ -137,32 +137,32 @@ Few things to note here:
 - We prefer to always use `oci` helm repositories.
 
 We will also need a few `kustomization.yaml` files to organize our resources.
-Let's add one in the `nginx` folder: `/infastructure/base/nginx/kustomization.yaml` with the following content:
+Let's add one in the `nginx` folder: `/infrastructure/base/nginx/kustomization.yaml` with the following content:
 
-```yaml title="/infastructure/base/nginx/kustomization.yaml"
+```yaml title="/infrastructure/base/nginx/kustomization.yaml"
 resources:
   - namespace.yaml
   - repository.yaml
 ```
 
-We will also need a `kustomization.yaml` in the `/infastructure/base` folder to include the `nginx` folder.
+We will also need a `kustomization.yaml` in the `/infrastructure/base` folder to include the `nginx` folder.
 
-```yaml title="/infastructure/base/kustomization.yaml"
+```yaml title="/infrastructure/base/kustomization.yaml"
 resources:
   - ./nginx
 ```
 
-And we will also create a `infastructure/staging` folder with a `kustomization.yaml` file, which will allow us to patch changes that we want for a specific cluster - in this case the `staging` cluster.
+And we will also create a `infrastructure/staging` folder with a `kustomization.yaml` file, which will allow us to patch changes that we want for a specific cluster - in this case the `staging` cluster.
 
-```yaml title="/infastructure/staging/kustomization.yaml"
+```yaml title="/infrastructure/staging/kustomization.yaml"
 resources:
 	- ../base
 ```
 
-It's best to verify using `kustomize` that `kustomize build` of the `/infastructure/staging` folder will output the expected resources.
+It's best to verify using `kustomize` that `kustomize build` of the `/infrastructure/staging` folder will output the expected resources.
 
 ```bash
-kustomize build infastructure/staging
+kustomize build infrastructure/staging
 ```
 
 The result of running this command is:
@@ -183,19 +183,19 @@ spec:
   type: oci
 ```
 
-Another thing that we need to do is to tell the `kustomize-controller` to watch the `infastructure/staging` folder.
+Another thing that we need to do is to tell the `kustomize-controller` to watch the `infrastructure/staging` folder.
 We achieve that with a `Kustomization` resource.
-Create the file `clusters/staging/infastructure.yaml` with the following content:
+Create the file `clusters/staging/infrastructure.yaml` with the following content:
 
-```yaml title="clusters/staging/infastructure.yaml"
+```yaml title="clusters/staging/infrastructure.yaml"
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infastructure
+  name: infrastructure
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./infastructure/staging
+  path: ./infrastructure/staging
   prune: true
   sourceRef:
     kind: GitRepository
@@ -221,9 +221,9 @@ Notice that in `OCI` repositories we do not have a `READY/STATUS` column, becaus
 
 Now that we managed to subscribe the `source-controller` to the `ingress-nginx` repository, we need to tell the `source-controller` to grab a specific chart from that repository.
 We can do that with the `HelmChart` custom resource.
-In the `infastructure/base/nginx` folder create the file `chart.yaml` with the following content:
+In the `infrastructure/base/nginx` folder create the file `chart.yaml` with the following content:
 
-```yaml title="/infastructure/base/nginx/chart.yaml"
+```yaml title="/infrastructure/base/nginx/chart.yaml"
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmChart
 metadata:
@@ -252,9 +252,9 @@ Throughout this course we will learn how to manage helm updates in a more preofe
 
 All of these will be covered throughout this course, but not in this lesson. This will require us to have a kustomization patch for the version in staging and production, but we will deal with that when we learn how to handle helm versions in a professional way.
 
-But first let's add the chart resource to the `infastructure/base/nginx/kustomization.yaml` file:
+But first let's add the chart resource to the `infrastructure/base/nginx/kustomization.yaml` file:
 
-```yaml title="/infastructure/base/nginx/kustomization.yaml"
+```yaml title="/infrastructure/base/nginx/kustomization.yaml"
 resources:
   - namespace.yaml
   - repository.yaml
@@ -281,9 +281,9 @@ Our chart is not installed yet, we just subscribed to the repository and grabbed
 Now it's time to install the chart on our cluster, and this is a job for the `helm-controller`.
 The `helm-controller` will watch for `HelmRelease` custom resources and install the charts specified in those resources.
 Those resources will specify which chart to use, and the values you want to pass to the chart.
-In the `infastructure/base/nginx` folder create the file `release.yaml` with the following content:
+In the `infrastructure/base/nginx` folder create the file `release.yaml` with the following content:
 
-```yaml title="/infastructure/base/nginx/release.yaml"
+```yaml title="/infrastructure/base/nginx/release.yaml"
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -304,10 +304,10 @@ spec:
 
 Notice that in the `HelmRelease` you have a `spec.chart` section, which is a shortcut for creating a `HelmChart` resource.
 I find it a bit better to create the `HelmChart` with this shortcut since it allows me to see the version of the release in the same file.
-This means we can now delete the chart file: `infastructure/base/nginx/chart.yaml`.
-And update the `infastructure/base/nginx/kustomization.yaml` file to include the `release.yaml` file:
+This means we can now delete the chart file: `infrastructure/base/nginx/chart.yaml`.
+And update the `infrastructure/base/nginx/kustomization.yaml` file to include the `release.yaml` file:
 
-```yaml title="/infastructure/base/nginx/kustomization.yaml"
+```yaml title="/infrastructure/base/nginx/kustomization.yaml"
 resources:
   - namespace.yaml
   - repository.yaml
