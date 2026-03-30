@@ -621,7 +621,7 @@ Don't use this event to stop the process from crashing, use it for cleanup, prop
 
 As we examined, express can help you catch the synchrone exceptions, but it can't help you with async exceptions.  
 On express version 5 it can help you catch rejected promises in the route handlers, but it can't help you with `EventEmitter` or `error-first-callback`.  
-If there is an uncuaght exception in express which is not transferred to express error handlers, then that exception will bubble up to the `process` and node will deal with that exception like we learned, by calling the proper events and eventually crashing the node process.
+If there is an uncaught exception in express which is not transferred to express error handlers, then that exception will bubble up to the `process` and node will deal with that exception like we learned, by calling the proper events and eventually crashing the node process.
 
 ## Exception journey
 
@@ -668,7 +668,7 @@ async function queryTheDb(query: string): Promise<any> {
 
 app.get('/', async (req, res) => {
   try {
-    await queryTheDb('some ileagal query')
+    await queryTheDb('some illegal query')
   } catch(err) {
     res.send('some error message')
   }
@@ -690,7 +690,7 @@ class QueryError extends Error {
 
 app.get('/', async (req, res, next) => {
   try {
-    await queryTheDb('some ileagal query')
+    await queryTheDb('some illegal query')
   } catch(err) {
     const queryError = new QueryError('some error message');
     next(queryError)

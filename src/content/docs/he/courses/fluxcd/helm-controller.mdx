@@ -104,11 +104,11 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 כל פקודה אחרת שיכולה לשנות את מצב הקלאסטר שלי, איננה נעשית עם פקודת `helm`, אלא עם **Flux**
 אז במקום הפקודה הזו, אנו מאפשרים ל - `source-controller` לנהל את כל ה - `helm repositories` שלנו.
 נשתמש ב - `HelmRepository` custom resource שמורה על כך שה - `source-controller` יירשם ל - `repository`.
-נתחיל בהרשמה ל - `nginx-ingress` repository, מאחר וכל הקלאסטרים שלנו יצטרכו להתקין ingress controller, נתקין אותו בתיקיית `infastructure/base` .
-בתוך התיקייה ניצור תיקייה נוספת `/infastructure/base/nginx` שבה נציב את כל המשאבים הקשורים ל - nginx ingress controller.
+נתחיל בהרשמה ל - `nginx-ingress` repository, מאחר וכל הקלאסטרים שלנו יצטרכו להתקין ingress controller, נתקין אותו בתיקיית `infrastructure/base` .
+בתוך התיקייה ניצור תיקייה נוספת `/infrastructure/base/nginx` שבה נציב את כל המשאבים הקשורים ל - nginx ingress controller.
 צרו את הקובץ `namespace.yaml` עם התוכן הבא:
 
-```yaml title="/infastructure/base/nginx/namespace.yaml"
+```yaml title="/infrastructure/base/nginx/namespace.yaml"
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -118,9 +118,9 @@ metadata:
 נציב את כל המשאבים של nginx בתוך ה - `namespace` `nginx`.
 
 כעת ניצור את ה - `HelmRepository` custom resource שירשם ל - `ingress-nginx` repository.
-ניצור את הקובץ `infastructure/base/nginx/repository.yaml` עם התוכן הבא:
+ניצור את הקובץ `infrastructure/base/nginx/repository.yaml` עם התוכן הבא:
 
-```yaml title="/infastructure/base/nginx/repository.yaml"
+```yaml title="/infrastructure/base/nginx/repository.yaml"
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
@@ -136,32 +136,32 @@ spec:
 - אנו מעדיפים להשתמש תמיד ב - `oci` repositories.
 
 נצטרך גם כמה קבצי `kustomization.yaml` כדי לארגן את המשאבים שלנו.
-נוסיף אחד בתיקיית `nginx`: `/infastructure/base/nginx/kustomization.yaml` עם התוכן הבא:
+נוסיף אחד בתיקיית `nginx`: `/infrastructure/base/nginx/kustomization.yaml` עם התוכן הבא:
 
-```yaml title="/infastructure/base/nginx/kustomization.yaml"
+```yaml title="/infrastructure/base/nginx/kustomization.yaml"
 resources:
   - namespace.yaml
   - repository.yaml
 ```
 
-נצטרך גם קובץ `kustomization.yaml` בתיקיית `/infastructure/base` שיכלול את התיקייה `nginx`.
+נצטרך גם קובץ `kustomization.yaml` בתיקיית `/infrastructure/base` שיכלול את התיקייה `nginx`.
 
-```yaml title="/infastructure/base/kustomization.yaml"
+```yaml title="/infrastructure/base/kustomization.yaml"
 resources:
   - ./nginx
 ```
 
-בנוסף ניצור תיקייה `/infastructure/staging` עם קובץ `kustomization.yaml` שיאפשר לנו לעשות patch לשינויים שאנו רוצים להחיל על קלאסטר מסוים - במקרה זה קלאסטר `staging`.
+בנוסף ניצור תיקייה `/infrastructure/staging` עם קובץ `kustomization.yaml` שיאפשר לנו לעשות patch לשינויים שאנו רוצים להחיל על קלאסטר מסוים - במקרה זה קלאסטר `staging`.
 
-```yaml title="/infastructure/staging/kustomization.yaml"
+```yaml title="/infrastructure/staging/kustomization.yaml"
 resources:
 	- ../base
 ```
 
-כדאי לוודא עם `kustomize` שהפקודה `kustomize build` של התיקייה `/infastructure/staging` תחזיר את המשאבים הרצויים.
+כדאי לוודא עם `kustomize` שהפקודה `kustomize build` של התיקייה `/infrastructure/staging` תחזיר את המשאבים הרצויים.
 
 ```bash
-kustomize build infastructure/staging
+kustomize build infrastructure/staging
 ```
 
 תוצאת הפקודה תהיה:
@@ -182,19 +182,19 @@ spec:
   type: oci
 ```
 
-דבר נוסף שעלינו לעשות הוא להודיע ל - `kustomize-controller` לצפות בתיקיית `infastructure/staging`.
+דבר נוסף שעלינו לעשות הוא להודיע ל - `kustomize-controller` לצפות בתיקיית `infrastructure/staging`.
 את זאת באמצעות `Kustomization` resource של Flux.
-ניצור את הקובץ `clusters/staging/infastructure.yaml` עם התוכן הבא:
+ניצור את הקובץ `clusters/staging/infrastructure.yaml` עם התוכן הבא:
 
-```yaml title="clusters/staging/infastructure.yaml"
+```yaml title="clusters/staging/infrastructure.yaml"
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infastructure
+  name: infrastructure
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./infastructure/staging
+  path: ./infrastructure/staging
   prune: true
   sourceRef:
     kind: GitRepository
@@ -220,9 +220,9 @@ nginx   oci://ghcr.io/nginxinc/charts               7m57s
 
 עכשיו שהצלחנו לבצע הרשמה של ה - `source-controller` ל - `ingress-nginx` repository, עלינו להודיע ל - `source-controller` להביא `chart` ספציפי מה - `repository`.
 נעשה זאת עם ה - `HelmChart` custom resource.
-בתיקיית `/infastructure/base/nginx` ניצור את הקובץ `chart.yaml` עם התוכן הבא:
+בתיקיית `/infrastructure/base/nginx` ניצור את הקובץ `chart.yaml` עם התוכן הבא:
 
-```yaml title="/infastructure/base/nginx/chart.yaml"
+```yaml title="/infrastructure/base/nginx/chart.yaml"
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmChart
 metadata:
@@ -251,9 +251,9 @@ spec:
 
 נלמד את כל אלו במהלך הקורס, אבל לא בשיעור זה. זה ידרוש מאיתנו ליצור `kustomization patch` לגרסא ב - `staging` וב - `production`, אבל נתמודד עם זה כאשר נלמד כיצד לנהל גרסאות של `helm` בדרך מקצועית.
 
-ראשית נוסיף את ה - `chart` ל - `infastructure/base/nginx/kustomization.yaml`:
+ראשית נוסיף את ה - `chart` ל - `infrastructure/base/nginx/kustomization.yaml`:
 
-```yaml title="/infastructure/base/nginx/kustomization.yaml"
+```yaml title="/infrastructure/base/nginx/kustomization.yaml"
 resources:
   - namespace.yaml
   - repository.yaml
@@ -280,9 +280,9 @@ nginx   nginx-ingress   1.2.x     HelmRepository   nginx         20m   True    p
 עכשיו הגיע הזמן להתקין את ה - `chart` על הקלאסטר שלנו, וזה משימה ל - `helm-controller`.
 ה - `helm-controller` יצפה ל - `HelmRelease` custom resources ויתקין את ה - `chart` שצוין ב - `HelmRelease`.
 ה - `HelmRelease` יציין איזה `chart` להשתמש, ואילו ערכים להעביר ל - `chart`.
-בתיקייה `/infastructure/base/nginx` ניצור את הקובץ `release.yaml` עם התוכן הבא:
+בתיקייה `/infrastructure/base/nginx` ניצור את הקובץ `release.yaml` עם התוכן הבא:
 
-```yaml title="/infastructure/base/nginx/release.yaml"
+```yaml title="/infrastructure/base/nginx/release.yaml"
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -303,10 +303,10 @@ spec:
 
 בתוך ה - `HelmRelease` יש שדה `spec.chart` שהוא קיצור דרך ליצירת `HelmChart` resource.
 אני מוצא את זה קצת יותר נוח ליצור את ה - `HelmChart` עם הקיצור הזה היות וזה מאפשר לי לראות את הגרסא של ה - `release` באותו קובץ.
-כלומר אנחנו יכולים למחוק את הקובץ `infastructure/base/nginx/chart.yaml`.
-ולערוך את הקובץ `infastructure/base/nginx/kustomization.yaml` שיכלול את הקובץ `release.yaml`:
+כלומר אנחנו יכולים למחוק את הקובץ `infrastructure/base/nginx/chart.yaml`.
+ולערוך את הקובץ `infrastructure/base/nginx/kustomization.yaml` שיכלול את הקובץ `release.yaml`:
 
-```yaml title="/infastructure/base/nginx/kustomization.yaml"
+```yaml title="/infrastructure/base/nginx/kustomization.yaml"
 resources:
   - namespace.yaml
   - repository.yaml

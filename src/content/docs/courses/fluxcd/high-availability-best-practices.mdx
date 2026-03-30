@@ -1,6 +1,6 @@
 ---
 title: High Availability Best Practices
-description: Best practice tips regarding infastructure and nginx ingress controller high availability.
+description: Best practice tips regarding infrastructure and nginx ingress controller high availability.
 publishDate: 2024-04-08
 preview: false
 sidebar:
@@ -21,7 +21,7 @@ In this lesson we will provide some `Single point of failure tips`
 ### Single point of failure
 
 A single point of failure is a part of a system that, if it fails, will stop the entire system from working.
-Currently, our nginx ingress controller is a single point of failure as well as our cluster infastructure.
+Currently, our nginx ingress controller is a single point of failure as well as our cluster infrastructure.
 
 ## Multi zone cluster
 
@@ -37,23 +37,23 @@ A regional cluster means the master nodes are spread across multiple zones, and 
 No single point of failure for the master and nodes.
 Cost more but for high availability production cluster it's a must.
 
-## Use Infastructure as Code
+## Use infrastructure as Code
 
-Changes in the infastructure should be done by code, and tracked in a version control system.
-This course does not cover infastructure by code technologies, it's more important to emphsize the importance of this practice of coding your infastructure, more then the actual technology you will use.
-It is important however to consider the cloud browser as a read only tool, and same goes for the cloud cli tool. Do not alter the state of the infastructure using the browser or cli, for altering the infastructure use code tracked by a version control system.
+Changes in the infrastructure should be done by code, and tracked in a version control system.
+This course does not cover infrastructure by code technologies, it's more important to emphsize the importance of this practice of coding your infrastructure, more then the actual technology you will use.
+It is important however to consider the cloud browser as a read only tool, and same goes for the cloud cli tool. Do not alter the state of the infrastructure using the browser or cli, for altering the infrastructure use code tracked by a version control system.
 
-To be clear regarding the infastructure used in this course, we created the folder `/iac` in the course repository, and we will store all the infastructure code there.
-This way you can also examine infastructure configurations that are used in the course.
+To be clear regarding the infrastructure used in this course, we created the folder `/iac` in the course repository, and we will store all the infrastructure code there.
+This way you can also examine infrastructure configurations that are used in the course.
 Inside the `/iac` folder there are folders for the cloud `/iac/gcp` if any other cloud provider will be asked we will create a folder for it - submit an issue (or create a PR if you really want a good practice).
 
-So it's `/iac/<cloud provider>` and inside that folder, there are folders according to the infastructure as code technology used.
-For example you will find the folder `/iac/gcp/tofu` for google cloud infastructure project created with [OpenTofu](https://opentofu.org/).
+So it's `/iac/<cloud provider>` and inside that folder, there are folders according to the infrastructure as code technology used.
+For example you will find the folder `/iac/gcp/tofu` for google cloud infrastructure project created with [OpenTofu](https://opentofu.org/).
 If you want an example in another technology, submit an issue (or create a PR if you are up to the challenge - only open source license technologies are allowed).
 
 ## Environments
 
 We want to emphasize tips for production cluster as well as non-production clusters.
-So the infastructure code will contain configurations for `dev` and `prod`, on dev we will focus on cost saving and on prod we will focus on high availability.
+So the infrastructure code will contain configurations for `dev` and `prod`, on dev we will focus on cost saving and on prod we will focus on high availability.
 
 
