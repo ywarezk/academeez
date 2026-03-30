@@ -1,7 +1,7 @@
 <h1 align="center">academeez - Open source learning platform for coders</h1>
 
 <p align="center">
-  <img src="https://www.academeez.com/_astro/logo-light.BUToeAsh_A0IIg.svg" alt="academeez-logo"/>
+  <img src="https://www.academeez.com/_astro/logo-light.BUToeAsh.svg" alt="academeez-logo"/>
   <br>
   <br>
   academeez is an open-source, MIT-licensed platform offering community-driven coding lessons for learners of all levels — from beginners taking their first steps in programming to experts looking to sharpen their skills.
