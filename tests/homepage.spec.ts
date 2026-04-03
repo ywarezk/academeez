@@ -16,4 +16,21 @@ test.describe('homepage', () => {
 		const count = await thumbs.count();
 		expect(count).toBeGreaterThan(0);
 	});
+
+	test('open source project card links to vscode-code-highlight GitHub repo', async ({ page }) => {
+		await page.goto('/');
+
+		const projectLink = page.getByRole('link', { name: /vscode-code-highlight/i });
+		await expect(projectLink).toBeVisible();
+
+		const [response] = await Promise.all([
+			page.waitForEvent('response', (res) =>
+				res.url().startsWith('https://github.com/ywarezk/vscode-code-highlight')
+			),
+			projectLink.click(),
+		]);
+
+		expect(response.status()).toBeLessThan(400);
+		expect(page.url()).toContain('https://github.com/ywarezk/vscode-code-highlight');
+	});
 });
