@@ -9,6 +9,26 @@ sources:
     title: "github-merge-queue"
 ---
 
+<div class="not-content flex">
+  <iframe
+    class="mx-auto"
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/vDQ2IG5u1t8?si=QBB644508MhW6vMc"
+    title="GitHub Merge Queue - video"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+    loading="lazy"
+    referrerPolicy="strict-origin-when-cross-origin"
+    aria-label="GitHub Merge Queue - video"
+    aria-describedby="iframe-video-description"
+  />
+</div>
+<span id="iframe-video-description" class="sr-only">
+  This video is a hands-on walkthrough of GitHub Merge Queue: why pull requests can pass CI yet still fail to merge when the target branch moves, how merge queues run checks against a predicted future state of the branch, and how that fits with branch rulesets and required status checks. It also covers merge groups, ordering, conflicts, important merge queue settings (including requiring all queue entries to pass checks), tradeoffs, and a short comparison with other merge-queue style tools such as Trunk and Mergify.
+</span>
+
+<br/>
 Let's start by describing the problem that merge queue can help you solve...  
 The problem happens when a team of developers are opening PRs trying
 to merge their code to the `main` branch.
