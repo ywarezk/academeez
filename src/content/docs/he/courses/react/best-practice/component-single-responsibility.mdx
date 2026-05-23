@@ -12,7 +12,7 @@ video:
     - React
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -44,8 +44,8 @@ This video explains the Single Responsibility Principle in React, demonstrating 
 בואו נבחן את ה - Component הבא וננסה לשפר אותו על ידי הקפדה על כלל ה -  `Single Responsibility Principle`.
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 
 			"react": "^18.0.0",
@@ -134,8 +134,8 @@ export default function App() {
 נסתכל על הקוד הבא:
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 
 			"react": "^18.0.0",

@@ -5,7 +5,7 @@ publishDate: 2023-12-21
 authors:
   - yariv-katz
 sidebar:
-  order: 9
+  order: 14
 video:
   videoUrl: https://www.youtube.com/watch?v=8HHXZcoovt4
   duration: 1342
@@ -15,7 +15,7 @@ video:
     - Suspense
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -96,8 +96,8 @@ In the following example we want a component to only render after 5 seconds.
 For this we are creating a `Promise` that will resolve after 5 seconds, and we are throwing that promise in the `render` function of the component.
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	files={{
 	"App.js": {
 		readOnly: true,

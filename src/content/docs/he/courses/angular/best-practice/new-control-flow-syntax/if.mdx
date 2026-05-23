@@ -12,7 +12,7 @@ video:
     - Angular
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -44,8 +44,8 @@ This video explains the new @if control flow syntax in Angular 17, highlighting 
 בואו נראה דוגמה:
 
 <div className="mt-5 not-content ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",
@@ -183,8 +183,8 @@ bootstrapApplication(AppComponent)
 ניתן להתאמן על הסינטקס החדש `@if` ולכתוב קוד בחלון למטה:
 
 <div className="mt-5 not-content ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",

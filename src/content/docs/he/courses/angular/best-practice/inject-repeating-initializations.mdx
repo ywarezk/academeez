@@ -12,7 +12,7 @@ video:
     - Angular
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -87,8 +87,8 @@ export class AppComponent {
 עם `injection function` אותו הקוד יכול להפוך ל:
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 
 			"@ngrx/store": "^16.3.0",

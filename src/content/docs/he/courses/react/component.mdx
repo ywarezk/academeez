@@ -12,7 +12,7 @@ video:
     - React
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -59,8 +59,8 @@ function MyButton() {
 הטופס לא עושה שום דבר עם הקלט והוא צריך לטפל רק בתצוגה של הטופס.
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	files={{
 		"App.js": {			
 			code: `export default function Login() {
@@ -77,8 +77,8 @@ function MyButton() {
 ## פתרון
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	files={{
 		"App.js": {
 			readOnly: true,

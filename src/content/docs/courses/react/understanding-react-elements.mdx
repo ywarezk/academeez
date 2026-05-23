@@ -5,7 +5,7 @@ authors:
   - yariv-katz
 publishDate: 2024-10-01
 sidebar:
-  order: 10
+  order: 15
 video:
   videoUrl: https://www.youtube.com/watch?v=8HHXZcoovt4
   duration: 2870
@@ -14,7 +14,7 @@ video:
     - React
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -58,8 +58,8 @@ Let's just create that hello world page using simple html.
 In this example we created a simple html file that displays an hello world message:
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	template="vanilla"
 	options={{
 		visibleFiles: ["/index.html"],
@@ -126,8 +126,8 @@ So the same **Hello World** application we can also create by constructing the D
 Take a look at the following example where the HTML is empty and now the Javascript is creating that hello world.
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	template="static"
 	options={{	
 		visibleFiles: ["/index.html"],	
@@ -169,8 +169,8 @@ Now let's try to create the same hello world website using `React`.
 We are loading the react library from a CDN (usually react is not installed from a CDN but in our simple example it's perfect).
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	template="static"
 	options={{		
 		activeFile: "/index.html",
@@ -252,8 +252,8 @@ We will now add a span and an underline under the `<h1>` element we created.
 Take a look in the editor at the following example:
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	template="static"
 	options={{		
 		activeFile: "/index.html",
@@ -379,8 +379,8 @@ Babel is a Javascript compiler, it will transform your advanced Javascript, to v
 Usually you won't have to install the compiler yourself, there are popular react starters which you can use which already configured the compiler for you, but in our case of exploring the basics of React and creating a minimal playground with only HTML file, it might be worth it to do a simple Babel installation in our current HTML file.
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	template="static"
 	options={{		
 		activeFile: "/index.html",

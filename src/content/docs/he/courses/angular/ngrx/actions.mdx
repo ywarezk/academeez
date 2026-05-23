@@ -15,7 +15,7 @@ video:
     - NGRX
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -80,8 +80,8 @@ export const setRepos = createAction(
 - תצטרכו גם ליצור action ב `actions.ts` שיקרא מ `app.component.ts` ויטפל בו ה reducer שנמצא ב `reducer.ts`.
 
 <div class="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",
@@ -226,8 +226,8 @@ export class AppComponent {
 להלן הפתרון לתרגיל:
 
 <div class="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",
@@ -410,8 +410,8 @@ export const repoActions = createActionGroup({
 - בקובץ `app.component.ts` תצטרכו לשלוח את ה action של `Delete Repo` כאשר המשתמש לוחץ על כפתור מחיקה.
 
 <div class="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",
@@ -565,8 +565,8 @@ export class AppComponent implements OnInit {
 ## פתרון
 
 <div class="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",

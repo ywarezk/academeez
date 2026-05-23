@@ -14,7 +14,7 @@ video:
     - Angular
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex mb-10">
 	<iframe
@@ -40,8 +40,8 @@ This video explains the new @for control flow syntax in Angular 17, highlighting
 בואו נסתכל על הדוגמה הבאה ונפרק את התכונות והיתרונות העיקריים של הסינטקס החדש.
 
 <div className="mt-5 not-content ltr" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",

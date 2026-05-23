@@ -7,11 +7,11 @@ authors:
   - yariv-katz
 sidebar:
   hidden: true
-  order: 9
-  label: 4.3 Props on React Components
+  order: 13
+  label: 5.3 Props on React Components
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 When we are thinking about creating a React Component, ideally we want that component to be written in a way so it can be reused throughout our application.
 To achieve that we often need to pass data from parent component to the child component.
@@ -22,8 +22,8 @@ In this lesson we will discuss about passing props to child components.
 In the following example we are creating an **Avatar** component that will get from the parent data about a user and will display an avatar of that user.
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	files={{
     "Avatar.js": {
       code: `
@@ -78,8 +78,8 @@ but in general keeping things consistent in programming allow us to view repeati
 In the following example our `<Avatar />` component will get a user object.
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	files={{
     "Avatar.js": {
       code: `
