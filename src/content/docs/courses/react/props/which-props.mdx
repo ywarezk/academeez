@@ -5,11 +5,11 @@ publishDate: 2025-11-22
 authors:
   - yariv-katz
 sidebar:
-  order: 6
-  label: 4.2 Which Props Can I Pass?
+  order: 10
+  label: 5.2 Which Props Can I Pass?
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -39,8 +39,8 @@ In React, **"props"** are how parents pass data down to children. In this lesson
 Let's see those three cases in our live code editor...
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	files={{
 		"Child.js": {
 			code: `

@@ -12,7 +12,7 @@ video:
     - Angular
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -45,8 +45,8 @@ The new way is by using the `@if` syntax.
 let's see an example:
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",
@@ -184,8 +184,8 @@ Few things to note here:
 You can practice the new `@if` syntax in the playground below:
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",

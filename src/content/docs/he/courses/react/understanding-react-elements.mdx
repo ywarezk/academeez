@@ -12,7 +12,7 @@ video:
     - React
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -56,8 +56,8 @@ This video provides a comprehensive introduction to React Elements, explaining t
 בדוגמא הבאה יצרנו קובץ HTML פשוט שמציג הודעת hello world:
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	template="vanilla"
 	options={{
 		visibleFiles: ["/index.html"],
@@ -124,8 +124,8 @@ $0.innerText = 'i can change the text with javascript'
 תסתכלו על הדוגמא הבאה שבה ה-HTML ריק וה-Javascript יוצר את ה-Hello World:
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	template="static"
 	options={{	
 		visibleFiles: ["/index.html"],	
@@ -167,8 +167,8 @@ $0.innerText = 'i can change the text with javascript'
 אנחנו נטען את ספריית `React` מ-CDN (בדרך כלל `React` לא נטען מ-CDN אלא מותקנת בפרוייקט אבל בדוגמא הפשוטה שלנו זה מושלם).
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	template="static"
 	options={{		
 		activeFile: "/index.html",
@@ -250,8 +250,8 @@ React יספק לכם כלים ליצירת ועדכון של דום וירטו�
 להלן מימוש של הדוגמא:
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	template="static"
 	options={{		
 		activeFile: "/index.html",
@@ -377,8 +377,8 @@ Babel הוא מהדר שמתרגם את הקוד שלנו ל-`Javascript` רגי
 בדרך כלל אין צורך להתקין את המהדר בעצמכם, יש סטארטרים פופולריים שמגיעים עם המהדר והם מוגדרים כבר עבורכם, אבל במקרה שלנו של יצירת סביבת למידה פשוטה עם קובץ HTML ניתן להתקין את המהדר בקובץ ה-HTML שלנו.
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	template="static"
 	options={{		
 		activeFile: "/index.html",

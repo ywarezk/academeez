@@ -154,19 +154,23 @@ export default defineConfig({
 							slug: 'courses/react/component-tree',
 						},
 						{
-							label: '4. Props',
+							label: '4. JSX',
+							items: [{ autogenerate: { directory: 'courses/react/JSX', collapsed: true } }],
+						},
+						{
+							label: '5. Props',
 							items: [{ autogenerate: { directory: 'courses/react/props', collapsed: true } }],
 						},
 						{
-							label: '5. Understanding React Elements',
+							label: '6. Understanding React Elements',
 							slug: 'courses/react/understanding-react-elements',
 						},
 						{
-							label: '6. <Suspense>',
+							label: '7. <Suspense>',
 							slug: 'courses/react/suspense',
 						},
 						{
-							label: '7. Single Responsibility',
+							label: '8. Single Responsibility',
 							slug: 'courses/react/best-practice/component-single-responsibility',
 						},
 					],

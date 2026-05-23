@@ -5,11 +5,11 @@ publishDate: 2025-08-01
 authors:
   - yariv-katz
 sidebar:
-  order: 5
-  label: 4.1 What are Props?
+  order: 9
+  label: 5.1 What are Props?
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -38,8 +38,8 @@ Let's take a look at a few examples...
 In the following example we are creating a React component that is passing props to `<img>` which will transform to an image DOM element ([`HTMLImageElement`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement))
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	files={{
 		"App.js": {
 			readOnly: false,
@@ -75,8 +75,8 @@ The `<Parent>` is placing the `<Child>` component and passing props to that `<Ch
 The `<Child>` is using those props and showing them on screen.
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	files={{
 		"App.js": {
 			readOnly: false,

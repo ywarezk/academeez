@@ -14,7 +14,7 @@ video:
     - Angular
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex mb-10">
 	<iframe
@@ -41,8 +41,8 @@ The new syntax is much cleaner and easier to read and write, and more powerful.
 Let's look at the following example and disect the main features and benefits of the new syntax.
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",

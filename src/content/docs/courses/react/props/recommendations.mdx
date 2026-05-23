@@ -5,8 +5,8 @@ publishDate: 2024-10-01
 authors:
   - yariv-katz
 sidebar:
-  order: 8
-  label: 4.4 Props Recommendations
+  order: 12
+  label: 5.4 Props Recommendations
 video:
   videoUrl: https://www.youtube.com/watch?v=krpGUmiCIEU
   duration: 9095
@@ -15,7 +15,7 @@ video:
     - React
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -46,8 +46,8 @@ take a look at the following example where `<App>` component is passing a prop t
 
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	files={{
 		"App.js": {			
 			code: `
@@ -91,8 +91,8 @@ To avoid prop drilling you can do the following:
 In this example instead of passing the prop down the tree of the components, we are creating a context and storing that prop in the context.
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	files={{
 		"title.context.js": {
 			code: `
@@ -146,8 +146,8 @@ Another way to avoid prop drilling is to use a state management library like `Re
 While in this example I will demonstrate with [Redux](https://redux.js.org/), `Redux` is not the only state management library out there, there are many popular alternatives where each one has it's pros and cons.
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 
 			"react": "^18.0.0",

@@ -13,7 +13,7 @@ video:
     - NGRX
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -85,8 +85,8 @@ Component של אנגולר שקורא את ה - `State` מיוצג בחלק ז�
 ניתן לקרוא את ה - `State` על ידי הזרקת ה - `Store` ושימוש בפעולת ה - `select`.
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 
 			"@ngrx/store": "^16.3.0",
@@ -161,8 +161,8 @@ export class AppComponent {
 נשמור על פשטות בדוגמא זו ונשתמש בלחיצת כפתור כדי להפעיל את תהליך השינוי. תצפו בדוגמא הבאה שמגדילה מונה בכל לחיצת כפתור.
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 
 			"@ngrx/store": "^16.3.0",
@@ -239,8 +239,8 @@ export class AppComponent {
 ה- `Reducer` מקבל את ה - `State` הנוכחי ואת ה - `Action` שקרה ומחזיר את ה - `State` החדש. נסתכל על `Reducer` פשוט:
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 
 			"@ngrx/store": "^16.3.0",
