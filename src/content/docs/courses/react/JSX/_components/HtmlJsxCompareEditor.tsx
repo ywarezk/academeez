@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState, type KeyboardEvent } from 'react';
 import CourseSandpack from '~/components/CourseSandpack';
 
 const EXAMPLE_IMAGE = 'https://react.dev/images/docs/scientists/7vQD0fPs.jpg';
@@ -178,6 +178,8 @@ export default function App() {
 
 type Tab = 'html' | 'jsx';
 
+const TABS: Tab[] = ['html', 'jsx'];
+
 const tabButtonClass = (active: boolean) =>
 	[
 		'px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors',
@@ -189,6 +191,40 @@ const tabButtonClass = (active: boolean) =>
 /** HTML vs JSX tabbed Sandpack for the JSX chapter intro lesson. */
 export default function HtmlJsxCompareEditor() {
 	const [tab, setTab] = useState<Tab>('html');
+	const tabRefs = useRef<Record<Tab, HTMLButtonElement | null>>({
+		html: null,
+		jsx: null,
+	});
+
+	const selectTab = (next: Tab) => {
+		setTab(next);
+		tabRefs.current[next]?.focus();
+	};
+
+	const handleTabListKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+		const index = TABS.indexOf(tab);
+		let nextIndex = index;
+
+		switch (event.key) {
+			case 'ArrowLeft':
+				nextIndex = index === 0 ? TABS.length - 1 : index - 1;
+				break;
+			case 'ArrowRight':
+				nextIndex = index === TABS.length - 1 ? 0 : index + 1;
+				break;
+			case 'Home':
+				nextIndex = 0;
+				break;
+			case 'End':
+				nextIndex = TABS.length - 1;
+				break;
+			default:
+				return;
+		}
+
+		event.preventDefault();
+		selectTab(TABS[nextIndex]);
+	};
 
 	return (
 		<div>
@@ -196,15 +232,20 @@ export default function HtmlJsxCompareEditor() {
 				role="tablist"
 				aria-label="HTML vs JSX"
 				className="flex gap-1 border-b border-[hsl(var(--sl-color-gray-5))] mb-4"
+				onKeyDown={handleTabListKeyDown}
 			>
 				<button
 					type="button"
 					role="tab"
 					id="html-jsx-tab-html"
+					ref={(el) => {
+						tabRefs.current.html = el;
+					}}
 					aria-selected={tab === 'html'}
 					aria-controls="html-jsx-panel"
+					tabIndex={tab === 'html' ? 0 : -1}
 					className={tabButtonClass(tab === 'html')}
-					onClick={() => setTab('html')}
+					onClick={() => selectTab('html')}
 				>
 					HTML
 				</button>
@@ -212,10 +253,14 @@ export default function HtmlJsxCompareEditor() {
 					type="button"
 					role="tab"
 					id="html-jsx-tab-jsx"
+					ref={(el) => {
+						tabRefs.current.jsx = el;
+					}}
 					aria-selected={tab === 'jsx'}
 					aria-controls="html-jsx-panel"
+					tabIndex={tab === 'jsx' ? 0 : -1}
 					className={tabButtonClass(tab === 'jsx')}
-					onClick={() => setTab('jsx')}
+					onClick={() => selectTab('jsx')}
 				>
 					JSX
 				</button>
