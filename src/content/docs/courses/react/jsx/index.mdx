@@ -11,6 +11,25 @@ sidebar:
 
 import HtmlJsxCompareEditor from './_components/HtmlJsxCompareEditor';
 
+<div class="not-content flex justify-center">
+  <iframe
+    class="mx-auto mb-10"
+    width="315"
+    height="560"
+    src="https://www.youtube.com/embed/RSSVDTtBwLo"
+    title="Introduction to JSX - short"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+    loading="lazy"
+    referrerPolicy="strict-origin-when-cross-origin"
+    aria-label="Introduction to JSX - short"
+    aria-describedby="iframe-video-description"
+  />
+</div>
+<span id="iframe-video-description" class="sr-only">
+  Short overview of the JSX chapter: what JSX is and how it differs from HTML.
+</span>
+
 In [React](https://react.dev/), a **component** is a function that represents a piece of your UI. It decides what to show based on data from your app—**props**, **state**, **context**, and **hooks** (we will cover those in later chapters). Inside that function you write both the **logic** for that piece of UI (handling events, fetching from a server, timers, and more) and a description of **how it should look**.
 
 You describe the UI with a syntax called **JSX**. The component **returns** JSX, and React turns that into what appears on the screen. JSX looks a lot like HTML, and in earlier lessons you may have treated it as HTML—but it is not HTML. It is JavaScript with extra syntax rules.
