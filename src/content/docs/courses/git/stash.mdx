@@ -15,8 +15,8 @@ Stash is handy when you need to switch tasks, pull upstream changes, or fix some
 ## The common use case
 
 Probably the most common use case (and what probably sums up everything the average developer knows about `git stash`)
-is running `git stash` to get back to the branch `HEAD`, and then doing `git stash pop` later.
-So a developer is working, and then maybe they get some sort of interrupt. For example, they need to do a task on a different branch,
+is running `git stash` to get back to a clean working tree that matches `HEAD`, and then doing `git stash pop` later.
+So a developer is working, and then maybe they get interrupted. For example, they need to do a task on a different branch,
 like fixing a bug in production, and then after they finish they want to go back to their branch and continue their work.
 
 To practice this common use case, we will create an empty directory for this lesson, open a terminal (or cmd), and `cd` into that directory.
