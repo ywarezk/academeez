@@ -1,0 +1,574 @@
+---
+title: git stash
+description: Learn how `git stash` saves your local changes and restores a clean working tree — so you can switch tasks, pull updates, or handle interruptions without committing work in progress, then bring those changes back with apply or pop.
+publishDate: 2026-05-25
+authors:
+  - yariv-katz
+---
+
+With `git stash` you can save your local modifications—the changes in your working directory and index—and reset the working tree to match `HEAD`. That gives you a clean slate without committing work in progress.
+
+You can restore those changes later with `git stash pop` or `git stash apply`, even on top of a different commit.
+
+Stash is handy when you need to switch tasks, pull upstream changes, or fix something urgent without losing unfinished work.
+
+## The common use case
+
+Probably the most common use case (and what probably sums up everything the average developer knows about `git stash`)
+is running `git stash` to get back to the branch `HEAD`, and then doing `git stash pop` later.
+So a developer is working, and then maybe they get some sort of interrupt. For example, they need to do a task on a different branch,
+like fixing a bug in production, and then after they finish they want to go back to their branch and continue their work.
+
+To practice this common use case, we will create an empty directory for this lesson, open a terminal (or cmd), and `cd` into that directory.
+We will initialize git in that directory by doing:
+
+```bash
+git init
+```
+
+This will initialize git in that directory and place us on the repository's initial branch (often `main`).
+Now let's create our first commit.
+Create a file called `foo` in our directory and place the text **Hello world** in that file.
+We will commit this file by doing:
+
+```bash
+git add -A
+git commit -m "initial commit"
+```
+
+We just created our first commit.
+
+Now let's say we are working on a new feature: making changes to the `foo` file and adding text at the end of that file,
+while also creating a new file `bar` with some text in it.
+We are not committing yet because we are in the middle of our work.
+So after the change, I can run `git status` and see something like this:
+
+```bash
+git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   foo
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        bar
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+Now we got some interrupt and we need to stash our work and context-switch to something different.
+We can run:
+
+```bash
+git stash
+```
+
+Running `git status` again we should see the following result:
+
+```bash
+git status
+On branch main
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        bar
+
+nothing added to commit but untracked files present (use "git add" to track)
+```
+
+Notice that the `git stash` command reverted the changes in the tracked `foo` file, but since the file `bar` is untracked,
+it did not do anything with that file. The same file is still in our worktree with the same changes.
+Leaving this file while context-switching, maybe to a different branch to fix something else, is not ideal - we can accidentally commit that file,
+and most likely we want that file to be stashed as well.
+So instead of using `git stash`, we can add the flag `--include-untracked` or `-u`: `git stash -u` will stash tracked and untracked files.
+That flag is quite handy and important to be familiar with.
+We usually use `git stash` when we have some sort of interrupt that forces us to context-switch to another task.
+Those interrupts can come in different shapes and sizes. Some can take longer; for longer switches, I personally find it better
+not to use `git stash`, but to use [`git worktree`](https://git-scm.com/docs/git-worktree).
+In any case, if you are using `git stash` and return after a while working on something different, you might have other items in your stash.
+`git stash` is not a one-change kind of thing; it can hold as many changes as you want.
+For example, after doing the first stash with the command `git stash -u`, we can now create another change in the `foo` file and stash that as well:
+
+```bash
+echo "111111" >> foo
+git stash # we do not need the -u flag now we don't have any untracked files in the change
+```
+
+Now we have 2 entries saved in the stash, and we can view them by doing:
+
+```bash
+git stash list
+```
+
+This will print:
+
+```bash
+stash@{0}: WIP on main: b05fdec initial commit
+stash@{1}: WIP on main: b05fdec initial commit
+```
+
+By default, git will write a message next to each stash with the following format:
+
+`stash@{<num in stash>}: WIP on <branch name>: <commit sha> <commit message>`
+
+`commit sha/message` - is the sha/message of the `HEAD` commit.
+
+A bit hard to understand, since both stash entries share the same parent commit,
+so it is hard to know which change belongs to each.
+We can also peek into a stash entry to examine the changes of that stash entry.
+We do that with the `git stash show` command:
+
+```bash
+git stash show -p stash@{1}
+```
+
+You will see the diff of that stash.
+Another option that helps you distinguish between stash entries is replacing the default name of the entry
+with something you can easily recognize.
+
+Let's try to attach a message to a stash entry.
+We will pop the latest entry that we pushed to the stash:
+
+```bash
+git stash pop
+```
+
+And now we will push again to the stash, but this time we will attach a message:
+
+```bash
+git stash -m "placed ones at the end of foo"
+```
+
+This works because `git stash push` is the default subcommand and `-m` is a flag on `git stash push`.
+Now when I want to view the stash entries:
+
+```bash
+git stash list
+```
+
+I see the following:
+
+```bash
+stash@{0}: On main: placed ones at the end of foo
+stash@{1}: WIP on main: b05fdec initial commit
+```
+
+So we stashed our changes so we can deal with some sort of interrupt. After that interrupt is dealt with, we return to where we left off
+and apply the changes that we stashed.
+Usually we apply the changes by running `git stash pop`.
+This applies the changes and also removes them from the stash.
+You can also apply the changes without removing them by running `git stash apply`.
+This is in case you want to keep the changes in the stash (perhaps you will need to use them again in a different branch).
+So essentially `git stash pop` is equal to (provided that `pop/apply` ran successfully):
+
+```bash
+git stash apply
+git stash drop
+```
+
+And you do not have to `pop/apply/drop` the latest entry in the stash. For example, if we want to apply a different entry, we can
+attach the entry number at the end.
+For example:
+
+```bash
+git stash pop stash@{1}
+```
+
+This would apply not the latest entry, but the one before that.
+I have to say that in most cases, I tend to use `git stash pop` and not the `apply` version.
+Usually I want to apply and remove that entry from the stash.
+
+## Built-in defaults
+
+Many Git commands let you omit arguments because Git fills them in for you. That is why `git stash` feels short: you rarely type every part of the command.
+
+With stash, the defaults look like this:
+
+- `git stash` → `git stash push`
+- `git stash pop` → `git stash pop stash@{0}`
+- `git stash apply` → `git stash apply stash@{0}`
+
+The same idea shows up elsewhere. For example (when your current branch has an upstream configured):
+
+- `git push` → pushes the current branch to its configured upstream (exact behavior depends on `push.default`)
+- `git pull` → `git pull <upstream remote> <tracked branch>`
+- `git fetch` → fetches from the configured default remote(s); in many repositories this means fetching from `origin`.
+
+### How to read a Git command as layers
+
+It helps to read a Git command from left to right, one layer at a time:
+
+1. **`git`** — the program itself (global options can go here).
+2. **`<command>`** — for example `stash`, `push`, or `pull`.
+3. **`<subcommand>`** (optional) — for example `push`, `pop`, or `apply` under `git stash`.
+4. **Arguments** — things like a stash ref (`stash@{1}`) or a branch name.
+5. **Flags** — options like `-u` or `-m "message"`.
+
+> Flags and options can appear in different positions depending on the command.
+
+At each layer, Git may use a built-in default, a flag you pass on the command line, or a value from your config.
+
+For `git stash`, that means:
+
+- You can stop at `git stash`, and Git runs the default subcommand `push`.
+- You can write the full form `git stash push` when you want to be explicit.
+- You can run `git stash pop` without a ref, and Git assumes `stash@{0}` (the latest stash).
+
+Once you see commands this way, flags and config make more sense: they are just another way to set values at a specific layer instead of accepting the default.
+
+## Viewing the stash object
+
+Here's a cool exercise. While it's not critical for using `git stash`,
+understanding this will give you a better grasp of the theory and how Git works.
+Git stores objects with information about commits,
+and we can use [`git cat-file`](https://git-scm.com/docs/git-cat-file) to inspect those objects—including our stash entries.
+At the moment, when we run `git stash list`, we get the following result:
+
+```bash
+stash@{0}: On main: placed ones
+stash@{1}: WIP on main: b05fdec initial commit
+```
+
+Let's view what Git stored for those objects.
+
+```bash
+git cat-file -t stash@{1}
+```
+
+The `-t` flag prints the type of the object.
+We can see that each stash entry is of type `commit`.
+
+```bash
+git cat-file -p stash@{1}
+```
+
+The `-p` flag pretty-prints the content of the stored object.
+You will see something similar to this:
+
+```bash
+tree af8c2190bbafc7d1b7f26eb424939b3be172d9f5
+parent b05fdec75a2f969d25548edda138d6cb0855c179
+parent b08c36be9633f63e7462a10ed0f7b7bdfad11519
+parent dfa85498dae9bf862bb3186893562372c4cd428b
+author academeez <...@academeez.com> 1779875537 +0300
+committer academeez <...@academeez.com> 1779875537 +0300
+```
+
+The `tree` represents the working tree—a snapshot of the working directory that the stash holds.
+Each **parent** is a commit that relates to the stash entry.
+We see 3 parents in this case; let's try to figure out what each one represents.
+We will run `git cat-file` on the latest stash entry:
+
+```bash
+git cat-file -p stash@{0}
+```
+
+This returned the following:
+
+```bash
+tree 93499ae1a789bac701f80b428c56a15b614bed4b
+parent b05fdec75a2f969d25548edda138d6cb0855c179
+parent 6d16fa9941e100cc584ded87efb727c9abacc36d
+author ...
+committer ...
+```
+
+We can see that both stash entries contain the same parent: `b05fdec75a2f969d25548edda138d6cb0855c179`.
+There is a useful command, [`git name-rev`](https://git-scm.com/docs/git-name-rev), that we can give a commit SHA,
+and if available it will show us a tag, branch name, or symbolic name (if one exists) for that SHA.
+
+```bash
+git name-rev b05fdec75a2f969d25548edda138d6cb0855c179
+b05fdec75a2f969d25548edda138d6cb0855c179 main
+```
+
+We can see that the common parent those two stash entries share is the commit that `HEAD` pointed to (through the `main` branch) when the stashes were created.
+
+Let's add another stash—this time with something in the index.
+
+```bash
+echo "222222" >> foo
+```
+
+Now let's stage our changes.
+
+```bash
+git add foo
+```
+
+We will not commit; instead we will stash.
+
+```bash
+git stash
+```
+
+Notice that we stashed while our index was not empty this time, but don't worry—we can pop from the stash while including the index:
+
+```bash
+git stash pop --index
+```
+
+You can run `git status` and you will notice that the `--index` flag restored the staged state that was saved in the stash, including which changes were staged.
+That means this data has to be stored: the stash commit object holds the working tree, and another parent commit records the state of the index.
+
+Regarding the 3rd parent we saw, we can use `git cat-file` to figure out what it contains:
+
+```bash
+git cat-file -p dfa85498dae9bf862bb3186893562372c4cd428b
+```
+
+This prints:
+
+```bash
+tree fb2dbf937fb2186693660ed28b0de48def6af5e7
+```
+
+We can examine that `tree`:
+
+```bash
+git cat-file -p fb2dbf937fb2186693660ed28b0de48def6af5e7
+```
+
+This shows `bar`:
+
+```bash
+100644 blob 38cd9f0c9e279c611e55c213704c9647c69f8dc1    bar
+```
+
+If you recall, the `bar` file was an **untracked file** that we stored in the stash by running `git stash -u`.
+So the 3rd parent holds the untracked files.
+
+While taking a moment to understand the parents of a stash entry, we learned some useful commands like `cat-file` and `name-rev`, and we understand a
+bit better the data Git stores in a commit and in a stash entry.
+
+## Stash popping a non-existent file
+
+Let's challenge `git stash`...
+In the following exercise, we will create a new branch and make a commit with a new file. We will then change that file
+and stash those changes. After that, we will move back to the `main` branch, which does not have the file the stash is based on, and try `git stash pop`
+there to see what happens.
+
+Create a new branch and switch to it:
+
+```bash
+git checkout -b stash-on-new-file
+```
+
+We are now on a new branch called `stash-on-new-file`. On that branch, we will create a new file `bar` and add some text to it:
+
+```bash
+echo "hello world" > bar
+```
+
+We will create a new commit for the initial `bar` file:
+
+```bash
+git add bar
+git commit -m "initial bar file"
+```
+
+Now we will create a new stash entry with changes to the `bar` file:
+
+```bash
+echo "foo bar" >> bar
+git stash
+```
+
+Now let's try to `stash pop` on the `main` branch. As a reminder, the `main` branch does not contain the `bar` file:
+
+```bash
+git checkout main
+git stash pop
+```
+
+In this case, Git cannot apply the stash cleanly and prints the following message:
+
+```bash
+CONFLICT (modify/delete): bar deleted in Updated upstream and modified in Stashed changes.  Version Stashed changes of bar left in tree.
+On branch main
+Unmerged paths:
+  (use "git restore --staged <file>..." to unstage)
+  (use "git add/rm <file>..." as appropriate to mark resolution)
+        deleted by us:   bar
+
+no changes added to commit (use "git add" and/or "git commit -a")
+The stash entry is kept in case you need it again.
+```
+
+We are presented with a `(modify/delete)` conflict: on one side the stash has a modified file, and on the other side that file does not exist on `main`, so Git treats it as deleted.
+Git suggests two options:
+- `(use "git restore --staged <file>..." to unstage)` — not relevant here, because we do not have any staged files
+- `(use "git add/rm <file>..." as appropriate to mark resolution)` — this is the one we need. From here we can either run:
+
+```bash
+git add bar
+```
+
+if we want to keep the modified `bar` from the stash,
+or we can run:
+
+```bash
+git rm bar
+```
+
+and then we resolve the conflict in favor of the version from `main`, leaving the repository without a `bar` file.
+
+The message also states at the bottom that no commit was created and that, because of the conflict, the stash entry was not removed.
+
+So `git stash pop` can be applied in a different context—not necessarily on the branch where the stash was created.
+We also need to be ready to deal with conflicts when running `git stash pop` (or `git stash apply`).
+
+This example shows that a stash is not simply a copy of files. Git attempts to merge the stashed changes into the current branch, which is why stash operations can produce merge conflicts.
+
+Keep in mind to read the messages Git prints when you run a command, or when you run `git status`.
+Reading those messages and understanding them is one of the differences between a Git beginner and a Git expert.
+
+## Stash is doing a merge
+
+We figured out from the previous example that `git stash pop` behaves a lot like a merge and can produce merge conflicts.
+In the previous example, it was a fairly simple conflict where we had to choose whether we want the file to exist or be deleted.
+In other cases, it might not be that simple.
+
+As we mentioned, we use stash when we have an interrupt. A more common case is to work on a branch, get interrupted, switch to a different branch and fix something
+—which might advance `main` (or another developer might have advanced `main` in the meantime)—then go back to your branch, grab the latest `main`, rebase your branch on top of `main`,
+and run `git stash pop`, only to find that after taking the latest changes from `main` you suddenly have conflicts with your stash.
+
+Since this is the conflict you will encounter most often, it is worth practicing it.
+
+Currently on the `main` branch we have the `foo` file, which contains the text `hello world`.
+We will create a new branch, add some text to `foo`, and stash our changes.
+In the meantime, `main` will move forward: we will add a commit to `main` that adds text to `foo`, then return to our branch and rebase
+it so it is up to date with the latest changes.
+We will then pop from our stash and encounter conflicts.
+From that conflicted state, we will walk through the steps to resolve them.
+
+From `main`, let's create a new branch and switch to it:
+
+```bash
+git checkout -b conflict-on-foo
+```
+
+Let's add some changes to the `foo` file and stash them:
+
+```bash
+echo "changes from the branch conflict-on-foo" >> foo
+git stash
+```
+
+Now let's go back to `main` and add a commit with changes to `foo` as well. This simulates `main` having progressed.
+In real life, when working with other developers, someone might have pushed changes to the remote repository. In that case, you can
+update your local `main` from the remote upstream `main` without leaving your current branch by running:
+
+```bash
+git fetch origin main:main
+```
+
+In this lesson we are simplifying things, and there is no remote upstream.
+We will manually switch to `main` and add a commit that changes the `foo` file.
+
+```bash
+git checkout main
+echo "changes from the main branch" >> foo
+git commit -am "changes to foo"
+```
+
+We added a commit to `main` with changes at the end of the `foo` file.
+(`git commit -a` stages all changed tracked files before committing.)
+
+Now let's go back to our branch. Our branch does not yet contain the latest changes from `main`.
+What we can do is [`rebase`](https://git-scm.com/docs/git-rebase) our branch on top of `main` to pick up those changes.
+
+```bash
+git checkout conflict-on-foo
+git rebase main
+```
+
+This should place our branch `conflict-on-foo` on the latest `main`, which means you should see the changes we added to `foo`:
+
+```bash
+cat foo
+```
+
+You should see:
+
+```
+hello world
+changes from the main branch
+```
+
+From this state, let's try to `stash pop` our changes:
+
+```bash
+git stash pop
+```
+
+We see the following result:
+
+```
+Auto-merging foo
+CONFLICT (content): Merge conflict in foo
+Recorded preimage for 'foo'
+On branch conflict-on-foo
+Unmerged paths:
+  (use "git restore --staged <file>..." to unstage)
+  (use "git add <file>..." to mark resolution)
+        both modified:   foo
+
+no changes added to commit (use "git add" and/or "git commit -a")
+The stash entry is kept in case you need it again.
+```
+
+We now have a conflict on the `foo` file. If we print the contents of `foo`, we will see:
+
+```
+hello world
+<<<<<<< Updated upstream
+changes from the main branch
+=======
+changes from the branch conflict-on-foo
+>>>>>>> Stashed changes
+```
+
+At the top, **Updated upstream** is the current version on your branch (what came from `main` after the rebase). Below that, **Stashed changes** is what was saved in the stash.
+
+After you decide how `foo` should look, you can stage the file by running `git add foo`.
+You can also go back to the state before you ran `git stash pop` (the stash entry still exists, so you will not lose anything—you can run `git stash pop` again later).
+We can restore `foo` to before the pop using [`git restore`](https://git-scm.com/docs/git-restore):
+
+```bash
+git restore --worktree --source=HEAD --staged foo
+```
+
+This restores the `foo` file in the working tree from `HEAD`—the commit at the tip of your branch, before the failed pop.
+
+Instead of running `git restore`, we will resolve the conflict by making `foo` include both changes:
+
+```
+hello world
+changes from the main branch
+changes from the branch conflict-on-foo
+```
+
+Our conflict is resolved. We can now commit the fixed file:
+
+```bash
+git commit -am "fixed conflicts on foo"
+```
+
+For more complicated conflicts, you can use [`git mergetool`](https://git-scm.com/docs/git-mergetool), but that is a topic for another lesson.
+
+## Summary
+
+`git stash` saves your local changes—the working directory and index—and resets your branch to a clean state at `HEAD`, without creating a commit. It is the tool you reach for when an interrupt forces you to context-switch: fix something on another branch, pull upstream changes, or handle urgent work, then come back and continue where you left off.
+
+In this lesson we covered the full stash workflow:
+
+- **Stashing and restoring** — `git stash` (same as `git stash push`), `git stash pop`, and `git stash apply`. `pop` applies and removes the entry; `apply` leaves it in the list. Use `git stash drop` to remove an entry without applying it.
+- **Untracked files** — plain `git stash` ignores untracked files; use `git stash -u` when you need those included.
+- **Multiple entries** — the stash is a stack, not a single slot. List with `git stash list`, inspect with `git stash show -p`, and name entries with `git stash push -m "message"`.
+- **Built-in defaults** — Git commands are layered (command → subcommand → arguments → flags). Many arguments have defaults, such as `stash@{0}` for the latest entry.
+- **What a stash actually is** — each entry is a commit object. With `git cat-file` we saw how parents record `HEAD`, the index, and (with `-u`) untracked files. Use `git stash pop --index` when you need the staged state restored too.
+- **Conflicts** — `git stash pop` merges stashed changes into your current branch, so it can conflict. That can happen on a different branch than where you stashed, or after rebasing onto an updated `main`. Read Git's output, resolve conflicts (or undo with `git restore`), stage the result, and commit when you are ready. On failure, the stash entry is kept.
+
+For longer interruptions, consider [`git worktree`](https://git-scm.com/docs/git-worktree) instead of stacking stashes. For everyday interrupts, `git stash` and `git stash pop` are enough—but knowing the rest helps you use stash confidently when things get messy.
