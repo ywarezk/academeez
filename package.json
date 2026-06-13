@@ -98,7 +98,7 @@
     "overrides": {
       "lodash": "4.18.1",
       "lodash-es": "4.18.1",
-      "@astrojs/vercel>esbuild": "0.25.0",
+      "esbuild": "0.28.1",
       "mdast-util-to-hast": "13.2.1",
       "@mapbox/node-pre-gyp>tar": "7.5.11",
       "@iconify/tools>tar": "7.5.11",
