@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
+import tailwindcss from '@tailwindcss/vite';
 import { mermaid } from './src/plugins/mermaid';
 import vercel from '@astrojs/vercel';
 import icon from 'astro-icon';
@@ -16,7 +16,11 @@ export default defineConfig({
 		build: {
 			sourcemap: isPreview || process.env.NODE_ENV === 'development',
 		},
+		resolve: {
+			tsconfigPaths: true,
+		},
 		plugins: [
+			tailwindcss(),
 			...(isPreview
 				? [
 						istanbul({
@@ -219,10 +223,7 @@ export default defineConfig({
 					label: 'Follow us on YouTube',
 				},
 			],
-			customCss: ['./src/styles/brand.css', './src/styles/tailwind.css'],
-		}),
-		tailwind({
-			applyBaseStyles: false,
+			customCss: ['./src/styles/tailwind.css', './src/styles/brand.css'],
 		}),
 		icon(),
 		sitemapCopier(),
