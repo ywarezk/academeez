@@ -1,0 +1,200 @@
+---
+title: Terragrunt Stack
+description: A Stack is a logical group of infrastructure. Use a terragrunt.stack.hcl file as a blueprint to generate the Terragrunt units that make up the group.
+publishDate: 2025-06-18
+authors:
+  - yariv-katz
+sidebar:
+  order: 9
+sources:
+  - url: "https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-09-temp"
+    title: "Environment stack - terragrunt.stack.hcl"
+---
+
+In the [previous lesson](/courses/terraform/unit) we learned about [Terragrunt Units](https://terragrunt.gruntwork.io/docs/features/units/).
+
+A unit represents a single instance of infrastructure.
+It is usually small and reusable — something like a VPC, database, etc.
+
+[A stack](https://terragrunt.gruntwork.io/docs/features/stacks/) allows us to group units together and form a reusable, logical group of infrastructure.
+
+Let's take environments as an example. Software projects usually require more than one environment. We typically have a `prod` environment for the end product, and we might also have an additional environment like `dev` or `staging` for developers.
+
+These environments usually share very similar infrastructure, and we might want to create a stack so we can create environments without duplicating code — and easily add more environments in the future with minimal DRY violations and minimal duplication of files.
+
+## Environments and implicit/explicit stacks
+
+We will take the environments example a step further and we will implement and environment stack that can be easily executed to create a boilerplate of units that construct and environment.
+But before we do that let's do some planning.
+Just for demonstration let's say each of our environment contains the following units: GCP Folder, GCP Project, VPC, Database, K8S
+
+In that case our folder structure might look like this:
+
+```text title="Folder structure"
+iac/
+└── live/
+    └── envs/
+        ├── prod/
+        │   ├── folder/
+        │   │   └── terragrunt.hcl
+        │   ├── project/
+        │   │   └── terragrunt.hcl
+        │   ├── vpc/
+        │   │   └── terragrunt.hcl
+        │   ├── database/
+        │   │   └── terragrunt.hcl
+        │   └── k8s/
+        │       └── terragrunt.hcl
+        └── non-prod/
+            ├── folder/
+            │   └── terragrunt.hcl
+            ├── project/
+            │   └── terragrunt.hcl
+            ├── vpc/
+            │   └── terragrunt.hcl
+            ├── database/
+            │   └── terragrunt.hcl
+            └── k8s/
+                └── terragrunt.hcl
+```
+
+Seems like a lot of duplication right?
+so although each unit folder is using a reusable catalog unit there is still a lot of duplication here:
+- we duplicate folders
+- we duplicate `terragrunt.hcl` file
+- in the `terragrunt.hcl` we will probably duplicate an include for root
+
+```
+include "root" {
+  path = find_in_parent_folders("root.hcl")
+}
+```
+
+And in general there is a lot of folders and file noise which could make a developer get lost.
+
+### Implicit stack
+
+The folder structure that we just described is basically using what we currently know about a terragrunt project.
+So that was the older way of creating repeatable logical group like environment.
+We call this way: Implicit Stack (place a link to the docs).
+Now the old way is not necesarily a bad way, although it is bad in this example, in many cases we dont have such a repeating structure and
+the folders we have a repeating just once, and in that case using the old way is not that bad, and might not be so bad in terms of dry violation.
+In some cases the old way of implicit stack could even be clearer and easier to debug, and less chaining in terms of what you can place in each `terragrunt.hcl` file.
+The problem starts when the logical group is repeating like in our environments case.
+- alot of files and folders
+- no reusability
+- a lot of repeating code in the files
+- harder api and harder to use that api, it's not exactly like calling a function and passing params for the environment. its a bit more harder than that and harder to understand.
+
+This is why Terragrunt introduced the explicit stack (place a link here)
+
+### Explicit stack
+
+Instead of creating those nested folders with many `terragrunt.hcl` files, explicit stacks allows you to create a single file `terragrunt.stack.hcl` the contains instructions how to create that folder structure.
+So the same elaborate folder structure can simply transform to the following:
+
+```text title="Folder structure"
+iac/
+└── live/
+    └── envs/
+        └── terragrunt.stack.hcl
+```
+
+The `terragrunt.stack.hcl` contains instructions how to generate our environments folder structure.
+Seems a bit cleaner than duplicating the folder structure with every environment.
+
+## But where are the files/folders?
+
+if the `terragrunt.stack.hcl` replaced all the folders we had to create for each environment, where are those folders now?
+In order for the folder structure to appear we have to cd to the directory that contains the `terragrunt.stack.hcl` file and run the command:
+
+```bash
+terragrunt stack generate
+```
+
+After running the command a new folder structure will appear:
+
+```text title="Generated folder structure"
+iac/
+└── live/
+    └── envs/
+        ├── terragrunt.stack.hcl
+        └── .terragrunt-stack/
+            ├── prod/
+            │   ├── folder/
+            │   │   └── terragrunt.hcl
+            │   ├── project/
+            │   │   └── terragrunt.hcl
+            │   ├── vpc/
+            │   │   └── terragrunt.hcl
+            │   ├── database/
+            │   │   └── terragrunt.hcl
+            │   └── k8s/
+            │       └── terragrunt.hcl
+            └── non-prod/
+                ├── folder/
+                │   └── terragrunt.hcl
+                ├── project/
+                │   └── terragrunt.hcl
+                ├── vpc/
+                │   └── terragrunt.hcl
+                ├── database/
+                │   └── terragrunt.hcl
+                └── k8s/
+                    └── terragrunt.hcl
+```
+t
+:::caution
+Terragrunt Stacks were introduced after version `0.78.0`. In that version, the options were limited, and some of the stack features we use in this lesson were only introduced in versions greater than `v1.1.0-rc1`. Make sure you are working with a version greater than that.
+:::
+
+You might be thinking, so what's the point the same folder structure is created only not by us.
+Well the thing is that you place the generated folder structure under `.gitignore` and they will not be commited.
+To create all the environments we can then cd to the `iac/live/envs` folder and run:
+
+```bash
+terragrunt stack run apply
+```
+
+## Catalog and live
+
+Terragrunt pro
+
+## Which blocks we can use in `terragrunt.stack.hcl`
+
+When we are writing terragrunt configurations, we are using a configuration syntax called HCL (provide a link: https://github.com/hashicorp/hcl/blob/main/hclsyntax/spec.md)
+HCL is a human readable configuration language that Hashicorp defined, it is just a general syntax of how the language looks like, which means it might explain how
+a block or attribute is written but it will not define the block or attribute that a certain project has.
+For example it might define a block, but it will not define a resource block which is something that terraform defined.
+So terraform is using HCL so it knows how a general block looks like and then terraform defines a resource block to use in terraform files.
+The same resource block that terraform defined cannot be used in terragrunt configuration file.
+So terragrunt defines which blocks are supported in their configuration (supply a link to: https://docs.terragrunt.com/reference/hcl/blocks/)
+and those blocks can be used in a `terragrunt.hcl` file, or with an `<some-file>.hcl` that we refrence with the `include` block (place a link to the include block in the docs).
+
+Terragrunt HCL stack file (`terragrunt.stack.hcl`) has different rules regarding which blocks are supported.
+For example if you try to use a dependency block (place a link) in your `terragrunt.stack.hcl` you would probably see this error
+when running `terragrunt stack generate`:
+
+```text
+ERROR  Error: Unsupported block type
+ERROR    on iac/live/envs/terragrunt.stack.hcl line 14, in dependency "hello":
+ERROR    14: dependency "hello" {
+ERROR  Blocks of type "dependency" are not expected here.
+ERROR  Error: Unknown variable
+ERROR    on iac/live/envs/terragrunt.stack.hcl line 23, in stack "non-prod":
+ERROR    23:     name = dependency.hello.outputs.id
+ERROR  There is no variable named "dependency".
+INFO   TIP (debugging-docs): For help troubleshooting errors, visit https://docs.terragrunt.com/troubleshooting/debugging
+ERROR  failed to read stack file iac/live/envs/terragrunt.stack.hcl:14,1-11: Unsupported block type; Blocks of type "dependency" are not expected here., and 1 other diagnostic(s)
+```
+
+The blocks that you can use in a `terragrunt.stack.hcl` file are the locals, unit, stack blocks (place links)
+We are already familiar with locals and we used it before to create constants that are used throughout the file. Now let's go over the 2 new blocks that you can use with your HCL stack file.
+
+### unit block
+
+We learned about what is a unit in the previous example it is a small deployable entity in terragrunt, it is placed in a folder with a `terragrunt.hcl` file
+which contain a small infrastructure, could be a vpc, db, etc.
+In a stack we use the unit block to group together all the units that are included in this stack, and will be deployed as part of the stack.
+
+ 
