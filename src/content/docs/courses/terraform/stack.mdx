@@ -1,0 +1,1184 @@
+---
+title: Terragrunt Stack
+description: A Stack is a logical group of infrastructure. Use a terragrunt.stack.hcl file as a blueprint to generate the Terragrunt units that make up the group.
+publishDate: 2025-06-18
+authors:
+  - yariv-katz
+sidebar:
+  order: 9
+sources:
+  - url: "https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-09-temp"
+    title: "Environment stack - terragrunt.stack.hcl"
+---
+
+In the [previous lesson](/courses/terraform/unit) we learned about [Terragrunt Units](https://terragrunt.gruntwork.io/docs/features/units/).
+
+A unit represents a single instance of infrastructure.
+It is usually small and reusable — something like a VPC, a database, etc.
+
+[A stack](https://terragrunt.gruntwork.io/docs/features/stacks/) allows us to group units together and form a reusable, logical group of infrastructure.
+
+Let's take environments as an example. Software projects usually require more than one environment. We typically have a `prod` environment for the end product, and we might also have an additional environment like `dev` or `staging` for developers.
+
+These environments usually share very similar infrastructure, and we might want to create a stack so we can create environments without duplicating code — and easily add more environments in the future with minimal DRY violations and minimal duplication of files.
+
+## Environments and implicit/explicit stacks
+
+To understand Terragrunt stacks, we will take the environment example as our goal —
+creating an easy-to-use stack that we can call to create `prod`, `dev`, and `staging` environments.
+
+Each of our environments will contain a GCP folder, project, VPC, database, and Kubernetes cluster,
+but to keep things simple in this lesson, an environment will only consist of a GCP folder and a project.
+We will add the rest in future lessons.
+
+We will take the environments example a step further and implement an environment stack
+that can be easily executed to create a boilerplate of units that construct an environment.
+But before we do that, let's do some planning.
+
+For demonstration, let's say each of our environments contains the following units:
+GCP Folder, GCP Project, VPC, Database, and K8S.
+
+In that case our folder structure might look like this:
+
+```text title="Folder structure"
+iac/
+└── live/
+    └── envs/
+        ├── prod/
+        │   ├── folder/
+        │   │   └── terragrunt.hcl
+        │   ├── project/
+        │   │   └── terragrunt.hcl
+        │   ├── vpc/
+        │   │   └── terragrunt.hcl
+        │   ├── database/
+        │   │   └── terragrunt.hcl
+        │   └── k8s/
+        │       └── terragrunt.hcl
+        └── non-prod/
+            ├── folder/
+            │   └── terragrunt.hcl
+            ├── project/
+            │   └── terragrunt.hcl
+            ├── vpc/
+            │   └── terragrunt.hcl
+            ├── database/
+            │   └── terragrunt.hcl
+            └── k8s/
+                └── terragrunt.hcl
+```
+
+Seems like a lot of duplication, right?
+So although each unit folder uses a reusable catalog unit, there is still a lot of duplication here:
+- we duplicate folders
+- we duplicate `terragrunt.hcl` files
+- in each `terragrunt.hcl` we will probably duplicate the root `include` block
+
+```
+include "root" {
+  path = find_in_parent_folders("root.hcl")
+}
+```
+
+And in general, there is a lot of folder and file noise that could make it easy for a developer to get lost.
+
+### Implicit stack
+
+The folder structure that we just described is basically how we currently structure a Terragrunt project.
+So that was the older way of creating a repeatable logical group, like an environment.
+We call this way an [Implicit Stack](https://docs.terragrunt.com/features/stacks/implicit/).
+
+Now, the old way is not necessarily a bad way. Although it is bad in this example, in many cases we do not have such a repeating structure —
+the folders repeat just once — and in that case using the old way is not that bad, and is probably not a DRY violation at all.
+In some cases, the old way of an implicit stack could even be clearer and easier to debug — each unit's `terragrunt.hcl` is less constrained, because a `terragrunt.stack.hcl` file only supports a limited set of blocks.
+
+The problem starts when the logical group repeats, like in our environments case:
+- a lot of files and folders
+- no reusability
+- a lot of repeating code in the files
+- a harder API for adding a new environment — it is not like calling a function and passing values, as you can with an explicit stack; instead you have to duplicate a lot of files and folders
+
+This is why Terragrunt introduced the [Explicit Stack](https://docs.terragrunt.com/features/stacks/explicit/).
+
+### Explicit stack
+
+Instead of creating those nested folders with many `terragrunt.hcl` files, explicit stacks allow you to create a single file `terragrunt.stack.hcl` that contains instructions on how to create that folder structure.
+So the same elaborate folder structure can simply transform into the following:
+
+```text title="Folder structure"
+iac/
+└── live/
+    └── envs/
+        └── terragrunt.stack.hcl
+```
+
+The `terragrunt.stack.hcl` contains instructions on how to generate our environments folder structure.
+It seems a bit cleaner than duplicating the folder structure for every environment.
+
+## But where are the files/folders?
+
+If the `terragrunt.stack.hcl` replaced all the folders we had to create for each environment, where are those folders now?
+In order for the folder structure to appear, we have to cd to the directory that contains the `terragrunt.stack.hcl` file and run the command:
+
+```bash
+terragrunt stack generate
+```
+
+After running the command, a new folder structure will appear:
+
+```text title="Generated folder structure"
+iac/
+└── live/
+    └── envs/
+        ├── terragrunt.stack.hcl
+        └── .terragrunt-stack/
+            ├── prod/
+            │   ├── folder/
+            │   │   └── terragrunt.hcl
+            │   ├── project/
+            │   │   └── terragrunt.hcl
+            │   ├── vpc/
+            │   │   └── terragrunt.hcl
+            │   ├── database/
+            │   │   └── terragrunt.hcl
+            │   └── k8s/
+            │       └── terragrunt.hcl
+            └── non-prod/
+                ├── folder/
+                │   └── terragrunt.hcl
+                ├── project/
+                │   └── terragrunt.hcl
+                ├── vpc/
+                │   └── terragrunt.hcl
+                ├── database/
+                │   └── terragrunt.hcl
+                └── k8s/
+                    └── terragrunt.hcl
+```
+
+:::caution
+Terragrunt stacks were introduced in version **`0.78.0`**. In that version, the options were limited, and some of the stack features we use in this lesson were only introduced in versions greater than **`v1.1.0-rc1`**. Make sure you are working with a version greater than that.
+:::
+
+You might be thinking: what's the point — the same folder structure is still created, only not by us.
+Well, the thing is that you add the generated folder structure to `.gitignore`, so it will not be committed.
+To create all the environments, we can then cd to the `iac/live/envs` folder and run:
+
+```bash
+terragrunt stack run apply
+```
+
+## Catalog and live
+
+Terragrunt provides example repositories at the following links:
+- Catalog - https://github.com/gruntwork-io/terragrunt-infrastructure-catalog-example
+- Live - https://github.com/gruntwork-io/terragrunt-infrastructure-live-stacks-example
+
+It's important to note the pattern used here and the separation between catalog and live.
+
+`terragrunt-infrastructure-catalog-example` does not represent infrastructure,
+but rather reusable units, stacks, and modules that can be used
+in other repositories to create infrastructure.
+Think of them like reusable functions that you can call to create
+repeating parts of infrastructure. You can import those functions
+into different Infrastructure as Code projects and create
+instances of infrastructure.
+The idea here is that you build one catalog for multiple infrastructure projects.
+So if we have a single catalog for many infrastructure projects, won't it be harder to update
+the catalog without breaking a project?
+For more stability, when using the catalog you will usually want
+to create tags in the catalog, and when using something from the catalog
+you would usually want to pin it to a certain tag. This way,
+even when the catalog updates, each project is still using some older
+version of that catalog.
+So updating the catalog is quite safe.
+
+```hcl
+unit "lambda_service" {  
+  source = "github.com/gruntwork-io/terragrunt-infrastructure-catalog-example//units/js-lambda-stateful-service?ref=v0.1.0"
+  ...
+}
+```
+
+This example shows how a live repository that represents the infrastructure
+of a project calls a unit in a catalog (our repeatable infrastructure functions).
+Notice how it calls the unit while pinning the catalog to a certain version
+by using `?ref=...` — that ref points to a certain tag in the
+catalog repository, which means that even if the catalog updates,
+we still use the same version.
+
+One of the goals of this course is to create a reusable GCP catalog
+so developers can keep using the same catalog in their own projects.
+The course repository itself follows that pattern — it represents a catalog
+that you can later reference from your own live repositories.
+
+## Which blocks we can use in `terragrunt.stack.hcl`
+
+When we are writing Terragrunt configurations, we use a configuration syntax called [HCL](https://github.com/hashicorp/hcl/blob/main/hclsyntax/spec.md).
+HCL is a human-readable configuration language that HashiCorp defined. It is a general syntax for how the language looks, which means it might explain how
+a block or attribute is written, but it will not define the blocks or attributes that a certain project supports.
+For example, HCL might define what a block looks like, but it will not define a `resource` block — that is something Terraform defined.
+Terraform uses HCL so it knows how a general block looks, and then Terraform defines the `resource` block for use in Terraform files.
+The same `resource` block that Terraform defined cannot be used in a Terragrunt configuration file.
+Terragrunt defines which blocks are supported in its configuration ([see the docs](https://docs.terragrunt.com/reference/hcl/blocks/)),
+and those blocks can be used in a `terragrunt.hcl` file, or in a `<some-file>.hcl` that we reference with the [`include` block](https://docs.terragrunt.com/reference/hcl/blocks/#include).
+
+A Terragrunt HCL stack file (`terragrunt.stack.hcl`) has different rules about which blocks are supported. If you are using a Terragrunt block in a `terragrunt.hcl` file, it does not mean you can use the same block in `terragrunt.stack.hcl`.
+For example, if you try to use a [`dependency` block](https://docs.terragrunt.com/reference/hcl/blocks/#dependency) in your `terragrunt.stack.hcl`, you would probably see this error
+when running `terragrunt stack generate`:
+
+```text
+ERROR  Error: Unsupported block type
+ERROR    on iac/live/envs/terragrunt.stack.hcl line 14, in dependency "hello":
+ERROR    14: dependency "hello" {
+ERROR  Blocks of type "dependency" are not expected here.
+ERROR  Error: Unknown variable
+ERROR    on iac/live/envs/terragrunt.stack.hcl line 23, in stack "non-prod":
+ERROR    23:     name = dependency.hello.outputs.id
+ERROR  There is no variable named "dependency".
+INFO   TIP (debugging-docs): For help troubleshooting errors, visit https://docs.terragrunt.com/troubleshooting/debugging
+ERROR  failed to read stack file iac/live/envs/terragrunt.stack.hcl:14,1-11: Unsupported block type; Blocks of type "dependency" are not expected here., and 1 other diagnostic(s)
+```
+
+The blocks that you can use in a `terragrunt.stack.hcl` file are [`locals`](https://docs.terragrunt.com/reference/hcl/blocks/#locals), [`unit`](https://docs.terragrunt.com/reference/hcl/blocks/#unit), and [`stack`](https://docs.terragrunt.com/reference/hcl/blocks/#stack).
+We are already familiar with `locals` and have used it before to create constants used throughout the file. Now let's go over the two new blocks you can use in your HCL stack file.
+
+### unit block
+
+We learned about what a unit is in the previous example. It is a small deployable entity in Terragrunt, placed in a folder with a `terragrunt.hcl` file
+that contains a small piece of infrastructure — a VPC, a database, etc.
+A stack contains a logical group of infrastructure, so it can contain
+multiple units that form that logical group.
+So in a `terragrunt.stack.hcl` file, we can place a `unit` block
+for every infrastructure piece that the stack is going to create.
+For example, let's say we want to create a stack that creates a database, a VPC, and a Kubernetes cluster;
+that stack might look like this:
+
+```hcl title="terragrunt.stack.hcl"
+unit "db" {
+  source = "..."
+  path   = "db"
+  values = {
+    ...
+  }
+}
+
+unit "vpc" {
+  source = "..."
+  path   = "vpc"
+}
+
+unit "k8s" {
+  source = "..."
+  path   = "k8s"
+  values = {
+    ...
+  }
+}
+```
+
+Based on this example, let's go over the attributes that we need to place
+in the `unit` block...
+
+#### source
+
+The `source` attribute points to the unit template — either locally in your repository or in a remote catalog repository.
+It contains the actual infrastructure logic that will run.
+When you run `terragrunt stack generate`, Terragrunt copies the unit from `source` into the generated folder.
+When pointing to a remote catalog, you will usually pin it to a certain tag
+using `?ref=***`.
+The `source` is a required attribute.
+
+#### path
+
+`path` is also required. Based on `path`, Terragrunt generates a folder
+with the files it will create.
+One of those files is the `terragrunt.hcl` copied from the `source` attribute, placed in that folder.
+You can think of the `unit` block inside a `terragrunt.stack.hcl` file
+as a recipe for Terragrunt to generate files inside a folder —
+that folder is the value you place in `path`.
+
+#### values
+
+In a reusable catalog unit, the author of that unit can use a Terragrunt
+variable called `values.<some-value>`.
+This basically allows them to turn the unit into a function
+that accepts arguments to generate the infrastructure.
+Some of those values might be required and some might be optional.
+The `values` attribute is a map that becomes available
+in the unit's `terragrunt.hcl` file through the `values.*` variable.
+
+The `terragrunt.stack.hcl` provides a recipe for Terragrunt
+on how to generate a folder structure with Terragrunt files.
+After creating the file above, we can cd to the folder where
+the `terragrunt.stack.hcl` file is located and tell Terragrunt to generate
+the files from that recipe by running:
+
+```bash
+terragrunt stack generate
+```
+
+Notice that this command only creates files — it does not
+create any infrastructure.
+Running this command generates the `.terragrunt-stack` folder next to
+the `terragrunt.stack.hcl` file. Inside it, Terragrunt creates
+other folders and files based on the `unit` and `stack` blocks
+defined in the `terragrunt.stack.hcl` file.
+In this example, it will create the following:
+
+```text title="Generated folder structure"
+├── terragrunt.stack.hcl
+└── .terragrunt-stack/
+    ├── db/
+    │   ├── terragrunt.hcl
+    │   └── terragrunt.values.hcl
+    ├── vpc/
+    │   └── terragrunt.hcl
+    └── k8s/
+        ├── terragrunt.hcl
+        └── terragrunt.values.hcl
+```
+
+So the `terragrunt.stack.hcl` is a recipe for generating folders and
+files, and the `unit` block is a block in that recipe that instructs
+Terragrunt to create a folder with certain files in it.
+Let's go over the files that are generated.
+
+#### Generated terragrunt.hcl
+
+In our `terragrunt.stack.hcl` example, we had:
+
+```hcl title="terragrunt.stack.hcl"
+...
+
+unit "vpc" {
+  source = "..."
+  path   = "vpc"
+}
+
+...
+```
+
+As a result, `terragrunt stack generate` created `.terragrunt-stack/vpc/terragrunt.hcl`.
+
+Viewing that file, it will probably look familiar...
+According to the `source` you provided in the `unit` block, Terragrunt
+copies the unit's `terragrunt.hcl` file and places it in the folder.
+So the "generated" `terragrunt.hcl` file is not really generated —
+it is more like downloaded from `source` (if it is in a remote location)
+or copied from a local folder, and placed in the generated folder.
+
+#### Generated `terragrunt.values.hcl`
+
+This is also quite simple.
+This generated file contains the key-value pairs from the `values` attribute.
+So, let's say our `terragrunt.stack.hcl` file contains the following:
+
+```hcl title="terragrunt.stack.hcl"
+unit "db" {
+  source = "..."
+  path   = "db"
+  values = {
+    name = "hello-world"
+  }
+}
+```
+
+The `terragrunt stack generate` command generates a `db` folder
+with a `terragrunt.hcl` and a `terragrunt.values.hcl` inside.
+The `terragrunt.values.hcl` file will contain:
+
+```hcl title="terragrunt.values.hcl"
+name = "hello-world"
+```
+
+So the `values` attribute simply maps what you place in the map to a new
+file, `terragrunt.values.hcl`.
+It's a bit confusing, so let's emphasize something: `values` are not `inputs`.
+The values do not map to inputs required by the unit — we use `autoinclude` for that (discussed later).
+The values map to a variable called `values.*` that the unit author can use in the unit's `terragrunt.hcl` file.
+
+#### autoinclude block
+
+There is another important block that will generate another file for us.
+We have already seen that the `unit` block with the `source` attribute generates
+a `terragrunt.hcl` file (copied from `source`).
+We also saw that the `values` attribute generates a `terragrunt.values.hcl` file
+with a copy of the `values` attribute.
+The `autoinclude` block is nested inside the `unit` block and
+generates a `terragrunt.autoinclude.hcl` file.
+That file is merged with the `terragrunt.hcl` file at parse time.
+In the `autoinclude` block, we can also use at generation time
+`unit.<unit-name>.<attribute>` or `stack.<stack-name>.<stack-attribute>`.
+This allows us to use `dependency` in the `autoinclude` block to connect
+different units and stacks in our stack.
+
+Since it's very important to understand how we form a connection
+between our units in a stack using `autoinclude` and `dependency`,
+let's see an example.
+Our goal for this lesson is to create a stack that creates an environment like
+`dev`, `prod`, etc.
+Each environment will be placed inside its own [GCP folder](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_folder) and [GCP project](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project).
+So our stack needs to generate a folder unit and a project unit.
+Now those two are connected because the project should wait until the folder is created, then take the ID of the folder
+that was just created and pass that ID into the project creation inputs so the project is nested under the folder.
+To achieve that, the project unit needs a `dependency` block pointing to the folder unit.
+Let's try to understand what this kind of stack might look like.
+
+To create our stack, we will use our course folder and project units.
+They rely on:
+- [`terraform-google-modules/folders/google`](https://registry.terraform.io/modules/terraform-google-modules/folders/google/latest) — for creating our folder
+- [`terraform-google-modules/project-factory/google`](https://registry.terraform.io/modules/terraform-google-modules/project-factory/google/latest) — for creating our project.
+
+You can view those units in our course repository:
+- [Project unit](https://github.com/ywarezk/academeez-k8s-flux/tree/main/iac/gcp/catalog/units/project)
+- [Folder unit](https://github.com/ywarezk/academeez-k8s-flux/tree/main/iac/gcp/catalog/units/folder)
+
+The folder unit accepts in `values` a `names` array of the folders to create
+and a `parent`, which is the ID of the parent folder or organization.
+
+The project unit accepts as input `folder_id` (under which folder to place the project),
+`billing_account` (which enables billing for the project),
+and `name` (the name of the project).
+Of these inputs, `folder_id` is the one we want to focus on here — it should be set to the ID of the folder we just created.
+
+Based on those units, our stack might look like the following:
+
+```hcl title="terragrunt.stack.hcl"
+
+// create a unit that will generate a folder
+unit "folder" {
+  source = "${get_repo_root()}/iac/catalog/units/folder"
+  path   = "folder"
+  
+  values = {
+    names  = ["non-prod"]
+    parent = "folders/111111"
+  }
+}
+
+// create a project under the folder we created
+unit "project" {
+  source = "${get_repo_root()}/iac/catalog/units/project"
+  path   = "project"
+  
+  autoinclude {
+    dependency "folder" {
+      config_path = unit.folder.path
+      mock_outputs = {
+        id = "folders/fake-value"
+      }
+    }
+    
+    inputs = {
+      folder_id       = dependency.folder.outputs.id
+      name            = "non-prod"
+      billing_account = "XXXXXX-XXXXXX-XXXXXX"
+    }
+  }  
+}
+```
+
+Let's break down what happens here:
+We have two units — one for the folder and one for the project.
+Both of them have a `source` attribute that points to the location
+of the unit.
+Both also have the required `path`, which specifies the name of the folder that will be created,
+so folders called `folder` and `project` will be created.
+Inside the `unit "folder" {}` block we have `values`.
+Those values are accessed in the folder unit as `values.names` and `values.parent`.
+Notice that those values are not inputs — the folder unit takes those values
+and passes them to the `inputs` map.
+Now, let's go over the `autoinclude` in `unit "project" {}`.
+After running `terragrunt stack generate`, we will see that the following folder
+is created from our `unit "project" {}`:
+
+```hcl title=".terragrunt-stack/project/terragrunt.hcl"
+// The project unit terragrunt.hcl will be copied here
+...
+
+terraform {
+  source = "tfr:///terraform-google-modules/project-factory/google?version=18.3.0"
+}
+
+...
+```
+
+```hcl title=".terragrunt-stack/project/terragrunt.autoinclude.hcl"
+// The autoinclude block will be copied to a new file
+
+dependency "folder" {
+  config_path = "../folder"
+  mock_outputs = {
+    id = "folders/fake-value"
+  }
+}
+
+inputs = {
+  folder_id       = dependency.folder.outputs.id
+  name            = "non-prod"
+  billing_account = "XXXXXX-XXXXXX-XXXXXX"
+}
+```
+
+So from the `autoinclude` block, a `terragrunt.autoinclude.hcl` file is created,
+which looks pretty similar to what we inserted in the `autoinclude` block.
+There are some differences in the variables available during the Terragrunt stack generate phase.
+For example, inside the `autoinclude` block we can use `unit.<unit-name>.*` or `stack.<stack-name>.*`,
+and when the stack is generated that value is replaced (in our example, with `../folder`).
+Now, when we run `terragrunt stack run plan`, Terragrunt will first run the
+generated `terragrunt.hcl` for the folder — that is, `.terragrunt-stack/folder/terragrunt.hcl` —
+and then run the `terragrunt.hcl` for the project, that is, `.terragrunt-stack/project/terragrunt.hcl`.
+Terragrunt is smart enough to know the right order: it needs to run the folder
+first, and because the project depends on the folder, it can run the project only after the folder completes.
+When running the `terragrunt.hcl` in the stack-generated project folder,
+Terragrunt includes the generated `terragrunt.autoinclude.hcl` file
+inside the `terragrunt.hcl`. This is similar to adding
+an `include` block inside the project's `terragrunt.hcl` that points to `terragrunt.autoinclude.hcl`.
+This allows us to place dependencies on other units or additional
+Terragrunt configurations.
+
+Another point to notice in this example is `mock_outputs`, which is crucial
+especially the first time none of the infrastructure has been created yet.
+Terragrunt does not know how to run `terragrunt stack run plan` when
+it cannot calculate the folder ID output; in that case it will simply error out
+and display the following error when you run `terragrunt stack run plan`:
+
+```text
+* resolving dependency "folder" outputs: ***/.terragrunt-stack/folder/terragrunt.hcl is a dependency of ***/.terragrunt-stack/project/terragrunt.hcl but detected no outputs. Either the target module has not been applied yet, or the module has no outputs.
+  
+  If this dependency is accessed before the outputs are ready (which can happen during the planning phase of an unapplied stack), consider using mock_outputs:
+  
+  dependency "folder" {
+      config_path = "../folder"
+  
+      mock_outputs = {
+          folder_output = "mock-folder-output"
+      }
+  }
+  
+  For more info, see:
+  https://docs.terragrunt.com/features/stacks/#unapplied-dependency-and-mock-outputs
+```
+
+### stack block
+
+Now, let's go over the `stack` block — another block we can use inside
+Terragrunt stack files (`terragrunt.stack.hcl`).
+That block is not an instruction to directly generate infrastructure,
+but an instruction to create another nested stack inside our stack.
+Let's try to understand the `stack` block using an example that takes us
+closer to the final goal of this lesson: generating an environment.
+Let's build on the previous example, where we had a stack that generated a folder and a project.
+We will tweak that stack a bit:
+
+```hcl title="catalog/stacks/env/terragrunt.stack.hcl"
+
+// create a unit that will generate a folder
+unit "folder" {
+  source = "${get_repo_root()}/iac/catalog/units/folder"
+  path   = "folder"
+  
+  autoinclude {
+    inputs = {
+      names  = [values.name]
+      parent = values.parent
+    }
+  }
+}
+
+// create a project under the folder we created
+unit "project" {
+  source = "${get_repo_root()}/iac/catalog/units/project"
+  path   = "project"
+  
+  autoinclude {
+    dependency "folder" {
+      config_path = unit.folder.path
+      mock_outputs = {
+        id = "folders/fake-value"
+      }
+    }
+    
+    inputs = {
+      folder_id       = dependency.folder.outputs.id
+      name            = values.name
+      billing_account = values.billing_account
+    }
+  }  
+}
+```
+
+We took the stack we created in the previous example and turned it into
+a catalog for generating an environment.
+An environment contains a folder and a project. It accepts as input
+a name, a billing account, and a parent.
+Notice how I use the `values.*` variable to assign the values I'm passing to different
+areas of the stack.
+So now we can create a stack that uses that catalog stack with the `stack` block.
+For example:
+
+```hcl title="/iac/live/env/terragrunt.stack"
+
+stack "non-prod" {
+  source = "${get_repo_root()}/iac/catalog/stacks/env"
+  path   = "non-prod"
+  values = {
+    name            = "non-prod"
+    parent          = "folders/xxxxxxx"
+    billing_account = "XXXXXX-XXXXXX-XXXXXX"
+  }
+}
+
+stack "prod" {
+  source = "${get_repo_root()}/iac/catalog/stacks/env"
+  path   = "prod"
+  values = {
+    name            = "prod"
+    parent          = "folders/xxxxxxx"
+    billing_account = "XXXXXX-XXXXXX-XXXXXX"
+  }
+}
+```
+
+We are calling our catalog for creating an environment using the
+`stack` block, and we are calling it twice — once for `prod` and once for `non-prod`.
+So it is not directly creating infrastructure resources; our stack
+calls another stack, which uses units to create a folder and a project.
+We can `cd` into the `/iac/live/env` folder and run `terragrunt stack generate`,
+and we will probably see a file structure similar to this:
+
+```text title="Generated folder structure"
+iac/
+├── catalog/
+│   ├── stacks/
+│   │   └── env/
+│   │       └── terragrunt.stack.hcl
+│   └── units/
+│       ├── folder/
+│       │   └── terragrunt.hcl
+│       └── project/
+│           └── terragrunt.hcl
+└── live/
+    └── env/
+        ├── terragrunt.stack.hcl
+        └── .terragrunt-stack/
+            ├── non-prod/
+            │   ├── terragrunt.stack.hcl
+            │   ├── terragrunt.values.hcl
+            │   └── .terragrunt-stack/
+            │       ├── folder/
+            │       │   ├── terragrunt.hcl
+            │       │   └── terragrunt.autoinclude.hcl
+            │       └── project/
+            │           ├── terragrunt.hcl
+            │           └── terragrunt.autoinclude.hcl
+            └── prod/
+                ├── terragrunt.stack.hcl
+                ├── terragrunt.values.hcl
+                └── .terragrunt-stack/
+                    ├── folder/
+                    │   ├── terragrunt.hcl
+                    │   └── terragrunt.autoinclude.hcl
+                    └── project/
+                        ├── terragrunt.hcl
+                        └── terragrunt.autoinclude.hcl
+```
+
+So stacks can be nested, and the `stack` block allows us to use other stacks
+in our stack.
+The course repository also contains units, stacks, and modules
+that form a catalog you can later use in your projects.
+Our `stack` block can have attributes like:
+- `source` — points to a location that contains a stack file
+- `path` — the folder created in `.terragrunt-stack` that holds the stack
+- `values` — creates a `terragrunt.values.hcl` next to the generated stack
+  and passes the values to the stack we are using.
+
+The `stack` block can also have an `autoinclude` block.
+
+#### stack autoinclude
+
+A `stack` block can also have an `autoinclude` block inside it,
+and the idea is somewhat similar to the `autoinclude` block in a `unit`.
+For a unit, a file is generated that holds the content of that `autoinclude`
+block. Something similar happens with the `stack`, only with a different
+file name.
+For a unit, the autoinclude file is automatically included when we parse and apply
+the `terragrunt.hcl` next to the unit's autoinclude file.
+For a stack, it works a bit differently — the autoinclude file is included in the `terragrunt.stack.hcl`
+before that stack is generated.
+The stack autoinclude can change what that stack block will generate, so
+it has to be included at a different time than the unit autoinclude.
+The stack autoinclude must be included in its stack file before
+that stack can be generated.
+The stack autoinclude file is included in a stack file,
+which means the content in that file must be supported during the stack
+generation phase. That means we cannot use blocks like `dependency`,
+which we can use in a `unit` `autoinclude`.
+Basically, we can only use `unit` and `stack` blocks inside that `autoinclude`.
+Which means the main use of `autoinclude` inside a `stack` block is to add another unit or stack to the catalog, or to patch a `unit` or `stack` block
+that is inside the stack we are referencing with the `source` attribute. This lets us override some configuration in that stack.
+But when overriding with this `autoinclude`, we are quite limited: if we use it to override a `unit` or `stack` block
+and in that block add another `autoinclude` (meaning we have `autoinclude` in the stack and another in the `unit`/`stack` we are overriding),
+it will create `terragrunt.autoinclude.stack.hcl` for the first `autoinclude`,
+but it will not create the second `autoinclude` file.
+You can, however, override `source`, `path`, and `values`, so
+if the stack we are calling wants to allow overrides, it will need to support
+them through the `values` attribute.
+
+Let's expand the example we had before and add a log bucket
+to the production environment.
+
+Our stack catalog looked like this:
+
+```hcl title="catalog/stacks/env/terragrunt.stack.hcl"
+
+// create a unit that will generate a folder
+unit "folder" {
+  source = "${get_repo_root()}/iac/catalog/units/folder"
+  path   = "folder"
+  
+  autoinclude {
+    inputs = {
+      names  = [values.name]
+      parent = values.parent
+    }
+  }
+}
+
+// create a project under the folder we created
+unit "project" {
+  source = "${get_repo_root()}/iac/catalog/units/project"
+  path   = "project"
+  
+  autoinclude {
+    dependency "folder" {
+      config_path = unit.folder.path
+      mock_outputs = {
+        id = "folders/fake-value"
+      }
+    }
+    
+    inputs = {
+      folder_id       = dependency.folder.outputs.id
+      name            = values.name
+      billing_account = values.billing_account
+    }
+  }  
+}
+```
+
+It created a folder and a project for our environment.
+Now we are going to use it to generate two environments.
+For production only, we will add an additional `unit` block for generating a bucket.
+
+```hcl title="/iac/live/env/terragrunt.stack"
+
+stack "non-prod" {
+  source = "${get_repo_root()}/iac/catalog/stacks/env"
+  path   = "non-prod"
+  values = {
+    name            = "non-prod"
+    parent          = "folders/xxxxxxx"
+    billing_account = "XXXXXX-XXXXXX-XXXXXX"
+  }
+}
+
+stack "prod" {
+  source = "${get_repo_root()}/iac/catalog/stacks/env"
+  path   = "prod"
+  values = {
+    name            = "prod"
+    parent          = "folders/xxxxxxx"
+    billing_account = "XXXXXX-XXXXXX-XXXXXX"
+  }
+  
+  autoinclude {
+    unit "log_bucket" {
+      source = "${get_repo_root()}/iac/catalog/units/bucket"
+      path = "log_bucket"
+      values = {
+        name = "log_bucket"
+      }
+    }
+  }
+}
+```
+
+Our `autoinclude` is like adding another `unit` block inside our catalog stack.
+That `unit` block's `source` is in our catalog folder, and we are
+passing a `name` value to it.
+That bucket catalog can look like this:
+
+```hcl title="catalog/units/bucket/terragrunt.hcl"
+include "root" {
+  path = find_in_parent_folders("root.hcl")
+}
+
+terraform {
+	source = "tfr:///terraform-google-modules/cloud-storage/google?version=12.1.0"
+}
+
+dependency "project" {
+	config_path = "../project"
+	
+	mock_outputs = {
+		project_id = "project-id"
+	}
+}
+
+inputs = {
+	names = [values.name]
+	project_id = dependency.project.outputs.project_id
+}
+```
+
+Notice that the bucket we added has a dependency
+on the environment's project.
+Ideally, we would create that dependency connection
+using the `unit` block's `autoinclude`, but in this particular
+case we are limited because we cannot nest another
+`autoinclude` inside our bucket unit, which is already added through a stack `autoinclude`.
+That means the dependency will have to live inside
+the unit's `terragrunt.hcl`.
+
+So the `autoinclude` we can use in the `stack` block
+is a bit more limited than the `autoinclude` in the `unit` block.
+In that `autoinclude`, you can basically use only `stack` and `unit` blocks,
+and those cannot have an additional `autoinclude`.
+After this exercise, the following folders and files will be created:
+
+```text title="Generated folder structure"
+iac/
+├── catalog/
+│   ├── stacks/
+│   │   └── env/
+│   │       └── terragrunt.stack.hcl
+│   └── units/
+│       ├── bucket/
+│       │   └── terragrunt.hcl
+│       ├── folder/
+│       │   └── terragrunt.hcl
+│       └── project/
+│           └── terragrunt.hcl
+└── live/
+    └── env/
+        ├── terragrunt.stack.hcl
+        └── .terragrunt-stack/
+            ├── non-prod/
+            │   ├── terragrunt.stack.hcl
+            │   ├── terragrunt.values.hcl
+            │   └── .terragrunt-stack/
+            │       ├── folder/
+            │       │   ├── terragrunt.hcl
+            │       │   └── terragrunt.autoinclude.hcl
+            │       └── project/
+            │           ├── terragrunt.hcl
+            │           └── terragrunt.autoinclude.hcl
+            └── prod/
+                ├── terragrunt.stack.hcl
+                ├── terragrunt.values.hcl
+                ├── terragrunt.autoinclude.stack.hcl
+                └── .terragrunt-stack/
+                    ├── folder/
+                    │   ├── terragrunt.hcl
+                    │   └── terragrunt.autoinclude.hcl
+                    ├── project/
+                    │   ├── terragrunt.hcl
+                    │   └── terragrunt.autoinclude.hcl
+                    └── log_bucket/
+                        ├── terragrunt.hcl
+                        └── terragrunt.values.hcl
+```
+
+Notice that an `autoinclude` inside a `stack` block creates the file `terragrunt.autoinclude.stack.hcl`.
+This is a bit different from the unit `autoinclude`, which generates `terragrunt.autoinclude.hcl`.
+
+## What if stack block needs `dependency`?
+
+Unlike a `unit` block, which can have an `autoinclude` that contains a `dependency`,
+a `stack` might also have some sort of dependency, and in that case
+we cannot add that dependency to the stack's `autoinclude`.
+The stack `autoinclude` can only have `unit` and `stack` blocks — you cannot use a
+`dependency` block inside the stack `autoinclude`.
+
+Let's show what we mean with an example.
+We will use the same example as before: we have a catalog stack that creates an environment.
+An environment consists of a folder containing a project.
+So our catalog `env` stack looks like this:
+
+```hcl title="catalog/stacks/env/terragrunt.stack.hcl"
+
+// create a unit that will generate a folder
+unit "folder" {
+  source = "${get_repo_root()}/iac/catalog/units/folder"
+  path   = "folder"
+  
+  autoinclude {
+    inputs = {
+      names  = [values.name]
+      parent = values.parent
+    }
+  }
+}
+
+// create a project under the folder we created
+unit "project" {
+  source = "${get_repo_root()}/iac/catalog/units/project"
+  path   = "project"
+  
+  autoinclude {
+    dependency "folder" {
+      config_path = unit.folder.path
+      mock_outputs = {
+        id = "folders/fake-value"
+      }
+    }
+    
+    inputs = {
+      folder_id       = dependency.folder.outputs.id
+      name            = values.name
+      billing_account = values.billing_account
+    }
+  }  
+}
+```
+
+This is the same catalog for generating an environment that we used in the previous example.
+Notice that when using this stack, we need to pass `values.parent`.
+That value is the parent folder where we want to place our env folder.
+We usually passed `folders/<parent-folder-id>`, but what if the parent
+we want to pass to the stack is one we generated?
+In that case, instead of passing the parent directly, let's change the value
+to `values.parent_config_path`, which points to the location
+where the parent dependency is located.
+In that case, our catalog stack would look like this:
+
+```hcl title="/iac/catalog/stacks/env/terragrunt.stack.hcl"
+
+// create a unit that will generate a folder
+unit "folder" {
+  source = "${get_repo_root()}/iac/catalog/units/folder"
+  path   = "folder"
+  
+  autoinclude {
+    dependency "parent_folder" {
+      config_path = values.parent_config_path
+      
+      mock_outputs = {
+        id = "folders/fake-parent-value"
+      }
+    }
+    
+    inputs = {
+      names  = [values.name]
+      parent = dependency.parent_folder.outputs.id
+    }
+  }
+}
+
+// create a project under the folder we created
+unit "project" {
+  source = "${get_repo_root()}/iac/catalog/units/project"
+  path   = "project"
+  
+  autoinclude {
+    dependency "folder" {
+      config_path = unit.folder.path
+      mock_outputs = {
+        id = "folders/fake-value"
+      }
+    }
+    
+    inputs = {
+      folder_id       = dependency.folder.outputs.id
+      name            = values.name
+      billing_account = values.billing_account
+    }
+  }  
+}
+```
+
+Notice that our catalog, instead of getting the parent as a constant,
+now gets the path to the parent and resolves that parent using the
+folder unit's `autoinclude` block.
+Now, to use that catalog:
+
+```hcl title="/iac/live/env/terragrunt.stack"
+
+stack "prod" {
+  source = "${get_repo_root()}/iac/catalog/stacks/env"
+  path   = "prod"
+  values = {
+    name               = "prod"
+    parent_config_path = "${get_repo_root()}/iac/live/common/folders/root"
+    billing_account    = "XXXXXX-XXXXXX-XXXXXX"
+  }
+}
+```
+
+Because a stack cannot have an `autoinclude` with a `dependency` in it,
+passing the path to the dependency is currently the only way
+to make a stack depend on something else.
+
+## Our final env catalog
+
+Our goal in this lesson is to create a catalog stack
+that we can use to easily create environments like
+`dev`, `staging`, and `prod`.
+Our plan is to create an environment with a Kubernetes cluster
+and a database, but to keep things simple, in this lesson we will
+only create a folder and project for our environment. We will continue
+adding additional infrastructure for our environment in future lessons,
+where we will dedicate a lesson to a database, a lesson
+to a VPC, and a lesson to a managed Kubernetes cluster.
+So for this lesson, our `env` stack will simply create the folder
+and project that will contain our environment.
+Here is what our catalog will look like:
+
+```hcl title="/iac/catalog/stacks/env/terragrunt.stack.hcl"
+/**
+ * Using this stack we can create an environment
+ * An environment is an opionionated k8s environment
+ * Please supply the following values:
+ * - name: the name of the environment
+ * - parent_folder_config_path: path to the parent folder unit whose id becomes this environment's parent folder
+ * - billing_account: billing account ID to attach to the environment's project
+ * Optional values:
+ * - folder_inputs: overrides catalog folder defaults (e.g. deletion_protection)
+ * - project_inputs: overrides catalog project defaults (e.g. budget_amount)
+ */
+
+locals {
+  units_folder = "${get_repo_root()}/iac/gcp/catalog/units"
+
+  default_folder_inputs = {
+    deletion_protection = false
+  }
+
+  default_project_inputs = {
+    random_project_id       = true
+    deletion_policy         = "DELETE"
+    create_project_sa       = false
+    default_service_account = "disable"
+  }
+}
+
+unit "folder" {
+  source = "${local.units_folder}/folder"
+  path   = "folder"
+
+  autoinclude {
+    dependency "parent_folder" {
+      config_path = values.parent_folder_config_path
+      mock_outputs = {
+        id = "folders/mock-parent-folder"
+      }
+    }
+    inputs = merge(
+      local.default_folder_inputs,
+      try(values.folder_inputs, {}),
+      {
+        parent = dependency.parent_folder.outputs.id
+        names = [values.name]
+      },
+    )
+  }
+}
+
+unit "project" {
+  source = "${local.units_folder}/project"
+  path   = "project"
+
+  autoinclude {
+    dependency "folder" {
+      config_path = unit.folder.path
+      mock_outputs = {
+        id = "folders/mock-folder"
+      }
+    }
+    inputs = merge(
+      local.default_project_inputs,
+      try(values.project_inputs, {}),
+      {
+        folder_id       = dependency.folder.outputs.id
+        name            = values.name
+        billing_account = values.billing_account
+      },
+    )
+  }
+}
+```
+
+To call our catalog, we need to pass three required arguments through the `values` map:
+- `name` — the name of our environment
+- `parent_folder_config_path` — our environment folder will be placed under this parent
+- `billing_account` — the billing account used to charge our environment
+
+Since the catalog is somewhat opinionated, default values are supplied for the project and folder,
+but the catalog also provides hooks to override project and folder inputs if the developer wants to change them or override the defaults.
+To override the default settings for folder and project, the developer can pass `folder_inputs` and `project_inputs` maps with the inputs they require.
+
+Now, to call our stack and generate our environments, we created a new folder under `live` called `envs`. In it, we created a `terragrunt.stack.hcl`
+that calls our environment stack for each environment we want.
+It looks like this:
+
+```hcl title="/iac/live/envs/terragrunt.stack.hcl"
+locals {
+  env_stack_path  = "${get_repo_root()}/iac/gcp/catalog/stacks/env"
+  billing_account = read_terragrunt_config(find_in_parent_folders("config/billing.hcl")).locals.billing_account
+}
+
+stack "non_prod" {
+  source = local.env_stack_path
+  path   = "non-prod"
+  values = {
+    name                      = "non-prod"
+    parent_folder_config_path = "${get_repo_root()}/iac/gcp/live/common/folders/root"
+    billing_account           = local.billing_account
+    project_inputs = {
+      budget_amount = 20
+    }
+  }
+}
+
+stack "prod" {
+  source = local.env_stack_path
+  path   = "prod"
+  values = {
+    name                      = "prod"
+    parent_folder_config_path = "${get_repo_root()}/iac/gcp/live/common/folders/root"
+    billing_account           = local.billing_account    
+  }
+}
+```
+
+We easily created two environments — one for production and one
+for `non-prod`. We also override the project inputs in the `non-prod`
+`env` to set a $20 budget for the project in our non-production environment.
+Also notice that even though our `env` stack is isolated, we can pass
+a parent folder `config_path` to place our stack under that folder.
+This lets us work around the limitation that a stack cannot use `dependency`,
+even though in this case we do need a dependency on the parent folder where we place our environment.
+
+## Summary
+
+In this lesson we learned that a **Terragrunt stack** is a logical group of infrastructure — usually made of multiple **units** (folder, project, VPC, database, GKE, and so on).
+
+We started with the problem: repeating environments like `prod` and `non-prod` with an **implicit stack** (many duplicated folders and `terragrunt.hcl` files) leads to a DRY violation. **Explicit stacks** solve this with a single `terragrunt.stack.hcl` blueprint that describes what to generate. Running `terragrunt stack generate` creates the `.terragrunt-stack` folder and the unit files inside it — it does **not** create cloud infrastructure by itself.
+
+We also covered the **catalog vs live** pattern: reusable units/stacks/modules live in **catalog**, and **live** calls them (often pinned to a catalog version with `?ref=`).
+
+In `terragrunt.stack.hcl` we can use **`locals`**, **`unit`**, and **`stack`** blocks. A **`unit`** block uses `source`, `path`, and optional `values`. Generation creates:
+- `terragrunt.hcl` (copied from the unit catalog)
+- `terragrunt.values.hcl` (from the `values` map)
+- `terragrunt.autoinclude.hcl` (from `autoinclude`, merged at parse time)
+
+Important distinction: **`values` are not `inputs`**. Catalog units read `values.*` and map them to `inputs`; wiring between units (dependencies and inputs) is done with **`autoinclude`** on the `unit` block, using `unit.<name>.path`, `dependency`, and `mock_outputs`.
+
+The **`stack`** block lets us nest stacks — for example, a live file that calls a catalog `env` stack twice to create `prod` and `non-prod`. Stack blocks also support **`autoinclude`**, which generates `terragrunt.autoinclude.stack.hcl` and lets us add or override units/stacks in one environment (like adding a `log_bucket` only in prod). Stack `autoinclude` is more limited than unit `autoinclude`: it can only contain `unit`/`stack` blocks, not `dependency`, and you cannot nest another `autoinclude` inside it.
+
+When a stack needs something outside itself (like a parent folder created elsewhere), we pass a **`parent_folder_config_path`** (or similar) through `values` and resolve it inside a unit's `autoinclude`.
+
+By the end of the lesson we built a reusable **env catalog stack** that creates a folder and project, with optional `folder_inputs` / `project_inputs` overrides, and used it from live to generate **prod** and **non-prod** environments. In future lessons we will extend this stack with VPC, database, and GKE.
