@@ -8,7 +8,7 @@ authors:
   - yariv-katz
 sources:
   - title: התקנת Flux עם Terraform/OpenTofu			  
-    url: https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-04/iac
+    url: https://github.com/Nerdeez/terragrunt-catalog/tree/lesson-04/iac
 video:
   videoUrl: https://www.youtube.com/watch?v=68YcfitcKGI
   duration: 5473
@@ -48,7 +48,7 @@ This video provides a detailed tutorial on installing FluxCD on a Kubernetes clu
 אנחנו מניחים שיש לכם ידע בסיסי ב-Terraform, ולא נעבור על היסודות של Terraform בשיעור זה.
 
 נקודה חשובה נוספת לפני שנתחיל היא שניצור את כל הדברים על [GCP](https://cloud.google.com/), אם אתם רוצים דוגמא לענן אחר, או דוגמא עם טכנולוגית אחרת של קוד תשלחו בקשה (או תיצרו PR אם אתם מוכנים לאתגר).
-ואל תשכחו לתת כוכב ל-[מאגר הקורס](https://github.com/ywarezk/academeez-k8s-flux), זה עוזר לנו המון.
+ואל תשכחו לתת כוכב ל-[מאגר הקורס](https://github.com/Nerdeez/terragrunt-catalog), זה עוזר לנו המון.
 
 אז הדגש בשיעור הזה הוא על פשטות, ודרישות מינימום להתחלת פרוייקט חדש ב-GCP, עם VPC, Subnet, GKE Cluster ו-Flux מותקן עליו.
 
@@ -433,7 +433,7 @@ provider "flux" {
 		}
 	}
 	git = {
-    url = "https://github.com/ywarezk/academeez-k8s-flux.git"
+    url = "https://github.com/Nerdeez/terragrunt-catalog.git"
     http = {
       username = "git" # This can be any string when using a personal access token
       password = var.github_pat
@@ -488,5 +488,5 @@ kubectl get pods -n flux-system
 כתזכורת זהו setup מינימלי, ובשיעור הבא נלמד על קונבנציות וכיצד לעשות דברים נכון.
 ה - repo של הקורס כולו דקלרטיבי, ככה שניתן ליצור את ה-cluster קודם לשיעור ולהריץ `tofu destroy` אחרי השיעור כדי לחסוך כסף ולהשתמש רק במשאבים במהלך השיעור.
 במהלך הקורס אנחנו נציג את השינויים בענן באמצעון דוגמאות infrastructure as code באמצעות שימוש ב-OpenTofu, אבל ניתן להשתמש בכל טכנולוגיה שמתאימה לכם, בנוסף ניתן להציע דוגמאות בטכנולוגיות אחרות על פי בקשה.
-ניתן לראות את קוד השיעור [כאן](https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-04/iac).
+ניתן לראות את קוד השיעור [כאן](https://github.com/Nerdeez/terragrunt-catalog/tree/lesson-04/iac).
 
