@@ -8,7 +8,7 @@ authors:
   - yariv-katz
 sources:
   - title: Installing Flux with Terraform/OpenTofu
-    url: https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-04/iac
+    url: https://github.com/Nerdeez/terragrunt-catalog/tree/lesson-04/iac
 video:
   videoUrl: https://www.youtube.com/watch?v=68YcfitcKGI
   duration: 5473
@@ -49,7 +49,7 @@ So remember easy solution, simple solution, for installing Flux with Terraform/O
 We assume you already have basic terraform knowledge, and we will not go over the basics of terraform in this lesson.
 
 Another important point before we begin is that we will create everything on [GCP](https://cloud.google.com/), if you want an example for other clouds, or you want an example with another infrastructure as code technology, submit an issue (or create a PR if you are up to the challenge).
-And don't forget to star the [course repository](https://github.com/ywarezk/academeez-k8s-flux), it helps us a lot.
+And don't forget to star the [course repository](https://github.com/Nerdeez/terragrunt-catalog), it helps us a lot.
 
 So our emphasis in this lesson is on simplicity, and minimum requirements for bootstrapping a new gcp project, with vpc, subnet, gke cluster and flux installed on it.  
 
@@ -434,7 +434,7 @@ provider "flux" {
 		}
 	}
 	git = {
-    url = "https://github.com/ywarezk/academeez-k8s-flux.git"
+    url = "https://github.com/Nerdeez/terragrunt-catalog.git"
     http = {
       username = "git" # This can be any string when using a personal access token
       password = var.github_pat
@@ -490,4 +490,4 @@ If you are managing a single cluster it's not that important if you install flux
 As a reminder this is the minimal setup, and in the next lesson we will go over best practices and how to do things right.
 Everything in our course repo is declarative, so you can create the cluster before a lesson and also run `tofu destroy` after the lesson to save money and only use the resources on the lessons.
 During this course we will show cloud infrastructure as code examples using OpenTofu, but you can use Terraform or any other IAC technology you want, feel free to raise an issue if you want an example in another technology or cloud placed in our course repository.
-Check out the source code [here](https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-04/iac)
+Check out the source code [here](https://github.com/Nerdeez/terragrunt-catalog/tree/lesson-04/iac)
