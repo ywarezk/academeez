@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="730" height="520" viewBox="0 0 730 520">
+  
+        
+        <path d="M 53 74.85 L 60 81.85 L 67 74.85" fill="none" stroke="#019A48" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        
+    <g transform="translate(80, 64) scale(1.5555555555555556)">
+      <path d="M1 4.5C1 3.67 1.67 3 2.5 3H7.2L9 4.8H15.5C16.33 4.8 17 5.47 17 6.3V14.5C17 15.33 16.33 16 15.5 16H2.5C1.67 16 1 15.33 1 14.5V4.5Z" fill="#6EEBA8" stroke="#01D662" stroke-width="1.1"/>
+      <path d="M1 6.5H17V14.5C17 15.33 16.33 16 15.5 16H2.5C1.67 16 1 15.33 1 14.5V6.5Z" fill="#01D662" fill-opacity="0.35"/>
+      <path d="M1 8H17" stroke="#01D662" stroke-width="0.8" opacity="0.5"/>
+    </g>
+        <text x="122" y="85" font-family="SF Mono, Menlo, Monaco, Consolas, monospace" font-size="20" fill="#14532D">catalog</text>
+      
+
+        <line x1="66" y1="104" x2="66" y2="130" stroke="#86EFAC" stroke-width="2"/>
+<line x1="66" y1="130" x2="84" y2="130" stroke="#86EFAC" stroke-width="2"/>
+<line x1="66" y1="130" x2="66" y2="156" stroke="#86EFAC" stroke-width="2"/>
+        <path d="M 97 123 L 104 130 L 97 137" fill="none" stroke="#019A48" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        
+      <g transform="translate(122, 116) scale(1.5555555555555556)">
+        <path d="M1 4.5C1 3.67 1.67 3 2.5 3H7.2L9 4.8H15.5C16.33 4.8 17 5.47 17 6.3V14.5C17 15.33 16.33 16 15.5 16H2.5C1.67 16 1 15.33 1 14.5V4.5Z" fill="#6EEBA8" stroke="#01D662" stroke-width="1.1"/>
+        <path d="M1 6.5H17V14.5C17 15.33 16.33 16 15.5 16H2.5C1.67 16 1 15.33 1 14.5V6.5Z" fill="#01D662" fill-opacity="0.25"/>
+      </g>
+        <text x="164" y="137" font-family="SF Mono, Menlo, Monaco, Consolas, monospace" font-size="20" fill="#14532D">modules</text>
+      
+
+        <line x1="66" y1="156" x2="66" y2="182" stroke="#86EFAC" stroke-width="2"/>
+<line x1="66" y1="182" x2="84" y2="182" stroke="#86EFAC" stroke-width="2"/>
+<line x1="66" y1="182" x2="66" y2="208" stroke="#86EFAC" stroke-width="2"/>
+        <path d="M 95 178.85 L 102 185.85 L 109 178.85" fill="none" stroke="#019A48" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        
+    <g transform="translate(122, 168) scale(1.5555555555555556)">
+      <path d="M1 4.5C1 3.67 1.67 3 2.5 3H7.2L9 4.8H15.5C16.33 4.8 17 5.47 17 6.3V14.5C17 15.33 16.33 16 15.5 16H2.5C1.67 16 1 15.33 1 14.5V4.5Z" fill="#6EEBA8" stroke="#01D662" stroke-width="1.1"/>
+      <path d="M1 6.5H17V14.5C17 15.33 16.33 16 15.5 16H2.5C1.67 16 1 15.33 1 14.5V6.5Z" fill="#01D662" fill-opacity="0.35"/>
+      <path d="M1 8H17" stroke="#01D662" stroke-width="0.8" opacity="0.5"/>
+    </g>
+        <text x="164" y="189" font-family="SF Mono, Menlo, Monaco, Consolas, monospace" font-size="20" fill="#14532D">stacks</text>
+      
+
+        <line x1="108" y1="208" x2="108" y2="234" stroke="#86EFAC" stroke-width="2"/>
+<line x1="108" y1="234" x2="126" y2="234" stroke="#86EFAC" stroke-width="2"/>
+        <path d="M 137 230.85 L 144 237.85 L 151 230.85" fill="none" stroke="#019A48" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        
+    <g transform="translate(164, 220) scale(1.5555555555555556)">
+      <path d="M1 4.5C1 3.67 1.67 3 2.5 3H7.2L9 4.8H15.5C16.33 4.8 17 5.47 17 6.3V14.5C17 15.33 16.33 16 15.5 16H2.5C1.67 16 1 15.33 1 14.5V4.5Z" fill="#6EEBA8" stroke="#01D662" stroke-width="1.1"/>
+      <path d="M1 6.5H17V14.5C17 15.33 16.33 16 15.5 16H2.5C1.67 16 1 15.33 1 14.5V6.5Z" fill="#01D662" fill-opacity="0.35"/>
+      <path d="M1 8H17" stroke="#01D662" stroke-width="0.8" opacity="0.5"/>
+    </g>
+        <text x="206" y="241" font-family="SF Mono, Menlo, Monaco, Consolas, monospace" font-size="20" fill="#14532D">envs</text>
+      
+
+        <line x1="108" y1="260" x2="108" y2="312" stroke="#86EFAC" stroke-width="2"/>
+<line x1="150" y1="260" x2="150" y2="286" stroke="#86EFAC" stroke-width="2"/>
+<line x1="150" y1="286" x2="168" y2="286" stroke="#86EFAC" stroke-width="2"/>
+        <path d="M 179 282.85 L 186 289.85 L 193 282.85" fill="none" stroke="#019A48" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        
+    <g transform="translate(206, 272) scale(1.5555555555555556)">
+      <path d="M1 4.5C1 3.67 1.67 3 2.5 3H7.2L9 4.8H15.5C16.33 4.8 17 5.47 17 6.3V14.5C17 15.33 16.33 16 15.5 16H2.5C1.67 16 1 15.33 1 14.5V4.5Z" fill="#6EEBA8" stroke="#01D662" stroke-width="1.1"/>
+      <path d="M1 6.5H17V14.5C17 15.33 16.33 16 15.5 16H2.5C1.67 16 1 15.33 1 14.5V6.5Z" fill="#01D662" fill-opacity="0.35"/>
+      <path d="M1 8H17" stroke="#01D662" stroke-width="0.8" opacity="0.5"/>
+    </g>
+        <text x="248" y="293" font-family="SF Mono, Menlo, Monaco, Consolas, monospace" font-size="20" fill="#14532D">k8s-db</text>
+      
+
+        <line x1="108" y1="312" x2="108" y2="364" stroke="#86EFAC" stroke-width="2"/>
+<line x1="192" y1="312" x2="192" y2="338" stroke="#86EFAC" stroke-width="2"/>
+<line x1="192" y1="338" x2="210" y2="338" stroke="#86EFAC" stroke-width="2"/>
+        
+        
+    <g transform="translate(248, 324) scale(1.5555555555555556)">
+      <path d="M4 1H11L15 5V15C15 16.1 14.1 17 13 17H4C2.9 17 2 16.1 2 15V3C2 1.9 2.9 1 4 1Z" fill="#FFFFFF" stroke="#01D662" stroke-width="1.2"/>
+      <path d="M11 1V5H15" fill="none" stroke="#01D662" stroke-width="1.2"/>
+      <path d="M5.2 10.2L6.4 12.4L8.6 8.8" fill="none" stroke="#019A48" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M9.2 12.4H12.4" fill="none" stroke="#019A48" stroke-width="1.3" stroke-linecap="round"/>
+      <path d="M9.2 9.6H12.4" fill="none" stroke="#019A48" stroke-width="1.3" stroke-linecap="round"/>
+    </g>
+        <text x="290" y="345" font-family="SF Mono, Menlo, Monaco, Consolas, monospace" font-size="20" fill="#14532D">terragrunt.stack.hcl</text>
+      
+
+        <line x1="66" y1="364" x2="66" y2="390" stroke="#86EFAC" stroke-width="2"/>
+<line x1="66" y1="390" x2="84" y2="390" stroke="#86EFAC" stroke-width="2"/>
+<line x1="66" y1="390" x2="66" y2="416" stroke="#86EFAC" stroke-width="2"/>
+        <path d="M 97 383 L 104 390 L 97 397" fill="none" stroke="#019A48" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        
+      <g transform="translate(122, 376) scale(1.5555555555555556)">
+        <path d="M1 4.5C1 3.67 1.67 3 2.5 3H7.2L9 4.8H15.5C16.33 4.8 17 5.47 17 6.3V14.5C17 15.33 16.33 16 15.5 16H2.5C1.67 16 1 15.33 1 14.5V4.5Z" fill="#6EEBA8" stroke="#01D662" stroke-width="1.1"/>
+        <path d="M1 6.5H17V14.5C17 15.33 16.33 16 15.5 16H2.5C1.67 16 1 15.33 1 14.5V6.5Z" fill="#01D662" fill-opacity="0.25"/>
+      </g>
+        <text x="164" y="397" font-family="SF Mono, Menlo, Monaco, Consolas, monospace" font-size="20" fill="#14532D">templates</text>
+      
+
+        <line x1="66" y1="416" x2="66" y2="442" stroke="#86EFAC" stroke-width="2"/>
+<line x1="66" y1="442" x2="84" y2="442" stroke="#86EFAC" stroke-width="2"/>
+        <path d="M 97 435 L 104 442 L 97 449" fill="none" stroke="#019A48" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        
+      <g transform="translate(122, 428) scale(1.5555555555555556)">
+        <path d="M1 4.5C1 3.67 1.67 3 2.5 3H7.2L9 4.8H15.5C16.33 4.8 17 5.47 17 6.3V14.5C17 15.33 16.33 16 15.5 16H2.5C1.67 16 1 15.33 1 14.5V4.5Z" fill="#6EEBA8" stroke="#01D662" stroke-width="1.1"/>
+        <path d="M1 6.5H17V14.5C17 15.33 16.33 16 15.5 16H2.5C1.67 16 1 15.33 1 14.5V6.5Z" fill="#01D662" fill-opacity="0.25"/>
+      </g>
+        <text x="164" y="449" font-family="SF Mono, Menlo, Monaco, Consolas, monospace" font-size="20" fill="#14532D">units</text>
+      
+</svg>
