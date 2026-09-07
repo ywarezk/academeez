@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="520" viewBox="0 0 760 520">
+  
+    <rect x="36" y="36" width="688" height="448" rx="18" ry="18"
+      fill="rgba(1, 214, 98, 0.08)" stroke="#01D662" stroke-width="2.5"/>
+  
+  
+    <text x="56" y="70" font-family="SF Pro Text, Helvetica Neue, Arial, sans-serif"
+      font-size="20" font-weight="600" fill="#01D662">GCP Folder</text>
+  
+
+  
+    <rect x="68" y="92" width="624" height="360" rx="16" ry="16"
+      fill="rgba(1, 214, 98, 0.14)" stroke="#019A48" stroke-width="2.5"/>
+  
+  
+    <text x="88" y="126" font-family="SF Pro Text, Helvetica Neue, Arial, sans-serif"
+      font-size="20" font-weight="600" fill="#019A48">GCP Project</text>
+  
+
+  <text x="380" y="286" text-anchor="middle"
+    font-family="SF Pro Text, Helvetica Neue, Arial, sans-serif" font-size="15" fill="#019A48">
+    infrastructure inside the project
+  </text>
+
+  
+    
+    <rect x="104" y="304" width="168" height="112" rx="14" ry="14"
+      fill="rgba(1, 214, 98, 0.14)" stroke="#01D662" stroke-width="2.5"/>
+  
+    <text x="188" y="367" text-anchor="middle"
+      font-family="SF Mono, Menlo, Monaco, Consolas, monospace" font-size="22" font-weight="600"
+      fill="#019A48">VPC</text>
+  
+
+    
+    <rect x="296" y="304" width="168" height="112" rx="14" ry="14"
+      fill="rgba(1, 214, 98, 0.14)" stroke="#01D662" stroke-width="2.5"/>
+  
+    <text x="380" y="367" text-anchor="middle"
+      font-family="SF Mono, Menlo, Monaco, Consolas, monospace" font-size="22" font-weight="600"
+      fill="#019A48">GKE</text>
+  
+
+    
+    <rect x="488" y="304" width="168" height="112" rx="14" ry="14"
+      fill="rgba(1, 214, 98, 0.14)" stroke="#01D662" stroke-width="2.5"/>
+  
+    <text x="572" y="367" text-anchor="middle"
+      font-family="SF Mono, Menlo, Monaco, Consolas, monospace" font-size="22" font-weight="600"
+      fill="#019A48">DB</text>
+  
+</svg>
