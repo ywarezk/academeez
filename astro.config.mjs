@@ -174,15 +174,19 @@ export default defineConfig({
 							items: [{ autogenerate: { directory: 'courses/react/props', collapsed: true } }],
 						},
 						{
-							label: '6. Understanding React Elements',
+							label: '6. State',
+							items: [{ autogenerate: { directory: 'courses/react/state', collapsed: true } }],
+						},
+						{
+							label: '7. Understanding React Elements',
 							slug: 'courses/react/understanding-react-elements',
 						},
 						{
-							label: '7. <Suspense>',
+							label: '8. <Suspense>',
 							slug: 'courses/react/suspense',
 						},
 						{
-							label: '8. Single Responsibility',
+							label: '9. Single Responsibility',
 							slug: 'courses/react/best-practice/component-single-responsibility',
 						},
 					],
