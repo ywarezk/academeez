@@ -54,6 +54,13 @@ export default [
 		},
 	},
 	{
+		// Astro/Starlight ambient types; imports break global `declare module` and Starlight locals.
+		files: ['src/env.d.ts'],
+		rules: {
+			'@typescript-eslint/triple-slash-reference': 'off',
+		},
+	},
+	{
 		ignores: [
 			'dist',
 			'node_modules',
