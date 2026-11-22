@@ -56,7 +56,7 @@
   },
   "devDependencies": {
     "@eslint/js": "9.39.5",
-    "@playwright/test": "1.56.1",
+    "@playwright/test": "1.65.1",
     "@semantic-release/git": "10.0.1",
     "@types/istanbul-lib-coverage": "2.0.6",
     "@types/istanbul-lib-report": "3.0.3",
@@ -96,6 +96,22 @@
     ]
   },
   "pnpm": {
+    "supportedArchitectures": {
+      "os": [
+        "current",
+        "linux",
+        "darwin"
+      ],
+      "cpu": [
+        "current",
+        "x64",
+        "arm64"
+      ]
+    },
+    "onlyBuiltDependencies": [
+      "sharp",
+      "esbuild"
+    ],
     "overrides": {
       "lodash": "4.18.1",
       "lodash-es": "4.18.1",

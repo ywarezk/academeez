@@ -19,7 +19,8 @@ video:
     - Terragrunt
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import TerragruntCommonModuleTabs from './_components/TerragruntCommonModuleTabs.astro';
+import TerragruntEnvModuleTabs from './_components/TerragruntEnvModuleTabs.astro';
 
 <div class="not-content flex">
   <iframe
@@ -235,50 +236,7 @@ The `_env` will usse as much as possible modules from the project: [terraform-go
 This is also a place where we can give repeating values for the `terraform-google-modules` to save us the hassle of repeating those values in every module.
 Inside the `/iac/gcp/tofu/_env` we will create the files: `folder.hcl`, `project.hcl`.
 
-<Tabs>
-  <TabItem value="folder.hcl" label="folder.hcl">
-```hcl
-/**
- * terragrunt function to create a folder
- */
- 
-locals {
-	org_id = yamldecode(file(find_in_parent_folders("common_vars.yaml"))).org_id
-}
-
-terraform {
-	source = "tfr:///terraform-google-modules/folders/google?version=5.0.0"
-}
-
-inputs = {
-	parent = "organizations/${local.org_id}"
-}
-```
-  </TabItem>
-  <TabItem value="project.hcl" label="project.hcl">
-```hcl
-/**
- * terragrunt function to create a project
- */
- 
-locals {
-	org_id = yamldecode(file(find_in_parent_folders("common_vars.yaml"))).org_id
-	billing_account = yamldecode(file(find_in_parent_folders("billing_vars.yaml"))).billing_account
-}
-
-terraform {
-	source = "tfr:///terraform-google-modules/project-factory/google?version=17.1.0"
-}
-
-inputs = {
-	random_project_id    = true
-	org_id = local.org_id
-	billing_account = local.billing_account
-	budget_amount = 20
-}
-```
-  </TabItem>  
-</Tabs>
+<TerragruntEnvModuleTabs />
 
 After we created those simple reusable terraform configurations, based on `terraform-google-modules`, we can now use those configurations to create some resources we will need for terraform to store the state in the bucket.
 
@@ -290,77 +248,7 @@ We will create a few files:
 - `common/folders/shared/terragrunt.hcl` - under the root folder we will create a folder called `shared` for the shared resources
 - `common/project/terragrunt.hcl` - this will create the project `academeez-k8s-flux-common`
 
-<Tabs>
-  <TabItem value="common/folder/terragrunt.hcl" label="common/folder/root/terragrunt.hcl">
-```hcl
-/**
- * Create the root folder, all the resources will be created under this folder
- */
-
-include "root" {
-  path   = find_in_parent_folders()
-}
-
-include "folder" {
-	path = "${dirname(find_in_parent_folders())}/_env/folder.hcl"
-}
-
-inputs = {
-	names = [ "academeez-k8s-flux" ]
-}
-```
-  </TabItem>
-  <TabItem value="common/folder/shared/terragrunt.hcl" label="common/folder/shared/terragrunt.hcl">
-```hcl
-/**
- * The shared folder will contain all the shared resources between environments
- */
-
-include "root" {
-	path   = find_in_parent_folders()
-}
-
-include "folder" {
-	path = "${dirname(find_in_parent_folders())}/_env/folder.hcl"
-}
-
-# since this folder is under the root folder we will use dependency to get the parent folder
-dependency "root_folder" {
-	config_path = "../root"
-}
-
-inputs = {
-	parent = dependency.root_folder.outputs.id
-	names = [ "shared" ]
-}
-```
-  </TabItem>
-  <TabItem value="common/project/terragrunt.hcl" label="common/project/terragrunt.hcl">
-```hcl
-/**
- * The common resources that are shared between the environments will be under the common project
- */
-
-include "root" {
-	path   = find_in_parent_folders()
-}
-
-include "project" {
-	path = "${dirname(find_in_parent_folders())}/_env/project.hcl"
-}
-
-# since the project will be under the shared folder we will grab it using the dependency block
-dependency "shared_folder" {
-	config_path = "../folders/shared"
-}
-
-inputs = {
-	folder_id = dependency.shared_folder.outputs.id
-	name = "academeez-k8s-flux-common"
-}
-```
-  </TabItem>  
-</Tabs>
+<TerragruntCommonModuleTabs />
 
 We are simply using the `_env` modules we created to create a root folder, a shared folder under the root folder, a project to hold the common resources.
 Few things to note:
