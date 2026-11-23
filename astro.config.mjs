@@ -70,10 +70,7 @@ export default defineConfig({
 			sidebar: [
 				{
 					label: 'Angular',
-					autogenerate: {
-						directory: 'courses/angular',
-						collapsed: true,
-					},
+					items: [{ autogenerate: { directory: 'courses/angular', collapsed: true } }],
 				},
 				{
 					label: 'FluxCD',
@@ -131,24 +128,15 @@ export default defineConfig({
 				},
 				{
 					label: 'Kubernetes',
-					autogenerate: {
-						directory: 'courses/kubernetes',
-						collapsed: true,
-					},
+					items: [{ autogenerate: { directory: 'courses/kubernetes', collapsed: true } }],
 				},
 				{
 					label: 'Git',
-					autogenerate: {
-						directory: 'courses/git',
-						collapsed: true,
-					},
+					items: [{ autogenerate: { directory: 'courses/git', collapsed: true } }],
 				},
 				{
 					label: 'GitHub',
-					autogenerate: {
-						directory: 'courses/github',
-						collapsed: true,
-					},
+					items: [{ autogenerate: { directory: 'courses/github', collapsed: true } }],
 				},
 				{
 					label: 'React',
@@ -167,10 +155,7 @@ export default defineConfig({
 						},
 						{
 							label: '4. Props',
-							autogenerate: {
-								directory: 'courses/react/props',
-								collapsed: true,
-							},
+							items: [{ autogenerate: { directory: 'courses/react/props', collapsed: true } }],
 						},
 						{
 							label: '5. Understanding React Elements',
@@ -188,17 +173,11 @@ export default defineConfig({
 				},
 				{
 					label: 'Express',
-					autogenerate: {
-						directory: 'courses/express',
-						collapsed: true,
-					},
+					items: [{ autogenerate: { directory: 'courses/express', collapsed: true } }],
 				},
 				{
 					label: 'Node.JS',
-					autogenerate: {
-						directory: 'courses/nodejs',
-						collapsed: true,
-					},
+					items: [{ autogenerate: { directory: 'courses/nodejs', collapsed: true } }],
 				},
 			],
 			title: 'academeez',
