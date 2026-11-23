@@ -1,0 +1,101 @@
+---
+title: React Components
+description: היכרות עם יצירת Component ב-React.
+publishDate: 2023-11-28
+authors:
+	- yariv-katz
+---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/n1a9okB6nkw?si=5Xl1mcQ36GjX6Thq"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+[React](https://react.dev/) הוא ספרייה פשוטה שמטרתה העיקרית היא לתת לך כלים ליצירת UI Component. UI Component מייצג חלק מממשק המשתמש שלך. בואו נקח את התמונה הזו של דף הבית של אקדמיז כדוגמה:
+
+![homepage](https://github.com/ywarezk/academeez/blob/main/content/en/course/react/component/homepage.png?raw=true)
+
+אם נרצה ליצור את דף הבית הזה באמצעות React, נוכל ליצור קומפוננטה עבור **Header**, קומפוננטה עבור כרטיסי השיעורים, ובגדול ליצור קומפוננטות ui שונות שיחד יבנו את המסך הזה.  
+
+אחרי שיוצרים קומפוננטה עם React, הקומפוננטה הזו הופכת לתג חדש (אנחנו משתמשים בתחביר דומה ל-HTML שנקרא JSX - נדבר על זה יותר מאוחר בקורס), אז אם יצרת קומפוננטה עבור **Header**, תוכל כעת להשתמש בקומפוננטה הזו על ידי שימוש בתג `<Header />`.
+
+## קומפוננטה ב-React היא פונקציה
+
+קומפוננטה ב-React מיוצגת על ידי פונקציה שבדרך כלל מחזירה תחביר שדומה ל - HTML שנקרא JSX שמתאר איך הקומפוננטה צריכה להיראות. בואו נסתכל על קומפוננטה פשוטה שתציג כפתור:
+
+```javascript
+function MyButton() {
+	return <button>Click Me</button>
+}
+```
+
+## תרגיל - הקומפוננטה הראשונה שלך
+
+שיעור ראשון וכבר תכתוב את הקומפוננטה הראשונה שלך ב-React. אין צורך להתקין כלום, תוכלו לכתוב את הפתרון של התרגיל כאן באתר.
+צרו קומפוננטה שתציג טופס התחברות עם 2 קלטים - שם משתמש וסיסמה, וכפתור לשליחת הטופס.
+יש פתרון לתרגיל מתחת כדי שתוכלו לראות את התוצאה.
+הטופס לא עושה שום דבר עם הקלט והוא צריך לטפל רק בתצוגה של הטופס.
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	files={{
+		"App.js": {			
+			code: `export default function Login() {
+  return (
+		<h1>Write your solution here</h1>
+  )
+}`
+		}
+	}}
+	template="react" 
+/>
+</div>
+
+## פתרון
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	files={{
+		"App.js": {
+			readOnly: true,
+			code: `export default function Login() {
+  return (
+		<form>
+			<div>
+				<label>Username</label>
+				<input type="text" />
+			</div>
+			<div>
+				<label>Password</label>
+				<input type="password" />
+			</div>
+			<div>
+				<button type="submit">Login</button>
+			</div>
+		</form>
+	)
+}`
+		}
+	}}
+	
+	
+	template="react" 
+/>
+</div>
+
+## סיכום
+
+המהות של React היא לתת לך API קל ליצירת קומפוננטות UI נפרדות. קומפוננטה היא פונקציה שמחזירה תחביר JSX (דומה ל-HTML) שמתאר איך הקומפוננטה צריכה להיראות.  
+ראיתם כמה קל ליצור את הקומפוננטה הראשונה שלכם ב-React
