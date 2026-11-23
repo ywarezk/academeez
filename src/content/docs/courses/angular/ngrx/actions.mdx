@@ -2,9 +2,24 @@
 title: NGRX Actions
 description: Student Ex. for NGRX actions
 publishDate: 2023-11-23
+authors:
+  - yariv-katz
 ---
 
 import {Sandpack} from '@codesandbox/sandpack-react';
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/ODuOw8aLXWU?si=OBL56ltE3eDDpvo2"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
 
 To study api's it's best to code it yourself, so let's go over the proper way to create actions using NGRX.  
 This lesson has 2 student execises, below each exercise you will find the solution for that exercise.
@@ -49,8 +64,9 @@ Time for you to practice the `createAction` api.
 - The `app.component.ts` will `implement OnInit` and in the `ngOnInit` method you will need to use the `repos.service.ts` to grab the repos and then populate the ngrx state with those repos.
 - You will need to create an action in `actions.ts` that will be dispatched from the `app.component.ts` and will be handled by the reducer in `reducer.ts`.
 
-<div class="mt-5">
+<div class="mt-5 not-content">
 <Sandpack 
+	client:load
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",
@@ -194,8 +210,9 @@ export class AppComponent {
 
 Here is the solution for the exercise:
 
-<div class="mt-5">
+<div class="mt-5 not-content">
 <Sandpack 
+	client:load
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",
@@ -377,8 +394,9 @@ In this exercise you will need to create a group of actions using `createActionG
 - In the `reducer.ts` file you will need to handle the `Delete Repo` action and remove the repo from the store based on the id that you get from the action.
 - In the `app.component.ts` you will need to dispatch the `Delete Repo` action when the user clicks the delete button.
 
-<div class="mt-5">
+<div class="mt-5 not-content">
 <Sandpack 
+	client:load
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",
@@ -531,8 +549,9 @@ export class AppComponent implements OnInit {
 
 ## Solution
 
-<div class="mt-5">
+<div class="mt-5 not-content">
 <Sandpack 
+	client:load
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",
