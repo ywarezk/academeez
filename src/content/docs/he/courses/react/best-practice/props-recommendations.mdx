@@ -6,7 +6,7 @@ authors:
   - yariv-katz
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -36,8 +36,8 @@ Prop drilling הוא העברת props להרבה שלבים בעץ ה - **React 
 נסתכל על הדוגמא הבאה שבה `<App>` מעבירה prop ל `<Child>` ו- `<Child>` מעבירה אותו ל- `<GrandChild>`  
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	files={{
 		"App.js": {			
 			code: `
@@ -81,8 +81,8 @@ export default function GrandChild(props) {
 בדוגמא הבאה במקום להעביר את ה-props במורד העץ של הרכיבים, אנו יוצרים context ומאחסנים את ה-props ב-context.
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	files={{
 		"title.context.js": {
 			code: `
@@ -136,8 +136,8 @@ export default function GrandChild(props) {
 נדגים בדוגמא הבאה עם [Redux](https://redux.js.org/), `Redux` אינו הספרייה היחידה לניהול State, ישנם ספריות ניהול State רבות ופופולריות נוספות שכל אחת מהן יש לה יתרונות וחסרונות.
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 
 			"react": "^18.0.0",

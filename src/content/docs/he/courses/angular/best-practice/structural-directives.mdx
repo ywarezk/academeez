@@ -10,7 +10,7 @@ video:
     - Angular
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -41,8 +41,8 @@ This video explains how to use structural directives in Angular to avoid repeati
 בואו נבחן את הדוגמא הבאה:
 
 <div className="mt-5 not-content ltr" dir='ltr'>
-<Sandpack
-  client:load
+<CourseSandpack
+  client:only="react"
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",
@@ -119,8 +119,8 @@ export class AppComponent {
 בואו ניצור structural directive שתטפל בלוגיקה של בדיקה האם המשתמש מחובר ואם כן תציג את ה template ותעביר את המשתמש לאותו ה template
 
 <div class="mt-5 not-content ltr" dir='ltr'>
-<Sandpack 
-  client:load
+<CourseSandpack 
+  client:only="react"
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",

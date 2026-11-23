@@ -12,7 +12,7 @@ video:
     - Angular
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -87,8 +87,8 @@ In fact you can call the inject function from an [injection context](https://ang
 With `injection function` the code above can turn to:
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 
 			"@ngrx/store": "^16.3.0",

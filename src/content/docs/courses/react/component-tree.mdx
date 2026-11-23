@@ -15,7 +15,7 @@ video:
     - React
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -46,8 +46,8 @@ Let's give a simple example, in the following example we have two components tha
 - `MyButton.js` - This component represents a button.
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	files={{
 		"App.js": {
 			readOnly: true,
@@ -97,8 +97,8 @@ It's common to split your application to multiple files, and you will often plac
 When splitting files we use [ES6 Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). so one syntax is to use `export default`:
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	files={{
 		"App.js": {			
 			code: `
@@ -130,8 +130,8 @@ export default function App() {
 Or you can use `export`
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	files={{
 		"App.js": {			
 			code: `
@@ -191,8 +191,8 @@ Where the focus is to simply place those components, and not on the styling of t
 You can write the code right here in the site: 
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	files={{
 		"App.js": {			
 			code: `
@@ -231,8 +231,8 @@ export default function LoginPage() {
 And here is the solution for the exercise:
 
 <div className="mt-5">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	files={{
 		"App.js": {
 			readOnly: true,	

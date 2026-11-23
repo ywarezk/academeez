@@ -10,7 +10,7 @@ video:
     - Angular
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -42,8 +42,8 @@ DRY violation with repeating [*ngIf](https://angular.dev/guide/directives#adding
 Let's examine the following example:
 
 <div className="mt-5 not-content">
-<Sandpack
-  client:load
+<CourseSandpack
+  client:only="react"
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",
@@ -120,8 +120,8 @@ If you have a repeating `ngIf` or a repeating need for some grabbing some data f
 Let's create a structural directive that will handle the logic of checking if the user is logged in and if so, will display the template and pass the user to that template.
 
 <div class="mt-5 not-content">
-<Sandpack 
-  client:load
+<CourseSandpack 
+  client:only="react"
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",

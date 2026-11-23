@@ -5,11 +5,11 @@ publishDate: 2025-12-19
 authors:
   - yariv-katz
 sidebar:  
-  order: 7
-  label: 4.3 Props with TypeScript
+  order: 11
+  label: 5.3 Props with TypeScript
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -35,8 +35,8 @@ declaring the types of the props using TypeScript.
 Here is a live code editor of a simple demonstration of how to declare the types of the props using TypeScript.
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load	
+<CourseSandpack
+	client:only="react"
 	template="react-ts"
   files={{
     "App.tsx": {
@@ -298,8 +298,8 @@ export default function Child<T>({data, onEvent}: ChildProps<T>) {
 And here is the solution for this exercise in our live code editor:
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load	
+<CourseSandpack
+	client:only="react"
 	template="react-ts"
   files={{
     "App.tsx": {

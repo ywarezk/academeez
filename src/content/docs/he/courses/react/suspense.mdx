@@ -13,7 +13,7 @@ video:
     - Suspense
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -94,8 +94,8 @@ This video provides a comprehensive overview of React Suspense, explaining its p
 לכן אנחנו יוצרים `Promise` שיפתור אחרי 5 שניות, ומזריקים את ה - `Promise` הזה ב - `render` function של ה - component.
 
 <div className="mt-5 not-content" dir="ltr">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	files={{
 	"App.js": {
 		readOnly: true,

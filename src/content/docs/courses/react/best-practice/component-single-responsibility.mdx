@@ -12,7 +12,7 @@ video:
     - React
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -44,8 +44,8 @@ If a component has many if's which render different things, or if it has many di
 Let's examine the following component and try and improve it by following the `Single Responsibility Principle`.
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 
 			"react": "^18.0.0",
@@ -134,8 +134,8 @@ Let's replace the `<BadTodo />` component and instead create the `<GoodTodo />` 
 Take a look at the following:
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 
 			"react": "^18.0.0",

@@ -1,0 +1,41 @@
+---
+title: Introduction to JSX
+description: What JSX is, try HTML-like syntax in the online editor, and a roadmap for the JSX lessons ahead.
+publishDate: 2026-05-22
+authors:
+  - yariv-katz
+sidebar:
+  order: 4
+  label: 4.1 Introduction to JSX
+---
+
+import HtmlJsxCompareEditor from './_components/HtmlJsxCompareEditor';
+
+In [React](https://react.dev/), a **component** is a function that represents a piece of your UI. It decides what to show based on data from your app—**props**, **state**, **context**, and **hooks** (we will cover those in later chapters). Inside that function you write both the **logic** for that piece of UI (handling events, fetching from a server, timers, and more) and a description of **how it should look**.
+
+You describe the UI with a syntax called **JSX**. The component **returns** JSX, and React turns that into what appears on the screen. JSX looks a lot like HTML, and in earlier lessons you may have treated it as HTML—but it is not HTML. It is JavaScript with extra syntax rules.
+
+In this chapter you will learn what JSX is, how it differs from HTML, and how to use it to describe component UI.
+
+## Live Editor: HTML vs JSX
+
+The live editor below shows the **same UI** in the preview from two angles: plain **HTML** on one side, and **React** with **JSX** on the other. Use the **HTML** and **JSX** tabs to switch the source and see the main differences side by side—closing tags, attribute names, events, embedding JavaScript, a single parent in `return`, and more.
+
+The code in each tab is editable. Change it, uncomment the hints, and watch the preview update. That hands-on practice is the fastest way to notice what works in HTML but breaks in JSX, and why.
+
+<div className="mt-5 not-content">
+<HtmlJsxCompareEditor client:only="react" />
+</div>
+
+## What's the plan?
+
+This lesson is the starting point. The editor above covers the main **markup rules** that make JSX different from HTML—closing tags, camelCase attributes, `className`, `htmlFor`, a single parent in `return`, and more.
+
+The rest of this chapter builds on that foundation:
+
+- **JSX markup rules** — a dedicated lesson on the rules in depth (what is valid JSX, common mistakes, and how they relate to HTML).
+- **Conditions in JSX** — showing, hiding, or choosing UI with `if`, ternary operators, `&&`, and related patterns inside components.
+- **Loops and lists** — rendering collections with `map`, keys, and how to structure list markup in JSX.
+- **The transpiler** — what happens to JSX before the browser runs your code (how it becomes plain JavaScript, and why those rules exist).
+
+After this chapter you will be comfortable reading and writing JSX in components.

@@ -13,7 +13,7 @@ video:
     - NGRX
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -86,8 +86,8 @@ An Angular component that is reading the state is represented in this part of th
 We can read the state by injecting the `Store` service and calling the `select` method.
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 
 			"@ngrx/store": "^16.3.0",
@@ -162,8 +162,8 @@ Popular things that will start a state change process are:
 Keeping things simple we will use a button click to trigger a state change process. Take a look at this example which increments a counter every button click.
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 
 			"@ngrx/store": "^16.3.0",
@@ -240,8 +240,8 @@ When we want to start a change in the state, we inject the `Store` service and c
 The Reducer will get the current state and the action that happened and will return a new state. Take a look at the following simple reducer:
 
 <div className="mt-5 not-content">
-<Sandpack 
-	client:load
+<CourseSandpack 
+	client:only="react"
 	customSetup={{ 
 		dependencies: { 
 			"@ngrx/store": "^16.3.0",

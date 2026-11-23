@@ -11,7 +11,7 @@ video:
     - Angular
 ---
 
-import {Sandpack} from '@codesandbox/sandpack-react';
+import CourseSandpack from '~/components/CourseSandpack';
 
 <div class="not-content flex">
 	<iframe
@@ -174,8 +174,8 @@ What we are going to create to check how CD works when you are zoneless, is a co
 based on this simple app we will try to understand how CD works when you are zoneless.
 
 <div className="mt-5 not-content">
-	<Sandpack 
-		client:load
+	<CourseSandpack 
+		client:only="react"
 		options={{
 			editorHeight: 500,
 			showConsole: true,
@@ -360,8 +360,8 @@ We will examine the problem and the solution to the problem in the next example.
 In the following example we removed zone.js, we then installed [@angular/material](https://material.angular.io/) and we are trying to use angular material checkbox component and see how it works in zoneless.
 
 <div className="mt-5 not-content">
-	<Sandpack 
-		client:load
+	<CourseSandpack 
+		client:only="react"
 		customSetup={{ 
 			dependencies: { 
 				"@angular/cdk": "^16.2.0",
