@@ -23,11 +23,11 @@ import {Sandpack} from '@codesandbox/sandpack-react';
 	/>
 </div>
 
-The new `@for` which we can use to replace `*ngFor` is available from **Angular 17**.
-The new syntax is much cleaner and easier to read and write, and more powerful.  
-Let's look at the following example and disect the main features and benefits of the new syntax.
+הסינטקס החדש של `@for` שניתן להשתמש בו כדי להחליף את `*ngFor` זמין מ-**Angular 17**.
+הסינטקס החדש הוא הרבה יותר נקי וקל לקריאה וכתיב, וגם עוצמתי יותר.  
+בואו נסתכל על הדוגמה הבאה ונפרק את התכונות והיתרונות העיקריים של הסינטקס החדש.
 
-<div className="mt-5 not-content">
+<div className="mt-5 not-content ltr" dir="ltr">
 <Sandpack 
 	client:load
 	customSetup={{ 
@@ -165,29 +165,29 @@ bootstrapApplication(AppComponent)
 
 ## track
 
-in the new `@for` control flow syntax, supplying `track` is mandatory. According to angular docs, a lot of angular apps performance issues were caused by `*ngFor` loops without `trackBy`, now the `track` is mandatory with a much simpler syntax.  
-You can now choose a propery from the iterated object to track by, and angular will use it to track changes in the array.  
-You can also use the `$index` context variable to track by index, but it's better if you have a primary key on the object to use that as the track property.
+בסינטקס החדש של `@for` חובה לספק את הפרמטר `track`. על פי התיעוד של Angular, הרבה בעיות בביצועים של אפליקציות Angular נגרמו מלולאות `*ngFor` ללא `trackBy`, עכשיו הפרמטר `track` הוא חובה עם סינטקס פשוט יותר.  
+כעת ניתן בקלות לבחור Property מהאובייקט, ואנגולר ישתמש בו כדי לעקוב אחרי שינויים במערך.  
+ניתן גם להשתמש במשתנה הקונטקסט `$index` כדי לעקוב לפי אינדקס, אבל עדיף להשתמש במפתח ראשי באובייקט ולהשתמש בזה כערך ל track.
 
-## empty block
+## בלוק ריק
 
-After the `@for` block you can add an `@empty` block, which will be rendered if the array is empty.  
-Before the new control flow syntax we had to use `*ngIf` to check if the array is empty, and then render the empty block.
+אחרי הבלוק של `@for` ניתן להוסיף בלוק של `@empty` שיתבצע כאשר המערך ריק.  
+לפני הסינטקס החדש היינו צריכים להשתמש ב-`*ngIf` כדי לבדוק אם המערך ריק, ואז להציג את הבלוק הריק.
 
-## context variables
+## משתנים בקונטקסט
 
-The same context variables that were available in *ngFor are available in `@for` as well:
-- `$index` - the index of the current item in the array
-- `$first` - true if the current item is the first item in the array
-- `$last` - true if the current item is the last item in the array
-- `$even` - true if the current item index is even
-- `$odd` - true if the current item index is odd
+המשתנים בקונטקסט שהיו זמינים ב-*ngFor זמינים גם ב-`@for`:
+- `$index` - האינדקס של האיבר הנוכחי במערך
+- `$first` - `true` אם האיבר הנוכחי הוא הראשון במערך
+- `$last` - `true` אם האיבר הנוכחי הוא האחרון במערך
+- `$even` - `true` אם האינדקס של האיבר הנוכחי הוא זוגי
+- `$odd` - `true` אם האינדקס של האיבר הנוכחי הוא אי-זוגי
 
-## Summary
+## סיכום
 
-It's recommended to stop using *ngFor and use the new `@for` control flow syntax instead. There are few advantages for using the new `@for` syntax:
-- easier to understand the `@for` block
-- easier to supply `track`
-- mandatory `track` will prevent performance issues
-- easier to render an empty block
+מומלץ להפסיק להשתמש ב-*ngFor ולהשתמש בסינטקס החדש של `@for`. ישנם כמה יתרונות לשימוש בסינטקס החדש של `@for`:
+- קל יותר להבין את הבלוק של `@for`
+- קל יותר לספק `track`
+- ה- `track` החובה ימנע בעיות בביצועים
+- קל יותר לטפל במצב של מערך ריק
 
