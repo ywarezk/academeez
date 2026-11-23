@@ -14,7 +14,7 @@ For example, we examined the GCP folder units we created under `iac/gcp/tofu/com
 
 You'll soon notice that creating a GCP folder is a repeating task — not only within this project, where we already have `root` and `shared`, but across other Infrastructure as Code projects as well. A folder is just one example — the same repetition applies to VPCs, projects, databases, and other infrastructure patterns, both within a single project and across different ones.
 
-To avoid DRY violations, we package those repeating patterns into a reusable library — a **catalog** — that we can share across projects. As we improve the catalog, we version it so each project can pin to a release and adopt updates gradually, without breaking the projects that already depend on it.
+To avoid DRY violations, we package those repeating patterns into a reusable library — a **catalog** — that we can share across projects. As we improve the catalog, we version it so each project can pin to a release and adopt updates gradually, without breaking the projects that already depend on it. Tests on the catalog help catch breaking changes before downstream projects pick them up.
 
 This course repository aims not only to teach Infrastructure as Code, but also to serve as a **catalog** of reusable unit templates and patterns that you can reference from your own projects.
 
@@ -185,6 +185,9 @@ catalog {
 ```
 
 Since our catalog lives in the same repository, we point at the repo root with `get_repo_root()`.
+
+When Terragrunt scans the repository for catalog items, it includes every folder by default. To tell it which paths to skip (for example, the `live` folder or CI configs), place a `.terragrunt-catalog-ignore` file at the repo root. It uses the same syntax as `.gitignore` — any path that matches is excluded from the catalog browser.
+
 Usually you will work from a different repository and reference a remote catalog — it would look something like:
 
 ```hcl
@@ -229,6 +232,62 @@ terragrunt scaffold 'github.com/Nerdeez/terragrunt-catalog//iac/gcp/catalog/unit
 ```
 
 This will simply create the same files — only you will have to fill in `terragrunt.values.hcl` yourself, without going through the catalog TUI.
+
+## Templates and Boilerplate
+
+Boilerplate is Gruntwork's template generator.
+It can take an entire directory of templates and translate it into a directory of rendered files.
+The template generator uses Go's `text/template` engine, which means the same tools you have with Go's `text/template` engine apply to the templates
+we are going to create here. You don't have to install Boilerplate — Terragrunt already ships with it — so we can easily use templates in our catalog.
+A template in our catalog is defined as a directory in the catalog that contains a `.boilerplate` directory with the template files that the template generator will translate,
+along with `boilerplate.yml`, which can contain variables, hooks, template dependencies, partials, and more information for the template generator.
+As an example of where those templates are useful, probably every Terragrunt project you create will contain a `root.hcl` file with similar things like
+configuring repeating providers, storing Terraform state in a bucket, using impersonation, etc. Since this will repeat in future projects, we often find ourselves copy-pasting
+from past projects into new ones.
+It becomes a bit annoying because there are some changes between those files in each project, so it's not a full copy-paste — you need to change some things, which means we might make a mistake.
+It is also quite common to generate a `root.hcl` that stores the state locally at the beginning, then generate the bucket we need using Terragrunt and Terraform, and then
+push the state to that bucket and change the `root.hcl` to work with the bucket we created. This is sort of a chicken-and-egg problem at the beginning of a project,
+so it makes things even more cumbersome. A simpler approach is to use our catalog to generate that `root.hcl`. Let's inspect how it works.
+Inside that template directory we have a `.boilerplate` directory with the template files — a single `root.hcl` file and a `boilerplate.yml` with our Boilerplate configuration.
+In the `boilerplate.yml` we defined the following variable:
+
+```yaml title="iac/gcp/catalog/templates/root/.boilerplate/boilerplate.yml"
+variables:
+  - name: StateBucket
+    description: |
+      GCS bucket for remote state (phase 2). Leave empty for local state (phase 1 bootstrap).
+      Provide the bucket name after creating it with the bootstrap project unit.
+    type: string
+    order: 7
+    default: ''
+    confirm: true
+```
+
+As stated, our `root.hcl` will be created differently at the beginning with local state, and after we create the bucket, with remote state.
+So at first we generate the template with the `StateBucket` variable set to empty, and after we create the bucket we generate that template again with
+`StateBucket` set to what we created. Then in the `root.hcl` we have a condition on that variable:
+
+```hcl title="iac/gcp/catalog/templates/root/.boilerplate/root.hcl"
+
+{{if .StateBucket}}
+remote_state {
+  backend = "gcs"
+  generate = {
+    path      = "backend.tf"
+    if_exists = "overwrite"
+  }
+  config = {
+    project              = local.common_project
+    bucket               = "{{ .StateBucket }}"
+    prefix               = "${path_relative_to_include()}/tofu.tfstate"
+    skip_bucket_creation = true
+  }
+}
+{{end}}
+
+```
+
+The template gives us the ability to use double curlies `{{}}` and place a valid template expression like conditions, loops, functions, etc.
 
 ## Summary
 
