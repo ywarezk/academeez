@@ -7,11 +7,12 @@ authors:
 ---
 
 I see many developers struggle with using `git rebase` and I think the main reason of the struggle is 
-caused by the conflicts that arise when rebasing.
+caused by the conflicts that arise when rebasing.  
 So right from the start let's clarify something:
-**Does `git rebase` has more conflicts than `merge`?**: The answer is if you **know what you are doing** than usually no - the number of conflicts will be the same.
+**Does `git rebase` has more conflicts than `merge`?**:  
+The answer is if you **know what you are doing** than usually no - the number of conflicts will be the same.  
 The **know what you are doing** is often the problem.
-If you are working in a branch and your commits are **messy** (We will explain what messy means) then you will have ton of conflicts when working with rebase.
+If you are working in a branch and your commits are **messy** (We will explain what messy means) then you will have tons of conflicts when working with `rebase`.
 In this article we will try and understand how `git rebase` works, and why we have so many conflicts when rebasing.
 
 ## Rebase and Merge
@@ -94,7 +95,7 @@ Then we will have to solve another conflict on `package.json` in commit `3`.
 
 This means that in our Rebase example we had to solve 2 conflicts on the `package.json` file, while in the Merge example we only had to solve one conflict on the `package.json` file.
 
-Is seems from this example that `git rebase` has more conflicts than `git merge`.
+It seems from this example that `git rebase` has more conflicts than `git merge`.
 OR IS IT?
 
 ### git rebase interactive mode
@@ -105,14 +106,19 @@ We can fix the issue and create a new commit but that's not always the best solu
 
 Let's try to explain the problem with an example.
 Let's say you have a task where you need to install a package that will help you with **PDF** files, and using that package you will have
-to read the pdf, and search for a specific string.
-You find a popular package `pdf-reader` and you install it.
-You create your first commit `chore: install pdf-reader` and you start working on the task.
-You implement reading the pdf and create another commit `feat: read pdf`.
+to read the pdf, and search for a specific string.  
+So here is the workflow of the task:
+1. You find a popular package `pdf-reader` and you install it.
+You create your first commit `chore: install pdf-reader`.
+2. You implement reading the pdf and create another commit `feat: read pdf`.
+
 You find out that the package you chose cannot be used for searching for a string in the pdf.
 You decide to go with a different package `pdf-lib` that can do the job.
-you create a new commit `chore: install pdf-lib` and you start working on the task again.
-You implement reading the pdf and create a commit and also searching for a string in the pdf and create another commit.
+
+3. you create a new commit `chore: install pdf-lib`.
+4. You implement reading the pdf and create a commit 
+5. You implement searching for a string in the pdf and create another commit.
+
 Then you realize that the package you chose are not maintained and has a lot of issues.
 The you decide to go with a 3rd package `awesome-pdf` which you manage to create all the features you need.
 So a commit history in your branch might look like this:
@@ -136,4 +142,98 @@ to read a tutorial we wrote on the topic: [Clean your commits](https://www.acade
 
 ## Convlicts Rebase vs Merge
 
-So actually if we make sure to 
+So actually if we make sure to arrange our commits properly and squash them when needed, then most likely the number of conflicts we will have when rebasing will be the same as the number of conflicts we will have when merging.
+The only difference might be if there is changes in the same file that the developer wants to emphasize the changes in different commits.
+Changes that are not related to each other and are more suited to a different commit then a remark on the commit body.
+Have to say that those are relatively rare, especially if you arrange you work properly to PR's with single responsibility and not a single PR that does everything.
+But there are cases when developer choose to split a change on a single file into multiple commits, in that case yes there will be more conflicts, but those changes are aimed for different pr's it makes sense that those changes will be reflected multiple times if that was the choice of the developer.
+On the merge side you will suddently have a commit with solved conflicts that reflect different commits from the past, very confusing in terms of looking back at the commit history.
+
+So bottom line if you arrange your PR properly 99% of the time - same conflicts, the 1% is your choice but it's actually better in terms of commit history.
+
+## What about pull?
+
+To understand how pull affects in terms of conflicts, rebase, and merge, let's think about the following scenario:
+I'm on a branch called `feature` I create 3 commits on that branch.
+commit `1` and commit `3` are changing the same file `package.json`.
+On the `main` branch a developer pushed a commit with changes to the `package.json` file.
+
+![git pull](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/pull1.png?raw=true)
+
+This image describe the scenario, we want to examine what happens on different pull commands.
+
+### git pull
+
+`git pull` with no additional argument will pull from the upstread branch (provided there is one) and merge the changes into the current branch.
+Meaning if we are on the `feature` branch and we run `git pull` it will `git fetch` to get the latest changes to the local repository and then it will merge the changes into the `feature` branch from the upstream of the `feature` branch (usually `origin/feature`).
+
+so provided that your remote name is `origin` and the upstream branch is `origin/feature`, the command will be equivalent to:
+
+```bash
+git fetch origin
+git merge origin/feature
+```
+
+and a more explicit command would be:
+
+```bash
+git pull origin feature
+```
+
+which in this case will be equivalent.
+
+### git pull origin main
+
+If I'm on the branch `feature` and I run `git pull origin main`, it will fetch the changes from the `main` branch and merge them into the `feature` branch.
+This is equivalent to running:
+
+```bash
+git fetch origin main
+git merge origin/main
+```
+
+This means that the changes from the `main` branch will be merged into the `feature` branch.
+Merge meaning another commit will be created on the `feature` branch that will combine the changes from both branches.
+
+Notice that the `main` branch is updated in our local repository but not in the working directory, so if we transition to main we won't see the changes.
+We will have to run `git pull` to get the changes from the `main` branch into our local repository.
+
+### git pull --rebase
+
+You can also run `git pull` with the `--rebase` option.
+So if we are on the `feature` branch and we run:
+
+```bash
+git pull --rebase origin main
+```
+
+This will fetch the changes from the upstream branch and rebase the current branch on top of the upstream branch.
+This is equivalent to running:
+
+```bash
+git fetch origin main
+git rebase origin/main # we are currently on the feature branch
+```
+
+Notice that the working directory is not updated with the changes from the `main` branch.
+This means the if we transition to the `main` branch we won't see the changes until we run `git pull` to get the changes from the `main` local repository to the working directory.
+
+without the `--rebase` option the default behavior of `git pull` is to merge the changes from the upstream branch into the current branch.
+Since I prefer to use `rebase` instead of `merge` I can set the default behavior of `git pull` to `rebase` by running:
+
+```bash
+git config pull.rebase true
+```
+
+In general I do find it clearer if the working directory is updated with the changes from the upstream branch and local repository, so personally I prefer not to do a `git pull origin main`  directly to my `feature` branch.
+I prefer to do a `git pull origin main` to the `main` branch and then do a `git rebase main` to my `feature` branch.
+Some developers might look at it as a bit more work, but I find it clearer and easier to understand.
+
+## Conclusion
+
+If your PR branch is organized properly and you are using `git rebase` instead of `git merge` then the number of conflicts you will have when rebasing will be the same as the number of conflicts you will have when merging.
+With Rebase there are certain changes in the same file that you choose not to squash to emphasize some change, on those not that common occasions that specific file can have more than
+one conflict, but it does make the history cleaner and easier to understand and those changes you want to emphasize are more understandable
+if the commit is solved on that specific commit and not one time on the merged version of the change.
+
+
