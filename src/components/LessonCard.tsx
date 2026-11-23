@@ -20,7 +20,7 @@ export const LessonCard: FC<{article: any, locale: string}> = ({
 	let imageLink = article.slug;
 	if (locale) {		
 		imageLink = imageLink.replace(`${locale}/`, '');
-	}
+	}	
   return (
     <Card>
 			<CardHeader>				
@@ -31,7 +31,7 @@ export const LessonCard: FC<{article: any, locale: string}> = ({
 				<img src={`https://github.com/ywarezk/academeez4/blob/main/src/content/docs/${imageLink}/thumbnail.png?raw=true`} className="object-cover my-2 rounded-xl h-40" />
 			</CardContent>
 			<CardFooter>
-				<a className={cn(buttonVariants(), 'w-full no-underline text-black')} href={article.slug}>
+				<a className={cn(buttonVariants(), 'w-full no-underline text-black')} href={`/${article.slug}`}>
 					Read
 				</a>
 			</CardFooter>
