@@ -1,0 +1,464 @@
+---
+title: התקנה של Flux על קלאסטר K8S עם Terraform/OpenTofu
+description: בשיעור זה נלמד איך להתקין Flux על קלאסטר K8S שלנו באמצעות Terraform או OpenTofu על GCP.
+publishDate: 2024-05-14
+sidebar: 
+  order: 4
+authors:
+  - yariv-katz
+sources:
+  - title: התקנת Flux עם Terraform/OpenTofu			  
+    url: https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-04/iac
+---
+
+בשיעור זה נלמד איך להתקין [Flux](https://fluxcd.io/) על קלאסטר [Kubernetes](https://kubernetes.io/) שלנו באמצעות [OpenTofu](https://opentofu.org/).  
+נכתוב את תשית הענן שלנו באמצעות קוד ונריץ אותו עם OpenTofu, אבל אותו קוד יכול להיות מורץ עם Terraform.  
+שיעור זה הוא מימוש נאיבי ופשטני להתקנת Flux עם Terraform, הוא מלא בשיטות רעות ומתמקד בפשטות, אבל אל תדאגו, בשיעור הבא אחרי שנבין איך להתקין Flux בצורה בסיסית, נלמד איך לעשות דברים נכונים.  
+מתמקדים על פשטות כדי להתחיל עם משהו פשוט לפני שנקפוץ לדברים מורכבים יותר.  
+אז זכרו פתרון קל, פתרון פשוט, להתקנת Flux עם Terraform/OpenTofu, ולא פתרון מומלץ בסיסי - עבור זה תצטרכו לקפוץ לשיעור הבא.
+
+אנחנו מניחים שיש לכם ידע בסיסי ב-Terraform, ולא נעבור על היסודות של Terraform בשיעור זה.
+
+נקודה חשובה נוספת לפני שנתחיל היא שניצור את כל הדברים על [GCP](https://cloud.google.com/), אם אתם רוצים דוגמא לענן אחר, או דוגמא עם טכנולוגית אחרת של קוד תשלחו בקשה (או תיצרו PR אם אתם מוכנים לאתגר).
+ואל תשכחו לתת כוכב ל-[מאגר הקורס](https://github.com/ywarezk/academeez-k8s-flux), זה עוזר לנו המון.
+
+אז הדגש בשיעור הזה הוא על פשטות, ודרישות מינימום להתחלת פרוייקט חדש ב-GCP, עם VPC, Subnet, GKE Cluster ו-Flux מותקן עליו.
+
+בואו נתחיל...
+
+## מה נלמד בשיעור הזה
+
+- חשיבות שימוש ב-IAC
+- יצירת Project חדש ב-GCP
+- יצירת VPC ו-Subnet
+- יצירת GKE Cluster
+- התקנת Flux עם Flux Provider
+
+## מה אתם צריכים שיותקן לפני שמתחילים
+
+- חשבון ב-GCP עם חשבון חיוב פעיל (כלומר כרטיס אשראי מחובר לחשבון)
+- חשבון ב-IAM עם הרשאות מנהל (זה לא פרקטיקה טובה ונלמד איך לעשות זאת נכון בשיעור הבא - עם דיבוג בראש)
+- צריך להתקין על המחשב שלכם את Terraform או OpenTofu (זה גם לא פרקטיקה טובה ונלמד איך לעשות זאת נכון בשיעור הבא עם [Terragrunt](https://terragrunt.gruntwork.io/))
+
+ניצור תיקייה חדשה בשם `iac` ונשים בתוכה את כל קוד התשתית שלנו.
+
+## GCP
+
+GCP זה ראשי תיבות של Google Cloud Platform, וזה ספק הענן שנשתמש בקורס הזה.  
+אין לנו העדפה מיוחדת ל-GCP, ואתם יכולים להשתמש בכל ספק ענן שתרצו, המושגים בין ספקי הענן דומים והמושגים הם החשובים, ולא הספק.  
+אם מספיק מפתחים יכתבו בקשה לספק ענן מסוים, נשקול להוסיף אותו לקורס.
+
+## OpenTofu
+
+במהלך הקורס נספק דוגמאות ב-IAC עם OpenTofu, אבל אותו קוד יכול להיות מורץ עם Terraform.  
+אין זה אומר שאנחנו ממליצים על OpenTofu, ואתם יכולים להשתמש בכל טכנולוגיית IAC שתרצו, המושגים בין טכנולוגיות ה-IAC דומים והמושגים הם החשובים, ולא הסינטקס השונה.  
+אם מספיק מפתחים יכתבו בקשה לטכנולוגית IAC מסוימת, נשקול להוסיף אותה לקורס.
+
+## מדוע זה חשוב להשתמש ב-IAC
+
+מומלץ מאוד להשתמש ב-IAC כדי ליצור את המשאבים שלכם בענן.  
+יש כמה יתרונות לכך:
+- עקביות של משאבי הענן בין סביבות
+- אוטומציה של יצירת משאבים בענן
+- קל להגדיל משאבי ענן
+- קל לשכפל קונפיגורציה מספר פעמים
+- בדיקות ולינטינג של קוד ה-IAC שלכם
+- יכולת לשתף פעולה עם חברי צוות אחרים
+- קל ליצור מחדש במקרה של פגיעה
+- ניתן לשלב עם תהליך ה CI/CD
+
+## Terraform Providers
+
+Terraform לבדו אינו מספק הרבה כוח. כדי לתת ל-Terraform יותר כוח עלינו להגיד ל-Terraform להתקין providers ליצירת דברים מסוימים.  
+כאשר אתה מגדיר provider אתה יכול לתת ל-provider שם נוסף, או להשתמש בשם המוגדר כבר. כל משאב נוצר על ידי provider והקידומת של המשאב או הציון של ה-provider בבלוק של המשאב יגיד ל-Terraform איזה provider ייצור את המשאב.  
+לדוגמא משאבים שמתחילים ב-`google_` נוצרים על ידי provider של google, ומשאבים שמתחילים ב-`flux_` נוצרים על ידי provider של flux.  
+כאשר אתה מחליט לתת שם אחר ל-provider עליך לציין את ה-provider בבלוק של המשאב.  
+לדוגמא עבור Flux Provider נצטרך לספק עוד קונפיגורציות, לדוגמא עבור Flux Provider נצטרך לספק אימות עם ה-cluster שלנו ועם ה-repo שלנו ב-github.
+
+## required_providers
+
+ב-Terraform/OpenTofu אתה יכול לציין את ה-providers, גרסאות ה-providers, והמיקום של ה-providers בבלוק של ה-configuration בתוך ה-`required_providers`.  
+זה מומלץ לכתוב שם את ה-providers וגרסאותיהם.  
+ניצור את הקובץ `iac/gcp/tofu/providers.tf` עם התוכן הבא:
+
+```terraform
+terraform {
+	required_version = "~> 1.8"
+	required_providers {
+		google = {
+			version = "~> 6.8"
+		}		
+	}
+}
+```
+
+כאשר קושרים את הגירסא עם `~>` זה אומר שהמספר הימני יכול להשתנות, בדוגמא זו מדובר ב-semver וזה אומר שהמספר הקטן יכול להשתנות, אבל המספר הגדול צריך להישאר זהה.  
+בנוסף ציינו את הגרסא של tofu שאנחנו משתמשים בה בשדה `required_version`.
+
+## terraform-google-modules
+
+[terraform-google-modules](https://registry.terraform.io/namespaces/terraform-google-modules) הוא אוסף של מודולים שנוצרו על ידי google.
+המודולים האלה מתוחזקים היטב ומתמקדים ביצירת משאבים תוך שמירה על best practices. נשתמש במודולים האלה כמה שנוכל כדי ליצור משאבים בענן.
+
+## הזדהות של Google Provider
+
+אנחנו משתמשים ב-Google Provider כדי ליצור משאבים ב-GCP.  
+אותו ה - Google Provider צריך להזדהות עם GCP כדי ליצור משאבים.
+נצטרך ללכת לתיעוד של ה-provider ולבדוק [איך הוא מתחבר ל-GCP](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference#authentication).  
+בדרך כלל אנחנו רוצים שההזדהות תתבצע באמצעות הטכניקה של impersonation של Service Account, אבל נדבר על זה בשיעור הבא. בשיעור זה נשתמש בפשטות ונזדהה עם הפקודה:
+
+```bash
+gcloud auth application-default login
+```
+
+צריך לוודא שהמשתמש שלכם ב-GCP יש לו מספיק הרשאות ליצירת כל המשאבים שאנחנו יוצרים.
+
+## יצירת Project חדש ב-GCP
+
+[Project ב-GCP](https://cloud.google.com/resource-manager/docs/creating-managing-projects) הוא יחידה ארגונית שיכולה לעזור לך לארגן משאבים ב-GCP.
+ניתן לשים את המשאבים תחת Project, ה-Project יקושר לחשבון חיוב, ניתן להגדיר תקציב אם אתם לא רוצים שהעלות של ה-Project תצא מכלל השליטה.
+ה-Project יעזור לנו גם עם הבידוד, נשים סביבות שונות בפרוייקטים שונים, והבידוד יעזור לנו גם עם ההרשאות לחברי צוות שונים.
+
+נשים את כל המשאבים בפרוייקט חדש, אז ניצור פרוייקט חדש ב-GCP.
+ניצור קובץ חדש `iac/main.tf`, ונשים בו את כל קוד התשתית שלנו (פרקטיקה רעה נוספת - אין מודולים ואין תלות, נתקן את זה בשיעור הבא).
+
+```terraform
+/**
+ * With the google provider we can use terrafom to create resources in GCP
+ */
+provider "google" {  
+  user_project_override = true
+	project               = var.project_id
+  billing_project       = var.project_id
+}
+
+/**
+ * The terraform-google-modules is a collection of terraform modules that help us create resources in GCP
+ * We will use terraform-google-modules/project-factory/google to create our GCP Project
+ */
+module "project" {
+	source = "terraform-google-modules/project-factory/google"
+	version = "~> 17.0"
+	auto_create_network = false	
+	billing_account = var.billing_account
+	org_id = var.org_id
+	budget_amount = 30
+	name = "academeez-k8s-flux"
+	random_project_id = true
+	create_project_sa = false
+	deletion_policy = "ABANDON"
+	activate_apis = [
+		"compute.googleapis.com",
+		"billingbudgets.googleapis.com",
+		"cloudresourcemanager.googleapis.com",
+		"serviceusage.googleapis.com",	
+		"container.googleapis.com"	
+	]
+}
+```
+
+יצרנו פרוייקט בשם `academeez-k8s-flux`.
+בנוסף קבענו תקציב של **30$** לפרוייקט.  
+
+יש צורך במשתנים כאן, אז ניצור קובץ `variables.tf`:
+
+```terraform
+variable "billing_account" {
+	description = "the gcp billing account that is connected to the project"
+	type = string
+}
+
+variable "org_id" {
+	description = "the gcp organization id"
+	type = string
+}
+
+variable "project_id" {
+	description = "academeez-k8s-flux created project id"
+	type = string
+}
+```
+
+ניצור קובץ `terraform.tfvars` ונשים בו את הערכים הבאים כדי למלא את המשתנים:
+
+```terraform
+org_id = "YOUR_ORG_ID"
+billing_account = "YOUR_BILLING_ACCOUNT"
+project_id = "id of the created project"
+```
+
+נחליף את `YOUR_ORG_ID` ו-`YOUR_BILLING_ACCOUNT` בערכים שלכם, וגם נקבע את ה-`project_id` ל-id של הפרוייקט שנוצר.
+
+ניתן לבדוק מה tofu הולך ליצור על ידי הרצת הפקודה `tofu plan` (או `terraform plan` או `terraform`).
+
+ניתו להריץ `terraform init` ו-`terraform apply` כדי ליצור את הפרוייקט.
+או ניתן להריץ עם OpenTofu `tofu init` ו-`tofu apply`.
+
+## יצירת VPC ו-Subnet
+
+[VPC](https://cloud.google.com/vpc/?hl=en) מייצג רשת וירטואלית. VPC אינו מקושר לאזור או לאזור, כך שהרשת הפרטית יכולה להתפשט בכל המיקומים בענן.
+VPC יעזור גם עם כללי אבטחה firewall וגם עם בידוד של משאבים.
+בהתאם למקרה השימוש ניתן להחליט שכל משאבי האפליקציה יהיו ב-VPC אחת, או אם יש לכם ארכיטקטורת רשת מורכבת יותר ואתם רוצים לשים צוותים של מיקרו-שירותים ב-VPC שונים זה אפשרי גם.
+במקרה של הקורס נצא עם הארכיטקטורה הפשוטה וניצור VPC אחת לכל סביבה.
+המשאבים בתוך ה-VPC יכולים לתקשר עם עצמם, וניתן להגדיר כללי חומה שיאפשרו או יסכימו על תנועה בין המשאבים.
+המשאבים ב-VPC יכולים גם לתקשר עם שירותים ב-GCP.
+
+[Subnet](https://cloud.google.com/vpc/docs/subnets) הוא טווח של כתובות IP בתוך ה-VPC שלך. זה מאפשר לך ליצור קטעים מסוימים בתוך ה-VPC שהם מוקשרים לאזור.
+כל תת-רשת יכולה להיות באזור אחד בלבד, והיא תכיל כתובות IP מה-VPC שלך.
+ה- subnet מאפשר לך ליצור בידוד נוסף בתוך ה-VPC יחד עם הוספת כללי חומה לתת-רשת.
+למרות שה - subnet נמצא ב- region המשאבים יכולים להתפזר על כמה zones ב-region הזה.
+
+ניצור VPC ו-Subnet עבור הקלאסטר שלנו.  
+בתחתית הקובץ `main.tf` נוסיף את הקוד הבא:
+
+```terraform
+/**
+ * We will place our application in a single VPC.
+ * We will also create a subnet to place our GKE cluster in.
+ */ 
+module "vpc" {
+	source  = "terraform-google-modules/network/google"
+	version = "~> 9.3"
+
+	project_id   = module.project.project_id
+	network_name = "academeez-k8s-flux"
+	routing_mode = "GLOBAL"
+
+	subnets = [
+		{
+				subnet_name           = "k8s"
+				subnet_ip             = "10.0.0.0/24"
+				subnet_region         = "us-central1"
+		}
+	]
+	
+	secondary_ranges = {
+		k8s = [
+			{
+				range_name    = "pods"
+				ip_cidr_range = "10.1.0.0/16"
+			},
+			{
+				range_name    = "services"
+				ip_cidr_range = "10.2.0.0/24"
+			}
+		]
+	}
+	
+}
+```
+
+נשים לב שיש מספיק כתובות IP ב-subnet שלנו עבור ה-nodes, pods ו-services שלנו.
+
+הוספנו VPC עם Subnet, וגם הוספנו טווחים משניים עבור pods ו-services.  
+ישנם ארכיטקטורות שונות של רשתות, וזה תלוי בארגון ובצרכי הארגון.
+במקרה שלנו פשוט הלכנו על משהו פשוט עם מספיק כתובות IP לצרכים שלנו.
+
+מספר כתובות ה- IP ב-CIDR של x.x.x.x/y הוא `2^(32-y)`. כאשר y - אומר שה-y הראשונים קבועים, והשאר יכולים להשתנות.
+
+נעבור על טווחי הכתובות:
+- עבור ה-nodes טווח הכתובות הוא `10.0.0.0/24` וזה אומר שיש לנו 255 כתובות IP ל-nodes שלנו (ה-24 הראשונים קבועים, והשאר יכולים להשתנות מתחילת `10.0.0.0`).
+- עבור ה-pods טווח הכתובות הוא `10.1.0.0/16` וזה אומר שיש לנו 65536 כתובות IP ל-pods שלנו (ה-16 הראשונים קבועים, והשאר יכולים להשתנות מתחילת `10.1.0.0`).
+- עבור ה- services טווח הכתובות הוא `10.2.0.0/24` וזה אומר שיש לנו 255 כתובות IP ל-services שלנו (ה-24 הראשונים קבועים, והשאר יכולים להשתנות מתחילת `10.2.0.0`).
+
+נשים לב שהשתמשנו ב-terraform-google-modules, והשתמשנו במודול `terraform-google-modules/network/google`.
+אז נצטרך להריץ `terraform init` או `tofu init` כדי להתקין את המודול.
+
+ניתן להריץ `terraform apply` או `tofu apply` כדי ליצור את ה-VPC.
+
+## יצירת GKE Cluster
+
+השירות GKE הוא שירות עבור cluster של kubernetes ב-GCP.
+מומלץ מאוד להשתמש בשירות מנוהל של kubernetes על הענן, זה נותן הרבה יתרונות כמו:
+- ניהול של ה-control plane עם זמינות גבוהה
+- ניטור
+- לוגים
+- הרחבת ה- nodes וה - pods על פי עומסים
+- עדכונים ותיקונים של ה-cluster
+
+אחרי שניצור את ה-cluster נרצה שה- `kubectl` שלנו יתקשר עם ה-cluster.
+בשביל זה נצטרך להוסיף לקובץ `~/.kube/config` את המידע על ה-cluster - להוסיף context ל- `kubectl` שלנו.
+מרבית ספקי הענן הפופולריים מספקים כלי cli שיעזרו לנו להוסיף את ה-context של ה-cluster שלנו. GCP מספקת את הכלי `gcloud` שיעזור לנו להוסיף את ה-context של ה-cluster שלנו.
+
+```bash
+gcloud container clusters get-credentials <cluster-name> --region=<region> --project=<project-id>
+```
+
+ניצור את ה-cluster שלנו.
+בתחתית הקובץ `main.tf` נוסיף את הקוד הבא:
+
+```terraform
+/**
+ * This will create our managed kubernetes cluster
+ */
+module "gke" {
+  source                     = "terraform-google-modules/kubernetes-engine/google"
+	version                    = "~> 33.1"
+	project_id = module.project.project_id
+	name = "academeez-k8s-flux"
+	region = "us-central1"
+	zones = ["us-central1-a", "us-central1-b", "us-central1-f"]
+	network = module.vpc.network_name
+	subnetwork                 = module.vpc.subnets_names[0]
+  ip_range_pods              = module.vpc.subnets_secondary_ranges[0][0].range_name
+  ip_range_services          = module.vpc.subnets_secondary_ranges[0][1].range_name
+	deletion_protection = false
+	node_pools = [
+		{
+			name                        = "default-node-pool"
+			machine_type                = "e2-medium"
+			node_locations              = "us-central1-a,us-central1-b,us-central1-f"
+			min_count                   = 1
+      max_count                   = 10
+			initial_node_count          = 3
+		}
+	]
+	
+	node_pools_oauth_scopes = {
+    all = [
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring",
+    ]
+  }
+}
+```
+
+אנחנו יוצרים קלאסטר עם node pool אחד שיכיל בין 1-10 nodes.
+אנחנו מגדירים את ה-machine type ל- `e2-medium` עבור ה - node pool.
+ה - node pool יתחיל עם 3 nodes.
+זהו לא קלאסטר ל - production, אלא קלאסטר ללמידה (נלמד על קלאסטרים יותר מקצועיים בשיעור הבא).
+
+כדי להריץ את הקוד נצטרך להריץ `terraform init` ו- `terraform apply` או `tofu init` ו- `tofu apply`.
+
+## התקנת Flux
+
+ניתן להתקין את Flux באמצעות terraform/tofo. עבור זה נצטרך להשתמש ב-[Flux Provider](https://registry.terraform.io/providers/fluxcd/flux/latest/docs).
+נצטרך להגדיר את ה-Flux provider ולספק מידע על ה-cluster שלנו וגם מידע על ה-repo שלנו.
+
+### יתרונות של שימוש ב-IAC להתקנת Flux
+
+התקנת Flux באמצעות infrastructure as code (IAC), בדוגמא שלנו OpenTofu/Terraform (אבל ניתן להשתמש גם בפתרונות אחרים) ישנם כמה יתרונות:
+- התקנת Flux היא דקלרטיבית.
+- גרסת Flux שמותקנת היא דקלרטיבית וזהה בכל ה-cluster שלנו.
+- קל להתקין ולעדכן Flux ב-cluster רבים.
+- קל להוסיף או להסיר רכיבי Flux מכל ה-cluster שלנו.
+
+ניתן בקלות לשכפל את הקונפיגורציה שלנו על כמה cluster, וגם לשנות את הקונפיגורציה ולהפעיל אותה על כמה cluster.
+זהו תנאי הכרחי כאשר עובדים בארגון גדול עם מספר רב של קלאסטרים או כאשר יש לנו צוותים רבים ורוצים להקים פתרון multi-tenant לארגון שלנו.
+
+במידה ומדובר רק בקלאסטר אחד ואנחנו היחידים שמנהלים אותו אז היתרונות פחות חשובים, וניתן להשתמש ב-CLI להתקנת Flux.
+
+### אימות של tofu עם ה-cluster
+
+tofu יצטרך ליצור משאבים ב-cluster שלנו, ולכן יצטרך להזדהות עם ה-cluster.
+ישנם דרכים שונות להזדהות עם ה-cluster, לדוגמא tofu יכול להשתמש ב- `kubectl` שלנו וה- `kubectl` צריך להזדהות לפני הרצת tofu עם ה-cluster הנכון.
+אבל הזדהות כזאת עלולה להיות בעיה, טעויות יכולות להתרחש ולהריץ את הפקודה ב-cluster שאנחנו לא רוצים. בנוסף זה יהיה קשה יותר כאשר יש צוותים רבים שמשתמשים בפרוייקט IAC.
+כאשר כל אחד מהמפתחים יצטרך להזדהות עם ה-cluster הנכון, זה יגרום לבלגן ולקושי כאשר יש יותר מ-cluster אחד ויותר ממפתח אחד.
+מומלץ שתהליך ההזדהות יהיה דקלרטיבי ככל הניתן כאשר ה - cluster מוזכר בלוגיקת ההזדהות.
+מומלץ גם להשתמש ב-token זמני וקצר מועד להזדהות.
+דרך אחת להזדהות עם ה-cluster (באמצעות Flux provider או באמצעות provider של kubernetes שהוא אותו דבר) היא להשתמש בכלי ה-cli של ספק הענן.
+ניתן להזדהות באמצעות יצירת token זמני וקצר מועד עם כלי ה-cli של ספק הענן, זה נקרא **Exec Plugin**.
+ב - `gcloud` נוכל להשתמש בפקודה `gke-gcloud-auth-plugin` כדי להזדהות עם ה-cluster.
+ניתן להתקין את ה-plugin על ידי הרצת הפקודה:
+
+```bash
+gcloud components install gke-gcloud-auth-plugin
+```
+
+[gke-gcloud-auth-plugin](https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke) היא הדרך הטובה ביותר בזמן כתיבת הקוד שלנו להזדהות עם ה-cluster ב-tofu.
+
+בואו נתקין את Flux על ה-cluster שלנו.
+
+ראשית נגיד ל - tofu שאנחנו רוצים שה-Flux provider יותקן.
+נוסיף את הקוד הבא לקובץ `providers.tf`:
+
+```terraform
+terraform {
+	required_version = "~> 1.8"
+	required_providers {
+		google = {
+			version = "~> 6.8"
+		}
+		flux = {
+			source = "fluxcd/flux"
+			version = "~> 1.4"
+		}
+	}
+}
+```
+
+אנחנו נצטרך להגדיר את ה-Flux provider, וגם להתקין את Flux על ה-cluster שלנו עם ה-resource `flux_bootstrap_git`.
+בקובץ `main.tf` נוסיף את הקוד הבא:
+
+```terraform
+/**
+ * Configuring the flux provider will allow us to install flux in our cluster
+ * we need to authenticate the flux provider with our GKE cluster and with our github repo
+ */
+provider "flux" {
+	kubernetes = {
+		host = module.gke.endpoint
+		cluster_ca_certificate = base64decode(module.gke.ca_certificate)
+		exec = {
+			api_version = "client.authentication.k8s.io/v1beta1"
+			command = "gke-gcloud-auth-plugin"
+		}
+	}
+	git = {
+    url = "https://github.com/ywarezk/academeez-k8s-flux.git"
+    http = {
+      username = "git" # This can be any string when using a personal access token
+      password = var.github_pat
+    }
+  }
+}
+
+/**
+ * This will install flux on our GKE cluster
+ */
+resource "flux_bootstrap_git" "flux_test_cluster" {
+	path = "clusters/prod"	
+}
+```
+
+ה - Flux provider צריך להזדהות עם ה-cluster וגם עם ה-repo שלנו.
+אנחנו מספקים את הנתונים הנדרשים ל-provider כדי להזדהות עם ה-cluster, כאשר חלק מהנתונים נלקחים מ-output של `module.gke`.
+
+ה - Flux provider צריך גם להזדהות עם ה-repo שלנו, ולכן נצטרך לספק **PAT** (Personal Access Token) עבור ה-repo.
+יש לנו הוראות מלאות על איך ליצור PAT ב-[שיעור הראשון](https://www.academeez.com/en/course/kubernetes/flux/installation#pat---personal-access-token) של הקורס שבו התקנו את Flux באמצעות ה-cli (זהו אותו PAT).
+
+צריך להוסיף משתנים לקובץ `variables.tf`:
+
+```terraform
+variable "github_pat" {
+	description = "The token used to talk to our github repo"
+	type = string
+}
+```
+
+וגם לאכלס אותם בתוך הקובץ `terraform.tfvars`:
+
+```terraform
+github_pat=XXX
+```
+
+אחרי זה אנחנו מוכנים להתקין את Flux על ה-cluster שלנו.
+
+נריץ `terraform init` או `tofu init` ואז נריץ `terraform apply` או `tofu apply` כדי להתקין את Flux על ה-cluster שלנו.
+
+## בדיקת ה-cluster
+
+```bash
+kubectl get pods -n flux-system
+```
+
+ניתן לבחון את כל ה-pods של Flux ולראות שהם רצים.
+
+## סיכום
+
+במידה ואתם מנהלים רק קלאסטר אחד ואתם היחידים שמנהלים אותו, אז זה לא כל כך חשוב אם אתם מתקינים את Flux באמצעות CLI או terraform, אבל כאשר הדברים מתחילים להתרחב, ויש לכם מספר רב של קלאסטרים, או יש לכם מספר רב של צוותים, או יש לכם מספר רב של סביבות, אז חשוב להזדהות עם ה-infastructure וההתקנה של Flux באמצעות IAC.
+כתזכורת זהו setup מינימלי, ובשיעור הבא נלמד על קונבנציות וכיצד לעשות דברים נכון.
+ה - repo של הקורס כולו דקלרטיבי, ככה שניתן ליצור את ה-cluster קודם לשיעור ולהריץ `tofu destroy` אחרי השיעור כדי לחסוך כסף ולהשתמש רק במשאבים במהלך השיעור.
+במהלך הקורס אנחנו נציג את השינויים בענן באמצעון דוגמאות infastructure as code באמצעות שימוש ב-OpenTofu, אבל ניתן להשתמש בכל טכנולוגיה שמתאימה לכם, בנוסף ניתן להציע דוגמאות בטכנולוגיות אחרות על פי בקשה.
+ניתן לראות את קוד השיעור [כאן](https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-04/iac).
+
