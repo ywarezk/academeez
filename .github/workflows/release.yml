@@ -1,0 +1,46 @@
+# 
+# This workflow will increase version and create tag based
+# on conventional commits and semantic-release package
+#
+# Created August 23rd, 2025
+# @author ywarezk
+# @license MIT
+# 
+
+
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v3.9.1
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
+        run: npx semantic-release
+          
+      
