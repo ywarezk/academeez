@@ -17,7 +17,7 @@ export const LessonCard: FC<{ article: CollectionEntry<'docs'>; locale: string }
 	article,
 	locale,
 }) => {
-	const slug = article.slug;
+	const slug = article.id;
 	const imageLink = getThumbnailBySlug(slug, locale.substring(1));
 
 	return (

@@ -12,7 +12,7 @@ export async function GET() {
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">`;
 
 	for (const video of videos) {
-		const { data, slug } = video;
+		const { data, id: slug } = video;
 		const locale = getLocaleFromDoc(video);
 		const thumbnail = getThumbnailBySlug(slug, locale);
 		const thumbnailSrc = thumbnail?.src;
