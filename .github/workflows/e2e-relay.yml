@@ -1,0 +1,42 @@
+# 
+# This will trigger the E2E workflow.
+# IMPORTANT: this is always taken from main - so if this is changed in branch it won't be applied
+# until this is merged to main
+# This behaviour is because the repository_dispatch trigger
+#
+# Created August 16th, 2025
+# @author ywarezk
+# @license MIT
+# 
+
+name: Trigger E2E
+  
+on:
+  repository_dispatch:
+    types:
+      - 'vercel.deployment.success'  
+jobs:
+  run-e2es:    
+    runs-on: ubuntu-latest
+    steps:                
+      - uses: actions/create-github-app-token@a8d616148505b5069dccd32f177bb87d7f39123b
+        id: app-token
+        with:
+          app-id: ${{ vars.ACADEMEEZ_APP_ID }}
+          private-key: ${{ secrets.ACADEMEEZ_APP_PRIVATE_KEY }}
+          
+      - name: Trigger workflow with SHA
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'e2e.yml', // Replace with your workflow file name
+              ref: '${{ github.event.client_payload.git.sha }}',
+              inputs: {
+                ref: '${{ github.event.client_payload.git.sha }}'
+              }
+            });
+          
+      

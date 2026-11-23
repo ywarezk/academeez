@@ -8,39 +8,19 @@
 # @license: MIT
 # 
 
-name: End to End Tests
+name: E2E Tests
  
 on:  
-  repository_dispatch:
-    types:
-      - 'vercel.deployment.success'
   workflow_dispatch:
     inputs:
       ref:
-        description: 'The branch, tag or SHA to checkout'
+        description: "Commit SHA or branch to test"
         required: true
+        
 jobs:
   run-e2es:    
     runs-on: ubuntu-latest
-    steps:
-      - name: Determine ref
-        id: determine-ref
-        shell: bash
-        run: |
-          # Determine the ref to checkout
-          # If a ref is explicitly provided, use it
-          if [[ -n "${{ inputs.ref }}" ]]; then
-            echo "Using provided ref: ${{ inputs.ref }}"
-            echo "ref=${{ inputs.ref }}" >> "$GITHUB_OUTPUT"
-          # If the event is a repository_dispatch and the client_payload contains a SHA, use it
-          elif [[ "${{ github.event_name }}" == "repository_dispatch" && -n "${{ github.event.client_payload.git.sha }}" ]]; then
-            echo "Using client_payload SHA: ${{ github.event.client_payload.git.sha }}"
-            echo "ref=${{ github.event.client_payload.git.sha }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "No ref throw exception"
-            exit 1
-          fi        
-          
+    steps:                 
       - uses: actions/create-github-app-token@a8d616148505b5069dccd32f177bb87d7f39123b
         id: app-token
         with:
@@ -57,22 +37,36 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: `E2E`,
-              head_sha: '${{ steps.determine-ref.outputs.ref }}',
+              head_sha: '${{ inputs.ref }}',
               status: 'in_progress',
               started_at: new Date().toISOString(),
             });
             console.log('response is:', response.data);
             return response.data.id;
-
       
       - name: Checkout code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
-          ref: ${{ steps.determine-ref.outputs.ref }}
+          ref: ${{ inputs.ref }}
           fetch-depth: 1
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610
+        with:
+          node-version-file: '.nvmrc'   # automatically reads Node version from .nvmrc
+          cache: 'npm'                  # enables npm cache based on lock file
+
+      - name: Install dependencies
+        run: npm ci
+          
+      # - name: Install Playwright browsers
+      #   run: npx playwright install --with-deps
     
-      
-      - run: echo "Running E2E tests against the preview environment ${{ github.event.client_payload.url }}"      
+      # - name: run tests
+      #   env:
+      #     BASE_URL: ${{ github.event.client_payload.url }} # 👈 preview env URL
+      #   run: |
+      #     npx playwright test          
       
       - name: Set e2e check to success
         if: ${{ success() }}
