@@ -1,0 +1,115 @@
+---
+title: git config
+description: When installing git, it is shipped with a default configuration. As you gain experience with git, you will want to change the default configuration to make it more convenient for you. In this series of lessons, we will go over important configurations that you need to be familiar with, and perhaps change the default values of those configurations.
+publishDate: 2025-10-03
+authors:
+  - yariv-katz
+---
+
+When installing git, certain default configurations are set. Usually, advanced developers with more experience in git choose to change some of these default configurations.
+
+This happens with many technologies, where trade-offs are made and choices regarding the default configuration are not necessarily the best for everyone.
+Often, maintainers have to choose between being more friendly to beginners and making the technology easier to adopt, rather than choosing the advanced, probably better, option.
+
+For example, most git users are not aware of what exactly rebase does. They do not understand why they suddenly have more conflicts when they use rebase. After a programmer understands what rebase is doing, the conflicts will be similar to the conflicts they had when they used merge.
+Those developers will usually prefer to change the configuration to default to rebase.
+
+If git started with the rebase configuration, it would be very hard for beginners to adopt git.
+
+So, trade-offs have to be made.
+
+There are literally hundreds of configurations that can be set in git, and we will go over some of the most important ones in this series of lessons.
+Each lesson will focus on a configuration and our recommendation regarding that configuration.
+
+This is the nice thing about community and open source education: if you stumble on a git configuration rule that you think is important, and have a recommendation regarding that rule, please contribute to the discussion on the topic that is located here.
+
+## git config
+
+Git ships with hundreds of configurations you can customize. Some configurations are required, some configurations can be omitted and in that case Git will use their default values, and some configurations can be overridden.
+
+## Essential First-Time Setup
+
+When you first install Git, you'll need to configure your identity before you can make any commits:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+```
+
+Without these settings, Git will refuse to create commits and show an error message asking you to identify yourself.
+
+## Basic config commands
+
+Throughout the git config lessons, we will use these basic commands to view and set configurations:
+
+- `git config get` - Retrieve a configuration value
+- `git config list` - List all configurations  
+- `git config set` - Set a configuration value
+- `git config unset` - Remove a configuration
+- `git config edit` - Edit configuration file
+
+## Configuration Layers
+
+After installation, we have 3 basic layers of configurations in our system:
+- System - configurations for all users on the system
+- Global - configuration for the current user
+- Local - configuration for a specific repository
+- Closer layers override previous layers
+- Additional custom layers can be added
+
+You can edit each of these layers of configurations by running:
+
+```bash
+git config --system <key> <value>
+git config --global <key> <value>
+git config --local <key> <value>
+```
+
+System might require you to add `sudo`.
+
+System describes configurations that apply to all users on the system.
+Global describes configurations that apply to the current user.
+Local describes configurations that apply to the current repository.
+
+Each closer layer overrides the previous layer.
+This means that if a configuration is set in system and that configuration is also set in global, the global configuration will be used.
+
+Another way you can edit those configurations is by using the editor that git is configured to use.
+So if we want to edit the global configuration, we can run:
+
+```bash
+git config --global --edit
+```
+
+This will open the global configuration file in the editor that git is configured to use.
+This will also allow you to view where each of those configurations are saved in your system.
+
+For example, when I'm running the following command:
+
+```bash
+git config --system --edit
+```
+
+It will open the system configuration file in the editor that git is configured to use, and my system configuration is in the file: `/usr/local/etc/gitconfig`.
+
+## Summary
+
+In the following lessons, we will learn how to tailor git configuration to fit your needs:
+- We will learn about important configurations
+- We will provide recommendations and best practices for those configurations
+
+We already learned in this lesson about:
+- the layers of configurations (system, global, local)
+- We covered how to edit configurations on those layers
+
+Now that we know how to edit the configurations, by either using the command line or using the editor that git is configured to use, we can start to configure git to our liking.
+In the following lessons, we will go over important configurations, best practices, and recommendations regarding those configurations.
+These are configurations that you have to be familiar with and change a lot of them according to your needs.
+
+We learned that git is shipped with a system configuration, a global configuration, and a local configuration.
+Where system configuration is applied to all users on the system, global configuration is applied to the current user, and local configuration is applied to the current repository.
+You can actually add more layers of configurations. For example, if you have a bunch of repositories from work that require certain configurations, and your personal repositories which require something else, you can include a configuration based on location to add more layers of conditional configurations, but more about that in the following lessons.
+
+Every time we edit a configuration, we will have to decide in which layer we want that configuration to be applied: `system`, `global`, or `local`? Or perhaps create a new layer of configurations?
+
+Let's start organizing our git configurations properly!
