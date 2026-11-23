@@ -1,0 +1,246 @@
+---
+title: "שימוש בפונקציית *ngFor trackBy"
+description: ביצועים ישתפרו באופן משמעותי אם תשתמשו בפונקציות trackBy ב-*ngFor
+publishDate: "2023-11-17"
+authors:
+  - yariv-katz
+---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/XOMY6S6GcZw?si=EQ6gJzVZpaqIfjBc"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+הבנת פונקציית `*ngFor` [`trackBy`](https://angular.io/api/core/TrackByFunction) היא חשובה לשיפור ביצועי הלולאות שלך ושל האפליקציה שלך בכלל.
+
+## מה זה `*ngFor` trackBy?
+
+בקצרה, `*ngFor` trackBy היא פונקציה שאתה יכול להעביר ללולאת `*ngFor` שלך כדי לספר לאנגולר איך לעקוב אחר הפריטים ברשימה שלך. באופן ברירת מחדל, אנגולר מעקב אחר הפריטים ברשימה שלך לפי זהותם, כלומר `===`.
+
+## ברירת המחדל של trackBy
+
+בואו נבין איך ה-`trackBy` ברירת המחדל עובד.  
+נתחיל באפליקציה חדשה של Angular:
+
+```bash
+npx @angular/cli@latest new trackby-demo --minimal --style css --routing false
+```
+
+נשנה את `app.component.ts` כך:
+
+```typescript title="app.component.ts"
+import {Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <ul>
+      <li *ngFor="let item of todo">
+        <input [value]="item.title" />
+      </li>
+    </ul>
+    <button (click)="add()">add</button>
+  `,
+})
+export class AppComponent {
+  todo = [
+    {id: 1, title: 'hello'},
+    {id: 2, title: 'world'},
+    {id: 3, title: 'foo'},
+    {id: 4, title: 'bar'},
+  ];
+
+  add() {
+    this.todo.push({id: Math.random(), title: 'baz' + Math.random()});
+  }
+}
+```
+
+בדוגמא זו יש לנו רשימת פריטי משימות. אנו משתמשים ב-`*ngFor` כדי לעבור על הפריטים ולהציג קלט עבור כל פריט. יש לנו גם כפתור שמוסיף פריט חדש לרשימה.  
+נשים `input` בכל פריט כדי לוודא אם הרכיבים ברשימה נוצרים מחדש מאפס או שהרשימה משתנה ורכיב נוסף נוסף לרשימה.  
+ניתן להקליד משהו בקלט, אם הרשימה נוצרת מחדש תאבד את מצב הרכיב ב-DOM (מאחר שהוא נמחק), אבל במקרה זה אנו רואים שאנגולר מצליח לשמור על הרכיבים ב-DOM ורק להוסיף רכיב בסופו של הרשימה.
+
+אנגולר יעבור על כל פריט ברשימה וישווה אותו לפריט הקודם ברשימה באמצעות `===` מאחר שהפריטים ברשימה הם אותם פריטים, כך גם הרכיבים ב-`*ngFor`.
+
+## הבעיה
+
+כל עוד הפריטים ברשימה נשארים אותם אין בעיה, הבעיה תתחיל כאשר הפריטים ברשימה ישתנו, מה שקורה לעיתים תכופות במקרה השימושי של `*ngFor` כאשר אנו עוברים על רשימת פריטים שנלקחים מהשרת.  
+נדמיין את המקרה הבא, הרשימה נלקחת מהשרת, ויש לנו קלט חיפוש שישלח בקשת חיפוש לשרת ויציג לנו רשימה חדשה.  
+במקרה זה הפריטים ברשימה ישתנו, ואנגולר יחדיר את הרכיבים ברשימה מחדש, כלומר ישמיד את הרכיבים ב-DOM ויצור אותם מחדש מאפס.
+
+ננסה לפשט את הדוגמא עם הקוד הבא:
+
+```typescript title="app.component.ts"
+import {Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <ul>
+      <li *ngFor="let item of todo">
+        <input [value]="item.title" />
+      </li>
+    </ul>
+    <button (click)="add()">add</button>
+  `,
+})
+export class AppComponent {
+  todo = [
+    {id: 1, title: 'hello'},
+    {id: 2, title: 'world'},
+    {id: 3, title: 'foo'},
+    {id: 4, title: 'bar'},
+  ];
+	
+  clone() {
+    return this.todo.map(item => {
+      return {...item};
+    });
+  }
+
+  add() {
+    this.todo = [...this.clone(), {id: Math.random(), title: 'baz' + Math.random()}];
+  }
+}
+```
+
+נשים לב שבכל הוספה אנו בעצם מחדשים את הרשימה לחלוטין, אנו משתמשים בפונקציית `clone` כדי לשכפל את הרשימה ולהוסיף פריט חדש לרשימה.  
+במקרה הבא נראה שהקלט ברכיב נמחק ונוצר מחדש מאפס, וכך גם הרכיב ב-DOM.
+מעבר לאבדן המצב, זה גם בעיה ביצועים, מאחר שאנגולר ישמיד את כל רכיבי ה-DOM ברשימה ויצור אותם מחדש מאפס.
+
+## הפתרון
+
+הפתרון הוא להשתמש בפונקציית `*ngFor` trackBy, שתחליף את השוואת הברירת מחדל `===` עם פונקציית שוואה מותאמת.
+
+```typescript title="app.component.ts"
+import {Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <ul>
+      <li *ngFor="let item of todo; trackBy: tbid">
+        <input [value]="item.title" />
+      </li>
+    </ul>
+    <button (click)="add()">add</button>
+  `,
+})
+export class AppComponent {
+  todo = [
+    {id: 1, title: 'hello'},
+    {id: 2, title: 'world'},
+    {id: 3, title: 'foo'},
+    {id: 4, title: 'bar'},
+  ];
+	
+  clone() {
+    return this.todo.map(item => {
+      return {...item};
+    });
+  }
+	
+	tbid(index, item: typeof this.todo[0]) {
+		return item.id;
+	}
+
+  add() {
+    this.todo = [...this.clone(), {id: Math.random(), title: 'baz' + Math.random()}];
+  }
+}
+```
+
+ננסה להקליד משהו בקלט ולהוסיף פריט חדש לרשימה, נראה שהקלט נשמר ורק נוסף פריט לרשימה.
+
+## אכיפה באמצעות lint
+
+היות וזה כל כך נפוץ ש-`*ngFor` יקבל רשימה חדשה, יש מקומות שמאכפים את השימוש בפונקציית `*ngFor` trackBy, על ידי הפעלת כלל ב-lint של `@angular-eslint`.
+
+```bash
+npx ng lint
+```
+
+נעדכן את הקובץ `.eslintrc`:
+
+```json
+{
+  "root": true,
+  "ignorePatterns": [
+    "projects/**/*"
+  ],
+  "overrides": [
+    {
+      "parser": "@angular-eslint/template-parser",
+      "files": [
+        "*.ts"
+      ],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates"
+      ],
+      "rules": {
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "type": "attribute",
+            "prefix": "app",
+            "style": "camelCase"
+          }
+        ],
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "type": "element",
+            "prefix": "app",
+            "style": "kebab-case"
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended",
+        "plugin:@angular-eslint/template/accessibility"
+      ],
+      "rules": {
+        "@angular-eslint/template/use-track-by-function": "error"
+      }
+    }
+  ]
+}
+```
+
+נשים לב שהוספנו את `"parser": "@angular-eslint/template-parser",` ואת הכלל: `"@angular-eslint/template/use-track-by-function": "error"`.
+
+כעת כאשר אתם מריצים `npx ng lint` בלי הפונקציית `trackBy` תקבלו שגיאת lint.  
+נמליץ על הוספת חוק ה lint כדי להבטיח שהפונקציית `trackBy` תשמש בכל מקום שבו יש שימוש ב-`*ngFor`.
+
+## סיכום
+
+כאשר אתם משתמשים ב-`*ngFor` תשאלו את עצמכם את השאלות הבאות:
+- אילו רכיבים ברשימה נוצרים מחדש, ואיך אני יכול לבצע אופטימיזציה כך שרק הרכיבים הנדרשים ברשימה יעודכנו, ולא כל הרשימה.
