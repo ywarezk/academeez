@@ -1,0 +1,240 @@
+---
+title: NGRX State
+description: עובדות שצריך להכיר על ה - State שמנוהל על ידי NGRX.
+publishDate: 2023-10-23
+sources:
+  - title: "אפליקציית ספירה"
+    url: "https://codesandbox.io/p/sandbox/empty-glitter-j625vk"
+  - title: "אפליקציית ספרים"
+    url: "https://codesandbox.io/p/sandbox/ecstatic-cdn-25c6wt"
+---
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/N3z4ivBJqr0?si=9O6KYcjxAiJEnYaG"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+`NGRX` הוא ספריית **STATE** management, בשיעור זה נלמד את החוקים הבסיסיים על ה - state שמנוהל על ידי `NGRX`.
+
+## אודות NGRX State
+
+ה - state הוא `Object` שמוחזק על ידי `NGRX`.  
+Components יכולים לבחור להירשם לשינוי ב state, ולקבל התראה כאשר ה state משתנה, אז הם יציירו את ה - UI עם הנתונים החדשים.  
+Components יכולים גם לספר ל `NGRX` להחליף את ה state עם state חדש, כך שתמיד ניתן להחליף את ה state עם state חדש.  
+נוכל להביט ב state כגיליון נתונים בנקודת זמן מסוימת, וNGRX מחזיק את ה state הנוכחי.
+
+## דוגמא לאפליקציית Counter
+
+בואו נבחן את ה state באפליקציית counter פשוטה זו:
+
+![counter app](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/state/state.gif?raw=true)
+
+האפליקציה תגדיל את המונה בכל לחיצה על כפתור.  
+ערך המונה מתקבל מ - `NGRX`.  
+באמצעות [Redux Dev Tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) אנו יכולים לבחון את ה state שמנוהל על ידי `NGRX` שמחזיק בצד הימני של המסך.  
+מה state פשוט כזה אנו יכולים להבין כמה עובדות על ה state שמנוהל על ידי `NGRX`, שהן גם נגזרות מבסיס של `Redux` - `NGRX` הוא אימפלמנטציה של `Redux` באמצעות Observables.
+
+## ה - State הוא Object
+
+ה state שלנו הוא `Object` פשוט ב - `Javascript`
+
+## ה - State יש ערך ראשוני
+
+שימו לב שה state הוא Object פשוט שנראה כך:
+
+```json
+{
+  "counter": 0
+}
+```
+
+אותו Object מתחיל עם ערך ראשוני של 0.  
+ה- `NGRX` state יש ערך ראשוני שנצטרך לספק כאשר אנו מגדירים את `NGRX` (אותו דבר עם `Redux` עלינו לספק את הערך הראשוני של ה state)
+
+## ה - State הוא Immutable (בלתי ניתן לשינוי)
+
+ה- state שלנו מתחיל עם:
+
+```json
+{
+  "couter": 0
+}
+```
+
+ואחרי שהמשתמש לוחץ על כפתור ה - Increment, ה state משתנה ל:
+
+```json
+{
+  "couter": 1
+}
+```
+
+כאשר אנו בודקים את ה state הזה, ייתכן שנחשב שה state הוא mutable, אך זה לא נכון.  
+המצב הוא כזה שאנו לא משנים את הערך של המאפיין `counter`, אלא אנו בעצם מחליף את כל ה state עם state חדש.  
+להסבר עם קוד פסאודו:
+
+```javascript
+// lets imaging we have the following imaginary function from ngrx
+import {getState, setState} from '@ngrx/store';
+
+/**
+ * this is an imaginary function called from pressing the increment button
+ */
+function increment() {
+  const currentState = getState();
+
+  // we are not doing
+  // currentState['counter'] = currentState['counter'] + 1
+
+  // we are doing
+  const newState = {
+    ...currentState,
+    counter: currentState.counter + 1,
+  };
+  setState(newState);
+}
+```
+
+בדוגמא זו יש לנו פונקציה לקבלת ה state הנוכחי, ופונקציה להגדרת state חדש.  
+אנחנו לא משנים את המאפיין `counter` ב state הנוכחי, אלא בונים state חדש מאפס, על ידי העתקת ה state הנוכחי, ומחליפים את המאפיין `counter` עם ערך חדש (בדוגמא זו כל כך פשוטה כי המונה הוא המאפיין היחיד, אך בדרך כלל ה state מכיל יותר מאפיין אחד ואז האופרטור המתאים הוא ה spread operator).
+
+ה - state הוא immutable, זה אומר שאנו לא משנים את ה state הנוכחי, אלא בונים state חדש ומחליפים את ה state הנוכחי עם ה state החדש.
+
+## הסתכלות על שינוי ה- State מנקודת מבט של RXJS
+
+ישנה `Service` בחבילת הראשית של `NGRX` שנקרא <a href="/courses/angular/ngrx/store">Store</a> שנדון בשיעורים הבאים.  
+אנו יכולים להביט ב - `Service` זה כ - `Observable` שמשדר את ה state בכל פעם שה state משתנה.
+
+![state as observable](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/state/state-rxjs.gif?raw=true)
+
+## המלצה: ה - State צריך להיות Serializable
+
+המונח `Serializable` אומר שאנו יכולים להמיר את ה - Object למחרוזת, ואז להמיר את המחרוזת חזרה ל - Object, ולקבל Object דומה.  
+טריק טוב לבדוק אם Object הוא Serializable או לא הוא להשתמש ב - `JSON.stringify` ו - `JSON.parse` ולראות אם אנו מקבלים את אותו Object.  
+לדוגמא:
+
+```javascript
+// this is an example of a serializable object
+const obj = {
+  name: 'Yariv',
+  age: 37,
+  myBooks: [
+    {
+      title: 'The Hobbit',
+      author: 'J.R.R Tolkien',
+    },
+  ],
+};
+
+const objString = JSON.stringify(obj);
+const objFromString = JSON.parse(objString);
+
+console.log(objFromString); // this will return the same obj
+```
+
+בדוגמא זו לקחנו Object, המירנו אותו למחרוזת, ואז המרנו את המחרוזת חזרה ל - Object, וקיבלנו את אותו Object.
+
+להלן דוגמא ל - Object שאינו Serializable:
+
+```typescript
+class Book {
+  constructor(public title: string, public author: string) {}
+}
+
+const obj = {
+  name: 'Yariv',
+  age: 37,
+  myFunctions: [function hello() {}],
+};
+
+const objString = JSON.stringify(obj);
+const objFromString = JSON.parse(objString);
+
+console.log(objFromString); // this will return an object without the functions in the array
+```
+
+אז בעצם Serializable אומר שהאובייקט שנוצר מפרימיטיבים פשוטים (מחרוזת, מספר, בוליאני) ומערכים ואובייקטים שנוצרים מפרימיטיבים פשוטים הוא Serializable.
+
+זוהי רק המלצה וניתן להשתמש ב - `NGRX` לאחסון פונקציות, מחלקות וכו'... אך דברים כמו: נסיעה בזמן, אחסון של מצב המשתמש כדי לשחזר אותו לאותו מצב, יכול לא לעבוד כמו שצריך.
+
+## ה - State צריך להיות מאורגן
+
+אנחנו לא מתייחסים ל - state כאל משתנה גלובלי אליו נזרוק בבלגן את כל המידע שלנו. אני מניח שלפני `NGRX` אתם אחסנתם את המידע של האפליקציה שלכם באמצעות `Services`, במקרה כזה לא יצרתם `Service` אחד לאחסון כל המידע, אלא יצרתם `Service` לפי הלוגיקה מסוימת. במידה והייתם מחזיקים מידע על משתמש, כנראה שיצרתם `UserService` לאחסון המידע של המשתמש עם פונקציות כמו לקבל את המשתמש מהשרת, לעדכן את המשתמש וכו'.  
+אותו דבר נכון גם עבור ה - state, עליכם לארגן את ה state על פי הלוגיקה של האפליקציה שלכם.  
+בואו נבחן את הדוגמא הבאה:
+
+![books app](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/state/state-organized.gif?raw=true)
+
+שימו לב שבדוגמא זו ה state נראה כך:
+
+```json
+{
+  "user": {
+    "firstName": "Yariv",
+    "lastName": "Katz",
+    "avatar": "..."
+  },
+  "books": {
+    list: [
+      {
+        "title": "The Hobbit",
+        "author": "J.R.R Tolkien"
+        "year": "1937"
+      }
+    ]
+  }
+}
+```
+
+שימו לב שה state מאורגן על פי הלוגיקה של האפליקציה. בנוסף ארגון ה state מוטמע עם `Interface`.
+
+## ניתן לטעון ולהסיר חלקים מה - State בצורה עצלנית
+
+נעיף עוד מבט על אפליקציית הספרים:
+
+![books app](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/state/state-organized.gif?raw=true)
+
+שימו לב שה state מתחיל עם:
+
+```json
+{
+  "user": null
+}
+```
+
+ורק אחרי שהמשתמש נכנס לאפליקציה יש לנו את הספרים ב state:
+
+```json
+{
+  "user": {
+    "firstName": "Yariv",
+    "lastName": "Katz",
+    "avatar": "..."
+  },
+  "books": {
+    list: [
+      {
+        "title": "The Hobbit",
+        "author": "J.R.R Tolkien"
+        "year": "1937"
+      }
+    ]
+  }
+}
+```
+
+בדומה לכך שיש לנו `Modules` שמטעינים בצורה עצלנית, כלומר רק כאשר המשתמש נכנס לאותו מודול, כך גם ה state יכול להיות עצלני, כלומר נוכל לטעון חלקים מה state רק כאשר הם נדרשים.
+
+## סיכום
+
+בשיעור זה למדנו את החוקים הבסיסיים על ה state שמנוהל על ידי `NGRX`.  
+החוק הכי חשוב שצריך לקחת איתנו לשיעורים הבאים, הוא העובדה שה state הוא `immutable`.  
+בואו נקח את כל המידע הזה לשיעור הבא שנלמד על ה - `Service` שמחזיק את ה state - ה - `Store`.
