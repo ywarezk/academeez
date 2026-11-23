@@ -1,9 +1,23 @@
 ---
-title: "Best Practice Tip: Structural Directives"
+title: "Structural Directives"
 description: Repeating *ngIf is often a sign to use a structural directive.
-video: "https://www.youtube.com/embed/7MPiRy8IPa8?si=Kl3sLth-QE1C8tGB"
-publishDate: "2023-11-15"
+publishDate: 2023-11-15
 ---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/7MPiRy8IPa8?si=Kl3sLth-QE1C8tGB"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
 
 [Structural Directives](https://angular.dev/guide/directives/structural-directives) in Angular is a powerful feature which is often underused in my opinion.  
 Let's try to change this and show you a repeating pattern which is better to solve with a structural directive.
@@ -14,8 +28,9 @@ DRY violation with repeating [*ngIf](https://angular.dev/guide/directives#adding
 
 Let's examine the following example:
 
-<div className="mt-5">
-<Sandpack 
+<div className="mt-5 not-content">
+<Sandpack
+  client:load
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",
@@ -91,8 +106,9 @@ If you have a repeating `ngIf` or a repeating need for some grabbing some data f
 
 Let's create a structural directive that will handle the logic of checking if the user is logged in and if so, will display the template and pass the user to that template.
 
-<div class="mt-5">
+<div class="mt-5 not-content">
 <Sandpack 
+  client:load
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",

@@ -1,0 +1,11 @@
+---
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+---
+
+<Default {...Astro.props as any} />
+
+<p class="text-muted-foreground">Published on {new Date(Astro.props.entry.data.publishDate).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+})}</p>
