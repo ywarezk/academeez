@@ -14,7 +14,21 @@ name: Trigger E2E
 on:
   repository_dispatch:
     types:
-      - 'vercel.deployment.success'  
+      - 'vercel.deployment.success'
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: "Commit SHA (optional)"
+        required: false
+      prNumber:
+        description: "PR number for fork/head ref fallback (optional)"
+        required: false
+      checkoutRef:
+        description: "Explicit ref to checkout in e2e workflow (optional)"
+        required: false
+      url:
+        description: "Preview URL"
+        required: true
 jobs:
   run-e2es:    
     runs-on: ubuntu-latest
@@ -27,18 +41,23 @@ jobs:
           
       - name: Trigger workflow with SHA
         uses: actions/github-script@v7
-        if: ${{ github.event.client_payload.environment != 'production' }}
+        if: ${{ github.event_name == 'workflow_dispatch' || github.event.client_payload.environment != 'production' }}
         with:
           github-token: ${{ steps.app-token.outputs.token }}
           script: |
+            const isManual = context.eventName === 'workflow_dispatch'
             const payload = context.payload.client_payload || {}
-            const sha = payload.git?.sha || ''
-            const prNumber = payload.meta?.githubPullRequestId || payload.pullRequest?.number
+            const sha = isManual ? (`${{ inputs.sha }}` || '') : (payload.git?.sha || '')
+            const prNumber = isManual
+              ? (`${{ inputs.prNumber }}` || '')
+              : (payload.meta?.githubPullRequestId || payload.pullRequest?.number || '')
             const defaultBranch = context.payload.repository?.default_branch || 'main'
-            let ref = payload.git?.branch || payload.git?.ref || defaultBranch
+            let checkoutRef = isManual
+              ? (`${{ inputs.checkoutRef }}` || '')
+              : (payload.git?.branch || payload.git?.ref || '')
 
             // For same-repo commits this gives us a normal branch name.
-            if (sha) {
+            if (!checkoutRef && sha) {
               try {
                 const { data: branches } = await github.rest.repos.listBranchesForHeadCommit({
                   owner: context.repo.owner,
@@ -46,7 +65,7 @@ jobs:
                   commit_sha: sha,
                 })
                 if (branches.length) {
-                  ref = branches[0].name
+                  checkoutRef = branches[0].name
                 }
               } catch (error) {
                 core.info(`Could not resolve branch from SHA ${sha}: ${error.message}`)
@@ -55,21 +74,26 @@ jobs:
 
             // Fork PR commits are often not on a local branch in the base repo.
             // In that case, use GitHub's pull ref if we have the PR number.
-            if ((!sha || ref === defaultBranch) && prNumber) {
-              ref = `refs/pull/${prNumber}/head`
+            if (!checkoutRef && prNumber) {
+              checkoutRef = `refs/pull/${prNumber}/head`
             }
 
-            core.info(`Dispatching E2E with ref=${ref} sha=${sha || 'n/a'}`)
+            // workflow_dispatch must run from a ref in the base repo; always use default branch.
+            const dispatchRef = defaultBranch
+            checkoutRef = checkoutRef || dispatchRef
+            const previewUrl = isManual ? `${{ inputs.url }}` : `${{ github.event.client_payload.url }}`
+
+            core.info(`Dispatching E2E from ref=${dispatchRef} checkoutRef=${checkoutRef} sha=${sha || 'n/a'}`)
           
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'e2e.yml', // Replace with your workflow file name
-              ref,
+              ref: dispatchRef,
               inputs: {
-                ref,
+                ref: checkoutRef,
                 sha,
-                url: `${{ github.event.client_payload.url }}`
+                url: previewUrl
               }
             });
           
