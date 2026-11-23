@@ -24,6 +24,7 @@ export default defineConfig({
       PageTitle: './src/components/PageTitle.astro',
       ThemeSelect: './src/components/ThemeSelect.astro',
       MarkdownContent: './src/components/MarkdownContent.astro',
+      Header: './src/components/Head.astro',
     },
     sidebar: [{
       label: 'Angular',
