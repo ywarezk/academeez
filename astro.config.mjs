@@ -3,7 +3,7 @@ import starlight from '@astrojs/starlight';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 import { mermaid } from './src/plugins/mermaid';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
 import icon from 'astro-icon';
 import { sitemapCopier } from './src/integrations/sitemap-copier';
 
@@ -51,6 +51,52 @@ export default defineConfig({
 						directory: 'courses/angular',
 						collapsed: true,
 					},
+				},
+				{
+					label: 'FluxCD',
+					items: [
+						{
+							label: '1. Course Introduction',
+							slug: 'courses/fluxcd',
+						},
+						{
+							label: '2. Installation',
+							slug: 'courses/fluxcd/installation',
+						},
+						{
+							label: '3. kustomize-controller',
+							slug: 'courses/fluxcd/kustomize-controller',
+						},
+						{
+							label: '4. helm-controller',
+							slug: 'courses/fluxcd/helm-controller',
+						},
+						{
+							label: '5. Installing Flux with Terraform',
+							slug: 'courses/fluxcd/installing-flux-terraform-opentofu',
+						},
+					],
+				},
+				{
+					label: 'Terraform / OpenTofu',
+					items: [
+						{
+							label: '1. IAC - Course Introduction',
+							slug: 'courses/terraform',
+						},
+						{
+							label: '2. Introduction to Terragrunt',
+							slug: 'courses/terraform/introduction-to-terragrunt',
+						},
+						{
+							label: '3. pre-commit',
+							slug: 'courses/terraform/pre-commit',
+						},
+						{
+							label: '4. Security - Permissions, Roles, Groups, Impersonation',
+							slug: 'courses/terraform/permissions-roles-groups-impersonation',
+						},
+					],
 				},
 				{
 					label: 'Kubernetes',
@@ -152,7 +198,7 @@ export default defineConfig({
 					label: 'Follow us on YouTube',
 				},
 			],
-			customCss: ['./src/tailwind.css'],
+			customCss: ['./src/styles/brand.css', './src/styles/tailwind.css'],
 		}),
 		tailwind({
 			applyBaseStyles: false,

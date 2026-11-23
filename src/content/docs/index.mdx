@@ -24,36 +24,32 @@ import LocalCourseCarousel  from '~/components/LocaleCourseCarousel.astro';
 
 ## [Our courses](/courses)
 
-<CardGrid stagger>
+<CardGrid stagger>  
   <Card>
-    <CardContentCourse title="Kubernetes" img="k8s">
-      place your app in a container (usually with Docker), and you can orchestrate those containers with Kubernetes.  
-      <br/>
-      K8S will help you manage your containers, scale them, and deploy them.
-      <br/>
-      The massive community around K8S will help you with common problems like: DNS, Load Balancing, TLS, Secrets, and more.
-    </CardContentCourse>    
-  </Card>
-  <Card>
-    <CardContentCourse title="Flux" slug="kubernetes/flux">
+    <CardContentCourse title="FluxCD" slug="fluxcd" img="flux">
       Flux gives you tools to manage your K8S cluster state in a declarative, professional way.
       <br />
       Using Flux CRD's, you can specify helm charts, install resources using kustomize, and everything is declared in your remote repository.
       <br/>
       You simply push those CRD's to your remote repository, and Flux will make sure your K8S cluster is in the desired state.
+      <br/>
+      In this course we will learn how to work with managed k8s cluster using GCP, and we will learn how to manage our cloud resources using: Terraform/OpenTofu
       
     </CardContentCourse>    
   </Card>
   <Card>
+    <CardContentCourse title="Terraform / OpenTofu" slug="terraform" img="terraform">
+      Learn how to manage cloud resources on <strong>Google Cloud Platform</strong> 
+  using <a href="https://developer.hashicorp.com/terraform" target="_blank">Terraform</a>, 
+  <a href="https://opentofu.org/" target="_blank">OpenTofu</a>, and 
+  <a href="https://terragrunt.gruntwork.io/" target="_blank">Terragrunt</a>. 
+  This hands-on course covers best practices in <em>Infrastructure as Code</em> 
+  and provides a ready-to-use starter kit repository.
+    </CardContentCourse>    
+  </Card>
+  <Card>
     <CardContentCourse title="React">
-      React is a UI library developed at Facebook to facilitate the creation of interactive, stateful & reusable UI components.  
-      React is the most popular UI library and is heavily used in a lot of web applications and native mobile apps. <br />
-
-      In this free and open source React course, you will learn the fundamentals of React, including React Hooks, JSX, props, state, events, and more.  
-      We will use React to create a web application, we will interact with server, and learn about the popular libraries and frameworks that are used with React, such as Redux, React Router, and Next.js.<br />
-
-      We will learn React in baby steps, taking short lessons, with plenty of online exercises in each lesson. The online exercises can be solved in the site in our online editor.
-      Each lesson will include a video, step by step guides, source code, and online exercises.
+      Learn React with our free, open-source course designed for both beginners and experienced developers. Build real-world projects, practice with interactive coding exercises, and master everything from components and hooks to advanced UI patterns — all at your own pace.
     </CardContentCourse>    
   </Card>
   <Card>
@@ -63,12 +59,20 @@ import LocalCourseCarousel  from '~/components/LocaleCourseCarousel.astro';
     In this **FREE, OPEN SOURCE, FULL**, Angular course, you will learn the fundamentals of Angular for beginners, and more advanced angular topics for the more experienced developer.
     </CardContentCourse>
   </Card>
+  <Card>
+    <CardContentCourse title="Git">
+    Master Git and take full control of your code. In this free, open-source course, you’ll learn version control fundamentals, branch management, and collaboration workflows using GitHub — from your first commit to advanced repository management.
+    </CardContentCourse>
+  </Card>
 </CardGrid>
 
-## New Content
+## Lessons
 
 <br/>
-<LocalCourseCarousel title="Kubernetes / Flux" courseLink="kubernetes/flux"/>
+<LocalCourseCarousel title="FluxCD" courseLink="fluxcd"/>
+
+<br/>
+<LocalCourseCarousel title="Terraform / OpenTofu" courseLink="terraform"/>
 
 <br/>
 <LocalCourseCarousel title="Angular" courseLink="angular"/>
