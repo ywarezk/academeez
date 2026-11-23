@@ -3,7 +3,7 @@ import starlight from '@astrojs/starlight';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 import sitemap from "@astrojs/sitemap";
-
+import { mermaid } from "./src/plugins/mermaid"
 import vercel from "@astrojs/vercel/serverless";
 
 // https://astro.build/config
@@ -20,7 +20,8 @@ export default defineConfig({
       PageSidebar: './src/components/PageSidebar.astro',
       SocialIcons: './src/components/SocialIcons.astro',
       PageTitle: './src/components/PageTitle.astro',
-      ThemeSelect: './src/components/ThemeSelect.astro'
+      ThemeSelect: './src/components/ThemeSelect.astro',
+      MarkdownContent: './src/components/MarkdownContent.astro',
     },
     sidebar: [{
       label: 'Angular',
@@ -87,10 +88,13 @@ export default defineConfig({
       }
     }
   })],
+  markdown: {
+    remarkPlugins: [mermaid],    
+  },
   prefetch: true,
   site: 'https://www.academeez.com',
   trailingSlash: 'never',
-  output: "server",
+  output: "server",  
   adapter: vercel({
     webAnalytics: {
       enabled: true,
