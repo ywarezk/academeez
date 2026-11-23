@@ -25,23 +25,24 @@ import LocalCourseCarousel  from '~/components/LocaleCourseCarousel.astro';
 
 ## [הקורסים שלנו](/courses)
 
-<CardGrid stagger>
+<CardGrid stagger>  
   <Card>
-    <CardContentCourse title="Kubernetes" img="k8s">
-      נשתמש ב Docker כדי לארוז את האפליקציה שלנו ב Container, לאחר מכן Kubernetes יכול לשמש אותנו לניהול ה Container האלו.
-      <br/>
-      K8S יעזור לנו לנהל את ה Containers, להגדיל את הכמות שלהם בהתאם לעומס, לנהל Deployment מקצועי של האפליקציות שלנו, ועוד
-      <br/>
-      באמצעות הקהילה הרחבה והפופולריות של הטכנולוגיה, ישנן חבילות שנלמד להתקין על ה Cluster שלנו שיעזרו לנו עם בעיות שכיחות כגון: Load Balancer, TLS, ניהול סודות, ועוד
-    </CardContentCourse>    
-  </Card>
-  <Card>
-    <CardContentCourse title="Flux" slug="kubernetes/flux">
+    <CardContentCourse title="Flux" slug="fluxcd" img="flux">
       Flux מסייע לנו לנהל את ה Cluster שלנו עם K8S בצורה מקצועית ודקלרטיבית באמצעות דחיפת ה State של ה Cluster שלנו ל Repository.
       <br />
       באמצעות Flux אנחנו יכולים להתקין Helm Charts, לנהל התקנת manifests באמצעות kustomize, והכל מוגדר בקבצי Yaml שנדחפים ל Repository שלנו.
       <br/>
       דחיפת הקבצים ל Repository שלנו תגרום ל Flux לוודא שה Cluster שלנו יהיה במצב הרצוי.      
+    </CardContentCourse>    
+  </Card>
+  <Card>
+    <CardContentCourse title="Terraform / OpenTofu" slug="terraform" img="terraform">
+      למדו כיצד לנהל משאבי ענן על גבי <strong>Google Cloud Platform</strong> 
+      באמצעות <a href="https://developer.hashicorp.com/terraform" target="_blank">Terraform</a>, 
+      <a href="https://opentofu.org/" target="_blank">OpenTofu</a>, ו־
+      <a href="https://terragrunt.gruntwork.io/" target="_blank">Terragrunt</a>. 
+      קורס מעשי זה מציג את מיטב השיטות בתחום <em>תשתיות כקוד (Infrastructure as Code)</em> 
+      ומספק מאגר התחלתי מוכן לשימוש.
     </CardContentCourse>    
   </Card>
   <Card>
@@ -60,6 +61,12 @@ import LocalCourseCarousel  from '~/components/LocaleCourseCarousel.astro';
     <CardContentCourse title="Angular">
     Angular היא ספריית קוד פתוח, שפותחה על ידי Google, ליצירת אפליקציות Web.<br/>
     בקורס החינמי, הפתוח והמלא הזה, תלמד את היסודות של Angular למתחילים, ונושאים מתקדמים יותר למתכנתים מנוסים.    
+    </CardContentCourse>
+  </Card>
+  <Card>
+    <CardContentCourse title="Git">
+      שלטו ב־Git וקחו שליטה מלאה על הקוד שלכם. בקורס חינמי וקוד פתוח זה תלמדו את יסודות ניהול הגרסאות, 
+      ניהול סניפים (Branches) וזרימות עבודה שיתופיות באמצעות GitHub — מהקומיט הראשון ועד לניהול מתקדם של מאגרים.
     </CardContentCourse>
   </Card>
 </CardGrid>
