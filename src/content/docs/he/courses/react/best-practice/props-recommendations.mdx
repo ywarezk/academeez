@@ -1,0 +1,484 @@
+---
+title: שימוש נכון ב-Props
+description: Props הם נתונים שמועברים לרכיב מהרכיב האב שלו. <br/> הנה רשימה של טיפים כיצד להשתמש ב-props בצורה נכונה
+publishDate: 2024-10-01
+authors:
+	- yariv-katz
+---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/krpGUmiCIEU?si=XPXEkzqSK4X5aizM"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+Props הם נתונים שמועברים לרכיב מהרכיב האב שלו.  
+הנה רשימה של טיפים כיצד להשתמש ב-props בצורה נכונה ב-`React`
+
+## \#1 המנעו מ-Prop drilling
+
+Prop drilling הוא העברת props להרבה שלבים בעץ ה - **React Components**  
+נסתכל על הדוגמא הבאה שבה `<App>` מעבירה prop ל `<Child>` ו- `<Child>` מעבירה אותו ל- `<GrandChild>`  
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	files={{
+		"App.js": {			
+			code: `
+import Child from './Child';
+export default function App() {
+  return (
+    <Child title="hello from parent"  />
+  )
+}`
+		},
+		"Child.js": {
+			code: `
+import GrandChild from './GrandChild';
+export default function Child(props) {
+  return (
+    <GrandChild {...props} />
+  )
+}`
+		},
+		"GrandChild.js": {
+			code: `
+export default function GrandChild(props) {
+  return (
+    <div>{props.title}</div>
+  )
+}`
+		}
+	}}
+	template="react" 
+/>
+</div>
+
+העברת ה- Props במורד העץ של הרכיבים נקראת **prop drilling** והיא נחשבת לפרקטיקה רעה כאשר מעבירים props ב-`React`.
+
+### דרכים למנוע prop drilling
+
+כדי למנוע prop drilling ניתן לבצע אחת מהדרכים הבאות:
+
+1. אחסון הנתונים ב-context
+
+בדוגמא הבאה במקום להעביר את ה-props במורד העץ של הרכיבים, אנו יוצרים context ומאחסנים את ה-props ב-context.
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	files={{
+		"title.context.js": {
+			code: `
+import { createContext } from 'react';
+export default createContext({
+	title: ''
+});
+`
+		},
+		"App.js": {			
+			code: `
+import Child from './Child';
+import titleContext from './title.context';
+export default function App() {
+  return (
+	  <titleContext.Provider value={{title: 'hello from parent'}}>
+        <Child />
+	  </titleContext.Provider>
+  )
+}`
+		},
+		"Child.js": {
+			code: `
+import GrandChild from './GrandChild';
+export default function Child() {
+  return (
+    <GrandChild />
+  )
+}`
+		},
+		"GrandChild.js": {
+			code: `
+import titleContext from './title.context';
+import {useContext} from 'react';
+export default function GrandChild(props) {
+  const { title } = useContext(titleContext);
+  return (
+    <div>{title}</div>
+  )
+}`
+		}
+	}}
+	template="react" 
+/>
+</div>
+
+2. שימוש בספריית ניהול State
+
+דרך נוספת למנוע prop drilling היא להשתמש בספריית ניהול State כמו `Redux` או `Mobx` כדי לאחסן את הנתונים ב-state גלובלי.
+
+נדגים בדוגמא הבאה עם [Redux](https://redux.js.org/), `Redux` אינו הספרייה היחידה לניהול State, ישנם ספריות ניהול State רבות ופופולריות נוספות שכל אחת מהן יש לה יתרונות וחסרונות.
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	customSetup={{ 
+		dependencies: { 
+			"react": "^18.0.0",
+    	"react-dom": "^18.0.0",
+    	"react-scripts": "^5.0.0",
+			"@reduxjs/toolkit": "^2.2.7",
+			"react-redux": "^9.1.2"
+		}
+	}}
+	files={{
+		"store.js": {
+			code: `
+import { configureStore, createSlice } from '@reduxjs/toolkit';
+export const messagesSlice = createSlice({
+	name: 'messages',
+	initialState: {
+		title: 'hello default value'
+	},
+	reducers: {
+		setTitle: (state, action) => {
+			state.title = action.payload;
+		}
+	}
+})
+
+export const store = configureStore({
+	reducer: {
+		messages: messagesSlice.reducer
+	}	
+})
+			`
+		},
+		"App.js": {			
+			code: `
+import Parent from './Parent';
+import { Provider } from 'react-redux';
+import { store } from './store';
+export default function App() {
+  return (
+	  <Provider store={store}>
+        <Parent />
+	  </Provider>
+  )
+}`
+		},
+		"Parent.js": {
+			code: `
+import Child from "./Child";
+import { useDispatch } from 'react-redux';
+import { messagesSlice } from './store';
+import { useEffect } from "react";
+export default function Parent() {
+  const dispatch = useDispatch();
+	
+  useEffect(() => {
+    dispatch(messagesSlice.actions.setTitle('Hello World from parent!'))
+  }, [dispatch])
+
+  return (
+    <Child />
+  )
+}`
+		},
+		"Child.js": {
+			code: `
+import GrandChild from './GrandChild';
+
+export default function Child() {
+  return (
+    <GrandChild />
+  )
+}			
+`
+		},
+		"GrandChild.js": {
+			code: `
+import { useSelector } from "react-redux"
+export default function GrandChild(props) {
+  const title = useSelector((state) => state.messages.title)
+  return (
+    <div>{title}</div>
+  )
+}`
+		}
+	}}
+	template="react" 
+/>
+</div>
+
+אנחנו צריכים לעטוף את כל האפליקציה שלנו עם רכיב `Provider` מספריית `react-redux` כדי שכל עץ הרכיבים יוכל לגשת ל-Redux store, ואנו עושים זאת ב-`App.js`.  
+`Parent.js` יכול לאחסן נתונים ב-Redux ש-`GrandChild` יכול לגשת אליהם בלי צורך ב-**Prop drilling**  
+`GrandChild.js` יכול לגשת לנתונים ב-Redux באמצעות השימוש ב- `useSelector` hook.
+
+## \#2. שימוש בקונבנציות בשמות ה-props
+
+אם תסתכלו על [Material Design](https://mui.com/) ותבחנו בשמות ה-props שאתם מעבירים לרכיבים, תגלו ששמות ה-props חוזרים בין רכיבים שונים.  
+לדוגמא: `variant`, `sx`, `disabled`, `color` ועוד.
+
+כאשר אתם יוצרים אפליקציה, עליכם לדמיין שאתם לא רק יוצרים אפליקציה, אלא גם יוצרים שפה שלמה.  
+אותה שפה תשקף איך האפליקציה שלכם תראה: סגנון חוזר, רכיבים חוזרים ו-UX.  
+אותה שפה תשקף גם איך הקוד שלכם יראה: שימוש בפונקציות, מחלקות, יצירת ספריות משלכם, יצירת כלים שתשתמשו בהם בכל האפליקציה שלכם.  
+אותה שפה תשמש ככלי אכיפה שתשקף עליכם לבנות את האפליקציה שלכם כמו קוביות לגו, בשימוש בתשתיות טובות ובשימוש בקוד שלכם.
+
+אותה שפה תשקף גם על קונבנציות שתצטרכו להשתמש בהן, ואותן קונבנציות יעזרו לכם להשתמש שימוש חוזר בסט הכלים שבניתם.
+
+לדוגמא בבסיס הנתונים שלכם, בעמודות הטבלאות, תשתדלו להשתמש בשמות דומים לעמודות דומות, אם לדוגמא יש לכם ישות (A) שמכילה עמודה שנקראת `name`, ויש לכם ישות (B) שגם היא מכילה עמודה שנקראת `name` תשתדלו להשתמש באותו שם גם ב- B ולא להשתמש לדוגמא ב- A בעמודה `name` וב- B בעמודה `title`.  
+
+למה זה כל כך חשוב לשמות דומים?  
+במילה אחת **קיבוץ**  
+כאשר יוצרים תוכנה אנו אוהבים לקיבץ דברים דומים יחד, מהקיבוץ הזה אפשר לחלק לקיבוצים גדולים יותר וגדולים יותר וגדולים יותר.  
+לדוגמא אולי תקחו פונקציות שקשורות זו לזו ותכניסו אותן לתוך מחלקה, אולי תקחו את המחלקה הזו ותכניסו אותה לתוך פונקציות עזר וכלים ותכניסו אותם לתוך ספריית חיצונית, ומכך תיצרו אפליקציות שונות.
+
+אנחנו אוהבים לקבץ דברים יחד לקבוצות לוגיות כאשר עוסקים בפיתוח תוכנה, השמות עוזרים להבין את החלוקה הזאת לקבוצות ושימוש חוזר בקוד ולכן הם חשובים.  
+קל יותר לקבץ דברים יחד אם השמות דומים זה לזה.
+
+אותה חוקיות עובדת גם בשמות של ה - props ברכיבים שלכם, תשתדלו להשתמש בשמות דומים ל- props ברכיבים שלכם, זה יעזור לכם לארגן, להוריש, להשתמש בתבניות שונות, למצוא את הפרצות ה - `DRY` שלכם.  
+זה יעזור גם לרכיבים שלכם להיות יותר נגישים לצוות שלכם.
+
+## \#3. סוגי ה-props, אופציונליים וערך ברירת מחדל
+
+תשאלו את עצמכם, מהו הסוג של כל פרופ שמועבר? האם הפרופ הוא חובה או אופציונלי? אם הפרופ הוא אופציונלי האם יש לו ערך ברירת מחדל?
+
+כאשר משתמשים ב-[TypeScript](https://www.typescriptlang.org/) תשובה לשאלות האלו תיראה כך:
+
+```typescript
+import type { FC } from 'react'
+
+type ChildProps = {
+	age? number;
+	name: string;
+}
+
+export const Child: FC<ChildProps> = ({
+	age = 33,
+	name
+}) => {
+	// ...
+}
+```
+
+שימו לב איך אנחנו מפרטים את כל סוג הפרופ שמועבר, אנו גם מפרטים אם הפרופ הוא אופציונלי או חובה, ואם נדרש נכניס לפרופ ערך ברירת מחדל בדסטרקטור.
+
+אותה חוקיות עובדת גם ב- **JavaScript** כאשר הקוד יראה כך:
+
+```js
+import PropTypes from 'prop-types';
+
+export const Child = ({
+	age = 33,
+	name
+}) => {
+	// ...	
+}
+
+Child.propTypes = {
+	age: PropTypes.number,
+	name: PropTypes.string.isRequired
+}
+```
+
+## \#4. הוסיפו הערות
+
+תיהיו חלק מהצוות שלכם, תוסיפו הערות לרכיבים שלכם כולל את הפרופס שהרכיב מקבל.  
+המפתחים בצוות שלכם לא יבינו איך להשתמש ברכיב שלכם מיד, עזרו להם עם [JSDocs](https://jsdoc.app/)
+
+```js
+/**
+ * This component will do this and that
+ * @param {Object} props
+ * @param {number} props.age - the age of the child
+ * @param {string} props.name - the name of the child
+ * @returns {React.ReactElement}
+ */
+export const Child = ({
+	age = 33,
+	name
+}) => {
+	// ...	
+}
+```
+
+עבודה עם `JSDoc` תשתלב נהדר עם ה-IDE שלכם שיכול להציג לכם הערות כאשר מעבירים על הפונקציה.
+
+## \#5. types גנריים
+
+האם אתם משתמשים ב-[TypeScript](https://www.typescriptlang.org/)? אם כן, תשתמשו בכל הכוח של `TypeScript` כדי להגדיר את סוגי ה-props שלכם.  
+לדוגמא תוכלו להשתמש ב- `Generic Type <T>` כדי להגדיר את הבדיקות של `TypeScript` על פי סוג שנשלח ב `<T>`.
+
+ניקח כדוגמא את הרכיב הבא שמקבל מופע של מחלקה ומדפיס אחת מהמאפיינים של המחלקה לפי ה-props שנשלחים לרכיב:
+
+```typescript
+
+type FilteredKeys<T, U> = { [P in keyof T]: T[P] extends U ? P : never }[keyof T];
+
+type Props<T, U> = { 
+	entity: T;
+	typeThis: FilteredKeys<T, U>;
+}
+
+export const Generic = <T extends unknown, U extends ReactNode>({ 
+	entity, 
+	typeThis 
+} : Props<T, U>): ReactElement => {
+	const hello = entity[typeThis] as U;
+	return (
+		<div>
+			<h1>{hello}</h1>
+		</div>
+	);
+}
+
+```
+
+שימו לב ש `FilterKeys` מסנן רק את המאפיינים שמורים על פי `U`, אז אם אני שולח את האובייקט:
+
+```
+const a = {
+	hello: 'world',
+	age: 33,
+	meaning: 42
+}
+```
+
+אז `FilteredKeys<typeof a, number>` יחזיר `age | meaning`.
+
+ה - `props` של הרכיב מקבלים 2 סוגי `Generic` ולכן כדי לקרוא לרכיב נוכל לעשות את הקריאה הבאה:
+
+```typescript
+class Person {
+  name = 'academeez';
+  age = {};
+}
+
+const me = new Person();
+
+function App() {
+  return (
+		<Generic<Person, string> entity={me} typeThis='name' />
+  );
+}
+```
+
+האם ידעתם שרוב הרכיבים ב- `mui` מכילים סוג גנרי?  
+אבל אנחנו לא צריכים באמת לשלוח אותם כאשר משתמשים ברכיב שלהם נכון?  
+בדוגמא שלנו אנחנו לא צריכים לשלוח את הגנריים האלו, והיינו יכולים לכתוב את אותו דבר כך:
+
+```typescript
+<Generic entity={me} typeThis='name' />
+```
+
+זה עובד כי `typescript` יכול להסיק את סוגי הגנריים על פי ה-props האחרים שאנו מעבירים, זה הסיבה שבדרך כלל אין צורך לשלוח את הגנריים ל- `mui`.  
+
+משתנים גנריים הם רק חלק מהכוח של `typescript` שאני רואה שרוב המפתחים המנוסים מפספסים כאשר כותבים את הרכיבים שלהם.
+
+## \#6 להשתמש ב memo או לא להשתמש ב memo?
+
+חשוב להבין מתי כדאי להשתמש ב- `memo` על ה- props שאתם מעבירים.  
+כחוק כללי תשתמשו ב- `memo` על ה- props שאתם מעבירים במקרים הבאים:
+
+1. כאשר הרכיב שאליו אתם מעבירים את ה- props הוא רכיב פיור שהוא מעוטר ב- `React.memo`, והרכיבים שאתם מעבירים הם לא פרימיטיבים, ואתם רוצים למנוע מהרכיב הזה לעדכן כאשר האבא שלו עושה רנדר:
+
+```js title="Child.js"
+import {memo} from 'react';
+
+function Child({
+	person,
+	onClick
+}) {
+	return (
+		<div>
+			<h1>
+			Hello {person.name}
+			</h1>
+			<button onClick={onClick}>
+				click me
+			</button>
+		</div>
+		
+	)
+}
+
+export default memo(Child);
+```
+
+תעשו `memo` על ה- props שאתם מעבירים ל- `Child` אם אתם לא רוצים שהוא ירנדר כל פעם שהאבא שלו רונדר.
+
+`Child` מעוטר ב- `memo` ולכן הוא ירנדר רק כאשר ה- props שלו משתנים.
+
+2. ה - props משמשים ב - Child ב - dependency array לדוגמא ב - `useEffect`, `useCallback`, `useMemo` ואתם לא רוצים שהם ירוצו שוב:
+
+```javascript
+import {useMemo} from 'react';
+
+export default function Child({
+	student,
+}) {
+	
+	const grade = useMemo(() => {
+		// when student is changed calculate his grade
+	}, [student])
+	
+	return (
+		<h1>
+		You got {grade}
+		</h1>			
+	)
+}
+```
+
+שימו לב שהילד קיבל prop ומשתמש ב prop בתוך dependency array, כך האב יכול לשלוט מתי הוא יצור את התלמיד כדי למנוע חישובים יקרים ב- `Child`
+
+## \#7 אם אתם יכולים לקבל את ה- props אז אל תעבירו אותם
+
+בתחילת הדרך של `Redux` במדריך שלהם, הם ציינו דרך לפרק את הרכיבים שלכם לרכיבי **Container** ורכיבי **Dumb**.  
+זו דרך שעזרה ל **Dan Abramov** בעבר והוא כתב על זה במאמר [זה](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0)
+
+בתחילת המאמר תראו את ההערה שלו:
+
+> Update from 2019: I wrote this article a long time ago and my views have since evolved. In particular, I don’t suggest splitting your components like this anymore. If you find it natural in your codebase, this pattern can be handy. But I’ve seen it enforced without any necessity and with almost dogmatic fervor far too many times. The main reason I found it useful was because it let me separate complex stateful logic from other aspects of the component. Hooks let me do the same thing without an arbitrary division. This text is left intact for historical reasons but don’t take it too seriously.
+
+העידן של הרכיבים החכמים והטיפשים כבר לא מתאים לעולם עם components שמשתמשים ב-hooks.
+
+פעמים רבות אני רואה מפתחים מעבירים את ה- props לרכיבים שלהם כאשר הם יכולים לקבל את ה- props בעצמם על ידי קריאה ל-hook מסוים.
+
+נבחן את הדוגמא הבאה המשתמשת ב - [NextJS](https://nextjs.org/)
+
+```javascript
+function App() {
+  const router = useRouter();
+  const id = router.query['id']
+  
+  return (
+    <Article id={id} />
+  );
+}
+```
+
+ה - `<Article />` יכול לקבל את ה - `id` מה - `useRouter()` ולא צריך לקבל אותו מה - `App`.  
+אז למה אנחנו מעבירים אותו?
+מדוע שה - `<Article />` לא יכול לקרוא ל - `useRouter()` בעצמו?
+
+ככל שתעבירו יותר props שאין באמת צורך להעביר אותם, כך תקשה על עצמכם להבין את הרכיב שלכם וכך תקשה על צוות שלכם להבין את הרכיב שלכם.
+
+## סיכום
+
+למדנו על props מאוד מוקדם כאשר התחלנו ללמוד על `React`.  
+עושה רושם שזה נושא פשוט, אך אני רואה כל כך הרבה טעויות ושימושים לא נכונים של אפילו של מפתחים מנוסים ב- `React`.
+כאשר לא מקפידים על שימוש נכון ב - `props` זה יוביל ליותר באגים, יותר רנדרים, API של רכיבים שאינם ברורים ולכן פחות משתמשים בהם, זה אפילו משפיע על הבדיקות ועל הקוד שלכם ועל הקושי שלכם לבדוק את הרכיבים שלכם.
+
+מקווה ששיעור זה ישפר את יכולת העברת ה- `props` שלכם ב- `React`.
