@@ -5,6 +5,8 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
+  lodash: 4.18.1
+  lodash-es: 4.18.1
   '@astrojs/vercel>esbuild': 0.25.0
   mdast-util-to-hast: 13.2.1
   '@mapbox/node-pre-gyp>tar': 7.5.11
@@ -20,17 +22,10 @@ overrides:
   test-exclude>minimatch: 9.0.7
   flatted: 3.4.2
   yaml-language-server>ajv: 8.18.0
-  semantic-release>lodash-es: 4.17.23
-  '@semantic-release/changelog>lodash': 4.17.23
-  '@semantic-release/git>lodash': 4.17.23
   conventional-changelog-writer>handlebars: 4.7.9
   minimatch@3.1.4>brace-expansion: 1.1.13
   picomatch@^2.3.1: 2.3.2
   picomatch@^4.0.0: 4.0.4
-  mermaid>lodash-es: 4.17.23
-  chevrotain>lodash-es: 4.17.23
-  '@chevrotain/cst-dts-gen>lodash-es': 4.17.23
-  '@chevrotain/gast>lodash-es': 4.17.23
   mermaid>dompurify: 3.3.2
   yaml: 2.8.3
 
@@ -146,9 +141,6 @@ importers:
       '@playwright/test':
         specifier: ^1.54.2
         version: 1.56.1
-      '@semantic-release/changelog':
-        specifier: ^6.0.3
-        version: 6.0.3(semantic-release@24.2.9(typescript@5.9.3))
       '@semantic-release/git':
         specifier: ^10.0.1
         version: 10.0.1(semantic-release@24.2.9(typescript@5.9.3))
@@ -2708,15 +2700,6 @@ packages:
       {
         integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==,
       }
-
-  '@semantic-release/changelog@6.0.3':
-    resolution:
-      {
-        integrity: sha512-dZuR5qByyfe3Y03TpmCvAxCyTnp7r5XwtHRf/8vD9EAn4ZWbavUX8adMtXYzE86EVh0gyLA7lm5yW4IV30XUag==,
-      }
-    engines: { node: '>=14.17' }
-    peerDependencies:
-      semantic-release: '>=18.0.0'
 
   '@semantic-release/commit-analyzer@13.0.1':
     resolution:
@@ -6771,10 +6754,10 @@ packages:
       }
     engines: { node: '>=10' }
 
-  lodash-es@4.17.23:
+  lodash-es@4.18.1:
     resolution:
       {
-        integrity: sha512-kVI48u3PZr38HdYz98UmfPnXl2DXrpdctLrFLCd3kOx1xUkOmpFPx7gCWWM5MPkL/fD8zb+Ph0QzjGFs4+hHWg==,
+        integrity: sha512-J8xewKD/Gk22OZbhpOVSwcs60zhd95ESDwezOFuA3/099925PdHJ7OFHNTGtajL3AlZkykD32HykiMo+BIBI8A==,
       }
 
   lodash.capitalize@4.2.1:
@@ -6819,10 +6802,10 @@ packages:
         integrity: sha512-e/zcLx6CSbmaEgFHCA7BnoQKyCtKMxnuWrJygbwPs/AIn+IMKl66L8/s+wBUn5LRw2pZx3bUHibiV1b6aTWIww==,
       }
 
-  lodash@4.17.23:
+  lodash@4.18.1:
     resolution:
       {
-        integrity: sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==,
+        integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==,
       }
 
   log-update@6.1.0:
@@ -10879,12 +10862,12 @@ snapshots:
     dependencies:
       '@chevrotain/gast': 11.0.3
       '@chevrotain/types': 11.0.3
-      lodash-es: 4.17.23
+      lodash-es: 4.18.1
 
   '@chevrotain/gast@11.0.3':
     dependencies:
       '@chevrotain/types': 11.0.3
-      lodash-es: 4.17.23
+      lodash-es: 4.18.1
 
   '@chevrotain/regexp-to-ast@11.0.3': {}
 
@@ -12109,14 +12092,6 @@ snapshots:
 
   '@sec-ant/readable-stream@0.4.1': {}
 
-  '@semantic-release/changelog@6.0.3(semantic-release@24.2.9(typescript@5.9.3))':
-    dependencies:
-      '@semantic-release/error': 3.0.0
-      aggregate-error: 3.1.0
-      fs-extra: 11.3.2
-      lodash: 4.17.23
-      semantic-release: 24.2.9(typescript@5.9.3)
-
   '@semantic-release/commit-analyzer@13.0.1(semantic-release@24.2.9(typescript@5.9.3))':
     dependencies:
       conventional-changelog-angular: 8.1.0
@@ -12125,7 +12100,7 @@ snapshots:
       conventional-commits-parser: 6.2.1
       debug: 4.4.3
       import-from-esm: 2.0.0
-      lodash-es: 4.17.23
+      lodash-es: 4.18.1
       micromatch: 4.0.8
       semantic-release: 24.2.9(typescript@5.9.3)
     transitivePeerDependencies:
@@ -12142,7 +12117,7 @@ snapshots:
       debug: 4.4.3
       dir-glob: 3.0.1
       execa: 5.1.1
-      lodash: 4.17.23
+      lodash: 4.18.1
       micromatch: 4.0.8
       p-reduce: 2.1.0
       semantic-release: 24.2.9(typescript@5.9.3)
@@ -12162,7 +12137,7 @@ snapshots:
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
       issue-parser: 7.0.1
-      lodash-es: 4.17.23
+      lodash-es: 4.18.1
       mime: 4.1.0
       p-filter: 4.1.0
       semantic-release: 24.2.9(typescript@5.9.3)
@@ -12177,7 +12152,7 @@ snapshots:
       aggregate-error: 5.0.0
       execa: 9.6.0
       fs-extra: 11.3.2
-      lodash-es: 4.17.23
+      lodash-es: 4.18.1
       nerf-dart: 1.0.0
       normalize-url: 8.1.0
       npm: 10.9.4
@@ -12198,7 +12173,7 @@ snapshots:
       get-stream: 7.0.1
       import-from-esm: 2.0.0
       into-stream: 7.0.0
-      lodash-es: 4.17.23
+      lodash-es: 4.18.1
       read-package-up: 11.0.0
       semantic-release: 24.2.9(typescript@5.9.3)
     transitivePeerDependencies:
@@ -13120,7 +13095,7 @@ snapshots:
   chevrotain-allstar@0.3.1(chevrotain@11.0.3):
     dependencies:
       chevrotain: 11.0.3
-      lodash-es: 4.17.23
+      lodash-es: 4.18.1
 
   chevrotain@11.0.3:
     dependencies:
@@ -13129,7 +13104,7 @@ snapshots:
       '@chevrotain/regexp-to-ast': 11.0.3
       '@chevrotain/types': 11.0.3
       '@chevrotain/utils': 11.0.3
-      lodash-es: 4.17.23
+      lodash-es: 4.18.1
 
   chokidar@3.6.0:
     dependencies:
@@ -13549,7 +13524,7 @@ snapshots:
   dagre-d3-es@7.0.13:
     dependencies:
       d3: 7.9.0
-      lodash-es: 4.17.23
+      lodash-es: 4.18.1
 
   dayjs@1.11.19: {}
 
@@ -14868,7 +14843,7 @@ snapshots:
     dependencies:
       p-locate: 5.0.0
 
-  lodash-es@4.17.23: {}
+  lodash-es@4.18.1: {}
 
   lodash.capitalize@4.2.1: {}
 
@@ -14884,7 +14859,7 @@ snapshots:
 
   lodash.uniqby@4.7.0: {}
 
-  lodash@4.17.23: {}
+  lodash@4.18.1: {}
 
   log-update@6.1.0:
     dependencies:
@@ -15170,7 +15145,7 @@ snapshots:
       dompurify: 3.3.2
       katex: 0.16.25
       khroma: 2.1.0
-      lodash-es: 4.17.23
+      lodash-es: 4.18.1
       marked: 16.4.2
       roughjs: 4.6.6
       stylis: 4.3.6
@@ -16394,7 +16369,7 @@ snapshots:
       hook-std: 4.0.0
       hosted-git-info: 8.1.0
       import-from-esm: 2.0.0
-      lodash-es: 4.17.23
+      lodash-es: 4.18.1
       marked: 15.0.12
       marked-terminal: 7.3.0(marked@15.0.12)
       micromatch: 4.0.8

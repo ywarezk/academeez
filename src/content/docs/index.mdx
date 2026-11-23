@@ -11,7 +11,7 @@ editUrl: false
 publishDate: 2024-09-09
 ---
 
-import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Card } from '@astrojs/starlight/components';
 import CardContentCourse from '~/components/CardContent.astro';
 import LocalCourseCarousel  from '~/components/LocaleCourseCarousel.astro';
 import Hero from '~/components/Hero/Hero.astro';
@@ -49,5 +49,41 @@ import HomeFooter from '~/components/HomeFooter.astro';
 
 <br/>
 <LocalCourseCarousel title="Node.JS" courseLink="nodejs"/>
+
+## Open Source Projects
+
+Academeez is not only open-sourcing programming education, but also building interesting open source, MIT-licensed projects that are free to use.
+Click a project to learn more.
+If you find a project interesting, feel free to star it and contribute code.
+
+<div style="width: 100%;">
+  <Card>
+    <a
+      href="https://github.com/ywarezk/vscode-code-highlight"
+      style="display: block; width: 100%; color: inherit; text-decoration: none; border: 1px solid var(--sl-color-gray-5); border-radius: 0.75rem; padding: 1rem; transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;"
+      onmouseenter="this.style.transform='translateY(-2px)'; this.style.borderColor='var(--sl-color-accent-high)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.12)'"
+      onmouseleave="this.style.transform='translateY(0)'; this.style.borderColor='var(--sl-color-gray-5)'; this.style.boxShadow='none'"
+    >
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+        <img
+          src="/icons/vscode-code-highlight.png"
+          alt="vscode-code-highlight logo"
+          style="width: 44px; height: 44px; object-fit: contain;"
+        />
+        <h3 style="margin: 0;">vscode-code-highlight</h3>
+      </div>
+      <p style="margin: 0;">
+        A VS Code extension for highlighting code and adding notes, including a summary slideshow that presents marked snippets with their comments. It is ideal for developers who want to give lectures and document coding projects with focused code walkthroughs.
+      </p>
+      <img
+        src="/icons/add-notes.gif"
+        alt="vscode-code-highlight demo"
+        loading="lazy"
+        decoding="async"
+        style="display: block; width: 100%; margin-top: 0.9rem; border-radius: 0.6rem; border: 1px solid var(--sl-color-gray-5);"
+      />
+    </a>
+  </Card>
+</div>
 
 <HomeFooter />
