@@ -16,6 +16,7 @@ export default defineConfig({
       components: {
         Sidebar: './src/components/Sidebar.astro',  
         PageSidebar: './src/components/PageSidebar.astro',
+        SocialIcons: './src/components/SocialIcons.astro',
       },
       sidebar: [
         {  
