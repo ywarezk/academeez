@@ -68,10 +68,39 @@ export default defineConfig({
 				},
 				{
 					label: 'React',
-					autogenerate: {
-						directory: 'courses/react',
-						collapsed: true,
-					},
+					items: [
+						{
+							label: '1. Course Introduction',
+							slug: 'courses/react',
+						},
+						{
+							label: '2. Component',
+							slug: 'courses/react/component',
+						},
+						{
+							label: '3. Component Tree',
+							slug: 'courses/react/component-tree',
+						},
+						{
+							label: '4. Props',
+							autogenerate: {
+								directory: 'courses/react/props',
+								collapsed: true,
+							},
+						},
+						{
+							label: '5. Understanding React Elements',
+							slug: 'courses/react/understanding-react-elements',
+						},
+						{
+							label: '6. <Suspense>',
+							slug: 'courses/react/suspense',
+						},
+						{
+							label: '7. Single Responsibility',
+							slug: 'courses/react/best-practice/component-single-responsibility',
+						},
+					],
 				},
 				{
 					label: 'Express',
@@ -106,11 +135,23 @@ export default defineConfig({
 					lang: 'he',
 				},
 			},
-			social: {
-				'x.com': 'https://x.com/academeez?ref=academeez',
-				github: 'https://github.com/ywarezk/academeez',
-				youtube: 'https://www.youtube.com/channel/UCmnTSM4hGDJin7g5PyXa9pQ',
-			},
+			social: [
+				{
+					href: 'https://x.com/academeez?ref=academeez',
+					icon: 'x.com',
+					label: 'Follow us on X',
+				},
+				{
+					href: 'https://github.com/ywarezk/academeez',
+					icon: 'github',
+					label: 'Follow us on GitHub',
+				},
+				{
+					href: 'https://www.youtube.com/channel/UCmnTSM4hGDJin7g5PyXa9pQ',
+					icon: 'youtube',
+					label: 'Follow us on YouTube',
+				},
+			],
 			customCss: ['./src/tailwind.css'],
 		}),
 		tailwind({

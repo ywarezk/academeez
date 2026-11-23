@@ -1,74 +1,85 @@
 ---
-import type { Props } from '@astrojs/starlight/props';
-import Default from '@astrojs/starlight/components/Sidebar.astro';
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "./Breadcrumb"
-import type { SidebarEntry } from 'node_modules/@astrojs/starlight/utils/navigation';
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+} from './Breadcrumb';
+
 import { getEntry } from 'astro:content';
 import { isRtl } from './utils';
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro';
+import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro';
+import type { SidebarEntry } from 'node_modules/@astrojs/starlight/utils/routing/types';
 
-const locale = Astro.currentLocale || 'en'
+const locale = Astro.currentLocale || 'en';
 
-function findMyParents(sidebar: SidebarEntry[], parents: SidebarEntry[] = []): SidebarEntry[] | null {  
-  for (let i = 0; i < sidebar.length; i++) {
-    const entry = sidebar[i];    
-    if (entry.type === 'group') {
-      const newParents =  findMyParents(entry.entries, [...parents, entry]);      
-      if (newParents) {
-        return newParents;
-      }
-    }
-    if (entry.type === 'link') {
-      if (entry.isCurrent) {
-        return [...parents, entry];  
-      }     
-    }
-  }
-  return null;
+function findMyParents(
+	sidebar: Array<SidebarEntry>,
+	parents: Array<SidebarEntry> = []
+): Array<any> | null {
+	for (let i = 0; i < sidebar.length; i++) {
+		const entry = sidebar[i];
+		if (entry.type === 'group') {
+			const newParents = findMyParents(entry.entries, [...parents, entry]);
+			if (newParents) {
+				return newParents;
+			}
+		}
+		if (entry.type === 'link') {
+			if (entry.isCurrent) {
+				return [...parents, entry];
+			}
+		}
+	}
+	return null;
 }
 
 // will hold the parents of the current page
-const parents: SidebarEntry[] = findMyParents(Astro.props.sidebar) as SidebarEntry[];
+const parents: SidebarEntry[] = findMyParents(
+	Astro.locals.starlightRoute.sidebar
+) as SidebarEntry[];
 
-const i18n = await getEntry('i18n', locale)
+const i18n = await getEntry('i18n', locale);
 const isRtlLocale = isRtl(locale);
 
 const Seperator = isRtlLocale ? ChevronLeft : ChevronRight;
 ---
 
-
 {
-  parents ? (
-    <div class="not-content">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink className="hover:text-green no-underline" href="/">{i18n?.data['breadcrumbs.home']}</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator className="flex">
-            <Seperator size={16} />
-          </BreadcrumbSeparator>    
-          <BreadcrumbItem>      
-            <BreadcrumbLink className="hover:text-green no-underline" href="/courses">{i18n?.data['breadcrumbs.courses']}</BreadcrumbLink>      
-          </BreadcrumbItem>
-          <BreadcrumbSeparator className="flex">            
-            <Seperator size={16} />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbPage>{parents[0].label}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>  
-    </div>    
-    <Default {...Astro.props} sidebar={(parents[0] as any).entries} />
-  ) : null
+	parents ? (
+		<>
+			<div class="not-content">
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink className="hover:text-green no-underline" href="/">
+								{i18n?.data['breadcrumbs.home']}
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator className="flex">
+							<Seperator size={16} />
+						</BreadcrumbSeparator>
+						<BreadcrumbItem>
+							<BreadcrumbLink className="hover:text-green no-underline" href="/courses">
+								{i18n?.data['breadcrumbs.courses']}
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator className="flex">
+							<Seperator size={16} />
+						</BreadcrumbSeparator>
+						<BreadcrumbItem>
+							<BreadcrumbPage>{parents[0].label}</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</div>
+			<SidebarPersister>
+				<SidebarSublist sublist={(parents[0] as any).entries} />
+			</SidebarPersister>
+		</>
+	) : null
 }
-
-

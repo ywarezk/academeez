@@ -13,7 +13,7 @@ import { buttonVariants } from './Button';
 import { cn } from './utils';
 
 export const LessonCard: FC<{ article: any; locale: string }> = ({ article, locale }) => {
-	const slug = article.id.replace(/\.mdx$/, '');
+	const slug = article.slug;
 	let imageLink = slug;
 	if (locale) {
 		imageLink = imageLink.replace(`${locale.substring(1)}/`, '');

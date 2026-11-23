@@ -2,14 +2,21 @@
 import Default from '@astrojs/starlight/components/PageTitle.astro';
 import { getEntry } from 'astro:content';
 
-const locale = Astro.currentLocale || 'en'
-const i18n = await getEntry('i18n', locale)
+const locale = Astro.currentLocale || 'en';
+const i18n = await getEntry('i18n', locale);
+
+const data = Astro.locals.starlightRoute.entry.data;
 ---
 
 <Default {...Astro.props as any} />
 
-<p class="text-muted-foreground">{i18n?.data['pagetitle.publish']} {new Date(Astro.props.entry.data.publishDate).toLocaleDateString(locale, {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric'
-})}</p>
+<p class="text-muted-foreground">
+	{i18n?.data['pagetitle.publish']}
+	{
+		new Date(data.publishDate).toLocaleDateString(locale, {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+		})
+	}
+</p>

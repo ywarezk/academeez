@@ -1,79 +1,87 @@
 ---
-
 import Default from '@astrojs/starlight/components/PageSidebar.astro';
 import { getCollection, getEntry } from 'astro:content';
 import { AvatarFull } from './Avatar';
 
-const writers = Astro.props.entry.data.authors;
-const sources = Astro.props.entry.data.sources || [];
+const data = Astro.locals.starlightRoute.entry.data;
+const writers = data.authors;
+const sources = data.sources || [];
 const allAuthors = await getCollection('authors');
 
 // from allAuthors find the authors that are in the writers array
 const authors = allAuthors.filter((author) => writers?.includes(author.slug));
 
-const locale = Astro.currentLocale || 'en'
-const i18n = await getEntry('i18n', locale)
+const locale = Astro.currentLocale || 'en';
+const i18n = await getEntry('i18n', locale);
 ---
 
 <Default {...Astro.props as any} />
 
 {
 	authors.length > 0 ? (
-		<hr />
-		<div class="p-4 not-content">
-			<h3 class="mb-2">{i18n?.data['pagesidebar.authors']}</h3>
-			
-			<!-- astro loop on the authors -->
-			<ul class="flex mt-4">
-				{authors.map((author) => (
-					<li>				
-						<AvatarFull 
-							client:load
-							avatar={author.data.avatar} 
-							name={author.data.name} 
-							slug={author.slug} 
-						/>
-					</li>
-				))}
-			</ul>
-		</div>
+		<>
+			<hr />
+			<div class="p-4 not-content">
+				<h3 class="mb-2">{i18n?.data['pagesidebar.authors']}</h3>
+
+				<ul class="flex mt-4">
+					{authors.map((author) => (
+						<li>
+							<AvatarFull
+								client:load
+								avatar={author.data.avatar}
+								name={author.data.name}
+								slug={author.slug}
+							/>
+						</li>
+					))}
+				</ul>
+			</div>
+		</>
 	) : null
 }
 
 {
-	sources && sources.length > 0 &&
-	(<hr />
-	<div class="p-4 not-content">
-		<h3 class="mb-2">{i18n?.data['pagesidebar.source']}</h3>
-	</div>)
+	sources && sources.length > 0 && (
+		<>
+			<hr />
+			<div class="p-4 not-content">
+				<h3 class="mb-2">{i18n?.data['pagesidebar.source']}</h3>
+			</div>
+		</>
+	)
 }
-
 
 <ul class="list-none">
 	{
-		sources.map((source: { title: string, url: string}) => {
+		sources.map((source: { title: string; url: string }) => {
 			return (
-				
-					<li class="mt-2 first:mt-0">
-						{
-							source.url.includes('github') && (
-								<a class="github-button" href={source.url} data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star" data-size="large" aria-label="Star ywarezk/academeez-k8s-flux on GitHub">{source.title}</a>
-							)
-						}
-						{
-							source.url.includes('codesandbox') && (
-								<a href={source.url} class="flex">
-									<img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="Edit in CodeSandbox" />
-									<h5 class="ml-2">{source.title}</h5>								
-								</a>
-							)
-						}
-					</li>
-				
-			)
+				<li class="mt-2 first:mt-0">
+					{source.url.includes('github') && (
+						<a
+							class="github-button"
+							href={source.url}
+							data-color-scheme="no-preference: light; light: light; dark: dark;"
+							data-icon="octicon-star"
+							data-size="large"
+							aria-label="Star ywarezk/academeez-k8s-flux on GitHub"
+						>
+							{source.title}
+						</a>
+					)}
+					{source.url.includes('codesandbox') && (
+						<a href={source.url} class="flex">
+							<img
+								src="https://codesandbox.io/static/img/play-codesandbox.svg"
+								alt="Edit in CodeSandbox"
+							/>
+							<h5 class="ml-2">{source.title}</h5>
+						</a>
+					)}
+				</li>
+			);
 		})
 	}
 </ul>
-	
 
 <script async defer src="https://buttons.github.io/buttons.js"></script>
