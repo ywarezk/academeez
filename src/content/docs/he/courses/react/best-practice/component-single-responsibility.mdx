@@ -1,0 +1,233 @@
+---
+title: אחריות אחת ל - Component
+description: כל Component ב-React צריך להיות אחראי על תפקיד אחד בלבד
+publishDate: 2024-04-16
+authors:
+	- yariv-katz
+---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/UHMP-26qBS4?si=l_Ym_uy3btnRKvG5"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+[SOLID](https://simple.wikipedia.org/wiki/SOLID_(object-oriented_design)#:~:text=mnemonic%20acronym%20for%205%20principles,(rules)%20in%20computer%20programming.) הוא סט של חמישה עקרונות שעוזרים לך לעצב קוד מאורגן, ניתן לתחזוקה ולהרחבה.
+בשיעור זה נתמקד ב- `Single Responsibility Principle` שהוא ה- `S` ב- `SOLID`.
+
+טעות שחוזרת שאני רואה בקרב מפתחי React, וטעות שיכולה לגרום לבעיות רבות בעתיד.
+אם ה-Component שלך ארוך מאוד ועוסק בדברים רבים, זה אות שה-Component עשוי להפר את `Single Responsibility Principle`.
+
+אם ה - Component כולל הרבה if's שמציינים דברים שונים, או אם יש לו הרבה מצבים שונים, או אם יש לו הרבה פונקציות שעושות דברים שונים, זה אות שה-Component עשוי להפר את `Single Responsibility Principle`.
+
+בואו נבחן את ה - Component הבא וננסה לשפר אותו על ידי הקפדה על כלל ה -  `Single Responsibility Principle`.
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	customSetup={{ 
+		dependencies: { 
+			"react": "^18.0.0",
+    	"react-dom": "^18.0.0",
+    	"react-scripts": "^5.0.0",
+    	"@tanstack/react-query": "5.29.2"
+		}
+	}}
+	files={{
+		"/BadTodo.js": {
+			readOnly: true,	
+			code: `/**
+ * Todo is in charge of:
+ *    - send a request to fetch the todo items
+ *    - render a loading sign until the response is recieved
+ *    - render a list of todo items
+ *    - render an error if the request if failing
+ *
+ * This long list is a sign for breaking the single responsibility rule
+ */
+
+import { useQuery } from "@tanstack/react-query";
+
+export function BadTodo() {
+  const { data, error, isPending } = useQuery({
+    queryKey: ["todos"],
+    queryFn: () => {
+      return fetch("https://jsonplaceholder.typicode.com/todos").then((res) => {
+        if (!res.ok) {
+          // make the promise be rejected if we didn't get a 2xx response
+          throw new Error("Not 2xx response", { cause: res });
+        } else {
+          return res.json();
+        }
+      });
+    },
+  });
+
+  if (isPending) {
+    return <h1>Loading</h1>;
+  }
+
+  if (error) {
+    return <h6>{error.message}</h6>;
+  }
+
+  return (
+    <ul>
+      {data?.map((todo) => (
+        <li key={todo.id}>{todo.title}</li>
+      ))}
+    </ul>
+  );
+}
+			`
+		},
+		"/App.js": {
+			hidden: true,
+			readOnly: true,		
+			code: `import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BadTodo } from "./BadTodo";
+			
+// Create a client
+const queryClient = new QueryClient();
+
+export default function App() {
+  return (
+		<QueryClientProvider client={queryClient}>
+			<BadTodo />
+		</QueryClientProvider>		
+  )
+}`
+		},
+		
+	}}
+	template="react" 
+/>
+</div>
+
+נסתכל על ה - Component `<BadTodo />`. ה - Component אחראי על לקבל את רשימת ה - todo items, להציג סימן טעינה עד שהתשובה מתקבלת, להציג רשימת todo items, ולהציג שגיאה אם הבקשה נכשלת.
+נשים לב לכמה if's שונים אשר גורמים להצגה שונה, וזה אות שה - Component עשוי להפר את `Single Responsibility Principle`.
+מה אם נרצה לחלוק את הסימן טעינה עם Component אחרים? מה אם נרצה לחלוק את ההודעה שגיאה עם Component אחרים? מה אם נרצה לחלוק את רשימת ה - todo items עם Component אחרים? אי אפשר לעשות זאת מכיוון שה - Component עושה יותר מדי דברים.
+לעתים קרובות שבירת `Single Responsibility Principle` גורמת לשכפול קוד, וזה עשוי להקשות על תחזוקה ובדיקה של הקוד.
+
+נחליף את ה - Component `<BadTodo />` וניצור במקום זאת את ה - Component `<GoodTodo />` אשר עוקב אחר `Single Responsibility Principle`.
+נסתכל על הקוד הבא:
+
+<div className="mt-5 not-content" dir="ltr">
+<Sandpack 
+	client:load
+	customSetup={{ 
+		dependencies: { 
+			"react": "^18.0.0",
+    	"react-dom": "^18.0.0",
+    	"react-scripts": "^5.0.0",
+    	"@tanstack/react-query": "5.29.2",
+			"react-error-boundary": "4.0.13"
+		}
+	}}
+	files={{
+		"/GoodTodo.js": {
+			readOnly: true,	
+			code: `import { useTodos } from "./todo.hook.js";
+
+export function GoodTodo() {
+  const { data } = useTodos();
+
+  return (
+    <ul>
+      {data.map((todo) => (
+        <li key={todo.id}>{todo.title}</li>
+      ))}
+    </ul>
+  );
+}
+`
+		},
+		"/App.js": {			
+			readOnly: true,		
+			code: `import "./styles.css";
+import { GoodTodo } from "./GoodTodo";
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import { Error } from "./Error";
+import { Loading } from "./Loading";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+// Create a client
+const queryClient = new QueryClient();
+
+export default function App() {
+  return (
+		<QueryClientProvider client={queryClient}>
+			<div className="App">
+				<ErrorBoundary fallback={<Error />}>
+					<Suspense fallback={<Loading />}>
+						<GoodTodo />
+					</Suspense>
+				</ErrorBoundary>
+			</div>
+		</QueryClientProvider>
+  );
+}
+`
+		},
+		"/Loading.js": {
+			readOnly: true,	
+			code: `export function Loading() {
+	return <h1>Loading</h1>;
+}					 
+					`
+		},
+		"/Error.js": {
+			readOnly: true,	
+			code: `export function Error() {
+	return <h6>Something went wrong</h6>;
+}`
+		},
+		"/todo.hook.js": {
+			readOnly: true,	
+			code: `import { useSuspenseQuery } from "@tanstack/react-query";
+
+/**
+ * Will query the server for a list of todo items
+ * @returns {ReturnType<typeof useSuspenseQuery>}
+ */
+export function useTodos() {
+  return useSuspenseQuery({
+    queryKey: ["todos"],
+    queryFn: () => {
+      return fetch("https://jsonplaceholder.typicode.com/todos").then(
+        (res) => {
+          if (!res.ok) {
+            // make the promise be rejected if we didn't get a 2xx response
+            throw new Error("Not 2xx response", { cause: res });
+          } else {
+            return res.json();
+          }
+        }
+      );
+    },
+  });
+}
+`
+		}
+	}}
+	template="react" 
+/>
+</div>
+
+אנחנו משתמשים כאן בכמה טכניקות כדי לתת ל - `<GoodTodo>` ולכל ה - Components כאן אחריות אחת בלבד:
+- אנו משתמשים ב - Custom Hook `useTodos` כדי לקבל את רשימת ה - todo items. ה - Hook הזה אחראי רק על לקבל את רשימת ה - todo items ולא על דבר אחר.
+- אנו משתמשים ב - `<Suspense>` ומספקים לו את ה - `fallback` prop עם ה - `<Loading />` Component. בכך אנו יכולים לשתף את הסימן טעינה עם Components אחרים, וה - `<Loading>` עצמו אחראי רק על סימן הטעינה.
+- אנו משתמשים ב - `<ErrorBoundary>` ומספקים לו את ה - `fallback` prop עם ה - `<Error />` Component. בכך אנו יכולים לשתף את ההודעה שגיאה עם Components אחרים, וה - `<Error>` עצמו אחראי רק על ההודעה שגיאה.
+
+כל דבר באפליקציה שלנו אחראי רק על דבר אחד ורק על דבר אחד. זה עושה את הקוד שלנו קל יותר לתחזוקה, קל יותר לבדיקה, וקל יותר להרחבה.
+אנו יכולים בקלות לשתף את ה - `<Loading />` ואת ה - `<Error />` Components עם Components אחרים, ואנו יכולים בקלות לשתף את ה - `useTodos` Hook עם Components אחרים.
