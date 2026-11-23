@@ -96,6 +96,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          override_branch: main
       
       - name: Set e2e check to success
         if: ${{ success() }}
