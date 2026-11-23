@@ -4,7 +4,23 @@ description: "In this lesson we will learn about helm-controller, and we will us
 template: "doc"
 sidebar:
   order: 3
+authors:
+  - yariv-katz
+source: "https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-03"
 ---
+
+<div class="not-content flex">
+  <iframe
+    className="mx-auto"
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/aD5_OA3IEaA?si=UGUp2nH7JC0Pb85h"
+    title="YouTube video player"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+  />
+</div>
 
 The `helm-controller` is a [Flux](https://fluxcd.io/flux/components/helm/) operator that works with the `HelmRelease` custom resource.
 It is used to manage helm releases on our cluster.
@@ -21,8 +37,8 @@ A Helm chart is a collection of files that describe a related set of Kubernetes 
 
 ### Helm Repository
 
-A Helm repository is an HTTP server that houses an `index.yaml` (No `index.yaml` in OCI repositories) file and some packaged charts. The `index.yaml` file contains a list of all of the charts in the repository, along with metadata about those charts.
-You don't need anything special for creating a Helm repository, you can use any web server to serve your charts (In OCI repositories it will require a bit more, and it's recommended to use cloud solution).
+A Helm repository is an HTTP server that houses an `index.yaml` (there are no `index.yaml` in OCI repositories) file and some packaged charts. The `index.yaml` file contains a list of all of the charts in the repository, along with metadata about those charts.
+You don't need anything special for creating a Helm repository, you can use any web server to serve your charts (In OCI repositories it will require a bit more, and it's recommended to use a cloud solution).
 Popular choices of hosting your charts can be: S3 buckets, Github pages, and many cloud providers are now offering artifact registries (artifact registries are perfect choice for OCI repositories).
 In addition to those self hosting options, you also have community managed repositories like [Artifact Hub](https://artifacthub.io/).
 In this lesson we will learn how to work with community managed repositories, and we will install [nginx ingress controller using helm](https://docs.nginx.com/nginx-ingress-controller/installation/installing-nic/installation-with-helm/)
