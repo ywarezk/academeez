@@ -1,7 +1,6 @@
 ---
-title: Installing @ngrx/store
-description: Create a new Angular application and install @ngrx/store.
-video: "https://www.youtube.com/embed/vGYX9LyeTVw?si=X2tMw_tD4ENthenH"
+title: התקנת @ngrx/store
+description: יצירת אפליקציה חדשה באנגולר והתקנת @ngrx/store.
 publishDate: 2023-11-06
 sidebar:
   order: 1
@@ -10,34 +9,47 @@ authors:
 source: "https://codesandbox.io/p/sandbox/exciting-keller-7kh6wq"
 ---
 
-In the following coding exercise we will do the following:
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/vGYX9LyeTVw?si=X2tMw_tD4ENthenH"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
 
-- Create a new Angular application
-- Install `@ngrx/store`
-- Install `@ngrx/store-devtools`
-- Install Redux DevTools Chrome extension
-- Populate the state with some data
-- Inspect the state using Redux DevTools
+שהו שיעור עבודה עצמית שבו נעשה את הצעדים הבאים:
 
-We will cover here the starting point of combining Angular and NGRX, including some recommended tools and best practices you should use.
+- יצירת אפליקציה אנגולר חדשה
+- התקנת `@ngrx/store`
+- התקנת `@ngrx/store-devtools`
+- התקנת תוסף `Redux DevTools` בכרום
+- מילוי ה - state של ngrx עם נתונים
+- בדיקת ה - state באמצעות <a href="https://github.com/reduxjs/redux-devtools">Redux DevTools</a>
 
-<div class="[&>h3]:step steps mb-12 mr-4 border-r pr-8 [counter-reset:step]">
+בסופו של תהליך זה נקבל נקודת התחלה טובה לפרוייקט אנגולר ו - NGRX, כולל כלים מומלצים ושיטות טובות שיש להשתמש בהן.
 
-### Create a new Angular application
+<div class="[&>h3]:step steps mb-12 ml-4 border-l pl-8 [counter-reset:step]">
 
-You can start a new Angular application using the Angular CLI.
+### יצירת אפליקציה אנגולר חדשה
+
+ניתן ליצור אפליקציה אנגולר חדשה באמצעות `Angular CLI`.
 
 ```bash
 npx @angular/cli@latest new ngrx-store-install --minimal --style css --routing false
 ```
 
-This will create a new angular application, the `--minimal` flag will create a minimal application with minimum files (`--inline-template`, `--skip-tests`, `--inline-style`).  
-We also chose to create the application with `css` style and without `routing`.
+הפקודה תיצור אפליקציה אנגולר חדשה, ה - flag `--minimal` תיצור אפליקציה מינימלית עם מינימום קבצים (`--inline-template`, `--skip-tests`, `--inline-style`).  
+בנוסף בחרנו ליצור את האפליקציה עם סגנון `css` וללא `routing`.
 
 ### OnPush
 
-with `NGRX` you will get the data as `Observable` which makes angular applications with `NGRX` ideal for `OnPush` change detection strategy (in all the components).  
-change the `app.component.ts` `changeDetection` to `OnPush`
+באפליקציות אנגולר עם `NGRX` תקבלו את הנתונים כ - `Observable` שמאפשר לאפליקציות אנגולר עם `NGRX` להיות אידיאליות לאסטרטגיית `OnPush` (בכל הרכיבים).  
+בקובץ `app.component.ts` נשנה את ה - `changeDetection` ל - `OnPush`.
 
 ```typescript title="src/app/app.component.ts"
 import { ChangeDetectionStrategy, Component } from '@angular/core';
@@ -49,56 +61,95 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 export class AppComponent {}
 ```
 
-:::tip[Best Practice Tip]
-It's recommended to use `OnPush` on all components in your application, not just the root component.  
-Follow <a className="text-green/80 underline" href="/he/course/angular/best-practices/onpush">this</a> best practice tip to make angular cli generate `OnPush` components, as well as adding a lint rule to verify `OnPush` is set for all components
+:::tip[עצה]
+מומלץ להשתמש ב - `OnPush` בכל הרכיבים באפליקציה, לא רק ברכיב הראשי.  
+ניתן לקרוא על זה ב - <a className="text-green/80 underline" href="/he/courses/angular/best-practices/onpush">עצה טובה זו</a> ולהוסיף כלל lint לוודא שכל הרכיבים באפליקציה מוגדרים עם `OnPush`.
 :::
 
-### Install @ngrx/store
+### התקנת @ngrx/store
 
-Each of the `@ngrx/*` libraries has an `ng add` command that will install the library and add additional boilerplate code.
+כל אחת מספריות `@ngrx/*` יש להן פקודת `ng add` שתתקין את הספרייה ותוסיף קוד תבנית נוסף.
 
-In your angular application run the following:
+הריצו את הפקודה הבאה באפליקציה האנגולר שיצרתם:
 
 ```bash
 npx ng add @ngrx/store@latest --skip-confirmation
 ```
 
-Running this command will npm install `@ngrx/store` and also add the following change to `src/app/app.module.ts`:
+הרצת הפקודה תתקין את `@ngrx/store` ותוסיף את השינוי הבא לקובץ `src/app/app.module.ts`:
 
-![app.module.ts changes](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/installing-ngrx-store/ng-add-store-change.png?raw=true)
+```diff lang="typescript" title="src/app/app.module.ts"
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {AppComponent} from './app.component';
++ import {StoreModule} from '@ngrx/store';
 
-Notice that `NGRX` `StoreModule.forRoot({}, {})` is added to the `imports` array with empty objects, which mean we will have an empty state in `NGRX`.
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+-    BrowserModule
++    BrowserModule, 
++    StoreModule.forRoot({}, {})
+  ],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+```
 
-### Install @ngrx/store-devtools
+שימו לב שהוספנו את `NGRX` `StoreModule.forRoot({}, {})` למערך `imports` עם אובייקטים ריקים, שמשמע שיהיה לנו State ריק ב - `NGRX`.
 
-It's recommended that on `Angular+NGRX` applications, you will work with `@ngrx/store-devtools` which will allow you to inspect the state of your application.
+### התקנת @ngrx/store-devtools
+
+מומלץ לעבוד עם `@ngrx/store-devtools` באפליקציות `Angular+NGRX` שתאפשר לכם לבדוק את State של האפליקציה שלכם.
 
 ```bash
 npx ng add @ngrx/store-devtools@latest --skip-confirmation
 ```
 
-Running this command will npm install `@ngrx/store-devtools` and also add the following change to `src/app/app.module.ts`:
+הרצת הפקודה תתקין את `@ngrx/store-devtools` ותוסיף את השינוי הבא לקובץ `src/app/app.module.ts`:
 
-![app.module.ts changes](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/installing-ngrx-store/ng-add-devtools-change2.png?raw=true)
+```diff lang="typescript" title="src/app/app.module.ts"
+-import {NgModule} from '@angular/core';
++import {NgModule, isDevMode} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {AppComponent} from './app.component';
+import {StoreModule} from '@ngrx/store';
++import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 
-Notice that `StoreDevtoolsModule.instrument()` is added to the `imports` array.
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+-  imports: [BrowserModule, StoreModule.forRoot({}, {})],
++  imports: [
++    BrowserModule, 
++    StoreModule.forRoot({}, {}),
++    StoreDevtoolsModule.instrument({maxAge: 25, logOnly: !isDevMode()})
++  ],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+```
 
-:::tip[Best Practice Tip]
-In production, it's best not to add the `StoreDevtoolsModule` to the imports array, in fact it's best to completly remove the `@ngrx/store-devtools` from the bundle.  
-Check out our best practice tip <a className="text-green/80 underline" href="/he/courses/angular/ngrx/best-practices/store-devtools-production">here</a>
+שימו לב שהוספנו את `StoreDevtoolsModule.instrument()` למערך `imports`.
+
+:::tip[עצה]
+בסביבת production כדאי לא להוסיף את `StoreDevtoolsModule` למערך `imports`, בעצם כדאי להסיר לחלוטין את `@ngrx/store-devtools` מהבאנדל.  
+ניתן לקרוא על זה ב - <a className="text-green/80 underline" href="/he/courses/angular/ngrx/best-practices/store-devtools-production">עצה טובה זו</a>
 :::
-	
-### Install Redux DevTools Chrome extension
 
-In order to inspect the state of your application, you will need to install the Redux DevTools Chrome extension.  
-Click [this link](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) and add the extension to your browser.
+### התקנת Redux DevTools בכרום	
+
+כדי לבדוק את ה - state של האפליקציה שלכם תצטרכו להתקין את התוסף `Redux DevTools` בכרום.  
+לחצו על [קישור זה](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) והתקינו את התוסף בדפדפן שלכם.
 
 ![Redux dev tools](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/installing-ngrx-store/redux-devtools.gif?raw=true)
 
-### Inspect your state with Redux dev tools
+### בחינת ה - state באמצעות Redux dev tools
 
-Let's populate our state with some initial data, and make sure we can examine that data with Redux dev tools.
+נמלא את ה - state שלנו עם נתונים ראשוניים, ונבדוק שאנו יכולים לבחון את הנתונים באמצעות Redux dev tools.
 
 ```typescript title="src/app/app.module.ts"
 import {NgModule, isDevMode} from '@angular/core';
@@ -126,22 +177,24 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 export class AppModule {}
 ```
 
-We populated the state with `counter: 0` (it's not important the exact syntax, we will learn about reducers later on).
+שמנו בתוך ה - state שלנו את המידע `counter: 0` (זה לא חשוב הדיוק בתחביר, נלמד על reducers מאוחר יותר).
 
-### Examine the state
+### בדיקת ה - state
 
-Run our app: 
+הריצו את האפליקציה:
 
 ```bash
 npx ng serve
 ```
 
-open the developer tools, you should see a new tab in the developer tools called `Redux`, this tab was added after installing the extension of `Redux Dev Tools` and you can use it to inspect the state.  
+פתחו את ה- Developer Tools של הדפדפן ותראו טאב חדש בשם `Redux`, כפתור זה התווסף לאחר התקנת התוסף `Redux DevTools` וניתן להשתמש בו כדי לבדוק את ה - state.  
 
 ![Inspect State](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/installing-ngrx-store/examine-state.gif?raw=true)
 
 </div>
 
-This basic app will be the baseline of all the exercises you will do in the `NGRX` chapter.  
-This app has `@ngrx/store` as well as `@ngrx/store-devtools` installed.  
-We also installed the `Redux DevTools` Chrome extension, and used it to inspect the state of our application.
+### סיכום
+
+האפליקציה שיצרנו תהווה את הבסיס לכל התרגילים שתעשו בפרק ה - `NGRX`.  
+באפליקציה זו יש `@ngrx/store` וגם `@ngrx/store-devtools` מותקנים.  
+בנוסף יש תוסף `Redux DevTools` בכרום שמאפשר לבדוק את ה - state של האפליקציה שלכם.
