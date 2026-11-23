@@ -1,0 +1,440 @@
+---
+title: The Rules of JSX
+description: Learning the rules of JSX by fixing bad code.
+publishDate: 2026-06-11
+authors:
+  - yariv-katz
+sidebar:
+  order: 5
+  label: 4.2 The Rules of JSX
+---
+
+import CourseSandpack from '~/components/CourseSandpack';
+
+If you are already familiar with HTML, learning JSX is a short step—both look very similar. In this lesson we focus on what makes JSX different: each section explains one rule, with an example that shows how JSX diverges from HTML. Then you get an online IDE with code that breaks that rule, and you fix it by applying what you just learned.
+
+We learn by writing code—that is the best way to learn.
+
+## Return a single root element
+
+A React component must **return a single root element**. You cannot return two sibling tags at the top level of `return`—React will report that adjacent JSX elements must be wrapped.
+
+In HTML you can place many elements next to each other inside `<body>`. In JSX, the component's `return` is one expression, so multiple siblings need a **wrapper**.
+
+The example below is broken. When you run it, you will see an error like this:
+
+:::danger[Something went wrong]
+
+```text frame="terminal"
+Cannot assign to read only property 'message' of object 'SyntaxError: /App.js: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (4:4)
+
+  2 |   return (
+  3 |     <h1>Hedy Lamarr's Todos</h1>
+> 4 |     <ul>
+    |     ^
+  5 |       <li>Invent new traffic lights</li>
+  6 |       <li>Rehearse a movie scene</li>
+  7 |     </ul>
+```
+
+:::
+
+The important part is the message: **Adjacent JSX elements must be wrapped in an enclosing tag.** Fix the component below by wrapping the markup in a `<div>`:
+
+<div className="mt-5 not-content">
+<CourseSandpack
+	client:only="react"
+	template="react"
+	files={{
+		'App.js': {
+			readOnly: false,
+			code: [
+				'export default function TodoList() {',
+				'  return (',
+				"    <h1>Hedy Lamarr's Todos</h1>",
+				'    <ul>',
+				'      <li>Invent new traffic lights</li>',
+				'      <li>Rehearse a movie scene</li>',
+				'    </ul>',
+				'  );',
+				'}',
+			].join('\n'),
+		},
+	}}
+/>
+</div>
+
+### Fragment
+
+Sometimes you need a wrapper to satisfy the single-root rule, but you **do not want an extra node in the DOM**—for example when a parent already provides layout and an added `<div>` would break styling or semantics.
+
+For that case React has a **Fragment**: `<>...</>`. It groups elements without rendering an extra tag in the browser.
+
+In the editor above, replace your `<div>` wrapper with a Fragment.
+
+## Don't forget to close the tag
+
+HTML is more forgiving when you leave tags open. In JSX you must either **close** every tag (`<li>...</li>`) or use a **self-closing** tag (`<img />`, `<br />`).
+
+Here is code that would work in HTML but breaks in JSX—an `<img>` that is not self-closing, and list items that are not closed. When you run it, you will see an error like this:
+
+:::danger[Something went wrong]
+
+```text frame="terminal"
+Cannot assign to read only property 'message' of object 'SyntaxError: /App.js: Expected corresponding JSX closing tag for <li>. (12:6)
+
+  10 |         <li>Rehearse a movie scene
+  11 |         <li>Improve the spectrum technology
+> 12 |       </ul>
+     |       ^
+  13 |     </>
+  14 |   );
+  15 | }
+```
+
+:::
+
+Notice how clear the exception is—it points at the problem and tells you what JSX expected: **Expected corresponding JSX closing tag for `<li>`.** Reading and understanding error messages is an important skill in programming.
+
+Fix both issues in the editor below:
+
+<div className="mt-5 not-content">
+<CourseSandpack
+	client:only="react"
+	template="react"
+	files={{
+		'App.js': {
+			readOnly: false,
+			code: [
+				'export default function TodoList() {',
+				'  return (',
+				'    <>',
+				'      <img',
+				'        src="https://react.dev/images/docs/scientists/yXOvdOSs.jpg"',
+				'        alt="Hedy Lamarr"',
+				'      >',
+				'      <ul>',
+				'        <li>Invent new traffic lights',
+				'        <li>Rehearse a movie scene',
+				'        <li>Improve the spectrum technology',
+				'      </ul>',
+				'    </>',
+				'  );',
+				'}',
+			].join('\n'),
+		},
+	}}
+/>
+</div>
+
+## No JavaScript reserved words
+
+React usually uses **DOM property names** rather than HTML attribute names. That is why some attributes look different in JSX—for example, `class` and `for` on HTML become `className` and `htmlFor` (which are also JavaScript reserved words, but the pattern is broader than that).
+
+For example, in HTML you place `class` on a tag:
+
+```html
+<img class="some-css-class" ... />
+```
+
+When the browser creates an [`HTMLImageElement`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement) from that tag, the `class` attribute becomes a property called `className` on the DOM element.
+
+React generally follows **DOM property names** rather than HTML attribute names. To follow JavaScript conventions, those property names are mostly **camelCased** and do not use **reserved words**. Since the DOM property is `element.className`, JSX uses `className`:
+
+```jsx
+<img className="some-css-class" ... />
+```
+
+In HTML, `for` is an attribute on a `<label>` that connects the label to an `<input>`:
+
+```html
+<form>
+  <label for="username">Username</label>
+  <input type="text" name="username" id="username" />
+</form>
+```
+
+For labels, the DOM property is `htmlFor`, so JSX uses `htmlFor`:
+
+```jsx
+<form>
+  <label htmlFor="username">Username</label>
+  <input type="text" name="username" id="username" />
+</form>
+```
+
+Unlike the syntax errors above, using `class` or `for` in JSX may **not** break the preview—the app can still render. React logs **warnings in the console** instead:
+
+:::caution[Console warning]
+
+```
+Invalid DOM property `%s`. Did you mean `%s`?
+class
+className
+Invalid DOM property `%s`. Did you mean `%s`?
+for
+htmlFor
+```
+
+:::
+
+This example shows why it is important to read **console errors and warnings** and understand them—not only hard errors. A warning can still point to a serious bug. On a plain DOM element React may still output `class` or `for` in the HTML despite the warning—but in `CssClass.js` the styled box only reads `className`, so the yellow background does not appear until you fix it.
+
+The editor below shows the **console** panel so you can see those warnings. Fix the mistakes in the two component files and watch the warning logs disappear:
+
+- **`CssClass.js`** — uses `class` on `<StyledBox>`; change it to `className` and watch the yellow background appear
+- **`Form.js`** — uses `for` on a `<label>`; change it to `htmlFor`
+
+<div className="mt-5 not-content">
+<CourseSandpack
+	client:only="react"
+	template="react"
+	options={{
+		visibleFiles: ['/CssClass.js', '/Form.js'],
+		activeFile: '/CssClass.js',
+		showConsole: true,
+	}}
+	files={{
+		'/App.js': {
+			readOnly: true,
+			code: [
+				"import CssClass from './CssClass';",
+				"import Form from './Form';",
+				'',
+				'export default function App() {',
+				'  return (',
+				'    <>',
+				'      <CssClass />',
+				'      <Form />',
+				'    </>',
+				'  );',
+				'}',
+			].join('\n'),
+		},
+		'/CssClass.js': {
+			readOnly: false,
+			code: [
+				"import './styles.css';",
+				"import StyledBox from './StyledBox';",
+				'',
+				'export default function CssClass() {',
+				'  return <StyledBox class="highlight">Styled with a CSS class</StyledBox>;',
+				'}',
+			].join('\n'),
+		},
+		'/StyledBox.js': {
+			readOnly: true,
+			code: [
+				'export default function StyledBox({ className, children }) {',
+				'  return <div className={className}>{children}</div>;',
+				'}',
+			].join('\n'),
+		},
+		'/styles.css': {
+			code: [
+				'.highlight {',
+				'  background-color: yellow;',
+				'  padding: 8px 12px;',
+				'  border-radius: 4px;',
+				'}',
+			].join('\n'),
+		},
+		'/Form.js': {
+			readOnly: false,
+			code: [
+				'export default function Form() {',
+				'  return (',
+				'    <form>',
+				'      <label for="username">Username</label>',
+				'      <input type="text" name="username" id="username" />',
+				'    </form>',
+				'  );',
+				'}',
+			].join('\n'),
+		},
+	}}
+/>
+</div>
+
+## most attributes are camelCased
+
+In HTML, many attribute names are **lowercase** or **kebab-case**. In JSX, most of them become **camelCase**—matching JavaScript conventions for **variables** and **object properties**, and the same names you would use on the matching DOM property.
+
+Here are a few valid HTML attributes and how they look in JSX:
+
+**`tabindex`** — controls tab order on focusable elements:
+
+**HTML:**
+
+```html
+<button tabindex="0">Click me</button>
+```
+
+**JSX:**
+
+```jsx
+<button tabIndex="0">Click me</button>
+```
+
+**`stroke-width`** — common on SVG elements:
+
+**HTML:**
+
+```html
+<circle stroke-width="2" />
+```
+
+**JSX:**
+
+```jsx
+<circle strokeWidth="2" />
+```
+
+React preserves `aria-*` and `data-*` exactly as defined by the HTML and accessibility specifications—you do not camelCase them.
+
+**`aria-label`** — describes an element for assistive technology:
+
+**HTML:**
+
+```html
+<button aria-label="Close">×</button>
+```
+
+**JSX:**
+
+```jsx
+<button aria-label="Close">×</button>
+```
+
+For the majority of other attributes, camelCase is the rule.
+
+Notice how React **warns you in the console** when attributes are not camelCase. Fix the mistakes in the editor below and get **no warnings** in the console:
+
+- **`LoginForm.js`** — a login form with username, password, and submit button; fix `tabindex` on each control
+- **`SvgCircle.js`** — an SVG circle with several kebab-case attributes; fix them to camelCase
+
+<div className="mt-5 not-content">
+<CourseSandpack
+	client:only="react"
+	template="react"
+	options={{
+		visibleFiles: ['/LoginForm.js', '/SvgCircle.js'],
+		activeFile: '/LoginForm.js',
+		showConsole: true,
+	}}
+	files={{
+		'/App.js': {
+			readOnly: true,
+			code: [
+				"import LoginForm from './LoginForm';",
+				"import SvgCircle from './SvgCircle';",
+				'',
+				'export default function App() {',
+				'  return (',
+				'    <>',
+				'      <LoginForm />',
+				'      <SvgCircle />',
+				'    </>',
+				'  );',
+				'}',
+			].join('\n'),
+		},
+		'/LoginForm.js': {
+			readOnly: false,
+			code: [
+				'export default function LoginForm() {',
+				'  return (',
+				'    <form>',
+				'      <label htmlFor="username">Username</label>',
+				'      <input id="username" type="text" name="username" tabindex="1" />',
+				'      <label htmlFor="password">Password</label>',
+				'      <input id="password" type="password" name="password" tabindex="2" />',
+				'      <button type="submit" tabindex="3">Log in</button>',
+				'    </form>',
+				'  );',
+				'}',
+			].join('\n'),
+		},
+		'/SvgCircle.js': {
+			readOnly: false,
+			code: [
+				'export default function SvgCircle() {',
+				'  return (',
+				'    <svg width="120" height="120" viewBox="0 0 120 120">',
+				'      <circle',
+				'        cx="60"',
+				'        cy="60"',
+				'        r="50"',
+				'        fill="lightblue"',
+				'        fill-opacity="0.5"',
+				'        stroke="navy"',
+				'        stroke-width="4"',
+				'        stroke-dasharray="8 4"',
+				'        stroke-linecap="round"',
+				'      />',
+				'    </svg>',
+				'  );',
+				'}',
+			].join('\n'),
+		},
+	}}
+/>
+</div>
+
+## Insert JavaScript expression using {}
+
+The last rule we will cover—and only briefly, because we have a full lesson on it—is how easy it is to insert **JavaScript expressions** directly into JSX.
+
+With curly braces `{}` you can insert a JavaScript expression directly into your markup. You can use them in **tag attributes**, for example:
+
+```javascript
+function Form() {
+	const username = 'academeez';
+	return (
+		<form>
+			<input type="text" value={username} />
+		</form>
+	)
+}
+```
+
+Or you can embed an expression **between element tags**. For example:
+
+```javascript
+function Avatar() {
+	const firstName = 'academeez';
+	const lastName = 'Free coding lessons';
+	
+	return (
+		<p>
+			Your first name is: {firstName} and last name is: {lastName}
+		</p>
+	)
+}
+```
+
+You cannot use a JavaScript expression as a **tag name**. Dynamic tags are possible, but in other ways—we will not cover that in this lesson. Doing this is not correct:
+
+```javascript
+function DynamicTag() {
+	const tagType = 'p';
+	
+	return (
+		<{tagType}>this code is wrong</{tagType}>
+	)
+}
+```
+
+## Summary
+
+In this lesson we learned the main **rules of JSX** by fixing broken code in the online IDE. JSX looks like HTML, but it follows stricter rules because it lives inside JavaScript.
+
+- **Return a single root element** — wrap siblings in a `<div>` or a Fragment (`<>...</>`).
+- **Close every tag** — use self-closing tags where needed (`<img />`, `<li>...</li>`).
+- **Use DOM property names** — mostly camelCased and avoiding JavaScript reserved words; for example `className` and `htmlFor` instead of HTML `class` and `for`.
+- **Use camelCase for most attributes** — for example `tabIndex` and `strokeWidth`; `aria-*` and `data-*` stay kebab-case.
+- **Insert JavaScript with `{}`** — in attribute values or between tags (we will go deeper in future lesson).
+
+When something is wrong, read the **error messages** and **console warnings**—they often tell you exactly what to fix.
+
+Next up: a separate **HTML to JSX** transformer page powered by [transform](https://github.com/ritz078/transform) ([transform.tools](https://transform.tools))—paste your HTML and it will automatically convert it to JSX using the rules from this lesson.
