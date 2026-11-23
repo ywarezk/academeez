@@ -2,13 +2,18 @@
 import Default from '@astrojs/starlight/components/SocialIcons.astro';
 import {buttonVariants} from './Button';
 import { cn } from './utils';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getEntry } from 'astro:content';
+
+const locale = Astro.currentLocale || 'en'
+const i18n = await getEntry('i18n', locale)
 ---
 
 
-<a href="/courses" class={cn(buttonVariants({
+<a href={getRelativeLocaleUrl(locale, 'courses')} class={cn(buttonVariants({
 	variant: 'default',
 }), 'mx-2 no-underline text-black')}>
-	Courses
+	{i18n?.data['header.courses']}
 </a>
 
 <Default {...Astro.props as any} />

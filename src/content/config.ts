@@ -8,7 +8,7 @@
  */
 
 import {defineCollection} from 'astro:content';
-import {docsSchema} from '@astrojs/starlight/schema';
+import {docsSchema, i18nSchema} from '@astrojs/starlight/schema';
 import {z} from 'zod';
 
 const authors = defineCollection({
@@ -21,6 +21,11 @@ const authors = defineCollection({
 
 export const collections = {
   authors,
+  i18n: defineCollection({ type: 'data', schema: i18nSchema({
+    extend: z.object({
+      'header.courses': z.string(),
+    }),
+  }) }),
   docs: defineCollection({
     schema: docsSchema({
       extend: z.object({
