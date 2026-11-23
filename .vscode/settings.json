@@ -1,0 +1,67 @@
+{
+  // Enable gjs support for eslint
+  "eslint.validate": [
+    "glimmer-js",
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "astro",
+    "markdown",
+    "mdx"
+  ],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "eslint.format.enable": false,
+  "eslint.useFlatConfig": true,
+
+  // Formatter configuration:
+  "[scss]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[glimmer-js]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[handlebars]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[astro]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  // eslint fix on save
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "eslint.probe": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "astro",
+    "markdown",
+    "mdx"
+  ],
+
+  "task.autoDetect": "off",
+  "eslint.debug": false,
+
+  // disable other stylesheet linters
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+  "eslint.codeAction.showDocumentation": { "enable": true }
+}

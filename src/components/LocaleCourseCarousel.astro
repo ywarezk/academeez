@@ -1,6 +1,6 @@
 ---
-import {CourseCarousel} from './CourseCarousel';
-import {getCollection} from 'astro:content';
+import { CourseCarousel } from './CourseCarousel';
+import { getCollection } from 'astro:content';
 
 interface Props {
 	title: string;
@@ -16,18 +16,20 @@ if (locale === 'en' || !locale) {
 
 const courseLink = Astro.props.courseLink || Astro.props.title.toLowerCase();
 
-const collections = await getCollection('docs', content => {
+const collections = await getCollection('docs', (content) => {
 	let prefix = '';
 	if (locale) {
 		prefix = `${locale.substring(1)}/courses/${courseLink}`;
 	} else {
 		prefix = `courses/${courseLink}`;
-	}	
+	}
 	return content.data.template === 'doc' && content.id.startsWith(prefix) && content.data.preview;
-}).then(allCollections => {
-	return allCollections.sort((a: any, b: any) => {
-		return a.data.sidebar.order - b.data.sidebar.order;
-	});
+}).then((allCollections) => {
+	return allCollections.sort(
+		(a: (typeof allCollections)[number], b: (typeof allCollections)[number]) => {
+			return (a.data.sidebar.order || 0) - (b.data.sidebar.order || 0);
+		}
+	);
 });
 ---
 

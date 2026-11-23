@@ -1,5 +1,4 @@
 ---
-
 interface Props {
 	title: string;
 	img?: string;
@@ -11,22 +10,22 @@ const { title, img, slug } = Astro.props;
 const icon = `/icons/${img || title.toLowerCase()}.svg`;
 const calcSlug = slug || title.toLowerCase();
 
-let locale = Astro.currentLocale
+let locale = Astro.currentLocale;
 if (locale === 'en' || !locale) {
-	locale = ''
+	locale = '';
 } else {
-  locale = `/${locale}`
+	locale = `/${locale}`;
 }
 ---
 
 <div class="flex flex-col justify-items-center place-items-center align-middle">
-  <div class="flex w-full not-content items-center">
-    <img src={icon} alt={title} class="h-12 mr-3" />
-    <h3>
-      <a href={`${locale}/courses/${calcSlug}`}>{title}</a>
-    </h3>
-  </div>
-  <p>
+	<div class="flex w-full not-content items-center">
+		<img src={icon} alt={title} class="h-12 mr-3" />
+		<h3>
+			<a href={`${locale}/courses/${calcSlug}`}>{title}</a>
+		</h3>
+	</div>
+	<p>
 		<slot />
-  </p>
+	</p>
 </div>

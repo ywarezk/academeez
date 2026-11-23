@@ -1,0 +1,38 @@
+# 
+# this will run eslint, prettier and astro check
+#
+# Created August 22nd, 2025
+# @author ywarezk
+# @license MIT
+# 
+
+name: Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
+    
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}-check
+  cancel-in-progress: true
+  
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5.0.0
+        with:          
+          fetch-depth: 1
+    
+      - name: Setup Node.js
+        uses: actions/setup-node@v3.9.1
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+              
+      - name: Run checks
+        run: npm run check

@@ -1,5 +1,7 @@
 ---
-import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import StarlightPage, {
+	type StarlightPageProps,
+} from '@astrojs/starlight/components/StarlightPage.astro';
 import { getCollection, getEntry } from 'astro:content';
 
 /**
@@ -34,6 +36,6 @@ const props = {
 	}
 </style>
 
-<StarlightPage {...props as any}>
+<StarlightPage {...props as StarlightPageProps}>
 	{result && result.Content ? <result.Content /> : <p>Author not found.</p>}
 </StarlightPage>

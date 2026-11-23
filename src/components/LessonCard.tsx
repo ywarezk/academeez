@@ -11,8 +11,12 @@ import type { FC } from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from './Card';
 import { buttonVariants } from './Button';
 import { cn } from './utils';
+import type { CollectionEntry } from 'astro:content';
 
-export const LessonCard: FC<{ article: any; locale: string }> = ({ article, locale }) => {
+export const LessonCard: FC<{ article: CollectionEntry<'docs'>; locale: string }> = ({
+	article,
+	locale,
+}) => {
 	const slug = article.slug;
 	let imageLink = slug;
 	if (locale) {

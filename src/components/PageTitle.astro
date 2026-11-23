@@ -8,7 +8,7 @@ const i18n = await getEntry('i18n', locale);
 const data = Astro.locals.starlightRoute.entry.data;
 ---
 
-<Default {...Astro.props as any} />
+<Default {...Astro.props} />
 
 <p class="text-muted-foreground">
 	{i18n?.data['pagetitle.publish']}
