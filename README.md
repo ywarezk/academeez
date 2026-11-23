@@ -1,33 +1,67 @@
-# academeez
+<h1 align="center">academeez - Open source learning platform for coders</h1>
 
-## What is academeez?
+<p align="center">
+  <img src="https://www.academeez.com/_astro/logo-light.BUToeAsh_A0IIg.svg" alt="academeez-logo"/>
+  <br>
+  <br>
+  academeez is an open-source, MIT-licensed platform offering community-driven coding lessons for learners of all levels — from beginners taking their first steps in programming to experts looking to sharpen their skills.
+</p>
 
-**academeez** is an **open-source, MIT-licensed** platform offering **community-driven coding lessons** for learners of all levels — from beginners taking their first steps in programming to experts looking to sharpen their skills.
+<p align="center">
+  <a href="https://www.academeez.com"><strong>academeez.com</strong></a>
+  <br>
+</p>
 
-Our mission is to make high-quality coding education accessible to everyone, and **academeez is completely free** to use. No registration is required to access the courses — simply dive in and start learning at your own pace.
+<hr>
 
-**academeez** also features **online coding exercises powered by CodeSandbox**, enabling learners to practice coding directly in their browser without any setup. This ensures a seamless, hands-on learning experience where you can experiment, build, and refine your skills in real time.
+## What Does Academeez Offer?
 
-Powered by contributions from a passionate community of developers, educators, and learners, academeez is your go-to resource for practical, interactive, and collaborative coding education.
+Academeez is not just another collection of tutorials — it’s a **complete learning ecosystem** designed to support different learning styles and levels of expertise.  
 
-## Why Do We Need Another Coding Courses Platform?
+Here’s what you’ll find:
 
-The primary goal of many online coding schools might seem like it’s to **educate programmers**, but in reality, their **main goal is to make money**. When profit comes first and education comes second, it often comes at a significant cost:
+- **Live Code Editing**  
+  Practice directly in your browser with interactive, real-time code editors powered by CodeSandbox. No setup required — just open, code, and learn.
 
-* Clickbait over quality: Many platforms focus on flashy marketing and exaggerated promises rather than providing meaningful, experience-driven content.
-* Content disconnected from best practices: Lessons are often created without proper input from experienced developers or the larger programming community, leading to outdated or subpar educational material.
-* Barrier to entry: If a platform requires you to register with your email or pay before even accessing lessons, it’s clear that their priority is collecting data or revenue, not advancing education.
+- **Video Lectures**  
+  Watch clear, concise lectures from experienced developers and educators that complement the written lessons.
 
-Additionally, most content on these platforms is **locked behind paywalls**, which has far-reaching effects:
+- **Student Exercises**  
+  Reinforce what you’ve learned through guided exercises and challenges, designed to help you apply concepts in practical scenarios.
 
-* It’s not properly indexed by search engines, making it harder to find useful content.
-* It lacks **community input** and real-world feedback, which are essential for growth and improvement.
+- **Material for Beginners and Experts**  
+  Whether you’re starting your coding journey or sharpening advanced skills, our lessons and exercises are tailored for all levels.
 
-In contrast, the **open-source movement** has given us some of the most incredible tools and technologies we use today. So, why shouldn’t **coding education** follow the same principles — driven by **community, transparency, and collaboration**?
+- **Starter Kits**  
+  Jumpstart your projects with ready-to-use starter kits that include best practices and modern tooling.
 
-What we really need is a **Wikipedia-like platform** for coding education, where the best learning tools and resources are freely available and collaboratively created. Just like Wikipedia has become the go-to source for information, coding education should be a collective effort, where the community can create, review, and improve learning content for developers at every level.
+- **Arranged Repositories for Courses**  
+  Each course is backed by a well-structured repository, giving you hands-on access to real project setups and workflows.
 
-Finally, if you ask experienced developers, you’ll find that at a certain level of expertise, they rarely rely on these platforms. Most online coding schools don’t cater to advanced learners, and the resources for experts are often lacking. While they might occasionally take courses to learn new technologies, there’s typically little value in the content when it comes to topics they’re already proficient in.
+---
 
-It’s time to shift from teaching code to make money to teaching code in the name of **improving coding education**.
+## How Is Academeez Different?
 
+We believe that learning to code should be **accessible, community-driven, and practical**. Unlike profit-focused platforms, Academeez is:
+
+- **Open-source and MIT-licensed** — free for everyone, forever.  
+- **Community-driven** — anyone can contribute lessons, exercises, and improvements.  
+- **Focused on real-world coding** — lessons are built on modern tools, industry best practices, and collective community knowledge.  
+
+By combining written lessons, videos, live coding, and hands-on repositories, Academeez ensures a complete learning experience that grows with you.
+
+---
+
+## Get Involved
+
+Academeez thrives on community contributions. Whether you want to **write lessons**, **improve code examples**, **add exercises**, or **fix bugs**, we welcome your help.  
+
+👉 See our [Contributing Guide](CONTRIBUTING.md) for details on how to get started.  
+👉 Please also review our [Code of Conduct](CODE_OF_CONDUCT.md).  
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).  
+Academeez is open-source and free to use, share, and improve.
