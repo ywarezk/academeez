@@ -22,29 +22,19 @@ Our starting point is that we started from a branch called `main`.
 We wanted to work on a new feature, so we created a new branch called `feature`.
 We created a few commits on the `feature` branch and while we were working on the branch, the `main` branch was updated with new commits.
 
-![feature main commits](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/store-state-angular.png?raw=true)
+![feature main commits](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/feature-main1.png?raw=true)
 
-We want to get the new commits from `main` into our `feature/something` branch.
-Usually developers will do something like this:
+we are on the `feaure` branch and we want to get the new commits from `main` into our `feature` branch we can do one of two things:
 
-```bash
-git pull origin main
-```
-
-this is assuming that they are now on the `feature/something` branch.
-We will discuss what this command does in a moment.
-But let's assume something else, let's assume our local repository `main` branch is up to date with the remote `main` branch.
-Now to get the new commits from `main` into our `feature/something` branch we can do one of two things:
-
-1. We can use `git merge` to merge the `main` branch into our `feature/something` branch.
+1. We can use `git merge` to merge the `main` branch into our `feature` branch.
 
 ```bash
 git merge main
 ```
 
-This assumes we are on the `feature/something` branch.
+This assumes we are on the `feature` branch.
 
-2. We can use `git rebase` to rebase our `feature/something` branch on top of the `main` branch.
+2. We can use `git rebase` to rebase our `feature` branch on top of the `main` branch.
 
 ```bash
 git rebase main
@@ -53,4 +43,18 @@ git rebase main
 Let's try and understand what each of these commands does.
 
 ### Git Merge
+
+When we run `git merge main` we are telling git to merge the `main` branch into our current branch.
+Git will create a new commit that combines the changes from both branches.
+This new commit will have two parents: the last commit on the `main` branch and the last commit on the `feature` branch.
+
+![merge main](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/merge-main.png?raw=true)
+
+Notice that a new commit was added on the `feature` branch.
+
+### Git Rebase
+
+When we run `git rebase main` we are telling git to take all the commits from the `feature` branch and replay them on top of the `main` branch.
+Git will take each commit from the `feature` branch and apply it on top of the `main` branch.
+This means that the commits from the `feature` branch will be added to the `main` branch one by one.
 
