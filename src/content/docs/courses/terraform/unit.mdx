@@ -7,7 +7,7 @@ authors:
 sidebar:
   order: 8
 sources:
-  - url: "https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-08"
+  - url: "https://github.com/Nerdeez/terragrunt-catalog/tree/lesson-08"
     title: "change root terragrunt.hcl to root.hcl"
 video:
   videoUrl: https://www.youtube.com/watch?v=GZMh3SsQOdo
@@ -53,7 +53,7 @@ A Unit represents a single instance of infrastructure managed by Terragrunt. Her
 - It is often minimalistic and represents a small piece of infrastructure.
 - A unit can interact with another unit using [dependency blocks](https://terragrunt.gruntwork.io/docs/reference/hcl/blocks#dependency).
 
-An example of a unit in our repository: [root folder](https://github.com/ywarezk/academeez-k8s-flux/tree/main/iac/gcp/tofu/common/folders/root).
+An example of a unit in our repository: [root folder](https://github.com/Nerdeez/terragrunt-catalog/tree/main/iac/gcp/tofu/common/folders/root).
 We have a unit which creates our course root folder, this is a very minimal piece of infrastructure which other units use with dependency blocks.
 
 ## terragrunt run
@@ -91,7 +91,7 @@ We will notice that it will fail with an error, the reason is that in the root o
 ## Bad Practice - root terragrunt.hcl
 
 In the past it was common to have a `terragrunt.hcl` file in the root of the repository.
-Just like in our repository: [root terragrunt.hcl](https://github.com/ywarezk/academeez-k8s-flux/tree/main/iac/gcp/tofu).
+Just like in our repository: [root terragrunt.hcl](https://github.com/Nerdeez/terragrunt-catalog/tree/main/iac/gcp/tofu).
 That root `terragrunt.hcl` did not really represent a unit, it was more of a shared configuration for all the units in the repository.
 
 Other units would include the root `terragrunt.hcl` using:
@@ -134,7 +134,7 @@ include "root" {
 }
 ```
 
-You can examine the migration in the following [PR](https://github.com/ywarezk/academeez-k8s-flux/pull/12)
+You can examine the migration in the following [PR](https://github.com/Nerdeez/terragrunt-catalog/pull/12)
 
 ## Summary
 
