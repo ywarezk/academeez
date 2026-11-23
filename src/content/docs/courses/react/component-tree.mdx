@@ -74,8 +74,7 @@ When splitting files we use [ES6 Modules](https://developer.mozilla.org/en-US/do
 <Sandpack 
 	client:load
 	files={{
-		"App.js": {
-			readOnly: true,
+		"App.js": {			
 			code: `
 import Hello from "./Hello"
 
@@ -87,8 +86,7 @@ export default function App() {
   )
 }`
 		},
-		"Hello.js": {
-			readOnly: true,
+		"Hello.js": {			
 			code: `export default function Hello() {
 	return (
 		<h1>
@@ -109,8 +107,7 @@ Or you can use `export`
 <Sandpack 
 	client:load
 	files={{
-		"App.js": {
-			readOnly: true,
+		"App.js": {			
 			code: `
 import { Hello } from "./Hello"
 
@@ -122,8 +119,7 @@ export default function App() {
   )
 }`
 		},
-		"Hello.js": {
-			readOnly: true,
+		"Hello.js": {			
 			code: `export function Hello() {
 	return (
 		<h1>
