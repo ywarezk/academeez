@@ -4,10 +4,13 @@ description: I always ask this question when I'm interviewing a Node.JS develope
 publishDate: 2024-11-16
 authors:
   - yariv-katz
+sources: 
+  - url: "https://codesandbox.io/p/devbox/xk2xkc"
+    title: Express worker threads
 ---
 
 Unfortunately, I get to interview a lot of Node.JS developers, not a task I enjoy doing, but it's part of my job.  
-One of the things that I noticed that the best developers also possess a good understanding of the underlying technology they are using, and not just problem solving, stackoverflow copy-pasting developers.
+One of the things that I noticed that the best developers also possess a good understanding of the underlying architecture of the technology they are using, and not just problem solving, stackoverflow copy-pasting developers.
 A developers with good understanding of the theory, internals, architecture, and design of Node.JS will probably be a good Node.JS developer, and these are the developers I'm looking for.
 So when I interview a lot of my questions are not coding exercise, or api, or god forbid riddles (why do interviewers ask riddles in an interview is something I will never understand), but in depth questions about the theory behind the technology they are using.
 
@@ -23,6 +26,26 @@ The Cluster and worker threads api are not something a Node.JS developer uses on
 So when I ask if Node.JS is single-threaded, I'm asking about the everyday Node.JS development, not those special cases.
 And when I explain the question again then the Developer will return to the original wrong answer: "In that case then yes, Node.JS is single-threaded if those api's are not used".
 
+While it seems like this question is strictly theoretical, it actually touch a lot of aspects regarding the performance of our server, it's also helps us answer the important question before we start writing code: Is Node.js the right tool for the job?
+
+## What is a Process? What is a Thread?
+
+
+### Process
+
+Before we dive into the Node.JS architecture, let's understand what is a process and what is a thread.
+When we run our program with `node my-program.js` (or use other tool to run that wraps this command), we are creating a Node.JS process.
+That process contains all the goodies that Node.js ships with like: V8, libuv, Event loop, etc.  
+We can create multiple processes to run different programs, and each process will have its own memory space, and will run in parallel with other processes.
+Processes are isolated from each other but they can communicate with each other using Inter-Process Communication (IPC) mechanisms which allows them to send messages to each other. 
+
+### Thread
+
+While process is more robust and isolated, threads are more lightweight. They run on the same process so unlike processes which require another Node.js instance with all it's goodies, threads are located in the same process which allows them to share memory.
+Threads can communicate with each other using message passing, but they can also share memory which, we can manually create threads using the [Worker Threads](https://nodejs.org/docs/latest/api/worker_threads.html) api.
+
+So now that we know what is a thread and what is a process, let's return to the original question: When we are running a JavaScript program using Node.js process, is that process only using a single thread (without the use of the Cluster or Worker Threads api)?
+
 ## But look Ma, JavaScript is single-threaded
 
 When I type in google **"JavaScript"** and navigate to the [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript) or [wikipedia page](https://en.wikipedia.org/wiki/JavaScript) (or any other respectable site) they will all say JavaScript is single-threaded.
@@ -36,64 +59,58 @@ NO!
 
 While JavaScript is a programming language, Node.JS is a runtime environment for JavaScript, although they are related, they represent different things.
 
-## JavaScript, and JavaScript Runtime
+## JavaScript, JavaScript Engine, and JavaScript Runtime
 
-Let's distinguish between these 2 concepts:
+Let's distinguish between these 3 concepts:
 
 ### JavaScript
 
-JavaScript is a programming language, it is single-threaded, it's popular implementation is the [V8 engine](https://v8.dev/), developed by Google, and used in Chrome and Node.JS.
-There is also the [SpiderMonkey](https://spidermonkey.dev/) engine, developed by Mozilla, and used in Firefox.
+JavaScript is a programming language defined by the [ECMAScript](https://ecma-international.org/publications-and-standards/standards/ecma-262/) standard.  
+It is something virtual like a blueprint or an interface of how the language should behave, and it is not something that can be executed.
+It's up to the JavaScript engine to implement the language and execute the code.
 
-So JavaScript is a programming language that is defined by [ECMAScript](https://ecma-international.org/publications-and-standards/standards/ecma-262/) and the V8 engine is an implementation of that language.
+### JavaScript Engine
 
-### V8
-
-Node.JS is using a JavaScript engine which is the V8 engine, developed by Google.
-Here are some of the things that are included in the V8 engine:
-- Call stack - where the code is placed and executed in a stack way (LIFO).
-- Heap - where the memory allocation of non-primitive types is done.
-- Garbage collector - which cleans up the memory.
-- Turning JavaScript code into machine code (Parser, Interperter, Compiler).
-
-```mermaid
-flowchart TD
-    A[JavaScript Code] --> B
-
-    subgraph n3[V8 JavaScript Engine]
-        subgraph Memory[Memory Management]
-            n5[Heap]
-            B[Call Stack]
-            n8[Stack Memory]
-        end
-        
-        subgraph Compilation[Compilation Pipeline]
-            Parser[Parser]
-            Interpreter[Interpreter/Compiler]
-        end
-        
-        B --> Parser
-        Interpreter --> MC
-        n7[Garbage Collector] --> n5
-        Parser --> Interpreter
-    end
-    
-    MC[Machine Code]
-
-    style n3 fill:#f5f5f5,stroke:#333,stroke-width:2px
-    style Memory fill:#e1f5fe,stroke:#333,stroke-width:1px
-    style Compilation fill:#fff3e0,stroke:#333,stroke-width:1px
-    style n5 fill:#fff,stroke:#333,stroke-width:1px
-    style B fill:#fff,stroke:#333,stroke-width:1px
-    style n8 fill:#fff,stroke:#333,stroke-width:1px
-    style MC fill:#fff,stroke:#333,stroke-width:1px
-```
+JavaScript Engine is the implementation of the JavaScript language as defined by the ECMAScript standard.  
+It will turn the JavaScript code into machine code that can be executed by the machine.
+It will arrange the execution of the code in a stack (LIFO), manage a heap for the non-primitive types, clean that heap from time to time using a garbage collector.
+Popular JavaScript engines are the V8 engine, SpiderMonkey, Chakra, etc.
+Node.js uses the V8 engine.
 
 ### JavaScript Runtime
 
+Let's examine the definition of the JavaScript language in the [EcmaScript standard](https://tc39.es/ecma262/).
+Observing the list of features that the language should support, we will notice that a lot of the things that we use everyday are not defined there.
+Things like the `console` object, the `setTimeout` function, the `fetch` function, the `require` function, etc.
+These are not part of the JavaScript language, they are implemented as part of the JavaScript runtime.
+While a lot of the api's we use are part of the JavaScript runtime, we will notice that a lot of them still have similar api's.
+For example `console.log` is pretty similar no matter which JavaScript runtime you are using, same goes for `setTimeout`, `fetch`, etc.
+There are group like the help define web standards like the [WHATWG](https://whatwg.org/) and the [W3C](https://www.w3.org/) that help define the web api's that are part of the JavaScript runtime.
+And the JavaScript backend runtime like Node.js strive to follow those standards.
+Alot of those standarts are defined in the [WHATWG github](https://github.com/whatwg) for example you can find the standard defined for the fetch in the [fetch](https://github.com/whatwg/fetch) repository.
+
+Among the popular JavaScript runtime are the browsers, and Node.js.
+The runtimes are using the JavaScript engine to execute the JavaScript code, but they also have other parts to integrate JavaScript with the actual runtime that they represent.
+For example  JavaScript do not have any api for reading files, but when you are creating a backend server then you might need to read files, so Node.js is a runtime that implemented a module for reading files, created C++ code to read files efficiently, and integrated that with the V8 engine.
+JavaScript by itself will be pretty useless, it has to run somewhere, and it has to integrate with the running environment, rather it's the browsers or the OS.
+
+## JS, JS Engine, JS Runtime which one is single-threaded?
+
+Now let's circle back to the original question: "Is Node.JS single-threaded?".  
+While everybody I asked jumped with the answer "Yes it is!" Look even wikipedia says JavaScript is single-threaded, now we are starting to understand that while JavaScript is single-threaded, Node.js is not.  
+Let's go back to the concepts we just defined:
+
+- **JavaScript** - is JavaScript single-threaded? Remeber JavaScript is a definition of a language as defined by ECMAScript, it's not the actual implementation.
+What we can do is check the ECMAScript standard, and we will see that it does not define anything about threads, processes, or anything related to that.
+So the answer is YES, JavaScript is defined by the ECMAScript standard as single-threaded.
+- **JavaScript Engine** - Is the JavaScript engine single-threaded? The answer is an easy YES, since JavaScript is single threaded and the engine is the implementation of the language, then the engine is also single-threaded.
+- **JavaScript Runtime** - I guess that depends on the runtime, but if looking at Node.js then the answer is NO, Node.js is not single-threaded.
+When code reaches the C++ part of Node.js it can decide to use a thread from a thread pool or delegate the task to the kernel.
+
+## Node.js architecture
+
 A JavaScript runtime (like Node.JS) includes a JavaScript engine (like V8), and allows us to run JavaScript code.
-Our browsers are also an example of a JavaScript runtime.
-Here are some of the things that are included in a Node.JS runtime:
+Here are some of the things that are included in Node.JS architecture:
 - Event queue - stores the incoming client requests
 - Event loop - infinite loop that executes the requests in the event queue
 - V8 engine - Executes the JavaScript code
@@ -104,6 +121,250 @@ Node.JS is single-threaded in the sense that the Event loop and V8 run in the sa
 The Event loop runs on the main thread and can handle some I/O operations in a non-blocking way, and delegate external tasks to the thread pool.
 
 I like to look at Node.JS as automatic multi-threading, mostly I program in a single-threaded way, and Node.JS then takes care of the multi-threading for me.
+
+## Example
+
+Let's take a look at the following example which will help us answer the question is Node.js the right tool for the job?  
+In the following example we are creating a simple express server with 2 routes:
+- `/random` - will return a random number.
+- `/fibonacci/:number` - will calculate the fibonacci number of the given number.
+
+While we calculate the fibonacci number we will examine requests that try to get a random number.
+We will then profile our app to understand where our main thread is stuck and then open a new thread to handle the fibonacci calculation.
+
+Create a new folder and run npm init in that folder and install express:
+
+```bash
+mkdir nodejs-architecture
+cd nodejs-architecture
+npm init --yes
+npm install express
+```
+
+Create the file `fibonacci.mjs` that expose a function that recursively calculate the fibonacci number:
+
+```javascript
+/**
+ * recursive function to calculate the nth fibonacci number
+ * @param {number} n 
+ * @returns 
+ */
+export function fibonacci(n) {
+	if (n === 0) {
+		return 0;
+	}
+	if (n === 1) {
+		return 1;
+	}
+	return fibonacci(n - 1) + fibonacci(n - 2);
+}
+```
+
+simple recursive function that calculates the fibonacci number.  
+Now let's create the express server in the file `server.mjs`:
+
+```javascript
+import createApplication from 'express';
+import { fibonacci } from './fibonacci.mjs';
+
+const app = createApplication();
+
+// this path will return a random number
+app.get('/random', (_req, res) => {
+	res.send(Math.random().toString());
+});
+
+// this path will use the fibonacci function to calculate the fibonacci number that we are getting in the path param
+app.get('/fibonacci/:n(\\d+)', (req, res) => {
+	const n = parseInt(req.params.n, 10);	
+	const result = fibonacci(n);
+	res.send(result.toString());
+});
+
+app.listen(3000, () => {
+	console.log('Server is running on port 3000');
+});
+```
+
+We can run our server using:
+
+```bash
+node server.mjs
+```
+
+This simple example represents the weakness of Node.js, while the fibonacci function is running the main thread is stuck and can't handle other requests.
+We can activate this server and try calculating the fibonacci number of 40 for example, and then try to get a random number while the fibonacci calculation is running.
+We will notice that the server is stuck, while Node.js shines in tasks like I/O operations, Database queries, etc. it is not the best tool for calculation sync tasks like the one we showed here.
+In this example this is clear what is causing our main thread to get stuck, but in a real-world application it might be harder to find the bottleneck.
+That is why we can profile our application to examine where the main thread is stuck.  
+To run our server with the profiler we can use the following command:
+
+```bash
+node --prof server.mjs
+```
+
+after running your server with the profiler go to the routes that cause the bottleneck, in our example try to go to `/fibonacci/50` and then go to `/random` and see that the server is stuck.
+After you get the server stuck time to analyze what caused the main thread to choke like it did. You will find a file that is created in the same folder with the name `isolate-0xnnnnnnnnnnnn-v8.log` we need to transfer that file to something more human readable so run the following:
+
+```bash
+node --prof-process isolate-...-v8.log > processed.txt
+```
+
+replace the `isolate-...-v8.log` with the actual file name that was created in your folder and you should see the file `processed.txt` that contains the profile of the server.
+In my example it looked like the following:
+
+```
+Statistical profiling result from isolate-0x7fe6f8008000-69984-v8.log, (140861 ticks, 447 unaccounted, 0 excluded).
+
+ [Shared libraries]:
+   ticks  total  nonlib   name
+
+ [JavaScript]:
+   ticks  total  nonlib   name
+  140390   99.7%   99.7%  JS: *fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+      1    0.0%    0.0%  JS: ~lazyEventEmitterAsyncResource node:events:101:39
+      1    0.0%    0.0%  JS: ~fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+      1    0.0%    0.0%  JS: ~encodeRealpathResult node:fs:2518:30
+      1    0.0%    0.0%  JS: wasm-function[15]
+      1    0.0%    0.0%  JS: ^trySelf node:internal/modules/cjs/loader:503:17
+      1    0.0%    0.0%  JS: ^setHeader node:_http_outgoing:650:57
+      1    0.0%    0.0%  JS: ^realpathSync node:fs:2553:22
+      1    0.0%    0.0%  JS: ^processTicksAndRejections node:internal/process/task_queues:67:35
+      1    0.0%    0.0%  JS: ^isatty node:tty:42:16
+      1    0.0%    0.0%  JS: ^debuglog node:internal/util/debuglog:76:18
+      1    0.0%    0.0%  JS: ^compileForPublicLoader node:internal/bootstrap/realm:322:25
+      1    0.0%    0.0%  JS: ^URL node:internal/url:763:14
+      1    0.0%    0.0%  JS: ^SafeMap node:internal/per_context/primordials:413:16
+      1    0.0%    0.0%  JS: ^Module._resolveFilename node:internal/modules/cjs/loader:964:35
+      1    0.0%    0.0%  JS: ^Module._findPath node:internal/modules/cjs/loader:564:28
+      1    0.0%    0.0%  JS: *normalizeString node:path:66:25
+      1    0.0%    0.0%  Builtin: StringAdd_CheckNone
+      1    0.0%    0.0%  Builtin: StrictEqual_Baseline
+      1    0.0%    0.0%  Builtin: RegExpReplace
+      1    0.0%    0.0%  Builtin: LoadIC_NoFeedback
+      1    0.0%    0.0%  Builtin: InterpreterEntryTrampoline
+      1    0.0%    0.0%  Builtin: FastNewObject
+      1    0.0%    0.0%  Builtin: Call_ReceiverIsAny
+      1    0.0%    0.0%  Builtin: CallFunction_ReceiverIsNullOrUndefined
+
+ [C++]:
+   ticks  total  nonlib   name
+
+ [Summary]:
+   ticks  total  nonlib   name
+  140414   99.7%   99.7%  JavaScript
+      0    0.0%    0.0%  C++
+     23    0.0%    0.0%  GC
+      0    0.0%          Shared libraries
+    447    0.3%          Unaccounted
+
+ [C++ entry points]:
+   ticks    cpp   total   name
+
+ [Bottom up (heavy) profile]:
+  Note: percentage shows a share of a particular caller in the total
+  amount of its parent calls.
+  Callers occupying less than 1.0% are not shown.
+
+   ticks parent  name
+  140390   99.7%  JS: *fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+  140390  100.0%    JS: *fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+  140390  100.0%      JS: *fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+  140390  100.0%        JS: *fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+  140390  100.0%          JS: *fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+  140390  100.0%            JS: *fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+
+```
+
+according to the **Summary**:
+
+```
+[Summary]:
+   ticks  total  nonlib   name
+  140414   99.7%   99.7%  JavaScript
+      0    0.0%    0.0%  C++
+     23    0.0%    0.0%  GC
+      0    0.0%          Shared libraries
+    447    0.3%          Unaccounted
+```
+
+our problem is in our JavaScript code, and looking at the analysis of the JavaScript code we can see that the bottleneck is in the `fibonacci` function:
+
+```
+[JavaScript]:
+   ticks  total  nonlib   name
+  140390   99.7%   99.7%  JS: *fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+	...
+```
+
+## Manually creating threads
+
+We can manually create a thread to calculate the fibonacci number, and then delegate the task to that thread.
+Change the `server.mjs` file to the following:
+
+```javascript
+import { Worker } from 'worker_threads';
+// ...
+function fibonacciThread(n) {
+	return new Promise((resolve, reject) => {
+		const worker = new Worker('./fibonacci.mjs', { workerData: n });
+		worker.on('message', resolve);
+		worker.on('error', reject);
+		worker.on('exit', (code) => {
+			if (code !== 0)
+				reject(new Error(`Worker stopped with exit code ${code}`));
+		});
+	});
+}
+
+app.get('/fibonacci/:n(\\d+)', async (req, res) => {
+	// create a thread for fibonacci calculation
+	const n = parseInt(req.params.n);
+	const result = await fibonacciThread(n);
+	res.send(result.toString());
+});
+// ...
+```
+
+We are creating a new thread using the `Worker` api, the thread will run the file `fibonacci.mjs` and will get the number to calculate as a parameter.
+We can change the `fibonacci.mjs` file to the following:
+
+```javascript
+import { parentPort, workerData } from 'worker_threads';
+
+export function fibonacci(n) {
+	// ...
+}
+
+const result = fibonacci(workerData);
+
+parentPort.postMessage(result);
+```
+
+If we activate our server and calculate a large fibonacci number we will see that the server is not stuck anymore, and we can still get random numbers while the fibonacci calculation is running.
+If we run our server using `--prof` we will see that the main thread is not stuck anymore. We will get 2 `isolate` files one for the thread which we will notice that it spend a lot of time in the fibonacci function, and the other for the main thread which should be quite free.
+What we saw is a stravation of the main thread which caused the server to be stuck, and we solved that by delegating the task to another thread and by doing so freeing the main thread to handle other requests.
+
+Opening a new thread has a lot of overhead, so if it's something that is happening often we might consider using a thread pool.
+Opening a thread is something that is not done often in Node.js, the event driven design combined with hight performance I/O operations prevents the usage of threads in most cases.
+If you find out that you have to use threads often and it's the only way for you to solve your server choking problem then you might want to consider using a different technology that is more suited for that kind of tasks.
+Understanding Node.js architecture if important for understanding if Node.js is the right tool for the job.
+
+## Best Practice
+
+In my opinion backend developers should start saying the word **NO** more often.
+Let me explain what I mean by that.
+Often I see backend developers are treated like Cinderella, remember the scene in Cinderella where the evil stepmother and stepsisters are throwing all the work on Cinderella while saying "Do this Cinderella, Do that Cinderella".
+Often backend developers are asked from all over to do this api and that api.
+The backend developer job is not to please every request the client needs, the job is to present certain logic that is oriented from the data and not from the clients.
+Think of it like this, the clients wants to make "Pizze" the backend should not create and API to make "Pizze" the backend should create an API to make "Dough", "Sauce", "Cheese", etc. and then the client can use those API's to create the "Pizze".
+Often with that kind of approach, calculations are done in the frontend.
+So if the client asks for Pizza in one request, the backend developer should say NO.
+
+Another example of saying no, is often the client will request an API to send him back millions of results from the database, perhaps the client is creating a Select with a lot of options.
+Obviously it will be easier for the client to get all the results and place them in the Select, but this is where the backend developer should say NO, and not focus on making the client life always easier.
+Instead the backend developer should say please provide me with pagination in each request, and supply the data paginated.
+Often the API's that are choking the server are those that require sync computations on millions of results from the database, and since no user can actually read million records my guess is that must of the time pagination needs to play a role there.
 
 ## Summary
 
