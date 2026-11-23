@@ -1,0 +1,75 @@
+---
+title: Component state - reacting to the user
+description: We use state to update the UI in a component when something happens in the app.
+publishDate: 2026-11-06
+authors:
+  - yariv-katz
+sidebar:
+  order: 14  
+---
+
+import CourseSandpack from '~/components/CourseSandpack';
+
+There are times when we want our React component to react to an event.
+An event can be a button click, a timer, a server response, etc.
+When that event happens, we sometimes want it to cause a change. Often that change shows up in the UI—a different look for one or more components.
+In that case, we can use component state.
+So state is our way to react to an event and drive that change.
+
+## Button click change color
+
+In the following example we’ll build a simple component that reacts to a button click.
+The label will be either red or green, and the button’s look will match (red when the label is red, green when it’s green).
+Clicking toggles both the text and the button color.
+This shows how we handle the click and use state so the component updates when that event fires.
+
+<div className="mt-5 not-content">
+<CourseSandpack
+	client:only="react"
+	files={{
+		"App.js": {
+			readOnly: false,
+			code: `
+import { useState } from 'react'
+
+export default function App() {
+  const [isGreen, setIsGreen] = useState(false)
+
+  const label = isGreen ? 'green' : 'red'
+  const backgroundColor = isGreen ? 'green' : 'red'
+
+  return (
+    <button
+      type="button"
+      onClick={() => setIsGreen((value) => !value)}
+      style={{
+        backgroundColor,
+        color: 'white',
+        padding: '0.5rem 1rem',
+        border: 'none',
+        borderRadius: 4,
+        cursor: 'pointer',
+        fontSize: '1rem',
+      }}
+    >
+      {label}
+    </button>
+  )
+}`
+		}		
+	}}
+	template="react" 
+/>
+</div>
+
+A special function we import from `react`, `useState`, lets us define state in our component.
+We pass the initial value and get back the current value and a function to update it.
+
+Events can change that state by calling the setter from `useState`. When they do, React re-renders the component—it runs the component function again. On that run, the state value is the updated one, so the component renders the change to the UI.
+
+## Summary
+
+In this lesson we built a simple component that uses `useState` to reflect a change triggered by an event.
+You can think of a component as a small state machine: an action moves it from one state to another.
+That change is held in state, and when state updates, React runs the component again so `useState` gives you the latest value.
+That lets you render a different UI for each state.
