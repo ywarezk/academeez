@@ -35,8 +35,11 @@ export const collections = {
     schema: docsSchema({
       extend: z.object({        
         preview: z.boolean().optional().default(true),
-        authors: z.array(z.string()).optional(),
-        source: z.string().optional(),
+        authors: z.array(z.string()).optional(),        
+        sources: z.array(z.object({
+          title: z.string(),
+          url: z.string(),
+        })).optional(),
         publishDate: z.date(),
       }),
     }),
