@@ -191,8 +191,8 @@ export default defineConfig({
 			],
 			title: 'academeez',
 			logo: {
-				light: './src/assets/logo-line.svg',
-				dark: './src/assets/logo-line.svg',
+				light: './src/assets/logo-light.svg',
+				dark: './src/assets/logo-light.svg',
 				replacesTitle: true,
 			},
 			defaultLocale: 'root',
