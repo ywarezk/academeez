@@ -5,18 +5,20 @@ publishDate: 2025-06-18
 authors:
   - yariv-katz
 sidebar:
-  order: 9
+  order: 10
 sources:
   - url: "https://github.com/Nerdeez/terragrunt-catalog/tree/lesson-09-temp"
     title: "Environment stack - terragrunt.stack.hcl"
 ---
 
-In the [previous lesson](/courses/terraform/unit) we learned about [Terragrunt Units](https://terragrunt.gruntwork.io/docs/features/units/).
+In the previous lessons we learned about [Terragrunt units](https://terragrunt.gruntwork.io/docs/features/units/) in the [unit lesson](/courses/terraform/unit), and about the [catalog](/courses/terraform/catalog) where we can create unit templates.
 
 A unit represents a single instance of infrastructure.
 It is usually small and reusable — something like a VPC, a database, etc.
+We can also create a unit template and place it in a catalog so it can later be used in other Infrastructure as Code projects.
 
-[A stack](https://terragrunt.gruntwork.io/docs/features/stacks/) allows us to group units together and form a reusable, logical group of infrastructure.
+[A stack](https://terragrunt.gruntwork.io/docs/features/stacks/) is something bigger than a unit — it allows us to group units together and form a reusable, logical group of infrastructure.
+We can also place stacks in a catalog if we think we are creating something reusable here.
 
 Let's take environments as an example. Software projects usually require more than one environment. We typically have a `prod` environment for the end product, and we might also have an additional environment like `dev` or `staging` for developers.
 
@@ -69,7 +71,7 @@ iac/
 ```
 
 Seems like a lot of duplication, right?
-So although each unit folder uses a reusable catalog unit, there is still a lot of duplication here:
+So although each unit folder uses a reusable [catalog](/courses/terraform/catalog) unit, there is still a lot of duplication here:
 - we duplicate folders
 - we duplicate `terragrunt.hcl` files
 - in each `terragrunt.hcl` we will probably duplicate the root `include` block
@@ -168,49 +170,7 @@ To create all the environments, we can then cd to the `iac/live/envs` folder and
 terragrunt stack run apply
 ```
 
-## Catalog and live
-
-Terragrunt provides example repositories at the following links:
-- Catalog - https://github.com/gruntwork-io/terragrunt-infrastructure-catalog-example
-- Live - https://github.com/gruntwork-io/terragrunt-infrastructure-live-stacks-example
-
-It's important to note the pattern used here and the separation between catalog and live.
-
-`terragrunt-infrastructure-catalog-example` does not represent infrastructure,
-but rather reusable units, stacks, and modules that can be used
-in other repositories to create infrastructure.
-Think of them like reusable functions that you can call to create
-repeating parts of infrastructure. You can import those functions
-into different Infrastructure as Code projects and create
-instances of infrastructure.
-The idea here is that you build one catalog for multiple infrastructure projects.
-So if we have a single catalog for many infrastructure projects, won't it be harder to update
-the catalog without breaking a project?
-For more stability, when using the catalog you will usually want
-to create tags in the catalog, and when using something from the catalog
-you would usually want to pin it to a certain tag. This way,
-even when the catalog updates, each project is still using some older
-version of that catalog.
-So updating the catalog is quite safe.
-
-```hcl
-unit "lambda_service" {  
-  source = "github.com/gruntwork-io/terragrunt-infrastructure-catalog-example//units/js-lambda-stateful-service?ref=v0.1.0"
-  ...
-}
-```
-
-This example shows how a live repository that represents the infrastructure
-of a project calls a unit in a catalog (our repeatable infrastructure functions).
-Notice how it calls the unit while pinning the catalog to a certain version
-by using `?ref=...` — that ref points to a certain tag in the
-catalog repository, which means that even if the catalog updates,
-we still use the same version.
-
-One of the goals of this course is to create a reusable GCP catalog
-so developers can keep using the same catalog in their own projects.
-The course repository itself follows that pattern — it represents a catalog
-that you can later reference from your own live repositories.
+Here we use stacks to compose [catalog](/courses/terraform/catalog) pieces into environments.
 
 ## Which blocks we can use in `terragrunt.stack.hcl`
 
@@ -1168,14 +1128,14 @@ In this lesson we learned that a **Terragrunt stack** is a logical group of infr
 
 We started with the problem: repeating environments like `prod` and `non-prod` with an **implicit stack** (many duplicated folders and `terragrunt.hcl` files) leads to a DRY violation. **Explicit stacks** solve this with a single `terragrunt.stack.hcl` blueprint that describes what to generate. Running `terragrunt stack generate` creates the `.terragrunt-stack` folder and the unit files inside it — it does **not** create cloud infrastructure by itself.
 
-We also covered the **catalog vs live** pattern: reusable units/stacks/modules live in **catalog**, and **live** calls them (often pinned to a catalog version with `?ref=`).
 
 In `terragrunt.stack.hcl` we can use **`locals`**, **`unit`**, and **`stack`** blocks. A **`unit`** block uses `source`, `path`, and optional `values`. Generation creates:
 - `terragrunt.hcl` (copied from the unit catalog)
 - `terragrunt.values.hcl` (from the `values` map)
 - `terragrunt.autoinclude.hcl` (from `autoinclude`, merged at parse time)
 
-Important distinction: **`values` are not `inputs`**. Catalog units read `values.*` and map them to `inputs`; wiring between units (dependencies and inputs) is done with **`autoinclude`** on the `unit` block, using `unit.<name>.path`, `dependency`, and `mock_outputs`.
+We can also place stacks in our catalog if we want to create a stack template that can be easily reused throughout this project or other future projects. When live uses a catalog stack, it can pass `values` through the `stack` block — those values are transferred to the catalog stack template as `values.<key>`, similar to catalog units.
+Wiring between units (dependencies and inputs) is done with **`autoinclude`** on the `unit` block, using `unit.<name>.path`, `dependency`, and `mock_outputs`.
 
 The **`stack`** block lets us nest stacks — for example, a live file that calls a catalog `env` stack twice to create `prod` and `non-prod`. Stack blocks also support **`autoinclude`**, which generates `terragrunt.autoinclude.stack.hcl` and lets us add or override units/stacks in one environment (like adding a `log_bucket` only in prod). Stack `autoinclude` is more limited than unit `autoinclude`: it can only contain `unit`/`stack` blocks, not `dependency`, and you cannot nest another `autoinclude` inside it.
 

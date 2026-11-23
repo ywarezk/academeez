@@ -129,7 +129,11 @@ export default defineConfig({
 							slug: 'courses/terraform/unit',
 						},
 						{
-							label: '7. Stack',
+							label: '7. Catalog',
+							slug: 'courses/terraform/catalog',
+						},
+						{
+							label: '8. Stack',
 							slug: 'courses/terraform/stack',
 						},
 					],

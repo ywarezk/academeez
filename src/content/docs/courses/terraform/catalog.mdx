@@ -1,0 +1,244 @@
+---
+title: Terragrunt Catalog
+description: A Catalog is a library of reusable units, stacks, and modules. Scaffold infrastructure from the catalog, pin sources to a version for stability, and reference catalog pieces with the catalog block.
+publishDate: 2025-08-15
+authors:
+  - yariv-katz
+sidebar:
+  order: 9
+---
+
+In the [previous lesson](/courses/terraform/unit) we talked about a [unit](https://terragrunt.gruntwork.io/docs/features/units/) — a single, runnable piece of infrastructure with its own state, defined in a folder that contains a `terragrunt.hcl` file.
+
+For example, we examined the GCP folder units we created under `iac/gcp/tofu/common/folders/` — such as [root](https://github.com/Nerdeez/terragrunt-catalog/tree/8e318626e17cdcc91ca6d04689a34d9beb82deef/iac/gcp/tofu/common/folders/root) and `shared` — each a minimal, runnable piece of infrastructure with its own state.
+
+You'll soon notice that creating a GCP folder is a repeating task — not only within this project, where we already have `root` and `shared`, but across other Infrastructure as Code projects as well. A folder is just one example — the same repetition applies to VPCs, projects, databases, and other infrastructure patterns, both within a single project and across different ones.
+
+To avoid DRY violations, we package those repeating patterns into a reusable library — a **catalog** — that we can share across projects. As we improve the catalog, we version it so each project can pin to a release and adopt updates gradually, without breaking the projects that already depend on it.
+
+This course repository aims not only to teach Infrastructure as Code, but also to serve as a **catalog** of reusable unit templates and patterns that you can reference from your own projects.
+
+## Catalog and live
+
+Terragrunt documents this catalog/live split in the [Recommended Repository Patterns](https://docs.terragrunt.com/getting-started/overview/#recommended-repository-patterns) section of the getting started guide — let's walk through the official examples.
+The docs illustrate this with two example repositories:
+
+- **Catalog** — [terragrunt-infrastructure-catalog-example](https://github.com/gruntwork-io/terragrunt-infrastructure-catalog-example) — holds reusable units, stacks, and modules. It does not represent infrastructure itself; live repositories reference it to create infrastructure.
+- **Live** — [terragrunt-infrastructure-live-stacks-example](https://github.com/gruntwork-io/terragrunt-infrastructure-live-stacks-example) — represents a project's actual infrastructure. It references catalog units and stacks to scaffold and run real instances.
+
+Now let's examine some code from the live repository example:
+
+```hcl title="root.hcl"
+...
+
+catalog {
+  urls = [
+    "https://github.com/gruntwork-io/terragrunt-infrastructure-catalog-example",
+    "https://github.com/gruntwork-io/terraform-aws-utilities",
+    "https://github.com/gruntwork-io/terraform-kubernetes-namespace"
+  ]
+}
+```
+
+The `catalog` block tells Terragrunt which repositories to browse when you run `terragrunt catalog`. We will go over it in more detail in [Using the catalog](#using-the-catalog) below — briefly, the `urls` attribute lists the catalog repositories Terragrunt can browse and scaffold from.
+
+Next, let's look at a file in the live repository that references a unit from the catalog:
+
+```hcl title="prod/us-east-1/stateful-lambda-service/terragrunt.stack.hcl"
+
+...
+
+unit "lambda_service" {
+  // You'll typically want to pin this to a particular version of your catalog repo.
+  // e.g.
+  // source = "github.com/acme/terragrunt-infrastructure-catalog//units/lambda-stateful-service?ref=v0.1.0"
+  //
+  // If you are using a private catalog, you may want to use an SSH source URL instead:
+  // source = "git::git@github.com:acme/terragrunt-infrastructure-catalog.git//units/lambda-stateful-service"
+  source = "github.com/gruntwork-io/terragrunt-infrastructure-catalog-example//units/js-lambda-stateful-service"
+
+	...
+	
+	values = {		
+		// This version here is used as the version passed down to the unit
+    // to use when fetching the OpenTofu/Terraform module.
+    version = "main"
+
+    name = local.name
+
+    // Required inputs
+    runtime    = "nodejs22.x"
+    source_dir = "./src"
+    handler    = "index.handler"
+    zip_file   = "handler.zip"
+
+    // Optional inputs
+    memory  = 128
+    timeout = 3
+	}
+	
+	...
+```
+
+We won't dive into the `unit` block here — we'll cover that in the [next lesson](/courses/terraform/stack) on stacks. For now, notice three things:
+
+- The `source` attribute references a unit path inside an external catalog repository.
+- The comments show how to pin that catalog with `?ref=<tag>` so the catalog can evolve without changing what this live file uses until you bump the ref.
+- The `values` map passes configuration into that catalog unit.
+
+Next, let's look at the catalog unit that the live file references:
+
+```hcl title="units/js-lambda-stateful-service/terragrunt.hcl"
+
+include "root" {
+  path = find_in_parent_folders("root.hcl")
+}
+
+terraform {
+  source                 = "../..//modules/lambda-service"
+  update_source_with_cas = true
+
+  before_hook "package" {
+    commands = ["apply", "plan", "destroy"]
+    execute  = [local.package_script, local.src_dir, local.zip_file]
+  }
+}
+
+locals {
+  script_dir     = "${get_terragrunt_dir()}/scripts"
+  package_script = "${local.script_dir}/package.sh"
+
+  src_dir  = "${get_terragrunt_dir()}/src"
+  zip_file = "${get_terragrunt_dir()}/handler.zip"
+
+  // Mark the handler source as read so changes to it cascade to this unit
+  // under reading-based filters (package.sh packages this directory).
+  src_files = mark_glob_as_read("${local.src_dir}/{*,**/*}")
+}
+
+inputs = {
+  # Required inputs
+  name       = values.name
+  runtime    = values.runtime
+  source_dir = local.src_dir
+  handler    = values.handler
+  zip_file   = local.zip_file
+
+  # Optional inputs
+  memory  = try(values.memory, 128)
+  timeout = try(values.timeout, 3)
+}
+
+```
+
+A few things to note about this catalog unit:
+
+Unlike the [units](/courses/terraform/unit) we examined in the previous lesson — runnable infrastructure with their own state — a catalog unit is a reusable template which does not represent infrastructure itself.
+Live repositories use catalog units as templates: they reference them, pass values, and Terragrunt creates a runnable infrastructure unit in live.
+
+Think of the catalog as a collection of templates, and live as the actual infrastructure that uses those templates.
+When live uses a template from the catalog, it can pass arguments through the `values` map, and the catalog unit can read any key as `values.<key>` wherever it needs it.
+That lets the same unit template adapt to slightly different scenarios without duplicating code.
+
+For example, the live file passes `name` in `values`, and this catalog unit sets `name = values.name` in `inputs`.
+When a live repository uses this catalog unit template, Terragrunt **copies** the template into live. The runnable unit — and its state — belong to the live project, not the catalog repository.
+
+## Our course repo is also a catalog
+
+Our goal in this course is not only to give you a solid understanding of best practices for managing Infrastructure as Code projects,
+but also to provide tools you can reuse in your other infrastructure projects.
+Therefore, our course repository also contains a reusable catalog you can use in your own projects.
+That catalog is filled with templates of units, stacks, and modules that you can easily use in your project to help you generate infrastructure while maintaining best practices.
+
+To support this, our folder structure will change slightly.
+In the `iac/` folder, we will have a cloud-provider folder (`aws`, `gcp`, `azure`), and under each provider we will have both a `catalog` folder and a `live` folder:
+
+`/iac/<cloud>/catalog`  
+`/iac/<cloud>/live`
+
+The live folder uses the same catalog, so you can think of it as an example of how to use the catalog.
+
+Our catalog will contain units, stacks (which we will cover in the next lesson), and modules —
+all reusable templates in your future Infrastructure as Code projects.
+This means the catalog folder will contain subfolders like `units/`, `stacks/`, and `modules/` — each with its own folder for every unit, stack, and module template we define.
+
+## Using the catalog
+
+The best way to learn is to use our catalog.
+
+### The catalog block
+
+In our live `root.hcl` we added the catalog block:
+
+```hcl title="/iac/gcp/live/root.hcl"
+
+...
+
+catalog {
+  urls = [
+    get_repo_root(),
+  ]
+}
+
+...
+
+```
+
+Since our catalog lives in the same repository, we point at the repo root with `get_repo_root()`.
+Usually you will work from a different repository and reference a remote catalog — it would look something like:
+
+```hcl
+
+catalog {
+  urls = [
+    "github.com/Nerdeez/terragrunt-catalog",
+  ]
+}
+
+```
+
+### terragrunt catalog
+
+Now let's try it.
+Create an empty directory under `live` and scaffold a **GCP Folder** there.
+`cd` into that directory and run:
+
+```bash
+terragrunt catalog
+```
+
+Search the list for **GCP Folder** (press `/` to filter).
+When you find it, press `s` to scaffold.
+Terragrunt will prompt you for the `values` the template needs — some are required.
+Fill them in and press `s` again to scaffold.
+Terragrunt copies the catalog unit template into your folder — you now have a new infrastructure unit.
+Two files are created:
+
+- `terragrunt.hcl` — the unit you run to create the infrastructure
+- `terragrunt.values.hcl` — the values you entered; the unit reads them as `values.<key>` in `terragrunt.hcl`
+
+Think of the catalog `terragrunt.hcl` as a template. `terragrunt.values.hcl` fills in the blanks so the unit can be configured and run.
+
+### terragrunt scaffold
+
+You can skip the catalog TUI and scaffold a unit directly from the command line.
+Create an empty folder under `live`, `cd` into it, and run:
+
+```bash
+terragrunt scaffold 'github.com/Nerdeez/terragrunt-catalog//iac/gcp/catalog/units/folder'
+```
+
+This will simply create the same files — only you will have to fill in `terragrunt.values.hcl` yourself, without going through the catalog TUI.
+
+## Summary
+
+A catalog is a directory full of templates — unit templates, stack templates, or even Terraform module templates.
+Since they are templates, they do not translate to actual infrastructure. Instead you use them in live while filling the blanks the template left (blanks can also be empty, so you do not need to fill anything).
+
+You can use items from the catalog in three ways:
+
+- Place the `catalog` block in `root.hcl`, then browse with `terragrunt catalog` (terminal UI)
+- Run `terragrunt scaffold <url>` directly with the catalog item URL
+- Reference catalog items from a stack (covered in the [next lesson](/courses/terraform/stack))
+
+When you scaffold unit or stack templates, you will often also get a `terragrunt.values.hcl` file with values referenced in `terragrunt.hcl` (or `terragrunt.stack.hcl`) as `values.<value-name>`.
