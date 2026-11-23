@@ -1,0 +1,153 @@
+---
+title: npm
+description: introduction to npm, the package manager that ships with Node.js that we will use in this course
+publishDate: 2025-12-13
+authors:
+  - yariv-katz
+sidebar:
+  order: 3
+---
+
+**npm** (Node Package Manager) is the default package manager that comes bundled with Node.js. It's a powerful tool that allows you to install, manage, and share JavaScript packages (libraries and tools) for your projects.
+
+## Other Package Managers
+
+While npm is the default and what we'll use throughout this course, it's worth knowing that there are other popular package managers available:
+
+- **[Yarn](https://yarnpkg.com/)** - A fast, reliable, and secure alternative package manager
+- **[pnpm](https://pnpm.io/)** - A fast, disk space efficient package manager
+
+These package managers have similar commands and functionality to npm, but we'll focus on npm in this course since it comes pre-installed with Node.js and is the most widely used.
+
+## Creating Your First Project
+
+Let's create a new project and learn how to use npm. We'll start by creating a new folder for our Express project.
+
+### Step 1: Create a Project Folder
+
+Open your terminal and create a new directory:
+
+```bash
+mkdir my-express-app
+cd my-express-app
+```
+
+### Step 2: Initialize npm
+
+Now let's initialize npm in this directory. This will create a `package.json` file that will track your project's dependencies and metadata:
+
+```bash
+npm init --yes
+```
+
+The `--yes` flag (or `-y` for short) automatically accepts all default values, so you don't have to answer questions interactively. This creates a `package.json` file with default values.
+
+You should now see a `package.json` file in your directory. Open it to see the default configuration:
+
+```json
+{
+  "name": "my-express-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+```
+
+The `package.json` file is the heart of your Node.js project. It contains:
+- **Project metadata** - name, version, description, author
+- **Dependencies** - packages your project needs to run
+- **Scripts** - commands you can run with `npm run <script-name>`
+- **Configuration** - various settings for your project
+
+### Step 3: Installing Packages
+
+Now let's install Express, which is the framework we'll be learning in this course:
+
+```bash
+npm install express
+```
+
+This command does several things:
+1. Downloads the Express package and all its dependencies
+2. Creates a `node_modules` folder containing all installed packages
+3. Creates or updates a `package-lock.json` file
+4. Updates your `package.json` file to include Express as a dependency
+
+## Understanding `node_modules` and `package-lock.json`
+
+### The `node_modules` Folder
+
+When you install packages, npm creates a `node_modules` directory in your project root. This folder contains:
+- All the packages you install
+- All the dependencies of those packages (and their dependencies, and so on)
+- The actual code files for each package
+
+**Important:** You should **never** commit the `node_modules` folder to version control (like Git). It can be very large and can always be recreated by running `npm install`. Instead, you'll commit `package.json` and `package-lock.json`, and other developers can run `npm install` to recreate the `node_modules` folder.
+
+**Common Mistake:** Some developers try to transfer or copy the `node_modules` folder from one computer to another (via USB drive, cloud storage, etc.). This is **not recommended** and will often cause problems. During installation, some packages perform native builds, such as compiling C++ code or building platform-specific binaries. These builds are specific to your operating system and architecture. If you simply copy `node_modules` to another machine, these native modules may not work correctly or may fail entirely. Always run `npm install` on each machine to ensure packages are properly built for that specific environment.
+
+### The `package-lock.json` File
+
+The `package-lock.json` file is automatically generated when you install packages. It serves several important purposes:
+
+- **Locks dependency versions** - Ensures everyone on your team installs the exact same versions of packages
+- **Improves installation speed** - npm can install packages faster by using the lock file
+- **Provides security** - Contains checksums to verify package integrity
+- **Enables reproducible builds** - Anyone running `npm install` will get the exact same dependency tree
+
+You **should** commit `package-lock.json` to version control. This ensures that all developers and deployment environments use the same package versions.
+
+## Installing Express
+
+As we saw earlier, you can install Express with:
+
+```bash
+npm install express
+```
+
+This installs Express as a **production dependency**, meaning it's needed to run your application. After running this command, you'll see:
+
+1. `node_modules/` folder created (if it didn't exist)
+2. `package.json` updated with Express in the `dependencies` section
+3. `package-lock.json` created or updated
+
+Your `package.json` should now look something like this:
+
+```json
+{
+  "name": "my-express-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
+```
+
+## Common npm Commands
+
+Here are some essential npm commands you'll use frequently:
+
+- `npm install <package>` - Install a package and add it to dependencies
+- `npm install <package> --save-dev` - Install a package as a development dependency (used only during development, not in production)
+- `npm install` - Install all packages listed in `package.json` (useful when cloning a project)
+- `npm uninstall <package>` - Remove a package from your project
+- `npm list` - Show all installed packages
+- `npm update` - Update packages to their latest versions (within version constraints)
+
+## Next Steps
+
+Now that you understand npm and have Express installed, you're ready to start building Express applications! In the next lesson, we'll create your first Express server and learn the fundamentals of the framework.
