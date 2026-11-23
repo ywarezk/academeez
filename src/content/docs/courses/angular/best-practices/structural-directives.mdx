@@ -1,0 +1,211 @@
+---
+title: "Best Practice Tip: Structural Directives"
+description: Repeating *ngIf is often a sign to use a structural directive.
+video: "https://www.youtube.com/embed/7MPiRy8IPa8?si=Kl3sLth-QE1C8tGB"
+publishDate: "2023-11-15"
+---
+
+[Structural Directives](https://angular.dev/guide/directives/structural-directives) in Angular is a powerful feature which is often underused in my opinion.  
+Let's try to change this and show you a repeating pattern which is better to solve with a structural directive.
+
+## The Problem
+
+DRY violation with repeating [*ngIf](https://angular.dev/guide/directives#adding-or-removing-an-element-with-ngif)
+
+Let's examine the following example:
+
+<div className="mt-5">
+<Sandpack 
+	customSetup={{ 
+		dependencies: { 			
+			"@angular/core": "^17.0.0",
+			"@angular/platform-browser": "^17.0.0",
+			"@angular/platform-browser-dynamic": "^17.0.0",
+			"@angular/common": "^17.0.0",
+			"@angular/compiler": "^17.0.0"
+		}
+	}}
+	
+	files={{
+		"src/app/user.service.ts": {
+			code: `import {Injectable} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
+import {User} from './user';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class UserService {
+  user$ = new BehaviorSubject<User | null>({
+    firstName: 'John',
+    lastName: 'Doe',
+  });
+
+  constructor() {}
+}
+`
+		},
+		"src/app/user.ts": {
+			code: `export type User = {
+  firstName: string;
+  lastName: string;
+};
+`	
+		},
+		"src/app/app.component.ts": {
+			code: `import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { UserService } from './user.service';
+
+@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: "app-root",
+  template: \`
+    <header>
+      <span *ngIf="userService.user$ | async; let user">
+        hello {{ user.firstName }} {{ user.lastName }}
+      </span>
+    </header>
+  \`
+})
+export class AppComponent {
+  constructor(
+    public userService: UserService
+  ) {}
+}
+`
+		}
+	}}
+	
+	template="angular"
+/>
+</div>
+
+In the following example we have a `user.service.ts` that will hold our logged in user or `null` if the user is not logged in.  
+In the `app.component.ts` we are using the `userService` to display the user's name if the user is logged in.
+
+A similar case was taken from a real world large project, where this kind of logic of checking if the user is logged in was repeated in many places, or in general not even checking if logged in but simple displaying data that we have on the logged in user.
+
+If you have a repeating `ngIf` or a repeating need for some grabbing some data from a service and having that data available in component template, then you should consider using a structural directive.
+
+## The Solution
+
+Let's create a structural directive that will handle the logic of checking if the user is logged in and if so, will display the template and pass the user to that template.
+
+<div class="mt-5">
+<Sandpack 
+	customSetup={{ 
+		dependencies: { 			
+			"@angular/core": "^17.0.0",
+			"@angular/platform-browser": "^17.0.0",
+			"@angular/platform-browser-dynamic": "^17.0.0",
+			"@angular/common": "^17.0.0",
+			"@angular/compiler": "^17.0.0"
+		}
+	}}
+	
+	files={{
+		"src/app/app.module.ts": {
+			code: `import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { WithUserDirective } from "./with-user.directive";
+      
+import { AppComponent } from "./app.component";
+      
+@NgModule({
+  declarations: [AppComponent, WithUserDirective],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}       
+`
+		},
+		"src/app/with-user.directive.ts": {
+			code: `import {Directive, OnInit, TemplateRef, ViewContainerRef} from '@angular/core';
+import {UserService} from './user.service';
+import {User} from './user';
+
+@Directive({
+  selector: '[withUser]'
+})
+export class WithUserDirective implements OnInit {
+  constructor(
+    public userService: UserService,
+
+    // get template and view container
+    private _templateRef: TemplateRef<{$implicit: User}>,
+    private _viewContainer: ViewContainerRef
+  ) {}
+
+  ngOnInit(): void {
+    // subscribe to user$ observable
+    this.userService.user$.subscribe(user => {
+      // clear view container
+      this._viewContainer.clear();
+      // if user is truthy
+      if (user) {
+        // create embedded view with user
+        this._viewContainer.createEmbeddedView(this._templateRef, {$implicit: user});
+      }
+    });
+  }
+}`
+		},
+		"src/app/user.service.ts": {
+			code: `import {Injectable} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
+import {User} from './user';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class UserService {
+  user$ = new BehaviorSubject<User | null>({
+    firstName: 'John',
+    lastName: 'Doe',
+  });
+
+  constructor() {}
+}
+`
+		},
+		"src/app/user.ts": {
+			code: `export type User = {
+  firstName: string;
+  lastName: string;
+};
+`	
+		},
+		"src/app/app.component.ts": {
+			code: `import { ChangeDetectionStrategy, Component } from "@angular/core";
+
+@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: "app-root",
+  template: \`
+    <header>
+      <span *withUser="let user">
+        hello {{ user.firstName }} {{ user.lastName }}
+      </span>
+    </header>
+  \`
+})
+export class AppComponent {}
+`
+		}
+	}}
+	
+	template="angular"
+/>
+</div>
+
+Notice that we create a structural directive that will only render the template if we have a logged in user, the directive will also provide that user to the `$implicit` allowing the `app.component.ts` to use it like so:
+
+```html
+<span *withUser="let user">
+	hello {{ user.firstName }} {{ user.lastName }}
+</span>
+```
+
+now every place I need the `user` I don't have to inject the `user.service.ts` and simply use my structural directive.  
+Handy isn't it? structural directives are an amazing shortcut to avoid repeating logic in your components.
