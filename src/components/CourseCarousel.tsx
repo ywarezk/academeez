@@ -4,17 +4,18 @@ import type {FC} from 'react';
 import {useEffect, useState} from 'react';
 import { LessonCard } from './LessonCard';
 
+
 export const CourseCarousel: FC<{
   title: string;
-  courseLink?: string;
-}> = ({title, courseLink = title.toLowerCase()}) => {
+  courseLink: string;
+  slug: string;
+}> = ({title, courseLink = title.toLowerCase(), slug}) => {
 	const [articles, setArticles] = useState<Array<any>>([]);
 	
   useEffect(() => {
     getCollection('docs', content => {
-      return content.data.template === 'doc' && content.slug.indexOf(courseLink) > -1;
-    }).then(allCollections => {
-			console.log(allCollections);
+      return content.data.template === 'doc' && content.slug.indexOf(slug) > -1;
+    }).then(allCollections => {			
       setArticles(allCollections.sort((a: any, b: any) => {
 				return a.data.order - b.data.order;
 			}))			
@@ -24,7 +25,7 @@ export const CourseCarousel: FC<{
   return (
     <div className="not-content">
       <h4>
-        <a href={`/courses/${courseLink}`}>{title}</a>
+        <a href={courseLink}>{title}</a>
       </h4>
       <br />
       <Carousel>
