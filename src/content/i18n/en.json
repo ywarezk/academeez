@@ -5,5 +5,8 @@
   "pagesidebar.source": "Source Code",
   "breadcrumbs.home": "Home",
   "breadcrumbs.courses": "Courses",
-  "pagetitle.publish": "Published on"
+  "pagetitle.publish": "Published on",
+  "hero.title": "Expert Free Courses",
+  "hero.description": "Free, open-source courses. No registration, no clickbait, no bullshit.",
+  "hero.buttonText": "Explore Courses"
 }

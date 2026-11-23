@@ -1,0 +1,66 @@
+---
+
+---
+
+<style is:global>
+	/* Hide the Starlight page title when it's empty - comprehensive selectors */
+	/* Target all possible h1 elements that could be the page title */
+	/* Exclude Hero's h1 by excluding .hero-title class */
+
+	/* Direct child h1 (empty or not, but not hero-title) */
+	.content-panel > h1:not(.hero-title),
+	.content-panel > h1:empty:not(.hero-title),
+	.content-panel > h1:first-child:not(.hero-title) {
+		display: none !important;
+		margin: 0 !important;
+		padding: 0 !important;
+		height: 0 !important;
+		min-height: 0 !important;
+		overflow: hidden !important;
+		line-height: 0 !important;
+	}
+
+	/* h1 inside header */
+	.content-panel > header h1:not(.hero-title),
+	.content-panel header:first-child h1:not(.hero-title) {
+		display: none !important;
+		margin: 0 !important;
+		padding: 0 !important;
+		height: 0 !important;
+		min-height: 0 !important;
+		overflow: hidden !important;
+		line-height: 0 !important;
+	}
+
+	/* Starlight's page title class */
+	.content-panel .sl-page-title:not(.hero-title),
+	.content-panel > .sl-page-title:not(.hero-title) {
+		display: none !important;
+		margin: 0 !important;
+		padding: 0 !important;
+		height: 0 !important;
+		min-height: 0 !important;
+		overflow: hidden !important;
+		line-height: 0 !important;
+	}
+
+	/* Also hide the header wrapper if it only contains the title */
+	.content-panel > header:has(h1:not(.hero-title):only-child) {
+		display: none !important;
+		margin: 0 !important;
+		padding: 0 !important;
+		height: 0 !important;
+		min-height: 0 !important;
+	}
+
+	/* Remove spacing from content-panel when title is hidden */
+	.content-panel:has(> h1:not(.hero-title):first-child) {
+		padding-top: 0 !important;
+		margin-top: 0 !important;
+	}
+
+	.content-panel:has(> header:first-child h1:not(.hero-title)) {
+		padding-top: 0 !important;
+		margin-top: 0 !important;
+	}
+</style>

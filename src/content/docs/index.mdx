@@ -1,5 +1,5 @@
 ---
-title: academeez
+title: ""
 description: Open Source Learning Platform for Coders
 head:
   - tag: title
@@ -9,62 +9,19 @@ next: false
 prev: false
 editUrl: false
 publishDate: 2024-09-09
-hero:
-  title: Open Source Learning Platform for Coders
-  tagline: Free, Open Source, Community Driven, Expert content for coders. <br/> No need to register, simple, free, professional content.
-  image:
-    dark: "../../assets/logo-dark.svg"
-    light: "../../assets/logo-light.svg"
-    alt: Open Source Learning Platform for Coders
 ---
 
 import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 import CardContentCourse from '~/components/CardContent.astro';
 import LocalCourseCarousel  from '~/components/LocaleCourseCarousel.astro';
+import Hero from '~/components/Hero/Hero.astro';
+import HideTitle from '~/components/HideTitle.astro';
 
-## [Our courses](/courses)
+<HideTitle />
 
-<CardGrid stagger>  
-  <Card>
-    <CardContentCourse title="FluxCD" slug="fluxcd">
-      Flux gives you tools to manage your K8S cluster state in a declarative, professional way.
-      <br />
-      Using Flux CRD's, you can specify helm charts, install resources using kustomize, and everything is declared in your remote repository.
-      <br/>
-      You simply push those CRD's to your remote repository, and Flux will make sure your K8S cluster is in the desired state.
-      <br/>
-      In this course we will learn how to work with managed k8s cluster using GCP, and we will learn how to manage our cloud resources using: Terraform/OpenTofu
-      
-    </CardContentCourse>    
-  </Card>
-  <Card>
-    <CardContentCourse title="Terraform / OpenTofu" slug="terraform" img="terraform">
-      Learn how to manage cloud resources on <strong>Google Cloud Platform</strong> 
-  using <a href="https://developer.hashicorp.com/terraform" target="_blank">Terraform</a>, 
-  <a href="https://opentofu.org/" target="_blank">OpenTofu</a>, and 
-  <a href="https://terragrunt.gruntwork.io/" target="_blank">Terragrunt</a>. 
-  This hands-on course covers best practices in <em>Infrastructure as Code</em> 
-  and provides a ready-to-use starter kit repository.
-    </CardContentCourse>    
-  </Card>
-  <Card>
-    <CardContentCourse title="React">
-      Learn React with our free, open-source course designed for both beginners and experienced developers. Build real-world projects, practice with interactive coding exercises, and master everything from components and hooks to advanced UI patterns — all at your own pace.
-    </CardContentCourse>    
-  </Card>
-  <Card>
-    <CardContentCourse title="Angular">
-    Angular is an open source framework, developed by Google, for creating web applications.<br/>
-    
-    In this **FREE, OPEN SOURCE, FULL**, Angular course, you will learn the fundamentals of Angular for beginners, and more advanced angular topics for the more experienced developer.
-    </CardContentCourse>
-  </Card>
-  <Card>
-    <CardContentCourse title="Git">
-    Master Git and take full control of your code. In this free, open-source course, you’ll learn version control fundamentals, branch management, and collaboration workflows using GitHub — from your first commit to advanced repository management.
-    </CardContentCourse>
-  </Card>
-</CardGrid>
+<div class="hero-wrapper" style="margin-top: -4rem;">
+	<Hero />
+</div>
 
 ## Lessons
 

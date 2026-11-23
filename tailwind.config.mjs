@@ -13,6 +13,15 @@ export default {
 			},
 		},
 		extend: {
+			animation: {
+				shimmer: 'shimmer 3s ease-in-out infinite',
+			},
+			keyframes: {
+				shimmer: {
+					'0%': { transform: 'translateX(-100%)' },
+					'100%': { transform: 'translateX(100%)' },
+				},
+			},
 			boxShadow: {
 				nav: 'var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),0 16px 32px -16px rgba(0,0,0,.1),0 0 0 1px rgba(0,0,0,.1)',
 			},
