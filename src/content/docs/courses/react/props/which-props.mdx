@@ -11,11 +11,30 @@ sidebar:
 
 import {Sandpack} from '@codesandbox/sandpack-react';
 
-In React, **“props”** are how parents pass data down to children. In this lesson (Rule 1), we’ll answer: Which props can I pass? We’ll look at three common cases and derive the rule from them:
+<div class="not-content flex">
+	<iframe
+		class="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/7SEriH6lJEw?si=xd2gEp-PvKvk3c3I"
+		title="Which Props Can I Pass? - React Props Video Tutorial"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="Which Props Can I Pass? - React Props Video Tutorial"
+		aria-describedby="iframe-video-description"
+	/>
+</div>
+<span id="iframe-video-description" class="sr-only">
+This video tutorial explains which props you can pass to DOM elements, your own React components, and third-party components, covering the first rule of passing props in React.
+</span>
 
-- `DOMElements` (e.g., `<img>`) → You can pass the element’s own DOM properties (plus a few React-internal props like `key`, `ref`).
+In React, **"props"** are how parents pass data down to children. In this lesson (Rule 1), we'll answer: Which props can I pass? We'll look at three common cases and derive the rule from them:
+
+- `DOMElements` (e.g., `<img>`) → You can pass the element's own DOM properties (plus a few React-internal props like `key`, `ref`).
 - Your own components → You can pass whatever props the component defines in its API (Plus React-internal props like `key`, `ref`).
-- Third‑party components (e.g., MUI) → You can pass the library’s documented props (Plus React-internal props like `key`, `ref`).
+- Third‑party components (e.g., MUI) → You can pass the library's documented props (Plus React-internal props like `key`, `ref`).
 
 Let's see those three cases in our live code editor...
 
