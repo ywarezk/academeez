@@ -19,6 +19,12 @@ export default defineConfig({
         name: "google-site-verification",
         content: "ZLdedo-l5mm1TcXoJ4Ikyasbj8wnH4iHMyMuWu2do9s"        
       }
+    }, {
+      tag: 'meta',
+      attrs: {
+        name: "msvalidate.01",
+        content: "9EEEA5142FA10331B8194AC8059955E9"
+      }      
     }],
     favicon: '/favicon-32x32.png',
     editLink: {
