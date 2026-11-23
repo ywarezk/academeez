@@ -1,0 +1,44 @@
+---
+title: academeez
+description: Open Source Learning Platform for Coders
+head:
+  - tag: title
+    content: academeez | Open Source Learning Platform for Coders
+template: splash
+next: false
+prev: false
+editUrl: false
+hero:
+  title: פלטפורמת למידה, קוד פתוח, למתכנתים
+  tagline: תוכן חינמי, מנוהל על ידי קהילת הקוד הפתוח, מומחים בתחום. <br/> לא צריך להירשם, תוכן פשוט, חינמי, מקצועי.
+  image:
+    dark: "../../../assets/logo-dark.svg"
+    light: "../../../assets/logo-light.svg"
+    alt: Open Source Learning Platform for Coders
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+## [הקורסים שלנו](/he/courses)
+
+<CardGrid stagger>
+  <Card>
+    <div class="flex flex-col">
+      <img src="/icons/k8s.svg" alt="Kubernetes" />
+      <a href="/he/courses/k8s"></a>
+    </div>
+    
+  </Card>
+  <Card title='Feedback' icon='magnifier'>
+    [Give feedback on coding
+    projects](https://forum.freecodecamp.org/c/project-feedback?max_posts=1)
+    built by campers.
+  </Card>
+  <Card title='Translations' icon='translate'>
+    [Help us translate](/intro#translations) freeCodeCamp.org's resources.
+  </Card>
+  <Card title='Open Source' icon='github'>
+    [Contribute to our open-source codebase](/intro#learning-platform) on
+    GitHub.
+  </Card>
+</CardGrid>

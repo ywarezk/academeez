@@ -1,0 +1,62 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import Default from '@astrojs/starlight/components/Sidebar.astro';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "./Breadcrumb"
+import type { SidebarEntry } from 'node_modules/@astrojs/starlight/utils/navigation';
+
+
+function findMyParents(sidebar: SidebarEntry[], parents: SidebarEntry[] = []): SidebarEntry[] | null {  
+  for (let i = 0; i < sidebar.length; i++) {
+    const entry = sidebar[i];    
+    if (entry.type === 'group') {
+      const newParents =  findMyParents(entry.entries, [...parents, entry]);      
+      if (newParents) {
+        return newParents;
+      }
+    }
+    if (entry.type === 'link') {
+      if (entry.isCurrent) {
+        return [...parents, entry];  
+      }     
+    }
+  }
+  return null;
+}
+
+// will hold the parents of the current page
+const parents: SidebarEntry[] = findMyParents(Astro.props.sidebar) as SidebarEntry[];
+
+---
+
+
+{
+  parents ? (
+    <div class="not-content">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink className="hover:text-green no-underline" href="/">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator className="flex" />    
+          <BreadcrumbItem>      
+            <BreadcrumbLink className="hover:text-green no-underline" href="/courses">Courses</BreadcrumbLink>      
+          </BreadcrumbItem>
+          <BreadcrumbSeparator className="flex" />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{parents[0].label}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>  
+    </div>    
+    <Default {...Astro.props} sidebar={(parents[0] as any).entries} />
+  ) : null
+}
+
+
