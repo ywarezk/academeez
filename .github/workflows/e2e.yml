@@ -16,6 +16,9 @@ on:
       ref:
         description: "Commit SHA or branch to test"
         required: true
+      sha:
+        description: "Optional commit SHA for creating a check run"
+        required: false
       url:
         description: "Preview environment URL"
         required: true
@@ -30,28 +33,33 @@ jobs:
           app-id: ${{ vars.ACADEMEEZ_APP_ID }}
           private-key: ${{ secrets.ACADEMEEZ_APP_PRIVATE_KEY }}
           
+      - name: Checkout code
+        uses: actions/checkout@v5.0.0
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 1
+
+      - name: Resolve checkout SHA
+        id: checkout-sha
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
       - name: E2E check
         uses: actions/github-script@v7.0.1
         id: e2e-check
         with:
           github-token: ${{ steps.app-token.outputs.token }}
           script: |
+            const headSha = `${{ inputs.sha }}` || `${{ steps.checkout-sha.outputs.sha }}`
             const response = await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: `E2E`,
-              head_sha: '${{ inputs.ref }}',
+              head_sha: headSha,
               status: 'in_progress',
               started_at: new Date().toISOString(),
             });
             console.log('response is:', response.data);
             return response.data.id;
-      
-      - name: Checkout code
-        uses: actions/checkout@v5.0.0
-        with:
-          ref: ${{ inputs.ref }}
-          fetch-depth: 1
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4.2.0
@@ -113,7 +121,7 @@ jobs:
           fail_ci_if_error: false
 
       - name: Set e2e check to success
-        if: ${{ success() }}
+        if: ${{ success() && steps.e2e-check.outputs.result != '' }}
         uses: actions/github-script@v7.0.1
         with:
           github-token: ${{ steps.app-token.outputs.token }}

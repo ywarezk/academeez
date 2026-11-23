@@ -29,20 +29,37 @@ jobs:
         uses: actions/github-script@v7
         if: ${{ github.event.client_payload.environment != 'production' }}
         with:
+          github-token: ${{ steps.app-token.outputs.token }}
           script: |
-            const sha = `${{ github.event.client_payload.git.sha }}`
-            // Find branches that contain this commit
-            const { data: branches } = await github.rest.repos.listBranchesForHeadCommit({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              commit_sha: sha,
-            })
-            if (!branches.length) {
-              core.setFailed(`No branch contains commit ${sha}`)
-              return
+            const payload = context.payload.client_payload || {}
+            const sha = payload.git?.sha || ''
+            const prNumber = payload.meta?.githubPullRequestId || payload.pullRequest?.number
+            const defaultBranch = context.payload.repository?.default_branch || 'main'
+            let ref = payload.git?.branch || payload.git?.ref || defaultBranch
+
+            // For same-repo commits this gives us a normal branch name.
+            if (sha) {
+              try {
+                const { data: branches } = await github.rest.repos.listBranchesForHeadCommit({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  commit_sha: sha,
+                })
+                if (branches.length) {
+                  ref = branches[0].name
+                }
+              } catch (error) {
+                core.info(`Could not resolve branch from SHA ${sha}: ${error.message}`)
+              }
             }
-            // Choose the first branch (or add your own selection logic)
-            const ref = branches[0].name
+
+            // Fork PR commits are often not on a local branch in the base repo.
+            // In that case, use GitHub's pull ref if we have the PR number.
+            if ((!sha || ref === defaultBranch) && prNumber) {
+              ref = `refs/pull/${prNumber}/head`
+            }
+
+            core.info(`Dispatching E2E with ref=${ref} sha=${sha || 'n/a'}`)
           
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
@@ -50,7 +67,8 @@ jobs:
               workflow_id: 'e2e.yml', // Replace with your workflow file name
               ref,
               inputs: {
-                ref: sha,
+                ref,
+                sha,
                 url: `${{ github.event.client_payload.url }}`
               }
             });
