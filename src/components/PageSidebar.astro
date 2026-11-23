@@ -1,7 +1,7 @@
 ---
 
 import Default from '@astrojs/starlight/components/PageSidebar.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import { AvatarFull } from './Avatar';
 
 const writers = Astro.props.entry.data.authors;
@@ -11,6 +11,8 @@ const allAuthors = await getCollection('authors');
 // from allAuthors find the authors that are in the writers array
 const authors = allAuthors.filter((author) => writers?.includes(author.slug));
 
+const locale = Astro.currentLocale || 'en'
+const i18n = await getEntry('i18n', locale)
 ---
 
 <Default {...Astro.props as any} />
@@ -19,7 +21,7 @@ const authors = allAuthors.filter((author) => writers?.includes(author.slug));
 	authors.length > 0 ? (
 		<hr />
 		<div class="p-4 not-content">
-			<h3 class="mb-2">Authors</h3>
+			<h3 class="mb-2">{i18n?.data['pagesidebar.authors']}</h3>
 			
 			<!-- astro loop on the authors -->
 			<ul class="flex mt-4">
@@ -42,7 +44,7 @@ const authors = allAuthors.filter((author) => writers?.includes(author.slug));
 	source ? (
 		<hr />
 		<div class="p-4 not-content">
-			<h3 class="mb-2">Source Code</h3>			
+			<h3 class="mb-2">{i18n?.data['pagesidebar.source']}</h3>			
 			<a class="github-button" href={source} data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star" data-size="large" aria-label="Star ywarezk/academeez-k8s-flux on GitHub">Star</a>
 		</div>
 		<script async defer src="https://buttons.github.io/buttons.js"></script>
