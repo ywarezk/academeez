@@ -30,13 +30,27 @@ jobs:
         if: ${{ github.event.client_payload.environment != 'production' }}
         with:
           script: |
+            const sha = `${{ github.event.client_payload.git.sha }}`
+            // Find branches that contain this commit
+            const { data: branches } = await github.rest.repos.listBranchesForHeadCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: sha,
+            })
+            if (!branches.length) {
+              core.setFailed(`No branch contains commit ${sha}`)
+              return
+            }
+            // Choose the first branch (or add your own selection logic)
+            const ref = branches[0].name
+          
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'e2e.yml', // Replace with your workflow file name
-              ref: '${{ github.event.client_payload.git.sha }}',
+              ref,
               inputs: {
-                ref: '${{ github.event.client_payload.git.sha }}'
+                ref: sha
               }
             });
           
