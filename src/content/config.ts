@@ -31,6 +31,7 @@ export const collections = {
       extend: z.object({        
         preview: z.boolean().optional().default(true),
         authors: z.array(z.string()).optional(),
+        source: z.string().optional(),
       }),
     }),
   }),
