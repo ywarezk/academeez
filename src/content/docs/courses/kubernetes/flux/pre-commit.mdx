@@ -1,0 +1,108 @@
+---
+title: Pretty code with pre-commit
+description: Make our code pretty with pre-commit and pre-commit-terraform
+publishDate: 2024-12-20
+authors:
+  - yariv-katz
+---
+
+Do you have programming OCD like I do? Do you have nightmares if your code is not perfectly formatted and consistent between all developers? If you don't even want a single commit in the repo with not properly indent code then there are 2 options:
+1. Try to cure your programming OCD.  
+or more realistically
+2. Create pre-commit hooks that will format your code before it is committed.
+
+This article will not cure your OCD rather we will focus on learning about properly configuring pre-commit hooks for your project.
+
+## pre-commit
+
+[pre-commit](https://pre-commit.com/) is a framework for managing and maintaining multi-language pre-commit hooks.
+It allows the community to maintain a set of hooks that can be shared across multiple projects.
+For example instead of recreating a hook that will run `terraform fmt` and recreate this hook in every terraform project you create, the community can share a project with pre-commit hooks that will integrate with the `pre-commit` framework.
+You create a pre-commit configuration under the file `.pre-commit-config.yaml` in the root of your project, you specify in that config the repositories that are containing the hooks that you want to run before commiting your code, you run `pre-commit install` and from now on every time you commit your code the hooks will run.
+Pretty simple, and luckily the community already created a Terraform/OpenTofu/Terragrunt pre-commit hooks that you can use.
+
+## pre-commit-terraform
+
+[pre-commit-terraform](https://github.com/antonbabenko/pre-commit-terraform) is a collection of git hooks to be used with **pre-commit**.
+We simply place the repository in the `.pre-commit-config.yaml` and choose the hooks that we want to run.
+For now we will use a simple hook that will format our terragrunt code before committing it.
+
+## terragrunt fmt
+
+Reformats all Terragrunt configuration files to a canonical format, meaning the reformat is according to officially defined, standard and consistent way of organizing and formatting our configuration files according to terraform and community standards.
+It is based on `terraform fmt` or `tofu fmt` commands and it will format the `.hcl` files in the project.
+Among the things it will do:
+- Indentation (two spaces no tabs)
+- Alignment
+- Spacing between blocks
+- Key ordering
+- Block structure
+- string are quoted with double quotes
+- Remove redundant spaces
+
+The code becomes more readable and consistent between all developers.
+
+## Install pre-commit
+
+Let's start by installing pre-commit on our machine, we will follow the instructions from the [pre-commit](https://pre-commit.com/#installation) website.
+
+```bash
+pip install pre-commit
+```
+
+If the installation was successful you should be able to run the following command to check the version of pre-commit:
+
+```bash
+pre-commit --version
+```
+
+## Create a `.pre-commit-config.yaml` file
+
+We can integrate the community terraform hooks by creating a `.pre-commit-config.yaml` file in the root of our project and including the [pre-commit-terraform](https://github.com/antonbabenko/pre-commit-terraform) hooks that we want to use.  
+For now we will only use the `terragrunt fmt` hook we is under the id `terragrunt_fmt`.
+
+```yaml title=".pre-commit-config.yaml"
+repos:
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.96.2
+    hooks:
+      - id: terragrunt_fmt
+```
+
+For now we only have one hook that will run `terragrunt fmt` before committing our code. But we can add more hooks from `pre-commit-terraform` or from other repositories as we move along in the project.
+
+## Install the hooks
+
+After our config file is ready we can install the hooks by running the following command:
+
+```bash
+pre-commit install
+```
+
+This command will install the hooks in the `.git/hooks` directory of our project.
+Now every time we stage files for commit and run `git commit` the hooks will run before the commit is completed.
+
+## Run on all the files
+
+since we already commited a lot of files before we installed the hooks we can run the hooks on all the files in the project by running the following command:
+
+```bash
+pre-commit run --all-files
+```
+
+After that commit and push our files to the repository.
+
+## CONTRIBUTING.md
+
+Let's update the `CONTRIBUTING.md` file to include the pre-commit hooks that we are using in the project.
+
+## Summary
+
+We learned how to use pre-commit hooks in our project to format our code before committing it.
+We used the `pre-commit-terraform` hooks to format our terragrunt code before committing it.
+We created a `.pre-commit-config.yaml` file in the root of our project and included the hooks that we want to use.
+We installed the hooks by running `pre-commit install` and ran the hooks on all the files in the project by running `pre-commit run --all-files`.
+
+
+
+
