@@ -118,6 +118,10 @@ export default defineConfig({
 							label: '4. Security - Permissions, Roles, Groups, Impersonation',
 							slug: 'courses/terraform/permissions-roles-groups-impersonation',
 						},
+						{
+							label: '5. Unit',
+							slug: 'courses/terraform/unit',
+						},
 					],
 				},
 				{
