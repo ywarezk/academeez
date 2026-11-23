@@ -1,0 +1,394 @@
+---
+title: האם Node.JS הוא Single-Threaded?
+description: "בשיעור זה נחקור את הארכיטקטורה של Node.JS ונבין אם Node.JS הוא Single-Threaded או לא."
+publishDate: 2024-11-16
+authors:
+  - yariv-katz
+sources: 
+  - url: "https://codesandbox.io/p/devbox/xk2xkc"
+    title: שימוש ב Worker Threads
+---
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/jnO2sdJIvMc?si=TStDh0Av8MZFooCX"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+לצערי כחלק מהעבודה אני צריך לראיין הרבה מפתחי Node.JS, משימה שאני לא אוהב לעשות במיוחד.  
+אחד הדברים ששמתי לב שהמפתחים הטובים ביותר מחזיקים גם בידע של הארגיטקטורה של הטכנולוגיה שהם משתמשים בה, ולא רק פותרים בעיות על ידי העתקת קוד מ stackoverflow אלא יש להם הבנה עמוקה איך הדברים עובדים.
+מפתח עם הבנה טובה של התאוריה והארכיטקטורה של Node.JS יהיה גם מפתח Node.JS פרקטי טוב, שיודע לכתוב קוד איכותי. זה המפתחים שאני מחפש.
+אז כאשר אני מראיין הרבה מהשאלות שלי לא מבוססות על שינון API או חידות חסרות פשר (שעד היום לא לגמרי הבנתי למה שואלים חידות בראיונות עבודה) אלא שאלות עמוקות על התאוריה של הטכנולוגיה שהם משתמשים בה.
+
+אחד השאלות שאני שואל תמיד מפתח Node.JS היא: **"האם Node.JS הוא Single-Threaded?"**.  
+אמלק; התשובה היא **לא**.
+
+90% מהמפתחים ששאלתי את השאלה הזו טעו.
+מבין התשובות הפופולריות שטעו הן:
+- כן, Node.JS הוא Single-Threaded.
+- לא, יש לנו API כמו: [Cluster](https://nodejs.org/docs/latest/api/cluster.html) או [Worker Threads](https://nodejs.org/docs/latest/api/worker_threads.html) שמאפשרים לנו להריץ יותר מתהליך אחד או יותר מ Thread אחד ב-Node.JS.  
+בעוד תשובה זו היא נכונה, היא לא בדיוק מה שאני רוצה לבדוק כאן אז אני מסביר שוב את השאלה: "בעולם ההיפותטי שבו אין API כמו Cluster או Worker Threads, האם Node.JS הוא Single-Threaded?".  
+אז כאשר אני שואל את השאלה הזו אני מתכוון לפיתוח היומיומי של Node.JS, לא למקרים המיוחדים בהם משתמשים ב- cluster או Worker Threads.
+וכאשר אני מסביר שוב את השאלה אז המפתח חוזר לתשובה הטעונה: "במקרה כזה אז כן, Node.JS הוא Single-Threaded אם אין שימוש ב-API האלה".
+
+בעוד נראה ששאלה זו היא תיאורטית, היא נוגעת בהרבה נושאים שקשורים לביצועים של השרת שלנו, היא גם עוזרת לנו לענות על השאלה החשובה לפני שאנו מתחילים לכתוב קוד: האם Node.JS הוא הכלי הנכון לעבודה?
+
+## מהו Process? מהו Thread?
+
+### Process
+
+לפני שנצלול לארכיטקטורה של Node.JS, בואו נבין מהו Process ומהו Thread.
+כאשר אנחנו מריצים את התוכנית שלנו עם `node my-program.js` (או כל כלי אחר שמריץ את הפקודה הזו), אנחנו יוצרים Process של Node.JS.
+אותו ה - Process מכיל את כל הפריטים הטובים שנשלחים עם Node.JS כמו: V8, libuv, Event loop ועוד.  
+ניתן ליצור מספר Process כדי להריץ תוכניות שונות, וכל Process יהיה לו את המרחב הזיכרון שלו, וירוץ בצורה מקבילית ל Process אחרים. 
+ה-Processes מופרדים זה מזה אבל הם יכולים לתקשר זה עם זה באמצעות מנגנוני Inter-Process Communication (IPC) שמאפשרים להם לשלוח הודעות זה לזה.
+
+### Thread
+
+כאשר ה - Process הוא יותר כבד, ה - Thread הוא קל משקל. ה - Thread רץ באותו ה - Process ולא דורש פתיחת Process חדש. ה - Threads גם חולקים מרחב זיכרון.
+ה - Threads יכולים לתקשר זה עם זה באותו ה - Process ולשתף זיכרון, ולכן הם יכולים לתקשר זה עם זה באמצעות Message Passing, אבל גם לשתף זיכרון שהם יכולים לגשת אליו.
+ניתן לפתוח Thread באופן ידני באמצעות ה - [Worker Threads](https://nodejs.org/docs/latest/api/worker_threads.html).
+
+אז עכשיו כאשר אנחנו יודעים מהו Thread ומהו Process, בואו נחזור לשאלה המקורית: כאשר אנחנו מריצים תוכנית JavaScript באמצעות Process של Node.JS, האם ה - Process הזה משתמש רק ב - Thread אחד (בלי שימוש ב - Cluster או ב - Worker Threads)?
+
+## אבל תראו! רשום ש JavaScript הוא Single-Threaded
+
+כאשר נעשה חיפוש בגוגל ל- **"JavaScript"** וננווט לדף [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript) או לדף [ויקיפדיה](https://en.wikipedia.org/wiki/JavaScript) (או לכל אתר כביר אחר) כולם יכתבו ש-JavaScript הוא Single-Threaded.
+לדוגמא MDN כותבים:
+
+> *JavaScript (JS) is a lightweight interpreted (or just-in-time compiled) programming language with first-class functions. While it is most well-known as the scripting language for Web pages, many non-browser environments also use it, such as Node.js, Apache CouchDB and Adobe Acrobat. JavaScript is a prototype-based, multi-paradigm, single-threaded, dynamic language, supporting object-oriented, imperative, and declarative (e.g. functional programming) styles.*
+
+אז זה לא הוכחה ש-Node.JS הוא Single-Threaded?
+
+לא!
+
+בעוד ש-JavaScript הוא שפת תכנות, Node.JS הוא סביבת ריצה ל-JavaScript, אם כי הם קשורים, הם מייצגים דברים שונים.
+
+## JavaScript, JavaScript Engine, ו-JavaScript Runtime
+
+בואו נבדיל בין שלושת המושגים האלה:
+
+### JavaScript
+
+JavaScript הוא שפת תכנות שהוגדרה על ידי תקן [ECMAScript](https://ecma-international.org/publications-and-standards/standards/ecma-262/).  
+זהו משהו וירטואלי כמו תוכנית או ממשק של איך השפה צריכה להתנהג, וזה לא משהו שניתן להריץ.
+זה תלוי במנוע JavaScript להפעיל את השפה ולהריץ את הקוד.
+
+### JavaScript Engine
+
+מנוע JavaScript הוא המימוש של השפה כפי שהוגדרה על ידי תקן ECMAScript.  
+אותו המנוע יקבל קוד JavaScript ויתרגם אותו לקוד מכונה שניתן להריץ על המחשב.
+אותו המנוע יסדר את הקוד בתוך מחסנית (LIFO) , יארגן Heap עבור המשתנים שאינם פרימיטיביים, ינקה את הHeap מזמן לזמן באמצעות Garbage Collector.
+מנועים פופולריים הם: מנוע V8, SpiderMonkey, Chakra ועוד.
+Node.js משתמש במנוע V8.
+
+### JavaScript Runtime
+
+בואו נבדוק את ההגדרה של השפה JavaScript ב-[תקן ECMAScript](https://tc39.es/ecma262/).
+אם נרפרף סביב רשימת התכונות שהשפה צריכה לתמוך בהן, נגלה שהרבה מהדברים שאנחנו משתמשים בהם יום יומיום אינם מוגדרים שם.
+לדוגמא אובייקטים כמו `console`, פונקציות כמו `setTimeout`, `fetch`, `require` ועוד.
+אלו אינם חלק מהשפה JavaScript, הם מוטמעים כחלק מה - JavaScript Runtime.
+בעוד שהרבה מה - API שאנחנו משתמשים בהם הם חלק מה - JavaScript Runtime, נגלה שהרבה מהם עדיין יש להם API דומים.
+לדוגמא `console.log` די דומה בכל מנוע JavaScript שאנחנו משתמשים בו, כך גם `setTimeout`, `fetch` ועוד.
+יש קבוצות כמו [WHATWG](https://whatwg.org/) ו-[W3C](https://www.w3.org/) שמגדירות את ה - Web API שהן חלק מה - JavaScript Runtime.
+וה - JavaScript Runtime כמו Node.js מתאמץ לעקוב אחרי התקנים האלה.
+הרבה מהתקנים האלה מוגדרים ב-[WHATWG github](https://github.com/whatwg) לדוגמא ניתן למצוא את התקן שמגדיר את ה - fetch ב-[fetch](https://github.com/whatwg/fetch) repository.
+
+בין ה - JavaScript Runtime הפופולריים הם הדפדפנים, ו-Node.js.
+אותם ה - Runtime משתמשים ב - JavaScript Engine כדי להריץ קוד JavaScript, אבל יש להם חלקים נוספים כדי לבצע אינטגרציה של JavaScript עם ה - Runtime שהם מייצגים.
+לדוגמא, JavaScript אינה מכילה API לקריאת קבצים, אבל כאשר יוצרים שרת יתכן ונצטרך לקרוא קבצים, אז Node.js הוא Runtime שמימש מודול לקריאת קבצים, יצר קוד C++ לקריאת קבצים ביעילות, וביצע אינטגרציה לכך עם מנוע V8.
+JavaScript לבד לא יהיה מועיל, צריך להריץ אותו במקום מסוים, ולא רק זה, צריך לאפשר לו לתקשר עם הסביבה שהוא רץ בה, ולכן יש לנו את ה - JavaScript Runtime.
+
+## JS, JS Engine, JS Runtime מי מהם הוא single-threaded?
+
+נחזור לשאלה המקורית: "האם Node.JS הוא Single-Threaded?".  
+בעוד מרבית המפתחים קפצו עם התשובה "כן זה כך", עכשיו אנחנו מתחילים להבין שבעוד JavaScript הוא Single-Threaded, Node.js אינו.  
+אז נחזור להגדרות שהגדרנו:
+
+- **JavaScript** - האם JavaScript הוא Single-Threaded? זכרו ש - JavaScript היא הגדרת שפה כפי שהוגדרה על ידי תקן ECMAScript, היא לא המימוש עצמו.
+ניתן לבדוק את התקן של ECMAScript, ונראה שהוא לא מגדיר דברים על Threads, Processes, או כל דבר אחר הקשור לזה.
+אז התשובה היא כן JavaScript כפי שהוגדרה על ידי תקן ECMAScript היא Single-Threaded.
+- **JavaScript Engine** - האם JavaScript Engine הוא Single-Threaded? היות והמנוע מהווה אימפלמנטציה של השפה, אז התשובה היא כן, JavaScript Engine הוא Single-Threaded.
+- **JavaScript Runtime** - האם JavaScript Runtime הוא Single-Threaded? הדבר תלוי איזה Runtime אנחנו מדברים עליו, אבל אם מסתכלים על Node.js, אז התשובה היא לא, Node.js אינו Single-Threaded.
+כאשר קוד מגיע לאיזור ה - C++ של Node.js הוא יכול להשתמש ב - Thread Pool או להפנות את המשימה לקרנל.
+
+## הארכיטקטורה של Node.js
+
+JavaScript Runtime (כמו Node.js) כולל JavaScript Engine (כמו V8), ומאפשר לנו להריץ קוד JavaScript.
+הנה כמה מהדברים שכלולים בארכיטקטורה של Node.js:
+- Event queue - אחסון לבקשות הלקוח
+- Event loop - המנצח של תזמורת האירועים האסינכרוניים
+- V8 engine - מבצע את הקוד JavaScript
+- Thread pool - ה - Event loop יכול להעביר משימות ל - Thread pool, שהוא בסך הכל קבוצת Threads שיכולים להריץ משימות בצורה פרללית.
+
+ה - Event loop וה - V8 רצים באותו ה - Thread (ה - Main Thread), אבל ה - Thread pool יכול לרוץ באופן מקבילי.
+Node.js הוא Single-Threaded במובן שה - Event loop וה - V8 רצים באותו ה - Thread, ישנו thread מיוחד שנקרא ה - main thread שמבצע את קוד ה - JavaScript.
+ה - Event Loop גם רץ על ה Main Thread ומסוגל לבצע כמה פעולות I/O באופן לא חוסם, ולהעביר משימות חיצוניות ל - Thread pool.
+
+אני אוהב להסתכל על Node.js כמבצע multi threading בצורה אוטומטית, בעיקר אנחנו כותבים ב - single-threaded, ו - Node.js יכול לטפל ב - multi-threading בשבילנו.
+
+## דוגמא
+
+נבחן את הדוגמא הבאה שתעזור לנו להבין אם Node.js הוא הכלי הנכון לעבודה.  
+בדוגמא הבאה אנו יוצרים שרת express פשוט עם 2 נתיבים:
+- `/random` - יחזיר מספר אקראי.
+- `/fibonacci/:number` - יחשב את מספר הפיבונאצ'י של המספר שהתקבל.
+
+בעוד השרת מחשב את מספר הפיבונצ׳י נבחן את התגובה שלו לבקשות אחרות.
+נבחן את השרת באמצעות פרופיילר שיעזור לנו להבין איפה ה- main thread תקוע ואז נפתח thread חלופי לאותם חישובים סינכרוניים בעייתים.
+
+תצרו תיקייה חדשה לפרוייקט ותריצו npm init בתוך אותה התיקווה ותתקינו את express:
+
+```bash
+mkdir nodejs-architecture
+cd nodejs-architecture
+npm init --yes
+npm install express
+```
+
+ניצור את הקובץ `fibonacci.mjs` שיכיל פונקציה שמחשבת את מספר הפיבונאצ'י באופן רקורסיבי:
+
+```javascript
+/**
+ * recursive function to calculate the nth fibonacci number
+ * @param {number} n 
+ * @returns 
+ */
+export function fibonacci(n) {
+	if (n === 0) {
+		return 0;
+	}
+	if (n === 1) {
+		return 1;
+	}
+	return fibonacci(n - 1) + fibonacci(n - 2);
+}
+```
+
+פונקציה רקורסיבית פשוטה שמחשבת את מספר הפיבונאצ'י.  
+ניצור את שרת ה - express בקובץ `server.mjs`:
+
+```javascript
+import createApplication from 'express';
+import { fibonacci } from './fibonacci.mjs';
+
+const app = createApplication();
+
+// this path will return a random number
+app.get('/random', (_req, res) => {
+	res.send(Math.random().toString());
+});
+
+// this path will use the fibonacci function to calculate the fibonacci number that we are getting in the path param
+app.get('/fibonacci/:n(\\d+)', (req, res) => {
+	const n = parseInt(req.params.n, 10);	
+	const result = fibonacci(n);
+	res.send(result.toString());
+});
+
+app.listen(3000, () => {
+	console.log('Server is running on port 3000');
+});
+```
+
+ניתן להריץ את השרת שלנו באמצעות:
+
+```bash
+node server.mjs
+```
+
+דוגמא פשוטה זו מהווה את החולשה של Node.js, בזמן החישוב של הפיבונצ׳י ה - main thread תקוע ולא יכול לטפל בבעיות אחרות.
+ניתן להפעיל את השרת ולנסות לחשב את מספר הפיבונצ׳י של 40 לדוגמא, ואז לנסות לקבל מספר אקראי בזמן שהחישוב רץ.
+נשים לב שהשרת תקוע, בעוד Node.js מצטיין במשימות כמו I/O, שאילתות לבסיס נתונים, וכו׳ הוא לא מתאים לחישובים סינכרוניים כמו חישוב מספר הפיבונצ׳י.
+בדוגמא זו קל למצוא מה תוקע את ה - Main Thread, אבל באפליקציות אמיתיות זה יכול להיות קשה יותר, ולכן נשתמש בפרופיילר כדי למצוא את הבעיה.
+הפרופיילר יאפשר לנו להבין מה מחזיק את ה - main thread תקוע.  
+כדי להריץ את השרת שלנו עם ה - profiler נשתמש בפרמטר `--prof`:
+
+```bash
+node --prof server.mjs
+```
+
+אחרי שמריצים את השרת עם ה - profiler ננסה להיכנס לנתיב שיצר את הביעה, בדוגמא שלנו ננסה להיכנס לנתיב `/fibonacci/50` ואז ללכת לנתיב `/random` ולראות שהשרת תקוע.
+אחרי שהשרת יתקע הגיע הזמן לנסות להבין מה תוקע את ה - main thread. נמצא קובץ באותו התיקייה שנקרא `isolate-0xnnnnnnnnnnnn-v8.log` ונעביר אותו לקובץ טקסט עם הפקודה הבאה:
+
+```bash
+node --prof-process isolate-...-v8.log > processed.txt
+```
+
+תחליפו את `isolate-...-v8.log` בשם הקובץ שנוצר בתיקייה שלכם ותראו את הקובץ `processed.txt` שמכיל את הפרופיל של השרת.
+בדוגמא שלי זה נראה כך:
+
+```
+Statistical profiling result from isolate-0x7fe6f8008000-69984-v8.log, (140861 ticks, 447 unaccounted, 0 excluded).
+
+ [Shared libraries]:
+   ticks  total  nonlib   name
+
+ [JavaScript]:
+   ticks  total  nonlib   name
+  140390   99.7%   99.7%  JS: *fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+      1    0.0%    0.0%  JS: ~lazyEventEmitterAsyncResource node:events:101:39
+      1    0.0%    0.0%  JS: ~fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+      1    0.0%    0.0%  JS: ~encodeRealpathResult node:fs:2518:30
+      1    0.0%    0.0%  JS: wasm-function[15]
+      1    0.0%    0.0%  JS: ^trySelf node:internal/modules/cjs/loader:503:17
+      1    0.0%    0.0%  JS: ^setHeader node:_http_outgoing:650:57
+      1    0.0%    0.0%  JS: ^realpathSync node:fs:2553:22
+      1    0.0%    0.0%  JS: ^processTicksAndRejections node:internal/process/task_queues:67:35
+      1    0.0%    0.0%  JS: ^isatty node:tty:42:16
+      1    0.0%    0.0%  JS: ^debuglog node:internal/util/debuglog:76:18
+      1    0.0%    0.0%  JS: ^compileForPublicLoader node:internal/bootstrap/realm:322:25
+      1    0.0%    0.0%  JS: ^URL node:internal/url:763:14
+      1    0.0%    0.0%  JS: ^SafeMap node:internal/per_context/primordials:413:16
+      1    0.0%    0.0%  JS: ^Module._resolveFilename node:internal/modules/cjs/loader:964:35
+      1    0.0%    0.0%  JS: ^Module._findPath node:internal/modules/cjs/loader:564:28
+      1    0.0%    0.0%  JS: *normalizeString node:path:66:25
+      1    0.0%    0.0%  Builtin: StringAdd_CheckNone
+      1    0.0%    0.0%  Builtin: StrictEqual_Baseline
+      1    0.0%    0.0%  Builtin: RegExpReplace
+      1    0.0%    0.0%  Builtin: LoadIC_NoFeedback
+      1    0.0%    0.0%  Builtin: InterpreterEntryTrampoline
+      1    0.0%    0.0%  Builtin: FastNewObject
+      1    0.0%    0.0%  Builtin: Call_ReceiverIsAny
+      1    0.0%    0.0%  Builtin: CallFunction_ReceiverIsNullOrUndefined
+
+ [C++]:
+   ticks  total  nonlib   name
+
+ [Summary]:
+   ticks  total  nonlib   name
+  140414   99.7%   99.7%  JavaScript
+      0    0.0%    0.0%  C++
+     23    0.0%    0.0%  GC
+      0    0.0%          Shared libraries
+    447    0.3%          Unaccounted
+
+ [C++ entry points]:
+   ticks    cpp   total   name
+
+ [Bottom up (heavy) profile]:
+  Note: percentage shows a share of a particular caller in the total
+  amount of its parent calls.
+  Callers occupying less than 1.0% are not shown.
+
+   ticks parent  name
+  140390   99.7%  JS: *fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+  140390  100.0%    JS: *fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+  140390  100.0%      JS: *fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+  140390  100.0%        JS: *fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+  140390  100.0%          JS: *fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+  140390  100.0%            JS: *fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+
+```
+
+נתמקד על איזור ה - **Summary**:
+
+```
+[Summary]:
+   ticks  total  nonlib   name
+  140414   99.7%   99.7%  JavaScript
+      0    0.0%    0.0%  C++
+     23    0.0%    0.0%  GC
+      0    0.0%          Shared libraries
+    447    0.3%          Unaccounted
+```
+
+ניתן לראות שהבעיה שלנו היא בקוד ה - JavaScript שלנו, ומבחינת הניתוח של הקוד ה - JavaScript אנחנו רואים שהבעיה היא בפונקצית ה - `fibonacci`:
+
+```
+[JavaScript]:
+   ticks  total  nonlib   name
+  140390   99.7%   99.7%  JS: *fibonacci file:///Users/yarivkatz/Development/academeez-node-architecture/fibonacci.mjs:8:26
+	...
+```
+
+## יצירת Threads באופן ידני
+
+אנחנו יכולים ליצור באופן ידני Thread כדי לחשב את מספר הפיבונצ׳י, ולאחר מכן להעביר את המשימה לאותו Thread.
+נשנה את הקובץ `server.mjs` לכך:
+
+```javascript
+import { Worker } from 'worker_threads';
+// ...
+function fibonacciThread(n) {
+	return new Promise((resolve, reject) => {
+		const worker = new Worker('./fibonacci.mjs', { workerData: n });
+		worker.on('message', resolve);
+		worker.on('error', reject);
+		worker.on('exit', (code) => {
+			if (code !== 0)
+				reject(new Error(`Worker stopped with exit code ${code}`));
+		});
+	});
+}
+
+app.get('/fibonacci/:n(\\d+)', async (req, res) => {
+	// create a thread for fibonacci calculation
+	const n = parseInt(req.params.n);
+	const result = await fibonacciThread(n);
+	res.send(result.toString());
+});
+// ...
+```
+
+אנחנו יוצרים Thread חדש באמצעות ה - `Worker` api, ה - Thread יריץ את הקובץ `fibonacci.mjs` ויקבל את המספר לחישוב כפרמטר.
+נשנה את הקובץ `fibonacci.mjs` לכך:
+
+```javascript
+import { parentPort, workerData } from 'worker_threads';
+
+export function fibonacci(n) {
+	// ...
+}
+
+const result = fibonacci(workerData);
+
+parentPort.postMessage(result);
+```
+
+אם נפעיל את השרת וננסה לחשב את מספר הפיבונצ׳י של 40 ואז לבקש מספר אקראי נראה שהשרת עובד כרגיל ולא נתקע כמו מקודם.
+אם נריץ את השרת עם ה - `--prof` נראה שה - main thread פנוי ולא תקוע. אנחנו נמצא שני קבצי `isolate` אחד עבור ה - main thread והשני עבור ה - worker thread שאנחנו יצרנו. נוכל להבחין שה - worker thread היה עסוק בחישוב הפיבונצ׳י בעוד ה - main thread היה פנוי.
+מה שראינו זה הרעבה של ה - main thread אשר גרם לתקיעת השרת, פתרנו את הבעיה על ידי יצירת Thread חדש והעברת החישוב לאותו Thread. בכך ה - main thread  היה פנוי לטפל בבקשות.
+
+פתיחת thread חדש יש תקורה ולוקח משאבים, אז אם תהליך הפתיחה קורה לעתים קרובות עלינו לשקול יצירת thread pool.
+פתיחת thread זה לא משהו שנעשה ב - Node.js בשכיחות גבוהה, הארכיטקטורה של Node.js ה - event driven design והביצועים הגבוהים של ה - I/O מונעים את השימוש ב - threads ברוב המקרים.
+במידה ואתם מוצאים שאתם חייבים לפתוח Threads לעתים קרובות, וזוהי הדרך היחידה למנוע הרעבה של ה - main thread אז זה סימן מובהק שאולי Node.js הוא לא הכלי הנכון במקרה זה ויתכן ובחירת טכנולוגיה אחרת יתאים יותר למשימה.
+הבנת הארכיטקטורה של Node.js חשובה להבנת האם Node.js הוא הכלי הנכון לעבודה.
+
+## המלצות לשימוש נכון
+
+לעניות דעתי מפתחי ה - backend צריכים להתחיל לומר יותר פעמים את המילה **לא**.
+אני אסביר למה אני מתכוון.
+לעתים קרובות אני רואה מפתח backend שמתייחסים אלהם כמו לסינדרלה, זוכרים את הסצנה בסינדרלה שהאמא החורגות והאחיות החורגות זורקים את כל העבודה על סינדרלה תוך כדי שאומרים: "תעשי זאת סינדרלה, תעשי את זה סינדרלה".
+לעתים קרובות מפתחי בקאנד מתבקשים מכל כיוון לעשות את ה - api הזה ואת ה - api האחר.
+התפקיד של מפתח הבקאנד הוא לא לרצות כל גחמה של כל client, התפקיד של מפתח הבקאנד הוא להציג לוגיקה מסוימת שמופנית מהנתונים ולא מקליינטים.
+תחשבו על זה כך, הקליינטים השונים רוצים להכין ״פיצה״ והתפקיד של הבקאנד הוא לא לתת להם את ה - api שמכין ״פיצה״, התפקיד של הבקאנד הוא לתת להם את ה - api שמכין ״בצק״, ״רוטב״, ״גבינה״ וכו׳ ואז הם יכולים להשתמש ב - api האלה כדי להכין את ה״פיצה״.
+עם גישה כזאת הרבה מהחישובים יפלו על צד הלקוח ולאו דווקא על השרת.
+אז עם הקליינטים שמבקשים ״פיצה״ בבקשה אחת, מפתח הבקאנד צריך לומר לא.
+
+דוגמא נוספת לומר לא, היא כאשר הלקוח מבקש API שישלח לו חזרה מיליוני תוצאות מהבסיס נתונים, אולי הלקוח יוצר Select עם המון אופציות.
+ברור כי זה יהיה קל יותר לקליינט לקבל את כל המליון תוצאות ולשים אותם באותו ה Select אבל זה המקום שבו מפתח הבקאנד צריך לומר לא, ולא להתמקד בכך שהחיים של הקליינט יהיו תמיד הכי קלים.
+במקום המםתח בקאנד צריך לבקש מהקליינט שיספק לו נתונים לביצוע pagination ולקבל רק חלק מהנתונים.
+בלעתים קרובות בעיות ביצועים מתחילים מחישובים שונים שמתבצעים על מליוני שורות והזמן משתפר משמעותית אם בתוכנית המקורית היו מחזירים רק חלק מהנתונים בהתאם ל pagination מסויים.
+
+## סיכום
+
+אז כדי לענות על השאלה: "האם Node.JS הוא Single-Threaded?".
+התשובה היא **לא**.
+Node.js הוא single-threaded במובן שה - Event loop וה - V8 רצים באותו ה - Thread, אבל הוא multi-threaded במובן שהוא יכול להשתמש ב - Thread pool ולהעביר משימות לקרנל.
+המבנה מבוסס non-blocking events של Node.js מאפשר לנו להשתמש ב - main thread, thread pool, קרנל ומשאבים אחרים בצורה יעילה ולהשתמש ביכולות הפרלליות של המחשב.
+
+אני מסתכל על זה כך, אני מקבל בצורה אוטומטית multi-threading מבלי הצורך, ברוב המקרים, לנהל threads בעצמי (ניהול threads הוא קשה ומלא בשגיאות), ואני יכול להתמקד בכתיבת האפליקציה עצמה ולדעת ש - Node.js טופלת את ה - multi-threading בשבילי.
+
+למה אני שואל את השאלה הזאת כאשר אני מראיין? ולמה זה חשוב לדעת את זה?
+השאלה ה״תיאורטית״ הזאת מתחברת גם למעשי כאשר השרת עובד באופן איטי עכב הרעבת ה - main thread, והידע יעזור לנו להתמודד עם בעיה זו.
+הבנה של מה ה - main thread עושה ומה מועבר לטיפול במקום אחר יכול לסייע לנו כאשר השרת שלנו יהיה איטי.
+אותו הידע במאמר הזה עזר לי פעמים רבות לפתור את אותן בעיות ביצועים כאשר מרבית המפתחים לא ידעו איך להתמודד איתן.
+לדוגמא אם השרת שלנו עובד לאט נוכל להפעיל את הפרופיילר ולהבין מה תוקע את ה - main thread, נוכל לבחון memory leaks (כי ה - main thread רץ גם את ה garbage collector), ובמקרים קשים נצטרך להשתמש ב - Cluster או ב - Worker Threads api כדי להריץ יותר מתהליך או יותר מחוטים ב - Node.JS.
