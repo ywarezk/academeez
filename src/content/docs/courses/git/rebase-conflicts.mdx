@@ -52,6 +52,24 @@ This new commit will have two parents: the last commit on the `main` branch and 
 
 Notice that a new commit was added on the `feature` branch.
 
+### Conflicts with Merge
+
+Let's examine the image above and imagine that on the `feature` branch in commit `1` we installed some package using `npm install <some-package1>`.
+Then in the same branch in commit `3` we installed another package using `npm install <some-package2>`.
+So in commit `1` and commit `3` we have changes in the `package.json` file.
+
+Now let's imagine in the `main` branch in commit `C` another developer installed a package using `npm install <some-package3>`.
+So in commit `C` we also have changes in the `package.json` file.
+Now when we try to merge the `main` branch into our `feature` branch, there is a good chance that we will have a conflict in the `package.json` file.
+
+Let's define 2 concepts that relate to conflicts and their value when doing a merge:
+- `ours` - the changes that we made in our branch (the `feature` branch).
+- `theirs` - the changes that were made in the other branch (the `main` branch).
+
+In the following conflict we will have a conflict on the `package.json` file, where `ours` is the aggregated change in `package.json` from commit `1` and commit `3` and `theirs` is the change in `package.json` from commit `C`.
+
+So we will have one conflict to solve on the `package.json` file.
+
 ### Git Rebase
 
 When we run `git rebase main` we are telling git to take all the commits from the `feature` branch and replay them on top of the `main` branch.
@@ -59,3 +77,63 @@ Git will take each commit from the `feature` branch and apply it on top of the `
 This means that the commits from the `feature` branch will be added to the `main` branch one by one.
 
 ![rebase main](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/rebase-anim4.gif?raw=true)
+
+### Conflicts with Rebase
+
+Same conflict scenario as before. we installed some package using `npm install <some-package1>` in commit `1` and in commit `3` we installed another package using `npm install <some-package2>`.
+In the `main` branch in commit `C` another developer installed a package using `npm install <some-package3>`.
+
+Let's define 2 concepts that relate to conflicts and their value when doing a rebase - Notice that the `ours` and `theirs` are different than the merge:
+- `ours` - represet the branch that we rebase on top of (the `main` branch).
+- `theirs` - represent the commit that we are trying to rebase (the `feature` branch).
+
+Now here is the catch:
+When we rebase we might have conflicts on every commit that we are trying to rebase.
+So in our case we will have a conflict on commit `1` that introduced a change in `package.json` that we will have to solve before the rebase can continue.
+Then we will have to solve another conflict on `package.json` in commit `3`.
+
+This means that in our Rebase example we had to solve 2 conflicts on the `package.json` file, while in the Merge example we only had to solve one conflict on the `package.json` file.
+
+Is seems from this example that `git rebase` has more conflicts than `git merge`.
+OR IS IT?
+
+### git rebase interactive mode
+
+Rebase interactive mode gives you a chance to edit the commits that you are rebasing. You can change the commit message, squash commits, drop commits, reorder commits, and more.
+There are times when we code something commit and then after few commits in the future we realize that a commit we made had issues and needs a bit of change.
+We can fix the issue and create a new commit but that's not always the best solution.
+
+Let's try to explain the problem with an example.
+Let's say you have a task where you need to install a package that will help you with **PDF** files, and using that package you will have
+to read the pdf, and search for a specific string.
+You find a popular package `pdf-reader` and you install it.
+You create your first commit `chore: install pdf-reader` and you start working on the task.
+You implement reading the pdf and create another commit `feat: read pdf`.
+You find out that the package you chose cannot be used for searching for a string in the pdf.
+You decide to go with a different package `pdf-lib` that can do the job.
+you create a new commit `chore: install pdf-lib` and you start working on the task again.
+You implement reading the pdf and create a commit and also searching for a string in the pdf and create another commit.
+Then you realize that the package you chose are not maintained and has a lot of issues.
+The you decide to go with a 3rd package `awesome-pdf` which you manage to create all the features you need.
+So a commit history in your branch might look like this:
+
+![rebase interactive1](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/rebase-interactive1.png?raw=true)
+
+That trial and error is not necessarily something you want to keep in your commit history, and at times can be sufficent just placing a trial you did in a commit body instead of creating a full commit.
+For example that same commit history can be arranged differently using git rebase interactive mode:
+
+![rebase interactive2](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/rebase-interactive2.png?raw=true)
+
+I would argue that the second commit history is much cleaner and easier to understand.
+And what about conflicts?
+
+If we take the previous example that we had a conflict on the `package.json`, in the example where we don't arrange and squash our commits properly
+we might have conflicts like the number of commits that changed the `package.json` file.
+Which means in this example we will have 3 conflicts, on the other hand after arranging and squashing our commits we will have only one conflict on the `package.json` file because only one commit is changing that file.
+
+And to give a few examples how to arrange and maintain a clean commit history, we highly recommend
+to read a tutorial we wrote on the topic: [Clean your commits](https://www.academeez.com/courses/git/best-practice/clean-your-commits)
+
+## Convlicts Rebase vs Merge
+
+So actually if we make sure to 
