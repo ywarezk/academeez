@@ -36,7 +36,7 @@ Conventional Commits is a specification for adding human and machine readable me
 Not only does it provide consistency to the commit messages which makes them more readable to everyone, but it also allows for automatic versioning and changelog generation.
 But first let's start by understanding the structure of a conventional commit message, and give a few examples of each structure.
 
-## Structure of a commit message
+### Structure of a commit message
 
 In conventional commits the structure of a commit message is as follows:
 
@@ -62,6 +62,12 @@ You can configure your default editor by running:
 
 ```bash
 git config --global core.editor "nano"
+```
+
+this will configure **nano** as the default editor for git, Personally I like the git editor to be my IDE which is **VSCode** so I will configure it like so:
+
+```bash
+git config --global core.editor "code --wait"
 ```
 
 Now let's write a commit message:
