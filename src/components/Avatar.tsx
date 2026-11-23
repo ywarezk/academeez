@@ -11,7 +11,7 @@ const Avatar = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<AvatarPrimitive.Root
 		ref={ref}
-		className={cn('relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full', className)}
+		className={cn('relative flex h-7 w-7 shrink-0 overflow-hidden rounded-full', className)}
 		{...props}
 	/>
 ));
@@ -55,7 +55,7 @@ const AvatarFull: React.FC<AvatarFullProps> = ({ avatar, name, slug, ...props })
 
 	// if no slug then don't render an anchor
 
-	const AvatarFull = (
+	const AvatarNoAnchor = (
 		<Avatar {...props}>
 			<AvatarImage src={avatar} />
 			<AvatarFallback>
@@ -66,16 +66,18 @@ const AvatarFull: React.FC<AvatarFullProps> = ({ avatar, name, slug, ...props })
 	);
 
 	if (!slug) {
-		return AvatarFull;
+		return AvatarNoAnchor;
 	}
 
 	return (
 		<a
 			href={`/authors/${slug}`}
-			className="flex flex-col justify-center items-center no-underline hover:text-green text-muted-foreground"
+			className="inline-flex items-center gap-2 no-underline text-foreground hover:text-green"
 		>
-			{AvatarFull}
-			<h6 className="mt-2">{name}</h6>
+			{AvatarNoAnchor}
+			<span className="m-0 inline-flex items-center leading-none text-sm font-normal font-sans">
+				{name}
+			</span>
 		</a>
 	);
 };
