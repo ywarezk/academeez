@@ -2,9 +2,8 @@
 title: Installing Flux with Terraform/OpenTofu
 description: In this lesson we will learn how to install Flux on our K8S cluster using Terraform or OpenTofu on GCp.
 publishDate: 2024-05-14
-preview: false
 sidebar: 
-  hidden: true
+  order: 4
 authors:
   - yariv-katz
 sources:
@@ -12,7 +11,7 @@ sources:
     url: https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-04/iac
 ---
 
-In this lesson we will learn how to install [Flux](https://fluxcd.io/) on our [Kubernetes](https://kubernetes.io/) cluster using [Terraform](https://www.terraform.io/) or [OpenTofu](https://opentofu.org/).  
+In this lesson we will learn how to install [Flux](https://fluxcd.io/) on our [Kubernetes](https://kubernetes.io/) cluster using [OpenTofu](https://opentofu.org/).  
 We will write infastructure as code and run it with OpenTofu, but the same code can be used with Terraform.  
 This lesson is a naive and simple approach to installing Flux with terraform, it is filled with bad practices and focuses on simplicity, but don't worry, the next lesson after we understand basic flux installation, we will go over best practices and learn how to do things right.  
 We focus on simplicity to start with something easy before jumping in to the more complex stuff.  
@@ -43,7 +42,7 @@ In case you are managing one cluster, and you are the only one managing it, then
 
 ## What you need to have before starting
 
-- You need to have a [GCP](https://cloud.google.com/) account
+- You need to have a [GCP](https://cloud.google.com/) account with an active billing account (meaning you have a credit card attached to the account)
 - You need to have IAM user with admin privileges (this is bad practice and we will learn how to do it right in the next lesson - with security in mind)
 - You need to have terraform or OpenTofu installed on your machine (this is another bad practice - in the next lesson we will learn how to do it with [Terragrunt](https://terragrunt.gruntwork.io/))
 
@@ -57,7 +56,7 @@ Create a new file `iac/main.tf`, we will place all infastructure code there (ano
 ```terraform
 module "project" {
   source              = "terraform-google-modules/project-factory/google"
-  version             = "~> 15.0"
+  version             = "~> 17.0"
   name                = var.project_name
   org_id              = var.org_id
   billing_account     = var.billing_account
@@ -120,7 +119,7 @@ At the bottom of the `main.tf` file add the following code:
 ```terraform
 module "vpc" {
   source       = "terraform-google-modules/network/google"
-  version      = "~> 9.1"
+  version      = "~> 9.3"
   project_id   = module.project.project_id
   network_name = "vpc-gke"
   subnets = [
@@ -148,6 +147,13 @@ module "vpc" {
 We added a VPC with a subnet, and we also added secondary ranges for pods and services.  
 There are many network architectures, and it highly depends on the organization and the needs of that organization.
 In our case we simply went for something simple with enough IP addresses for our needs.
+
+The number of ips in a CIDR of x.x.x.x/y is `2^(32-y)`. where y - means the first y bits are fixed, and the rest can change.
+
+Let's go over the address ranges:
+- For the nodes the ip address range is `10.0.0.0/17` which means we have 32,766 IP addresses for our nodes (first 17 bits are fixed, the rest can change starting from `10.0.0.0`).
+- For the pods the ip address range is `192.168.0.0/18` which means we have 16,382 IP addresses for our pods (first 18 bits are fixed, the rest can change starting from `192.168.0.0`).
+- For the services the ip address range is `192.168.64.0/18 ` which means we have 16,382 IP addresses for our services (first 18 bits are fixed, the rest can change starting from `192.168.64.0`).
 
 We added a `region` variable, so let's add it to the `variables.tf` file:
 
@@ -179,7 +185,7 @@ At the bottom of the `main.tf` file add the following code:
 ```terraform
 module "gke" {
   source                          = "terraform-google-modules/kubernetes-engine/google"
-  version                         = "~> 30.0"
+  version                         = "~> 33.1"
   name                            = "gke"
   project_id                      = module.project.project_id
   regional                        = false
@@ -239,6 +245,7 @@ module "gke" {
 }
 ```
 
+We are focusing here on development simple cheap cluster setup.
 We are creating a GKE cluster with a single node pool with preemptible nodes.
 We are setting the machine type to `e2-medium` and the disk size to 100GB.
 The node pool will have 3 nodes, and we are setting the `preemptible` flag to `true`.
@@ -281,7 +288,7 @@ provider "flux" {
 }
 ```
 
-The flux provider will not to authenticate to the cluster and to the git repository.
+The flux provider will need to authenticate to the cluster and to the git repository.
 We are providing the data needed for the provider to authenticate to the cluster, where some of the data is taken from the `module.gke` output.
 
 Flux provider will also need to authenticate with the git repository, so for this we need to supply a **PAT** (Personal Access Token) for the git repository.
@@ -331,6 +338,23 @@ resource "flux_bootstrap_git" "bootstrap" {
 ```
 
 Run `terraform init` or `tofu init` and then run `terraform apply` or `tofu apply` to install Flux on your cluster.
+
+## Check your cluster
+
+Time to check our cluster and verify that everything is working. You will need to set your `kubectl` context to point to the new cluster.  
+There is a `gcloud` command that will help you with that:
+
+```bash
+gcloud container clusters get-credentials <cluster-name> --region <zone> --project <project-name>
+```
+
+after doing that we can run the command:
+
+```bash
+kubectl get pods -n flux-system
+```
+
+We can examine all the flux pods and see that all of them are running
 
 ## Summary
 
