@@ -97,7 +97,8 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           override_branch: main
-      
+          override_commit: ${{ github.sha }}
+
       - name: Set e2e check to success
         if: ${{ success() }}
         uses: actions/github-script@v7.0.1
