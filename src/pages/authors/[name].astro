@@ -16,10 +16,9 @@ export const prerender = true;
 
 const { name } = Astro.params;
 const authorEntry = await getEntry('authors', name);
-const { Content } = await authorEntry?.render();
+const result = await authorEntry?.render();
 
 const props = {
-	...Astro.props,
 	frontmatter: {
 		title: 'hide me',
 		template: 'splash',
@@ -35,13 +34,6 @@ const props = {
 	}
 </style>
 
-<StarlightPage
-	frontmatter={{
-		title: 'hide me',
-		template: 'splash',
-		hero: {},
-		publishDate: new Date(),
-	}}
->
-	<Content />
+<StarlightPage {...props as any}>
+	{result && result.Content ? <result.Content /> : <p>Author not found.</p>}
 </StarlightPage>
