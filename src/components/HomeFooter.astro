@@ -1,0 +1,338 @@
+---
+import { getEntry } from 'astro:content';
+// @ts-expect-error - Starlight virtual module
+import SocialIcons from 'virtual:starlight/components/SocialIcons';
+import { getCourses } from '../utils/courses';
+import logoLight from '../assets/logo-light.svg';
+
+// Get courses for the current locale
+const currentLocale = Astro.currentLocale || 'en';
+const courses = await getCourses(currentLocale);
+
+// Get i18n translations for the current locale
+const i18n = await getEntry('i18n', currentLocale);
+const siteDescription =
+	(i18n?.data['footer.siteDescription'] as string) ||
+	'Free, open-source courses. No registration, no clickbait, no bullshit.';
+const coursesLabel = (i18n?.data['footer.courses'] as string) || 'Courses';
+const donationLabel = (i18n?.data['footer.donation'] as string) || 'Donation';
+const communityLabel = (i18n?.data['footer.community'] as string) || 'Community';
+const legalLabel = (i18n?.data['footer.legal'] as string) || 'Legal';
+const dropUsALineLabel = (i18n?.data['footer.dropUsALine'] as string) || 'Drop us a line';
+const copyrightText =
+	(i18n?.data['footer.copyright'] as string) || 'academeez. All rights reserved.';
+const currentYear = new Date().getFullYear();
+const copyrightLabel = `© ${currentYear} ${copyrightText}`;
+
+// Get locale prefix for URLs
+function getLocalePrefix(locale: string | undefined): string {
+	return locale === 'en' || !locale ? '' : `/${locale}`;
+}
+
+const localePrefix = getLocalePrefix(currentLocale);
+const githubDiscussionsUrl = 'https://github.com/ywarezk/academeez/discussions';
+const githubRepoUrl = 'https://github.com/ywarezk/academeez';
+---
+
+<footer class="home-footer">
+	<div class="footer-grid">
+		<!-- Site Logo and Description -->
+		<div class="footer-section">
+			<div class="footer-logo">
+				<a href={localePrefix || '/'} class="footer-logo-link">
+					<img src={logoLight.src} alt="academeez" class="logo-img" />
+				</a>
+			</div>
+			<p class="footer-description">{siteDescription}</p>
+		</div>
+
+		<!-- Courses Links -->
+		<nav class="footer-section" aria-label={coursesLabel}>
+			<h3 class="footer-heading">{coursesLabel}</h3>
+			<ul class="footer-links-list">
+				{
+					courses.map((course) => {
+						const courseHref = `${localePrefix}/courses/${course.slug}`;
+						return (
+							<li>
+								<a href={courseHref} class="footer-link">
+									{course.title}
+								</a>
+							</li>
+						);
+					})
+				}
+			</ul>
+		</nav>
+
+		<!-- Donation -->
+		<nav class="footer-section" aria-label={donationLabel}>
+			<h3 class="footer-heading">{donationLabel}</h3>
+			<ul class="footer-links-list">
+				<li>
+					<a
+						href="https://opencollective.com/academeez"
+						class="footer-link"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						Open Collective
+					</a>
+				</li>
+			</ul>
+		</nav>
+
+		<!-- Community and Reaching Out -->
+		<nav class="footer-section" aria-label={communityLabel}>
+			<h3 class="footer-heading">{communityLabel}</h3>
+			<ul class="footer-links-list">
+				<li>
+					<a
+						href={githubDiscussionsUrl}
+						class="footer-link"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						{dropUsALineLabel}
+					</a>
+				</li>
+				<li>
+					<a href={githubRepoUrl} class="footer-link" target="_blank" rel="noopener noreferrer">
+						GitHub Repository
+					</a>
+				</li>
+			</ul>
+		</nav>
+
+		<!-- Legal -->
+		<nav class="footer-section" aria-label={legalLabel}>
+			<h3 class="footer-heading">{legalLabel}</h3>
+			<ul class="footer-links-list">
+				<li>
+					<a href={`${localePrefix}/terms-of-service`} class="footer-link"> Terms of Service </a>
+				</li>
+				<li>
+					<a
+						href="https://github.com/ywarezk/academeez/blob/main/CODE_OF_CONDUCT.md"
+						class="footer-link"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						Code of Conduct
+					</a>
+				</li>
+				<li>
+					<a
+						href="https://github.com/ywarezk/academeez/blob/main/LICENSE"
+						class="footer-link"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						License
+					</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+
+	<!-- Copyright and Social Icons -->
+	<hr class="footer-divider" />
+	<div class="footer-bottom">
+		<div class="footer-copyright">
+			{copyrightLabel}
+		</div>
+		<div class="footer-social">
+			<SocialIcons />
+		</div>
+	</div>
+</footer>
+
+<style is:global>
+	/* Remove padding-bottom from parent containers to eliminate white space below footer */
+	.content-panel:has(.home-footer:last-child),
+	.content-panel:has(.home-footer) {
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+
+	.sl-container:has(.home-footer:last-child),
+	.sl-container:has(.home-footer) {
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+
+	main:has(.home-footer:last-child),
+	main:has(.home-footer) {
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+
+	.page:has(.home-footer:last-child),
+	.page:has(.home-footer) {
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+
+	.home-footer {
+		margin-top: 4rem;
+		padding: 3rem 1rem;
+		background-color: rgba(1, 214, 98, 0.05);
+		border-top: 1px solid var(--sl-color-hairline);
+		width: 100vw;
+		max-width: 100vw;
+		margin-left: calc(50% - 50vw);
+		margin-right: calc(50% - 50vw);
+		box-sizing: border-box;
+		margin-bottom: 0 !important;
+	}
+
+	:root[data-theme='dark'] .home-footer {
+		background-color: rgba(1, 214, 98, 0.1);
+	}
+
+	.home-footer .footer-grid {
+		max-width: min(120ch, 90%);
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 2rem;
+		margin-bottom: 2rem;
+		padding: 0 1rem;
+	}
+
+	.home-footer .footer-section {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		margin: 0;
+		padding: 0;
+		align-items: flex-start;
+	}
+
+	.home-footer .footer-section > *:first-child {
+		margin-top: 0 !important;
+		padding-top: 0 !important;
+	}
+
+	.home-footer .footer-logo {
+		margin: 0;
+		padding: 0;
+		line-height: 1.5rem;
+		display: flex;
+		align-items: center;
+		height: 1.5rem;
+	}
+
+	.home-footer .footer-logo-link {
+		display: inline-block;
+		text-decoration: none;
+		line-height: 1;
+	}
+
+	.home-footer .logo-img {
+		height: 1.5rem;
+		width: auto;
+		display: block;
+	}
+
+	.home-footer .footer-description {
+		color: var(--sl-color-text);
+		font-size: 0.9rem;
+		line-height: 1.6;
+		margin: 0;
+		opacity: 0.8;
+	}
+
+	:root[data-theme='dark'] .home-footer .footer-description {
+		color: var(--sl-color-text);
+		opacity: 0.9;
+	}
+
+	.home-footer .footer-heading {
+		font-size: 1rem;
+		font-weight: 600;
+		margin: 0;
+		padding: 0;
+		line-height: 1.5rem;
+		height: 1.5rem;
+		display: flex;
+		align-items: center;
+		color: var(--sl-color-text);
+		vertical-align: top;
+	}
+
+	.home-footer .footer-links-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.home-footer .footer-link {
+		color: var(--sl-color-text);
+		text-decoration: none;
+		transition: color 0.2s ease;
+		font-size: 0.9rem;
+		opacity: 0.8;
+	}
+
+	:root[data-theme='dark'] .home-footer .footer-link {
+		color: var(--sl-color-text);
+		opacity: 0.9;
+	}
+
+	.home-footer .footer-link:hover {
+		color: #01d662;
+		text-decoration: underline;
+	}
+
+	.home-footer .footer-divider {
+		border: none;
+		border-top: 1px solid var(--sl-color-hairline);
+		margin: 2rem 0;
+		max-width: min(120ch, 90%);
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.home-footer .footer-bottom {
+		max-width: min(120ch, 90%);
+		margin: 0 auto;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 1rem;
+		padding: 0 1rem;
+	}
+
+	.home-footer .footer-copyright {
+		font-size: 0.875rem;
+		color: var(--sl-color-text);
+		opacity: 0.8;
+	}
+
+	:root[data-theme='dark'] .home-footer .footer-copyright {
+		color: var(--sl-color-text);
+		opacity: 0.9;
+	}
+
+	.home-footer .footer-social {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	@media (max-width: 768px) {
+		.home-footer .footer-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.home-footer .footer-bottom {
+			flex-direction: column;
+			text-align: center;
+		}
+	}
+</style>

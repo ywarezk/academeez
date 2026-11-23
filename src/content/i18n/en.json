@@ -8,5 +8,12 @@
   "pagetitle.publish": "Published on",
   "hero.title": "Expert Free Courses",
   "hero.description": "Free, open-source courses. No registration, no clickbait, no bullshit.",
-  "hero.buttonText": "Explore Courses"
+  "hero.buttonText": "Explore Courses",
+  "footer.siteDescription": "Free, open-source courses. No registration, no clickbait, no bullshit.",
+  "footer.courses": "Courses",
+  "footer.donation": "Donation",
+  "footer.community": "Community",
+  "footer.legal": "Legal",
+  "footer.dropUsALine": "Drop us a line",
+  "footer.copyright": "academeez. All rights reserved."
 }
