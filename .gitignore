@@ -31,3 +31,7 @@ pnpm-debug.log*
 /blob-report/
 /playwright/.cache/
 .vercel
+
+# coverage
+.nyc_output/
+coverage/
