@@ -1,18 +1,34 @@
 ---
-
-import { CourseCarousel } from './CourseCarousel';
+import {CourseCarousel} from './CourseCarousel';
+import {getCollection} from 'astro:content';
 
 interface Props {
 	title: string;
 	courseLink: string;
 }
 
-let locale = Astro.currentLocale
+let locale = Astro.currentLocale;
 if (locale === 'en' || !locale) {
-	locale = ''
+	locale = '';
 } else {
-  locale = `/${locale}`
+	locale = `/${locale}`;
 }
+
+const courseLink = Astro.props.courseLink || Astro.props.title.toLowerCase();
+
+const collections = await getCollection('docs', content => {
+	let prefix = '';
+	if (locale) {
+		prefix = `${locale.substring(1)}/courses/${courseLink}`;
+	} else {
+		prefix = `courses/${courseLink}`;
+	}	
+	return content.data.template === 'doc' && content.id.startsWith(prefix) && content.data.preview;
+}).then(allCollections => {
+	return allCollections.sort((a: any, b: any) => {
+		return a.data.sidebar.order - b.data.sidebar.order;
+	});
+});
 ---
 
-<CourseCarousel client:load {...Astro.props} locale={locale} />
+<CourseCarousel client:load {...Astro.props} locale={locale} articles={collections} />
