@@ -41,12 +41,24 @@ const i18n = await getEntry('i18n', locale)
 }
 
 {
-	source ? (
+	source && source.includes('github') ? (
 		<hr />
 		<div class="p-4 not-content">
 			<h3 class="mb-2">{i18n?.data['pagesidebar.source']}</h3>			
 			<a class="github-button" href={source} data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star" data-size="large" aria-label="Star ywarezk/academeez-k8s-flux on GitHub">Star</a>
 		</div>
 		<script async defer src="https://buttons.github.io/buttons.js"></script>
+	) : null
+}
+
+{
+	source && source.includes('codesandbox') ? (
+		<hr />
+		<div class="p-4 not-content">
+			<h3 class="mb-2">{i18n?.data['pagesidebar.source']}</h3>
+			<a href={source}>
+				<img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="Edit in CodeSandbox" />
+			</a>
+		</div>
 	) : null
 }
