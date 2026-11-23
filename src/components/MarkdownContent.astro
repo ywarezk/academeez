@@ -19,8 +19,13 @@ import Default from '@astrojs/starlight/components/MarkdownContent.astro';
         startOnLoad: false,
         fontFamily: "var(--sans-font)",
         // @ts-ignore This works, but TS expects a enum for some reason
-        theme: window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "default",
+        theme: "neutral"
       })
+			
+			mermaid.registerIconPacks([{
+				name: 'material-symbols',
+				loader: () => fetch('https://unpkg.com/@iconify-json/material-symbols@1/icons.json').then((res) => res.json()),
+			}]);
 
       for (const graph of graphs) {
         const content = graph.getAttribute("data-content")

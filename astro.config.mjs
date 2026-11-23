@@ -6,6 +6,8 @@ import sitemap from "@astrojs/sitemap";
 import { mermaid } from "./src/plugins/mermaid"
 import vercel from "@astrojs/vercel/serverless";
 
+import icon from 'astro-icon';
+
 // https://astro.build/config
 export default defineConfig({
   integrations: [react({
@@ -53,6 +55,12 @@ export default defineConfig({
         directory: 'courses/express',
         collapsed: true
       }
+    }, {
+      label: 'Node.JS',
+      autogenerate: {
+        directory: 'courses/nodejs',
+        collapsed: true
+      }
     }],
     title: 'academeez',
     logo: {
@@ -87,7 +95,7 @@ export default defineConfig({
         he: 'he-IL'
       }
     }
-  })],
+  }), icon()],
   markdown: {
     remarkPlugins: [mermaid],    
   },
