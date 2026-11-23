@@ -9,7 +9,10 @@ const data = Astro.locals.starlightRoute.entry.data;
 
 // authors in frontmatter is ["yariv-katz"] -> resolve from the "authors" collection
 const authorSlugs = Array.isArray(data.authors) ? data.authors : data.authors ? [data.authors] : [];
-const authors = await Promise.all(authorSlugs.map((slug) => getEntry('authors', slug)));
+const authorsEntries = await Promise.all(authorSlugs.map((slug) => getEntry('authors', slug)));
+const authors = authorsEntries.filter(
+	(a): a is NonNullable<typeof a> => a != null && a.data?.name != null && a.data?.avatar != null
+);
 
 const publishDate = new Date(data.publishDate);
 const publishISO = publishDate.toISOString();
@@ -30,10 +33,10 @@ const publishHuman = publishDate.toLocaleDateString(locale, {
 				{authors.map((a) => (
 					<AvatarFull
 						client:load
-						avatar={a?.data?.avatar}
-						key={a?.slug}
-						name={a?.data?.name}
-						slug={a?.slug}
+						avatar={a.data.avatar}
+						key={a.slug}
+						name={a.data.name}
+						slug={a.slug}
 						className="ring-1 ring-border"
 					/>
 				))}
