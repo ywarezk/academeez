@@ -17,6 +17,9 @@ on:
       - 'vercel.deployment.success'
   workflow_dispatch:
     inputs:
+      repository:
+        description: "Source repository owner/name (optional)"
+        required: false
       sha:
         description: "Commit SHA (optional)"
         required: false
@@ -52,6 +55,16 @@ jobs:
               ? (`${{ inputs.prNumber }}` || '')
               : (payload.meta?.githubPullRequestId || payload.pullRequest?.number || '')
             const defaultBranch = context.payload.repository?.default_branch || 'main'
+            const baseRepo = `${context.repo.owner}/${context.repo.repo}`
+            const repository = isManual
+              ? (`${{ inputs.repository }}` || baseRepo)
+              : (
+                  payload.git?.repo ||
+                  payload.git?.repoName ||
+                  payload.git?.full_name ||
+                  payload.pullRequest?.head?.repo?.full_name ||
+                  baseRepo
+                )
             let checkoutRef = isManual
               ? (`${{ inputs.checkoutRef }}` || '')
               : (payload.git?.branch || payload.git?.ref || '')
@@ -86,7 +99,7 @@ jobs:
             checkoutRef = checkoutRef || dispatchRef
             const previewUrl = isManual ? `${{ inputs.url }}` : `${{ github.event.client_payload.url }}`
 
-            core.info(`Dispatching E2E from ref=${dispatchRef} checkoutRef=${checkoutRef} sha=${sha || 'n/a'}`)
+            core.info(`Dispatching E2E from ref=${dispatchRef} repository=${repository} checkoutRef=${checkoutRef} sha=${sha || 'n/a'}`)
           
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
@@ -94,6 +107,7 @@ jobs:
               workflow_id: 'e2e.yml', // Replace with your workflow file name
               ref: dispatchRef,
               inputs: {
+                repository,
                 ref: checkoutRef,
                 sha,
                 url: previewUrl
