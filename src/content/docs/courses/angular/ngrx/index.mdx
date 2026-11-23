@@ -1,0 +1,61 @@
+---
+title: NGRX
+description: Redux inspired state management for Angular.
+publishDate: 2024-10-01
+---
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/lb7HlCvH-is?si=OMPECy431afj2odR"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+[NGRX](https://www.ngrx.io) is the most popular state management library for Angular. It is inspired by Redux and provides a way to manage state in your Angular application.  
+Managing state means it will organize your data in memory, and provide a way to access and update it. When the data is updated the proper components will be updated as well.
+
+## Managing state with NGRX
+
+It's best to start with understanding the essence of ngrx, this will help you understand if this library can be helpful for your project (for medium-large projects it usually is).  
+NGRX helps you organize your application state, the main package that helps you achieve that is `@ngrx/store`.
+
+### @ngrx/store
+
+The main package of NGRX is the `@ngrx/store` package. It provides a way to manage state in your application. That is, organize your application data, and easily update and read that data.  
+Here is an example of a small application that is using `@ngrx/store` to store user information, and book list information.
+
+![@ngrx/store](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/store.gif?raw=true)
+
+`@ngrx/store` plays nicely with a developer tools extension called [Redux dev tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd), that's the right section of the video.  
+You can see that it's easy to track you state, and manage your state changes, you can easily go back in time and see how your state looked like in the past (and the components that read the state are updated as well with each change).
+
+## Other goodies
+
+`@ngrx/store` is the main package of NGRX, but once you have a predictable state conventions, other goodies in the form of other packages, can be shipped to help you even further:
+
+- `@ngrx/effects` - helps you decouple business logic, from your UI components.
+- `@ngrx/entity` - helps you organize collections in the store.
+- `@ngrx/data` - is a nice combination of the above packages, to help you manage collections, as well as request data from the server and sync it with the store and collections in the store.
+
+You have more packages, and we will cover all of them in this chapter.
+
+## Benefits of using NGRX
+
+1. Since it's the most popular state management library for Angular, a lot of organizations are using it, and prefer to hire developers that know it (it's not an easy learning curve).
+2. It introduces state and data handling conventions among the team of developers, no more thousands of services that do the same thing, and no more different ways to handle data.
+3. It decouples component UI with service business logic
+4. It makes your app easier to test
+5. It helps you manage collections in your application and grab them from the server with little code (no more repeating services that inject `HttpClient` and do similar things).
+6. Redux dev tools makes it much easier to debug and understand your application state.
+7. Easier to restore the user to the same state after he leaves your site.
+
+## Drawbacks of using NGRX
+
+1. It's not easy to learn, and it's not easy to master, but don't worry we will help you with that challenge.
+2. Alot of files, and alot of boilerplate code (Altough there are new shortcuts that reduce the amount of code drasticlly).
