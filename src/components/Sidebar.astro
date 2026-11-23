@@ -10,7 +10,11 @@ import {
   BreadcrumbSeparator,
 } from "./Breadcrumb"
 import type { SidebarEntry } from 'node_modules/@astrojs/starlight/utils/navigation';
+import { getEntry } from 'astro:content';
+import { isRtl } from './utils';
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
+const locale = Astro.currentLocale || 'en'
 
 function findMyParents(sidebar: SidebarEntry[], parents: SidebarEntry[] = []): SidebarEntry[] | null {  
   for (let i = 0; i < sidebar.length; i++) {
@@ -33,6 +37,10 @@ function findMyParents(sidebar: SidebarEntry[], parents: SidebarEntry[] = []): S
 // will hold the parents of the current page
 const parents: SidebarEntry[] = findMyParents(Astro.props.sidebar) as SidebarEntry[];
 
+const i18n = await getEntry('i18n', locale)
+const isRtlLocale = isRtl(locale);
+
+const Seperator = isRtlLocale ? ChevronLeft : ChevronRight;
 ---
 
 
@@ -42,13 +50,17 @@ const parents: SidebarEntry[] = findMyParents(Astro.props.sidebar) as SidebarEnt
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink className="hover:text-green no-underline" href="/">Home</BreadcrumbLink>
+            <BreadcrumbLink className="hover:text-green no-underline" href="/">{i18n?.data['breadcrumbs.home']}</BreadcrumbLink>
           </BreadcrumbItem>
-          <BreadcrumbSeparator className="flex" />    
+          <BreadcrumbSeparator className="flex">
+            <Seperator size={16} />
+          </BreadcrumbSeparator>    
           <BreadcrumbItem>      
-            <BreadcrumbLink className="hover:text-green no-underline" href="/courses">Courses</BreadcrumbLink>      
+            <BreadcrumbLink className="hover:text-green no-underline" href="/courses">{i18n?.data['breadcrumbs.courses']}</BreadcrumbLink>      
           </BreadcrumbItem>
-          <BreadcrumbSeparator className="flex" />
+          <BreadcrumbSeparator className="flex">            
+            <Seperator size={16} />
+          </BreadcrumbSeparator>
           <BreadcrumbItem>
             <BreadcrumbPage>{parents[0].label}</BreadcrumbPage>
           </BreadcrumbItem>
