@@ -16,16 +16,22 @@ import {Sandpack} from '@codesandbox/sandpack-react';
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
+		class="mx-auto mb-10"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/8HHXZcoovt4?si=91cgdzxiphQfNdsr"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="Understanding React Elements - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="Understanding React Elements - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video provides a comprehensive introduction to React Elements, explaining their purpose, how to create them, and their role in building user interfaces with practical examples.
+</span>
 
 בואו נקח את הצעד הראשון להפוך למפתחי [React](https://react.dev/).  
 בשיעור הזה נלמד את היסודות של **React**, וניצור אתר ראשון בעזרת **React**.  

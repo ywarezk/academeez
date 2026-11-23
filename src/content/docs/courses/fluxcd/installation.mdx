@@ -23,16 +23,23 @@ video:
 
 <div class="not-content flex">
   <iframe
-    className="mx-auto"
+    class="mx-auto"
     width="560"
     height="315"
     src="https://www.youtube.com/embed/vp-oFksFoZs?si=6XALIufPOMTq7rxG"
-    title="YouTube video player"
-    frameBorder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    title="FluxCD installation with flux-cli - video"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowFullScreen
+    loading="lazy"
+    referrerPolicy="strict-origin-when-cross-origin"
+    aria-label="FluxCD installation with flux-cli - video"
+    aria-describedby="iframe-video-description"
   />
 </div>
+
+<span id="iframe-video-description" class="sr-only">
+This video explains how to install FluxCD on a Kubernetes cluster using the flux-cli tool, including prerequisites, configuration of a Git repository for GitOps, and practical steps to bootstrap Flux on the cluster.
+</span>
 
 To install flux on our **K8S cluster** using the flux CLI we will need to do the following steps:
 

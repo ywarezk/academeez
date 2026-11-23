@@ -18,16 +18,23 @@ video:
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
-		width="560"
-		height="315"
-		src="https://www.youtube.com/embed/yKrHj9AEjxU?si=n47onbdHG3EsPaa1"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-		allowFullScreen
+    class="mx-auto mb-10"
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/yKrHj9AEjxU?si=n47onbdHG3EsPaa1"
+    title="Angular - Remove @ngrx/store-devtools in production - video"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+    loading="lazy"
+    referrerPolicy="strict-origin-when-cross-origin"
+    aria-label="Angular - Remove @ngrx/store-devtools in production - video"
+    aria-describedby="iframe-video-description"
 	/>
 </div>
+
+<span id="iframe-video-description" class="sr-only">
+This video explains how to remove @ngrx/store-devtools from an Angular application in production, ensuring that the development tools do not bloat the production bundle, with practical examples and best practices.
+</span>
 
 In production `@ngrx/store-devtools` should be completly removed from the bundle.  
 Let's see an example:

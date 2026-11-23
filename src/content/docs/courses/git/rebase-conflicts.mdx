@@ -14,16 +14,22 @@ video:
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
+		class="mx-auto mb-10"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/p8JFivti0hU?si=vZZG008EZV5I77n2"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="Git - rebase conflicts - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="Git - rebase conflicts - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video explains whether git rebase has more conflicts than git merge, detailing the differences between the two commands, how conflicts arise in each scenario, and best practices for managing and resolving these conflicts effectively.
+</span>
 
 I see many developers struggle with using `git rebase` and I think the main reason of the struggle is 
 caused by the conflicts that arise when rebasing.  

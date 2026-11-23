@@ -17,16 +17,22 @@ import {Sandpack} from '@codesandbox/sandpack-react';
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
+		class="mx-auto mb-10"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/BRJu0GGCBbI?si=-VoW_lVJD4pCuqBy"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="React Suspense - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="React Suspense - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video provides a comprehensive overview of React Suspense, explaining its purpose, how to implement it, and its benefits in managing asynchronous operations in React applications with practical examples.
+</span>
 
 כאשר חלק מה - component tree שלך צריך מידע אסינכרוני כדי להציג, תוכל לעטוף את ה - components האלו ב - `<Suspense>` component. זה יאפשר לך להציג `fallback` עד שתוכל להציג את ה - components האסינכרוניים.
 

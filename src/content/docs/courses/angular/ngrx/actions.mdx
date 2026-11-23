@@ -19,16 +19,23 @@ import {Sandpack} from '@codesandbox/sandpack-react';
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
-		width="560"
-		height="315"
-		src="https://www.youtube.com/embed/ODuOw8aLXWU?si=OBL56ltE3eDDpvo2"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-		allowFullScreen
+    class="mx-auto mb-10"
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/ODuOw8aLXWU?si=OBL56ltE3eDDpvo2"
+    title="Angular - NGRX Actions - video"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+    loading="lazy"
+    referrerPolicy="strict-origin-when-cross-origin"
+    aria-label="Angular - NGRX Actions - video"
+    aria-describedby="iframe-video-description"
 	/>
 </div>
+
+<span id="iframe-video-description" class="sr-only">
+This video explains how to use NGRX actions in Angular, including creating and dispatching actions, with practical examples and student exercises.
+</span>
 
 To study api's it's best to code it yourself, so let's go over the proper way to create actions using NGRX.  
 This lesson has 2 student execises, below each exercise you will find the solution for that exercise.

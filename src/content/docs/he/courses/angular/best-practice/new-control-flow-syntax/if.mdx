@@ -16,16 +16,22 @@ import {Sandpack} from '@codesandbox/sandpack-react';
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
+		class="mx-auto mb-10"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/qvwGt_v7a80?si=ckUwhXxlzagKFqHc"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="Angular - new @if control flow syntax - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="Angular - new @if control flow syntax - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video explains the new @if control flow syntax in Angular 17, highlighting its advantages over the traditional *ngIf directive, with practical examples and best practices.
+</span>
 
 הסינטקס החדש `@if` שניתן להשתמש בו כדי להחליף את `*ngIf` זמין מ-**Angular 17**.
 הסינטקס החדש הוא הרבה יותר נקי וקריא, וגם עוצמתי יותר.  

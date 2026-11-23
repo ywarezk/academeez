@@ -18,16 +18,23 @@ video:
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
-		width="560"
-		height="315"
-		src="https://www.youtube.com/embed/N3z4ivBJqr0?si=9O6KYcjxAiJEnYaG"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-		allowFullScreen
+    class="mx-auto mb-10"
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/N3z4ivBJqr0?si=9O6KYcjxAiJEnYaG"
+    title="Angular - NGRX State - video"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+    loading="lazy"
+    referrerPolicy="strict-origin-when-cross-origin"
+    aria-label="Angular - NGRX State - video"
+    aria-describedby="iframe-video-description"
 	/>
 </div>
+
+<span id="iframe-video-description" class="sr-only">
+This video explains the key facts about the state managed by NGRX in Angular applications, including its immutability, structure, and best practices for organization and serialization.
+</span>
 
 `NGRX` is a **STATE** management library, in this lesson we will learn the basic rules about the state that is managed by `NGRX`.
 

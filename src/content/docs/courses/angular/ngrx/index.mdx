@@ -13,16 +13,23 @@ video:
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
+		class="mx-auto mb-10"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/lb7HlCvH-is?si=OMPECy431afj2odR"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="Angular - NGRX introduction - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="Angular - NGRX introduction - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+
+<span id="iframe-video-description" class="sr-only">
+This video provides an introduction to NGRX, a Redux-inspired state management library for Angular, explaining its benefits and how it helps manage application state effectively.
+</span>
 
 [NGRX](https://www.ngrx.io) is the most popular state management library for Angular. It is inspired by Redux and provides a way to manage state in your Angular application.  
 Managing state means it will organize your data in memory, and provide a way to access and update it. When the data is updated the proper components will be updated as well.

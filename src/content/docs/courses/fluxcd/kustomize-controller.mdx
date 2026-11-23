@@ -23,16 +23,23 @@ video:
 
 <div class="not-content flex">
   <iframe
-    className="mx-auto"
+    class="mx-auto"
     width="560"
     height="315"
     src="https://www.youtube.com/embed/DqXDrAR4cJ4?si=CAm9-wSE9ZyjKBg5"
-    title="YouTube video player"
-    frameBorder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    title="FluxCD - kustomize-controller and Kustomization resource - video"    
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowFullScreen
+    loading="lazy"
+    referrerPolicy="strict-origin-when-cross-origin"
+    aria-label="FluxCD - kustomize-controller and Kustomization resource - video"
+    aria-describedby="iframe-video-description"
   />
 </div>
+
+<span id="iframe-video-description" class="sr-only">
+This video explains the kustomize-controller in FluxCD, detailing how it uses the Kustomization custom resource to manage and synchronize Kubernetes cluster state with resources defined in a kustomization.yaml file, including practical examples and best practices.
+</span>
 
 The [`kustomize-controller`](https://fluxcd.io/flux/components/kustomize/) is looking at a [`Kustomization`](https://fluxcd.io/flux/components/kustomize/kustomizations/) custom resource in the cluster (One entry point `Kustomization` was created on `flux bootstrap`).  
 `Kustomization` custom resource will contain a `sourceRef` and a `path` to a folder.

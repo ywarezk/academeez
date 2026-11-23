@@ -7,16 +7,22 @@ preview: false
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
-		width="560"
-		height="315"
-		src="https://www.youtube.com/watch?v=Ce6v5AG4uuc"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-		allowFullScreen
+    class="mx-auto mb-10"
+    width="560"
+    height="315"
+    src="https://www.youtube.com/watch?v=Ce6v5AG4uuc"
+    title="React Suspense and NextJS Streaming - video"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+    loading="lazy"
+    referrerPolicy="strict-origin-when-cross-origin"
+    aria-label="React Suspense and NextJS Streaming - video"
+    aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video explains how to use React Suspense for streaming data in NextJS applications, demonstrating techniques for improving performance and user experience with server-side rendering and progressive content loading.
+</span>
 
 In this lesson we will learn how the backend server deals with `<Suspense>` and how `<Suspense>` effects Server-Side-Rendering (SSR).
 

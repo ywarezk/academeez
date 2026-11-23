@@ -19,16 +19,22 @@ import {Sandpack} from '@codesandbox/sandpack-react';
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
-		width="560"
-		height="315"
-		src="https://www.youtube.com/embed/BRJu0GGCBbI?si=-VoW_lVJD4pCuqBy"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-		allowFullScreen
+    class="mx-auto mb-10"
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/BRJu0GGCBbI?si=-VoW_lVJD4pCuqBy"
+    title="React - Suspense - video"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+    loading="lazy"
+    referrerPolicy="strict-origin-when-cross-origin"
+    aria-label="React - Suspense - video"
+    aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video provides a comprehensive overview of React Suspense, explaining its purpose and how it can be used to manage asynchronous operations in React applications, with practical examples and best practices.
+</span>
 
 When a portion of your component tree  needs some async data to render, you can wrap these components with the `<Suspense>` component. This will allow you to display a `fallback` until you can render the async components.
 

@@ -17,16 +17,22 @@ video:
 
 <div class="not-content flex">
 	<iframe
-		className="mx-auto mb-10"
+		class="mx-auto mb-10"
 		width="560"
 		height="315"
 		src="https://www.youtube.com/embed/GB1GuPjHO64?si=WpyMu_3gpnnQCPvq"
-		title="YouTube video player"
-		frameBorder="0"
-		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		title="React course introduction - video"
+		allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowFullScreen
+		loading="lazy"
+		referrerPolicy="strict-origin-when-cross-origin"
+		aria-label="React course introduction - video"
+		aria-describedby="iframe-video-description"
 	/>
 </div>
+<span id="iframe-video-description" class="sr-only">
+This video provides an introduction to the React course, outlining what will be covered and the skills you will gain by completing the course.
+</span>
 
 [React](https://react.dev) is a UI library developed at Facebook to facilitate the creation of interactive, stateful & reusable UI components.  
 React is the most popular UI library and is heavily used in a lot of web applications and native mobile apps.
