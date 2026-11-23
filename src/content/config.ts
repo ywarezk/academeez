@@ -28,6 +28,7 @@ export const collections = {
       'pagesidebar.source': z.string(),
       "breadcrumbs.home": z.string(),
       "breadcrumbs.courses": z.string(),
+      "pagetitle.publish": z.string(),
     }),
   }) }),
   docs: defineCollection({

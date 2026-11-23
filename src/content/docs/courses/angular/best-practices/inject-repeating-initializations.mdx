@@ -1,0 +1,154 @@
+---
+title: "injection functions for repeating initializations"
+description: "You can use injection functions for repeating initializations. Let's see how it works with NGRX"
+publishDate: 2022-11-14
+authors:
+  - yariv-katz
+---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/AqXHyIfxC5U?si=t2QnnrvOWbzKm1x5"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+Lets give a simple use case of injection functions, and from that example try to understand a general best practice tip for using injection functions.
+
+## DI
+
+Usually we use the `DI` by injecting using the constructor.
+
+```typescript
+import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+
+@Component({...})
+export class AppComponent {
+	counter$ = this._store.select((state) => state.counter);
+	
+	constructor(private _store: Store) {}
+}
+``` 
+
+In this example we inject the `Store` using the constructor, and then use the `Store` service to select data from the `State`.
+
+## Problem
+
+What if we want to read that `counter` in many components, what if we want to do some repeating manipulation on that data?  
+Do we have to duplicate this logic along all the components?
+
+Sure we can use [NGRX Selectors](https://ngrx.io/guide/store/selectors) and RXJS pipe to make a custom RXJS operator to extract that data, but we would still have to DI the `Store` service and call the `store.pipe`.  
+
+In general with `NGRX` we have a lot of those initializers that subscribe to some section of the state.
+
+## Injection Functions
+
+When you have repeating initializations it's a good sign for using injection functions.  
+Another way you can ask the `DI` to give you the `Store` service is by using the `inject` function:
+
+```typescript
+import { Component, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
+
+@Component({...})
+export class AppComponent {
+	private _store: Store;
+	counter$ = this._store.select((state) => state.counter);
+	
+	constructor() {
+		this._store = inject(Store);
+	}
+}
+```
+
+In fact you can call the inject function from an [injection context](https://angular.io/guide/dependency-injection-context) which includes those class props like `counter$`.  
+
+With `injection function` the code above can turn to:
+
+<div className="mt-5 not-content">
+<Sandpack 
+	client:load
+	customSetup={{ 
+		dependencies: { 
+			"@ngrx/store": "^16.3.0",
+			"@angular/core": "^16.2.0",
+			"@angular/platform-browser": "^16.2.0",
+			"@angular/platform-browser-dynamic": "^16.2.0",
+			"@angular/common": "^16.2.0",
+			"@angular/compiler": "^16.2.0"
+		}
+	}}
+	
+	files={{
+		"src/app/counter.selector.ts": {
+			readOnly: true,	
+			code: `import { inject } from '@angular/core';
+import { Store } from '@ngrx/store';
+
+export function useCounter() {
+	return inject(Store).select((state) => state.counter);
+}
+			`
+		},
+		"src/app/app.module.ts": {
+			hidden: true,
+			readOnly: true,
+			code: `import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+
+import { AppComponent } from "./app.component";
+import { StoreModule } from "@ngrx/store";
+
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, StoreModule.forRoot({
+		counter: () => 43
+	}, {})],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}`
+		},
+		"src/app/app.component.ts": {
+			readOnly: true,
+			code: `import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { useCounter } from './counter.selector';
+
+
+@Component({
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: "app-root",
+	template: \`<h1>{{ counter$ | async }}</h1>\`
+})
+export class AppComponent {
+	counter$ = useCounter();	
+}`
+		}
+	}}
+	
+	template="angular" 
+/>
+</div>
+
+The code is not only shorter, simpler, and cleaner, but also it makes your component easier to test, and easier to extend.  
+You can use more logic to the `useCounter` if you need to manipulate the data in some way, and you can also use the same technique if for example you need initialization of server query for a component.
+
+## Best Practice
+
+So to summarize, if you have a repeating prop initializers in your class like: 
+- server calls
+- service usage
+- grab of data from ngrx or elsewhere
+
+instead of duplicating the logic you can use a reusable function that is using the `inject` function to inject the services.
+
