@@ -1,0 +1,634 @@
+---
+title: Terraform GCP Permissions, Roles, Groups, Impersonation
+description: המלצות בתחום האבטחה, ואיך לממש באמצעות Terraform/Tofu את ההרשאות לצוותי הפיתוח
+publishDate: 2024-12-23
+authors:
+  - yariv-katz
+sidebar:
+  order: 7
+---
+
+בשיעור זה נלמד איך לנהל את הרשאות הצוותים שלנו בצורה נכונה.
+אנחנו נתמקד במספר הנחיות וטיפים לעבודה נכונה:
+- **קבוצות** - במקום להתייחס להרשאות ברמה אינדיבידואלית, אנחנו נסדר את המפתחים בקבוצות ונדאג להרשאות ברמת הקבוצה.
+- **מינימום הרשאות** - נדאג שכל אחד מהיישויות שלנו יהיה לו את מינימום ההרשאות שהוא צריך כדי לבצע את תפקידו.
+- **Impersonation (התחזות)** - באמצעות התחזות משתמש יכול ליצור משאבי ענן כאילו הוא Service Account ולא המשתמש עצמו.
+- **טוקנים קצרי מועד** - את הטוקנים להתחזות נדאג ליצור לתקפות קצרת מועד להגברת האבטחה. ואת זאת נגדיר בצורה דקלרטיבית בפרוייקט ה - Terraform שלנו.
+- **הימנעות משימוש ב - Basic Roles - הרשאות אלה הן מתירניים מדי ומומלץ לא להשתמש בהן.
+
+נלמד להגדיר את הפרוייקט Terraform שלנו ככה שכללים אלה יוגדרו בפרוייקט באופן דלרטיבי, נלמד גם איך להגדיר בפרוייקט התחזות ל - Service Account מתאים תוך כדי יצירת טוקנים קצרי מועד.
+טיפול נכון בהרשאות יגביר את האבטחה בענן שלנו ובנוסף יתן לנו יתרונות נוספים:
+- למשתמשים לא ינתן הרשאות ליצירת משאבים בענן (רק ל - Service Accounts ספציפיים זה ינתן) מה שאומר שהם לא יוכלו ללכת ל Web UI של GCP וליצור משאבים משם, כלומר זה יחייב אותם ליצור משאבי ענן על ידי שימוש בפרוייקט ה - Terraform ובצורה נכונה , דקלרטיבית, ומתועדת ב Version control
+- הנזק שמפתח יכול לעשות מצומצם על פי  ההרשאות שלו שהן מינימליות לביצוע תפקידו
+- אבטחה טובה יותר וצמצום ההרשאות למינימום יצמצם את הנזק במידה וחשבון של מפתח נחשף - בנוסף למפתחים לא יהיה הרשאות ליצירת משאבי ענן (זה ינתן רק ל Service Accounts ) אז לא יהיה ניתן להשתמש בחשבון הנחשף ליצירת משאבי ענן.
+- מפתחים יהיה את ההרשאות התחזות המתאימות כך שיוכלו ליצור משאבי ענן על ידי התחזות ולא יהיו תלויים באופן מוחלט בצוותי ה - DevOps - תסביך סינדרלה שבו הכל תלוי במפתח אחד שקורע את התחת כדי לנסות לענות על המון בקשות של הצוותים.
+
+בואו נלמד איך מנהלים הרשאות בצורה נכונה בפרוייקט Terragrunt.
+
+## Principals (ישויות)
+
+ב- GCP אנחנו מביאים הרשאות [לישויות](https://cloud.google.com/iam/docs/overview#concepts_related_identity) בקורס זה אנחנו נתמקד ב 3 ישויות:
+- User (משתמש)
+- Group (קבוצה) - שיכולה להכיל ישויות נוספות, ישות יכולה להיות במספר קבוצות במקביל
+- Service Account - מייצג ישות שהיא לא אדם, לדוגמא היא יכולה לייצג מכונה וירטואלית ולתת הרשאות מתאימות לשרת שבנינו שרץ על מכונה וירטואלית
+
+על ידי נתינת הרשאות לישויות אלה הן יוכלו לבצע פעולות שונות ב - GCP.
+אנחנו נמנע מלתת הרשאות למשתמש אינדיבידואלי, ופשוט נשים את המפתחים בארגון שלנו בקבוצות וניתן הרשאות לקבוצות, מפתח שנמצא בקבוצה יורש את ההרשאות שניתנות לקבוצה.
+בדוגמאת הקוד שניתן ניצור 3 קבוצות:
+- **Admin** - משתמשי קבוצה זו יוכלו להתחזות ל - Service Account שיוכל ליצור קבוצות, לשים משתמשים בקבוצות, לתת הרשאות לקבוצות, ליצור Service Accounts ולתת להם הרשאות.
+- **DevOps** - מפתחי ה - DevOps בארגון יהיו שייכים לקבוצה זו, הם יוכלו להתחזות ל - Service Account שיתן להם הרשאות ליצירת משאבים משותפים לכלל הפרוייקטים ושליטה בסביבות prod ו - non-prod.
+- **Developers** - קבוצה זו יהיה גישה לסביבת non-prod בלבד.
+
+אנחנו נבנה את הטמפלט לקבוצות ולהרשאות ויתכן שמהלך הקורס נרחיב וניתן עוד הרשאות ועוד קבוצות על פי הצורך.
+
+את מנגנוני ההרשאות בשיעור זה ניצור בתיקייה: `iac/gcp/tofu/iam` בתוך תיקייה זו ניצור תיקייה שנקראת `groups` שבה אנחנו נגדיר את הקבוצות השונות.
+עד עתה כאשר הרצנו את קוד ה- IAC יצרנו משאבים ב - GCP על ידי שימוש ב - Google Provider, אותו ה provider הצריך מאיתנו הזדהות עם GCP, ומה שעשינו זה הרצנו את הפקודה: `gcloud auth application-default login` וכאשר נפתח הדפדפן הזדהנו בתור היוזר שלנו בענן
+ואז (בהנחה שליוזר שלנו היו את ההרשאות המתאימות) יצרנו משאבים ב- GCP באמצעות הזדהות עם היוזר שלנו.
+
+הקפדה על הרגלי אבטחה נכונים תחייב אותנו לעבוד בצורה שונה, אחרי השיעור הזה במידה ומפתח ינסה ליצור משאבי ענן על ידי שימוש ביוזר שלו כמו מקודם הוא יכשל (ליוזר שלו לא יהיה את ההרשאות המספקות), למעשה אף יוזר לא יוכל באמצעות הזדהות כיוזר ליצור משאבי ענן.
+חברי הצוות ישוייכו לקבוצות, כאשר משתמש נמצא בקבוצה הוא ירש את כל ההרשאות של אותה קבוצה.
+אז תיאורטית במידה וניתן לקבוצה הרשאות ליצור משאבי ענן, אז חברי הצוות המשוייכים לקבוצה יוכלו ליצור משאבי ענן, אבל זה לא יהיה המצב, גם לקבוצות השונות לא יהיו הרשאות ליצירת משאבי ענן.
+היישויות היחידות שינתן להן ההרשאות ליצירת משאבי ענן הן ישויות מסוג Service Accounts (שימו לב לשימוש ברבים, יהיו לנו מספר Service Accounts כאלה, ולא רק אחד כמו שראיתי בהרבה ארגונים שנותנים הרשאות כל יכול לישות service account אחד פעולה שמאוד לא מומלצת).
+אם כך אז איך אנחנו מבצעים הזדהות כ Service Account כך שנוכל ליצור משאבים? אנחנו משתמשים בטריק שנקרא התחזות או Impersonation.
+
+## התחזות - Impersonation
+
+[התחזות - Impersonation](https://cloud.google.com/iam/docs/service-account-impersonation) היא כאשר ישות מזוהה כמו user או service account, יוצרים טוקן זמני כדי לבצע פעולה בשם Service Account אחר, הפעולה מזוהה עם Service Account אחר עם כל ההרשאות של אותו ה Service Account.
+
+Impersonation in GCP is similar to AWS [AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html) and Azure [On-Behalf-Of](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-on-behalf-of-flow) flow.
+Using the impersonation tricks we will create several service accounts with different gcp resource creation privilages, we can then give impersonation permissions to our groups to impersonate certain service accounts according to the permissions we want to grant the team memebers in the group.
+
+So a user is can not run our terraform code, he is placed in a group so he is getting more permissions but even with those permissions he can't directly run 
+the terraform code, but the group might contains permissions to impersonate certain service accounts that are dedicated to IAC, and then using impersonation the user can create the cloud resources.
+Now that sounds really complicated right? 
+Does that mean every time I want to run terraform code I need to remember which service account is allowed to run that code? 
+Does it mean I need to start generating tokens to impersonate the service account?
+No, and it is actually simpler than you think. 
+In the code itself we will define in each folder which service account should be impersonated to and the impersonation will happen automatically.
+
+## Why do we need impersonation
+
+If we are using impersonation it means the GCP user is not directly creating the resources, instead the user is impersonating a service account that has the proper permissions to create the resources and then the service account will create those resources.
+This is a good practice because:
+
+* Enhanced security - we will follow the principle of least privilage, every user will get the minimum amount of permissions required.
+If that user wants to create resources he will have to generate a short lived token to impersonate the service account
+which will require the user to authenticate.
+If the user account is compromised the attacker will not be able to create resources in GCP.
+* Better CI Integration - Usually you assign service account to the CI and you can easily add impersonation to the CI by assigning him to the right group
+* Better audit logs and breadcrumbs - you can easily track resource generation which will help you manage vulnerabilities and security breaches.
+* Better permissions management - It's easier to understand the teams you have and which permissions each group has, it allows you for better management, better organization, better control on which resources can be created by who, which gives you more control on your cloud and the amount of resources that can be generated by the cloud.
+* Better damage control - if a user account is compromised you can easily find out which service account goes berserk and understand which group is compromised and easily sandbox the problem and revoke permission on that service account.
+
+## Service, Permissions, Roles, Predefined roles, Basic Roles
+
+Before we start coding let's cover some of the terminology here
+
+### Service
+
+In GCP a service is a resource that is managed by GCP, for example a GKE cluster, a GCS bucket, a Pub/Sub topic, a BigQuery dataset, etc.
+A service has a name, for example: **Kubernetes Engine**, it has an api: `container.googleapis.com`, and it has a service permission prefix: `container` (the prefix of the api).
+You can use find the api by the service name [here](https://cloud.google.com/apis?hl=en) 
+
+### Permissions
+
+Based on the service that we want to give certain permission to we can have the list of permissions that are associated with that service.
+You can find the permissions [here](https://cloud.google.com/iam/docs/permissions-reference) and you find the relavant ones by searching using the service permission prefix.
+For example if I want to give permissions on **Kubernetes Engine** I will find the api `container.googleapis.com` and I will search using the permission prefix: `container.`
+And looking at the first of the list we have the `container.apiServices.create` and on the right you have the list of roles that include this permissions.
+
+### Roles
+
+Roles are a group of permissions, you can create custom roles, predefined roles, or use basic roles (which are not recommended).
+
+### Predefined roles
+
+Predefined roles are roles that are created and maintained by Google, they are roles that are created for a specific service and they give you a logical permission on that service.
+In our course we will use predefined roles only.
+The best place to search for the proper predefined role is the [IAM roles](https://cloud.google.com/iam/docs/understanding-roles#predefined) page.
+
+### Basic roles
+
+Basic roles are highly permissive roles that existed prior to the introduction of IAM, we recommend to avoid using these roles and instead use the predefined roles or custom roles.
+
+### Custom roles
+
+Custom roles are roles that you can create, you can create a role with a specific set of permissions and assign that role to a user, group, or service account.
+
+## Root Terragrunt
+
+At the moment our root Terragrunt looks like [this](https://github.com/ywarezk/academeez-k8s-flux/blob/lesson-06/iac/gcp/tofu/terragrunt.hcl): 
+
+```hcl
+...
+
+generate "provider" {
+  path      = "provider.tf"
+  if_exists = "overwrite"
+  contents  = <<EOF
+provider "google" {	
+	region  = "${local.region}"
+	billing_project = "${local.billing_project}"
+	user_project_override = true
+}
+EOF
+}
+```
+
+What we are doing is defining the google provider without any special authentication configurations, which means every GCP resource we create now will be created by our user.
+Things are going to change, what we would like to do is enforce service account impersonation.
+So we will change this logic to this:
+
+```hcl
+locals {
+  sa_vars         = try(yamldecode(file(find_in_parent_folders("sa.yaml"))), {"email": ""})
+  ...
+}
+
+generate "provider" {  
+  path      = "provider.tf"
+  if_exists = "overwrite"
+  contents  = <<EOF
+# create condition based on the existence of the service account
+
+%{ if length(local.sa_vars.email) > 0 }
+provider "google" {
+  alias = "impersonation"
+  user_project_override = true
+  scopes = [
+    "https://www.googleapis.com/auth/cloud-platform",
+    "https://www.googleapis.com/auth/userinfo.email",
+  ]
+
+}
+
+#receive short-lived access token
+data "google_service_account_access_token" "default" {
+  provider               = google.impersonation
+  target_service_account = "${local.sa_vars.email}"
+  scopes                 = ["cloud-platform", "userinfo-email"]
+  lifetime               = "3600s"
+}
+%{ endif }
+  
+provider "google" {	
+	region  = "${local.region}"
+	billing_project = "${local.billing_project}"  
+	user_project_override = true
+%{ if length(local.sa_vars.email) > 0 }
+  access_token    = data.google_service_account_access_token.default.access_token
+%{ endif }
+}
+
+provider "google-beta" {
+  region  = "${local.region}"
+  user_project_override = true
+  billing_project = "${local.billing_project}"
+%{ if length(local.sa_vars.email) > 0 }
+  access_token    = data.google_service_account_access_token.default.access_token
+%{ endif }
+}
+EOF
+}
+```
+
+The logic here is a bit complex so let's try and break it down:
+- `sa_vars` is a local variable that will try to find the first `sa.yaml` file in the parent folders, if it finds it it will decode the yaml file and extract the email of the service account.
+the `sa.yaml` file represents the service account that we want to impersonate to.
+this means every section can define different service account that is in charge of creating things in that section.
+- We are creating a first google provider with `alias = "impersonation"`, this provider will authenticate using our user
+- Using a data block we are creating a short lived token for the service account that we want to impersonate to.
+- Using that token we can now create `google` and `google-beta` providers that will authenticate using the service account token.
+
+Now every place we want impersonation we can simply add a file called `sa.yaml`:
+
+```yaml title="sa.yaml"
+email: some-service-account-email@that-we-will-impersonate-to.com
+```
+
+If the file `sa.yaml` is not found, there is a fallback to simply use the user permissions without impersonation.
+
+The logic here is the engine behind how we are going to deal with authentication and permissions in our Terragrunt project.
+
+## IAM Project
+
+All the service accounts that can create cloud resources and that we can impersonate them, will belong to a new project we are going to create `academeez-k8s-iam`.
+We will also place that project in an `iam` folder. Let's create the project and folder:
+
+Creating the folder:
+
+```hcl title="iac/gcp/tofu/iam/folder/terragrunt.hcl"
+include "root" {
+  path = find_in_parent_folders()
+}
+
+include "folder" {
+  path = "${dirname(find_in_parent_folders())}/_env/folder.hcl"
+}
+
+# since this folder is under the root folder we will use dependency to get the parent folder
+dependency "root_folder" {
+  config_path = "../../common/folders/root"
+}
+
+inputs = {
+  parent = dependency.root_folder.outputs.id
+  names  = ["iam"]
+}
+```
+
+We already created a folder in previous lessons, we are simply using the same logic to create a new folder called `iam`.
+
+Now let's create the project:
+
+```hcl title="iac/gcp/tofu/iam/project/terragrunt.hcl"
+include "root" {
+  path = find_in_parent_folders()
+}
+
+include "project" {
+  path = "${dirname(find_in_parent_folders())}/_env/project.hcl"
+}
+
+# Grab the iam folder
+dependency "iam_folder" {
+  config_path = "../folder"
+}
+
+inputs = {
+  folder_id = dependency.iam_folder.outputs.id
+  name      = "academeez-k8s-iam"
+}
+```
+
+We are using the `_env/project.hcl` file to create the project named `academeez-k8s-iam` We are also grabbing the folder we just created to
+parent that folder.
+
+Note that until now we did not place any `sa.yaml` file so the project and folder will be created with our user permissions, without impersonation.
+
+You can create the project and folder by running `terragrunt run-all apply` in the `iac/gcp/tofu/iam` folder.
+
+## Admin Group
+
+We are going to place our team members in different groups, you create different groups with different permissions for each group according to your organization needs.
+Each team member can be placed in multiple groups, we create the groups according to some logic and we keep the permissions of that group
+as minimal as possible in accordance with the principle of least privilege.
+
+The first group we will create is the **Admin** group. In terms of Terraform and GCP resources the members of the **Admin** group
+will only be able to create GCP resources by impersonating the admin service account (members of the group will have permission to impersonate the admin service account), the admin service account will have the following permissions:
+- permission to create/edit/delete groups and assign members to groups
+- permission to assign roles to groups and service accounts
+- permission to create service accounts in the iam project we just created
+
+### Admin service account
+
+We will start by creating the admin service account and giving that service account the proper permissions, after we do that we can
+start using that admin service account instead of our user.
+
+Let's create a helper function that will help us create service accounts:
+
+```hcl title="iac/gcp/tofu/_env/service_account.hcl"
+terraform {
+  source = "tfr:///terraform-google-modules/service-accounts/google?version=4.4.3"
+}
+
+inputs = {
+  prefix = "az-k8s"
+}
+```
+
+Same drill like our other functions, we use `terraform-google-modules` whenever we can, this time to create service accounts.
+Let's use this bad boy to create the admin service account.
+
+```hcl title="iac/gcp/tofu/iam/service-accounts/admin/terragrunt.hcl"
+include "root" {
+  path = find_in_parent_folders()
+}
+
+include "sa" {
+  path = "${dirname(find_in_parent_folders())}/_env/service-account.hcl"
+}
+
+dependency "iam_project" {
+  config_path = "../../project"
+}
+
+inputs = {
+  project_id = dependency.iam_project.outputs.project_id
+	names = ["admin"]
+}
+```
+
+Notice that we are grabbing as a dependency the iam project we created, all the service accounts that are terraform related and will be used as gcp resource creation service accounts
+will belong to the iam project we created.
+Feel free to create the service account by running: `terragrunt apply` in the `iac/gcp/tofu/iam/service-accounts/admin` folder.
+
+### Creating the Admin Group
+
+Everyone in the Admin group will be able to impersonate the admin service account, and the admin service account will have 
+permissions to create groups, service accounts and assign roles to those groups and service accounts.
+Usually that admin group will contain very little people, usually the devops team leader, the security team leader, and the cloud team leader.
+Not every devops will need to be a team member in this group.
+
+Let's first start by creating the Admin group, we will create another function to help us create groups in an instance:
+
+```hcl title="iac/gcp/tofu/_env/group.hcl"
+locals {
+	common_vars    = yamldecode(file(find_in_parent_folders("common_vars.yaml")))
+}
+
+terraform {
+  source = "tfr:///terraform-google-modules/group/google?version=0.7.0"
+}
+
+inputs = {	
+	owners = ["academeez-k8s-flux-admin-temp@academeez.com"]
+	customer_id = local.common_vars.customer_id
+}
+```
+
+We are using the `terraform-google-modules` to create the group.
+We need to link the group to an organization or domain, so we need to supply the `customer_id` you can retrieve the `customer_id` by running the command:
+
+```bash
+gcloud organizations list
+```
+
+We added that information to the `common_vars.yaml` file, let's create the Admin group:
+
+```hcl title="iac/gcp/tofu/iam/groups/admin/terragrunt.hcl"
+include "root" {
+  path = find_in_parent_folders()
+}
+
+include "admin_group" {
+  path = "${dirname(find_in_parent_folders())}/_env/group.hcl"
+}
+
+inputs = {
+  id = "az-k8s-flux-admin@academeez.com"
+  display_name = "academeez-k8s-flux-admin"
+  description = "Academeez k8s flux admin group"
+  owners = ["xxxxx@academeez.com"]  
+}
+```
+
+Before we can `terragrunt apply` this we are still creating resources from our user, so we will need to make sure that our user
+can create groups. so other then the proper permissions we will also need to make sure that our user is assigned the `Groups Admin` under `admin.google.com` (look for Account -> Admin roles -> Groups Admin).
+
+After you make sure that your user has the proper permissions you can run `terragrunt apply` in the `iac/gcp/tofu/iam/groups/admin` folder.
+
+### Admin service account roles
+
+Let's provide the admin service account with the proper roles, we will use predefined roles only.
+We do not recommend using basic roles like `roles/owner` or `roles/editor` because they are too permissive, instead we will use predefined roles that are more granular and give the minimum permissions required (custom roles can be used as well but we will not use them in this course).
+
+Here is the list of roles that we will give this service account and the reason why those roles are needed:
+- roles/serviceusage.serviceUsageConsumer - we will give this permission on the billing project since this is required in order to enable the usage the Cloud Identity API for creating groups.
+- roles/resourcemanager.folderAdmin - We will give this role on the root folder where all the resources we create are under (that folder is named: **academeez-k8s-flux**).
+We need this role so we can provide roles for the other service accounts that will be created, this gives the admin service account the ability to assign roles (under the folder) for other service accounts.
+- roles/iam.serviceAccountAdmin - this will allow us to create service accounts in the iam project (this is only needed in the iam project where the service account will be able to create other service accounts).
+- roles/iam.serviceAccountTokenCreator - we will place this role on the admin service account so the admin group can impersonate that service account (this will be added later after the group is created).
+
+Notice that we are not only giving the minimal permissions, we are also carfully assigning them to the minimal resource that requires them, for example I won't place the role `roles/iam.serviceAccountAdmin` on the organization allowing to create service accounts everywhere,
+rather I will place them only on the project where the service account will be able to create other service accounts (the IAM project).
+I will not place the role `roles/iam.serviceAccountTokenCreator` on the project or organization (allowing us to impersonate all service accounts in the project or organization - a very powerful role and a common mistake that is done often)
+rather I will place it only on the service account that I want to impersonate to.
+Minimum roles assigned to the minimal resources that require them. In addition we will often use the `*_binding` roles which will guarantee our full control to where certain roles are assigned (more on this later).
+
+
+We will create a `roles/admin` folder and create the following `terragrunt.hcl` file:
+
+```hcl title="iac/gcp/tofu/iam/roles/admin/terragrunt.hcl"
+locals {
+	billing_vars    = yamldecode(file(find_in_parent_folders("billing_vars.yaml")))
+	billing_project = local.billing_vars.billing_project
+}
+
+include "root" {
+  path = find_in_parent_folders()
+}
+
+dependency "sa" {
+	config_path = "../../service-accounts/admin"	
+}
+
+dependency "admin_group" {
+	config_path = "../../groups/admin"
+}
+
+dependency "root_folder" {
+	config_path = "${dirname(find_in_parent_folders())}/common/folders/root"
+}
+
+dependency "iam_project" {
+	config_path = "../../project"
+}
+
+terraform {
+	source = "./main.tf"
+}
+
+inputs = {
+	sa = dependency.sa.outputs
+	root_folder = dependency.root_folder.outputs.id
+	billing_project = local.billing_project
+	iam_project = dependency.iam_project.outputs.project_id
+	admin_group = dependency.admin_group.outputs.id
+}
+```
+
+We are grabbing a few dependencies and passing them along to the `main.tf` file that will create the roles.
+We are grabbing the `iam` project, the root folder of the entire course resources, the admin group, and the admin service account.
+We will create a `main.tf` in the same folder that will assign all the proper roles:
+
+```hcl title="iac/gcp/tofu/iam/roles/admin/main.tf"
+variable "sa" {
+	type = any
+	description = "Service account email"
+}
+
+variable "root_folder" {
+	type = string
+	description = "Root folder id"
+}
+
+variable "billing_project" {
+	type = string
+	description = "Billing project id"
+}
+
+variable "iam_project" {
+	type = string
+	description = "IAM project id"
+}
+
+variable "admin_group" {
+	type = string
+	description = "Admin group id"
+}
+
+resource "google_folder_iam_binding" "admin" {
+	folder = var.root_folder
+	role = "roles/resourcemanager.folderAdmin"
+	members = [
+		"serviceAccount:${var.sa.email}"
+	]
+}
+
+# project iam member
+resource "google_project_iam_member" "admin" {
+	project = var.billing_project
+	role = "roles/serviceusage.serviceUsageConsumer"
+	member = "serviceAccount:${var.sa.email}"
+}
+
+resource "google_project_iam_binding" "create_sa" {
+	project = var.iam_project
+	role = "roles/iam.serviceAccountAdmin"
+	members = [
+		"serviceAccount:${var.sa.email}"
+	]
+}
+
+# members of the admin group can impersonate the service account
+resource "google_service_account_iam_binding" "impersonate" {
+	service_account_id = var.sa.service_account.name
+	role = "roles/iam.serviceAccountTokenCreator"
+	members = [
+		"group:${var.admin_group}"
+	]
+}
+```
+
+we set our admin service account to be `resourcemanager.folderAdmin` so our admin service account will be able to control iam permission on the course resources.
+Notice that we are very careful and setting it on the root folder of the course and not on the organization.
+You can also notice that we leverage the `*_binding` roles which means that role is binded to the list of members in that resource only
+which means no one else can be the `folderAdmin` this is a great way we can add more security and control on those important roles
+which we would probably won't want to assign again (they are perfect for being binded).
+the role `roles/serviceusage.serviceUsageConsumer` is needed for some api's we will need to use when impersonating the service account.
+`serviceAccountAdmin` will allow us to create service accounts in the iam project (notice that again we are limiting this powerful role to our iam project only and not on the organization).
+`serviceAccountTokenCreator` will allow the admin group to impersonate the service account (notice that this is placed on the service account iam - which means we can only impersonate the admin service account, if it was placed in an organization it basically means we can impersonate all service accounts which is a big security problem).
+
+After we create those roles using `terragrunt apply` we can decide that everything under the folder: `iac/gcp/tofu/iam` we be created by the admin service account, we can do that by creating a `sa.yaml` file in the `iac/gcp/tofu/iam` folder:
+
+```yaml title="sa.yaml"
+email: az-k8s-flux-admin@academeez-k8s-iam-temp-c55b.iam.gserviceaccount.com
+```
+
+Now every thing we create we will first impersonate the service account we created, and they will be created by the admin service account.
+The roles we define to the service accounts in our `iam` are now carved in stone and we will probably add more permissions down the road.
+But now every permission we will need we can add it here and have a track on all the permissions that are required for every service in GCP we will use.
+
+## DevOps Group
+
+We will create another group called `DevOps` the members of that group will control the common resources as well as the environments.
+Later we might  create another group called `Developers` that will only control the non-prod environments.
+
+Since it's pretty repetitive and similar to the flow we did with the admin group we will do it quickly.
+First we will create the Group, so we will create the file: `iac/gcp/tofu/iam/groups/devops/terragrunt.hcl`:
+
+```hcl title="iac/gcp/tofu/iam/groups/devops/terragrunt.hcl"
+include "root" {
+  path = find_in_parent_folders()
+}
+
+include "devops_group" {
+  path = "${dirname(find_in_parent_folders())}/_env/group.hcl"
+}
+
+inputs = {
+  id = "az-k8s-flux-devops@academeez.com"
+  display_name = "academeez-k8s-flux-devops"
+  description = "devops group"
+  owners = []  
+}
+```
+
+this will create the group, we will also need to create the service account for the devops group, so we will create the file: `iac/gcp/tofu/iam/service-accounts/devops/terragrunt.hcl`:
+
+```hcl title="iac/gcp/tofu/iam/service-accounts/devops/terragrunt.hcl"
+include "root" {
+  path = find_in_parent_folders()
+}
+
+include "sa" {
+  path = "${dirname(find_in_parent_folders())}/_env/service-account.hcl"
+}
+
+dependency "iam_project" {
+  config_path = "../../project"
+}
+
+inputs = {
+  project_id = dependency.iam_project.outputs.project_id
+	names = ["devops"]
+}
+```
+
+and we will create the roles for the devops service account in the `roles/devops` folder:
+
+```hcl title="iac/gcp/tofu/iam/roles/devops/terragrunt.hcl"
+include "root" {
+  path = find_in_parent_folders()
+}
+
+dependency "sa" {
+	config_path = "../../service-accounts/devops"	
+}
+
+dependency "devops_group" {
+	config_path = "../../groups/devops"
+}
+
+terraform {
+	source = "./main.tf"
+}
+
+inputs = {
+	sa = dependency.sa.outputs
+	devops_group = dependency.devops_group.outputs.id
+}
+```
+
+We are grabbing the devops group and service account and passing them to the `main.tf` file that will create the roles:
+
+```hcl title="iac/gcp/tofu/iam/roles/devops/main.tf"
+variable "sa" {
+	type = any
+	description = "Service account email"
+}
+
+variable "devops_group" {
+	type = string
+	description = "devops group id"
+}
+
+# members of the devops group can impersonate the service account
+resource "google_service_account_iam_binding" "impersonate" {
+	service_account_id = var.sa.service_account.name
+	role = "roles/iam.serviceAccountTokenCreator"
+	members = [
+		"group:${var.devops_group}"
+	]
+}
+```
+
+We are not adding to much roles here, it is probably best to add them as we go along in this course.
+But what we can do is assing the common `iac/gcp/tofu/common` to the devops group, by creating `sa.yaml` file in the `iac/gcp/tofu/common` folder:
+
+```hcl title="iac/gcp/tofu/common/sa.yaml"
+email: az-k8s-flux-devops@academeez-k8s-iam-temp-c55b.iam.gserviceaccount.com
+```
+
+Now every resource we create in the `common` folder will be created by the devops service account.
+
+## Conclusion
+
+We learned how to manage permissions properly in our Terragrunt project, and in our entire organization.
+We learned about placing our users in groups and giving permissions to those group, the groups do not have a direct access to create resources in gcp but some of the groups might have permissions
+to impersonate service accounts that can create resources.
+We focused on best practice and security and gave minimal permissions to the groups and service accounts, focusing on PoLP - Principle of Least Privilege.
+This is not the end of the `iam` folder we created, as we move along we might create more groups or modify the permissions.
+And of course each organization can decide on groups and permissions according to their own needs, so take this as an inspiration
+
