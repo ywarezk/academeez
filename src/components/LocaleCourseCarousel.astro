@@ -10,6 +10,8 @@ interface Props {
 let locale = Astro.currentLocale
 if (locale === 'en' || !locale) {
 	locale = ''
+} else {
+  locale = `/${locale}`
 }
 ---
 
