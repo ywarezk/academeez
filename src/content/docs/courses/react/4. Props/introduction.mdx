@@ -1,0 +1,122 @@
+---
+title: 4.1 Props Introduction
+description: Passing data from parent to child component
+publishDate: 2025-08-01
+authors:
+  - yariv-katz
+sidebar:
+  order: 5
+---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+Props give us the ability to pass data from a parent component to a child component.  
+Let's take a look at a few examples...
+
+## Passing props to DOM Elements
+
+In the following example we are creating a React component that is passing props to `<img>` which will transform to an image DOM element ([`HTMLImageElement`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement))
+
+<div className="mt-5 not-content">
+<Sandpack 
+	client:load
+	files={{
+		"App.js": {
+			readOnly: false,
+			code: `
+export default function App() {
+  return (
+		<img 
+        height="50"
+        style={{
+          backgroundColor: 'red',
+          opacity: 0.5,
+        }}
+        onClick={() => {
+          console.log('hello');
+        }}
+        src="https://images.stockcake.com/public/1/7/e/17e62d84-37f3-42b2-af37-c08c7beba06b_large/puppy-with-toy-stockcake.jpg"
+		/>
+  )
+}`
+		}		
+	}}
+	template="react" 
+/>
+</div>
+
+Props can give values to DOM elements properties.
+In this example we are populating the `height`, `style`, `onClick`, and `src` properties of the image DOM element.
+
+## Passing props to React components
+
+In the following example we have 2 components `<Parent>` and `<Child>`.  
+The `<Parent>` is placing the `<Child>` component and passing props to that `<Child>`.  
+The `<Child>` is using those props and showing them on screen.
+
+<div className="mt-5 not-content">
+<Sandpack 
+	client:load
+	files={{
+		"App.js": {
+			readOnly: false,
+			code: `
+import Child from './Child';
+			
+export default function Parent() {
+  return (
+		<Child name="Academeez" age={ 5 } />
+  )
+}`
+		},
+		"Child.js": {
+			readOnly: false,
+			code: `
+export default function Child(props) {
+	return (
+		<div>
+			<h1>My name is {props.name}</h1>
+			<p>My age is {props.age}</p>
+		</div>
+	)
+}
+			`	
+		}
+	}}
+	template="react" 
+/>
+</div>
+
+Since component are functions, those props are just the arguments passed to that function, only they are wrapped in a single object argument called `props`.  
+This means that if we are passing `<Child name="Academeez" age={ 5 } />` than the `<Child>` function:
+
+```js
+export default function Child(props) {
+	...
+}
+```
+
+will get a single argument (usually we name that `props` but it can be named differently) which looks like the following `Object`: `{name: 'Academeez', age: 5}`.
+
+We can also use [`destructuring`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring) to grab those props like so:
+
+```js
+export default function Child({name, age}) {
+	return (
+		<div>
+			<h1>My name is {name}</h1>
+			<p>My age is {age}</p>
+		</div>
+	)
+}
+```
+
+## Summary
+
+In this introduction to `Props` we learned that `Props` is a mechanism for passing data from parent to child components in React.  
+We can either use it to set properties on Dom Elements or to pass data to React components.  
+In the following chapter about `Props` we will have a dedicated lessons about:
+- Passing props to Dom Elements
+- Passing props to React components
+- Props and TypeScript
+- Best practices and common patterns with props
