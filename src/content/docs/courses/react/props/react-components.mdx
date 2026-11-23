@@ -1,0 +1,275 @@
+---
+title: Props on React Components
+description: In this lesson we will learn about passing props to React Components
+publishDate: 2025-11-10
+preview: false
+authors:
+  - yariv-katz
+sidebar:
+  hidden: true
+  order: 7
+  label: 4.3 Props on React Components
+---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+When we are thinking about creating a React Component, ideally we want that component to be written in a way so it can be reused throughout our application.
+To achieve that we often need to pass data from parent component to the child component.
+In this lesson we will discuss about passing props to child components.
+
+## Simple example - Avatar
+
+In the following example we are creating an **Avatar** component that will get from the parent data about a user and will display an avatar of that user.
+
+<div className="mt-5 not-content">
+<Sandpack 
+	client:load
+	files={{
+    "Avatar.js": {
+      code: `
+export default function Avatar(props) {
+    return (
+      <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '10px'
+        }}
+      >
+        <img src={props.img} height="48" width="48" />
+        <span>
+          {props.name}
+        </span>
+      </div>
+  )
+}      
+      `
+    },
+		"App.js": {			
+			code: `
+import Avatar from './Avatar';
+      
+export default function App() {
+    return (
+      <div>
+        <p>The parent is placing the Avatar component</p>      
+        <Avatar name="Yariv Katz" img="https://avatars.githubusercontent.com/u/2714362?v=4" />
+        <p>passing props: name and img to the Avatar Component</p>
+      </div>
+    )
+}`
+		}
+	}}
+	template="react" 
+/>
+</div>
+
+We are creating a child component `<Avatar />` which is getting a name and the image of the user from the parent.
+Passing props which are of type `string` do not require us to place the value inside `{}` curly braces
+
+## Avatar - User object
+
+it's best to keep API of a component simple and consistent.
+Simple for example can be, if we have some sort of function (or hook - hooks will be learned later on) that returns a user, might be simpler to allow our component to receive an object that represents our user.
+instead of forcing developers to extract information from the user.
+Consistent means that if other comoponents are getting a prop called `user` with the user object and we are suddenly forcing in this specific component to extract the name and the image, the inconsistency is not only a hassle for developers
+but in general keeping things consistent in programming allow us to view repeating patterns more easily and easily plan for a generic solution that will fit many cases.
+In the following example our `<Avatar />` component will get a user object.
+
+<div className="mt-5 not-content">
+<Sandpack 
+	client:load
+	files={{
+    "Avatar.js": {
+      code: `
+export default function Avatar(props) {
+    return (
+      <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '10px'
+        }}
+      >
+        <img src={props.user.img} height="48" width="48" />
+        <span>
+          {props.user.name}
+        </span>
+      </div>
+    )
+}      
+      `
+    },
+		"App.js": {			
+			code: `
+import Avatar from './Avatar';
+      
+export default function App() {
+    const user = { name: 'Yariv Katz', img: 'https://avatars.githubusercontent.com/u/2714362?v=4' }
+    return (
+        <div>
+          <p>The parent is placing the Avatar component</p>      
+          <Avatar user={user} />
+          <p>passing props: name and img to the Avatar Component</p>
+        </div>
+    )
+}`
+		}
+	}}
+	template="react" 
+/>
+</div>
+
+Notice how a type that is different than a string has to be wrapped in `{}` curly braces.
+
+```jsx
+<Avatar user={user} />
+```
+
+## Destructuring props
+
+In the previous example we passed prop called `user` which is an object that has `name` and `img` properties.
+So to access the `name` and `img` properties we had to do `props.user.name` and `props.user.img`.
+This is not very convenient, so we can destructure the props object and get the `user` directly to a variable called `user`.
+
+```js
+export default function Avatar({user}) {
+  return (
+    <div>
+      <img src={user.img} height="48" width="48" />
+      <span>{user.name}</span>
+    </div>
+  )
+}
+```
+
+Destructuring is a powerful feature that allows us to extract properties from an object (or an array) and assign them to variables.
+More on destructuring can be found [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment).
+
+## optional prop and default value
+
+We can also decide that a certain prop is optional, for example in our `<Avatar />` component we can make the `user` prop optional and decide that if no user is passed, we will type anonymous user.
+
+```js
+export default function Avatar({user}) {  
+  if (!user) {
+    return <div>Anonymous user</div>
+  }
+  
+  return (
+    <div>
+      <img src={user.img} height="48" width="48" />
+      <span>{user.name}</span>
+    </div>
+  )
+}
+```
+
+We can also set a default value for the `user` prop.
+
+```js
+export default function Avatar({user = {name: 'Anonymous', img: 'https://avatars.githubusercontent.com/u/2714362?v=4'}}) {
+  return (
+    <div>
+      <img src={user.img} height="48" width="48" />
+      <span>{user.name}</span>
+    </div>
+  )
+}
+```
+
+## spread operator
+
+[spread operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax) is a powerful feature that allows us to spread the properties of an object (or an array) into another object (or an array).
+The same syntax can also be used to pass props to a component.
+In the following example our component is getting `age`, `name`, and `city` properties.
+
+```js
+export default function Avatar({age, name, city}) {
+  return (
+    <div>
+      <h1>My name is {name}</h1>
+      <p>My age is {age}</p>
+      <p>My city is {city}</p>
+    </div>
+  )
+}
+```
+
+In the following example we are passing the `age`, `name`, and `city` properties to the `<Avatar />` component.
+
+```js
+export default function App() {
+  return (
+    <Avatar age={30} name="Yariv" city="Tel Aviv" />
+  )
+}
+```
+
+Notice how we are spreading the `age`, `name`, and `city` properties into the `<Avatar />` component.
+
+another way we can pass props to a component is to use the spread operator.
+
+```js
+export default function App() {
+  const data = {age: 30, name: 'Yariv', city: 'Tel Aviv'}
+  return (
+    <Avatar {...data} />
+  )
+}
+```
+
+Notice how we are spreading the `age`, `name`, and `city` properties into the `<Avatar />` component.
+
+This is also useful if a component is getting a lot of props and we want to pass them all to the component.
+so in the following example our parent component is getting that information from it's own props and we want to pass them all to the `<Avatar />` component.
+
+```js
+export default function App(props) {
+  return (
+    <Avatar {...props} />
+  )
+}
+```
+
+## Events
+
+A component can define events, for example in our `<Avatar />` component we can define the event `onClick` when the avatar is clicked.
+We can accept a prop called `onClick` and a function that will be called when the avatar is clicked.
+
+```js
+export default function Avatar({onClick, img}) {
+  return (
+    <div onClick={onClick}>
+      <img src={img} height="48" width="48" />
+    </div>
+  )
+}
+```
+
+this will allow the parent to subscribe to the `onClick` event and call the function when the avatar is clicked.
+
+```js
+export default function App() {
+  const handleAvatarClick = () => {
+    console.log('Avatar clicked!')
+  }
+  return (
+    <Avatar onClick={handleAvatarClick} img="https://avatars.githubusercontent.com/u/2714362?v=4" />
+  )
+}
+```
+
+## Summary
+
+In this lesson we learned about passing props to React components.
+Passing props gives us more reusability and flexibility in our components. It allows a component to fit better in other places thus open the possibility for reusability.
+There are certain patterns in the props aspect that you need to familiarize yourself since they are commonly used in React.
+Deciding on an API of a component meaning what props it will get is crucial, think about the props, are they required or optional, if they are optional should they have a default value?
+Try to aim for repeating API's so if one component is getting a prop called `user` and another is getting `name` and `img` then it's better to keep API's consistent and use the same prop name for the same type of data.
+You can also use the spread operator to pass all the props to a component, this is useful if a component is getting a lot of props and we want to pass them all to the component.
+You can also define events on a component, this is useful if you want to allow the parent to subscribe to an event and call a function when the event is triggered.
+
+In the next lesson we will talk about props in the realm of TypeScript and we will learn about some types that are commonly used in React.

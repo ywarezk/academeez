@@ -46,17 +46,17 @@ In the following example we are creating a React component that is passing props
 			code: `
 export default function App() {
   return (
-		<img 
-        height="50"
-        style={{
-          backgroundColor: 'red',
-          opacity: 0.5,
-        }}
-        onClick={() => {
-          console.log('hello');
-        }}
-        src="https://images.stockcake.com/public/1/7/e/17e62d84-37f3-42b2-af37-c08c7beba06b_large/puppy-with-toy-stockcake.jpg"
-		/>
+    <img 
+      height="50"
+      style={{
+        backgroundColor: 'red',
+        opacity: 0.5,
+      }}
+      onClick={() => {
+        console.log('hello');
+      }}
+      src="https://images.stockcake.com/public/1/7/e/17e62d84-37f3-42b2-af37-c08c7beba06b_large/puppy-with-toy-stockcake.jpg"
+    />
   )
 }`
 		}		
@@ -84,21 +84,21 @@ The `<Child>` is using those props and showing them on screen.
 import Child from './Child';
 			
 export default function Parent() {
-  return (
-		<Child name="Academeez" age={ 5 } />
-  )
+    return (
+      <Child name="Academeez" age={ 5 } />
+    )
 }`
 		},
 		"Child.js": {
 			readOnly: false,
 			code: `
 export default function Child(props) {
-	return (
-		<div>
-			<h1>My name is {props.name}</h1>
-			<p>My age is {props.age}</p>
-		</div>
-	)
+    return (
+      <div>
+        <h1>My name is {props.name}</h1>
+        <p>My age is {props.age}</p>
+      </div>
+    )
 }
 			`	
 		}
