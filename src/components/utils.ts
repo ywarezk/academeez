@@ -30,7 +30,10 @@ export function getThumbnailBySlug(slug: string, locale: string): { src: string 
 		: slug;
 
 	const entry = Object.entries(thumbnails).find(([path]) => {
-		return path.includes(`/docs/${normalizedSlug}/thumbnail.png`);
+		return (
+			path.endsWith(`/docs/${normalizedSlug}/thumbnail.png`) ||
+			path.endsWith(`/docs/${normalizedSlug}/index/thumbnail.png`)
+		);
 	});
 	return entry?.[1]; // the built URL
 }
