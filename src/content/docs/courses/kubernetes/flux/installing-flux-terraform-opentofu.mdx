@@ -26,19 +26,13 @@ So our emphasis in this lesson is on simplicity, and minimum requirements for bo
 
 Let's get started.
 
-## Advantages of using IAC for installing Flux
+## What we will cover in this lesson
 
-Installing Flux with infastucture as code (IAC), in our example OpenTofu/Terraform (but other solutions can be used as well) has several advantages:
-- **Reproducibility**: You can run the same code on different clusters and get the same result.
-- **Version control**: You can track changes to the code in a version control system.
-- **Collaboration**: You can share the code with others and collaborate on it.
-- **Automation**: You can automate the installation process.
-
-The first advantage is a big one!
-We can easily duplicate the same setup on different clusters, and if we need to make changes, we can do it in the code and run it again.
-This is a most if you are in a bigger organization with multiple clusters, or have many teams and want to arrange a multi-tenant solution for your organization.
-
-In case you are managing one cluster, and you are the only one managing it, then the advantages are less important, and you can use the CLI to install Flux.
+- The importance of using IAC
+- Creating a new project on GCP
+- Creating a VPC and subnet
+- Creating a GKE cluster
+- Installing Flux with the Flux Provider
 
 ## What you need to have before starting
 
@@ -48,53 +42,141 @@ In case you are managing one cluster, and you are the only one managing it, then
 
 Create a new folder called `iac` and we will place all the infastructure code there.
 
+## GCP
+
+GCP stands for Google Cloud Platform, and it's the cloud provider we will use in this course.  
+We do not advocate for GCP, and you can use any cloud provider you want, the concepts between the cloud providers are the similar and you should focus on the concepts and not the cloud provider.  
+If enough developers will write a request for a specific cloud provider, we will consider adding it to the course.
+
+## OpenTofu
+
+During this course we will give examples using OpenTofu but the same code can be run with Terraform.  
+Again we do not advocate for OpenTofu, and you can use any IAC technology you want, the concepts between the IAC technologies are the similar and you should focus on the concepts and not the IAC technology (the different syntax is not the thing to focus on).  
+If enough developers will write a request for a specific IAC technology, we will consider adding it to the course.
+
+## Why it's important to use IAC
+
+It's highly recommended to IAC for creating your cloud resources.  
+There are a few advantages of doing so:
+- Consistency of cloud resources across environments
+- Automation of cloud resources creation
+- Easier to scale
+- Avoid repeating configurations
+- Testing and linting of you IAC.
+- Collaboration with other team members
+- Disaster recovery - easier to recreate resources
+- Can be integrated with CI/CD pipelines
+
+## Terraform Providers
+
+Terraform by itself don't have a lot of power. To give terraform more power we need to tell terraform to install providers for creating certain things.  
+When you define a provider you can give that provider an alias name, or use the default name of the provider. Each resource is created by a provider and the prefix of the resource or specifying the provider in the block of the resource will tell terraform which provider will create that resource.  
+For example resources that start with `google_` are created by the google provider, and resources that start with `flux_` are created by the flux provider.  
+If you decide to give a different name to the provider, you will need to specify the provider in the resource block.  
+Some providers will require you to supply additional configurations, for example the Flux Provider will require us to authenticate with our cluster and our github repo.
+
+## required_providers
+
+In terraform/tofu you can specify the providers, provider versions, and location of those providers in a terraform configuration block inside the `required_providers`.  
+It's recommended to write there the providers and their versions.  
+Create the file `iac/gcp/tofu/providers.tf` with the following:
+
+
+```terraform
+terraform {
+	required_version = "~> 1.8"
+	required_providers {
+		google = {
+			version = "~> 6.8"
+		}		
+	}
+}
+```
+
+when you bind the version with `~>` it means the the right most number can change, in this example since it's semver it means the minor version can be updated, but the major version should stay the same.  
+We also specified the tofu version that we are using (to force similar versions between developers) in the `required_version` field.
+
+## terraform-google-modules
+
+[terraform-google-modules](https://registry.terraform.io/namespaces/terraform-google-modules) is a collection of terraform/tofo modules created by google.
+Those modules are highly maintained while focusing on best practices in creating google cloud resources. We will use those modules as much as we can for creating cloud resources.
+
+## Google Provider authentication
+
+We are using the Google Provider to create resources on GCP.  
+The Google Provider will have to authenticate with GCP to create resources.
+We will need to go to the provider documentation and check [how it authenticates with GCP](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference#authentication).  
+Usually we would like that authentication to be using impersonation of a service account, but more on this in the next lesson. In this lesson we will keep things simple and authenticate using the command:
+
+```bash
+gcloud auth application-default login
+```
+
+Make sure that your gcp users has enough permissions to create all the resources we are going to create.
+
 ## Create a new project on GCP
+
+A [Project in GCP](https://cloud.google.com/resource-manager/docs/creating-managing-projects) is an organizational unit that can help you organize resources in GCP.
+You can place the resources under a project, the project will be connected to a billing account, you can set a budget if you don't want the cost of the project running out of control.
+The projects will also help us with isolation, so we will place different environments in different projects, and that isolation will also help us with permissions to different team memebers.
 
 We will place all the resources in a new project, so let's create a new project on GCP.
 Create a new file `iac/main.tf`, we will place all infastructure code there (another bad practice - no modules no dependencies, this will be fixed in the next lesson).
 
 ```terraform
+/**
+ * With the google provider we can use terrafom to create resources in GCP
+ */
+provider "google" {  
+  user_project_override = true
+	project               = var.project_id
+  billing_project       = var.project_id
+}
+
+/**
+ * The terraform-google-modules is a collection of terraform modules that help us create resources in GCP
+ * We will use terraform-google-modules/project-factory/google to create our GCP Project
+ */
 module "project" {
-  source              = "terraform-google-modules/project-factory/google"
-  version             = "~> 17.0"
-  name                = var.project_name
-  org_id              = var.org_id
-  billing_account     = var.billing_account
-  random_project_id   = false
-  auto_create_network = false
-  create_project_sa   = false
-  activate_apis = [
-    "compute.googleapis.com",
-    "container.googleapis.com",
-    "gkehub.googleapis.com",
-    "anthosconfigmanagement.googleapis.com",
-    "cloudresourcemanager.googleapis.com"
-  ]  
-  budget_amount = 30
+	source = "terraform-google-modules/project-factory/google"
+	version = "~> 17.0"
+	auto_create_network = false	
+	billing_account = var.billing_account
+	org_id = var.org_id
+	budget_amount = 30
+	name = "academeez-k8s-flux"
+	random_project_id = true
+	create_project_sa = false
+	deletion_policy = "ABANDON"
+	activate_apis = [
+		"compute.googleapis.com",
+		"billingbudgets.googleapis.com",
+		"cloudresourcemanager.googleapis.com",
+		"serviceusage.googleapis.com",	
+		"container.googleapis.com"	
+	]
 }
 ```
 
-We are creating here a project called `test-project`.
-Google has a project called [Cloud Foundation Toolkit](https://cloud.google.com/foundation-toolkit) which contain terraform modules for creating gcp resources in a best practice way.  
-Those terraform modules start with `terraform-google-modules/*` and whenever we can we will strive to use those modules.
-We are also setting a budget of 30$ for the project.  
+We are creating here a project called `academeez-k8s-flux`.
+We are also setting a budget of **30$** for the project.  
 
 Some variables are required here so let's create a `variables.tf` file:
 
 ```terraform
-variable "org_id" {
-	description = "The GCP organization ID"
-	type        = string	
-}
-
 variable "billing_account" {
-	description = "The GCP billing account ID"
-	type        = string	
+	description = "the gcp billing account that is connected to the project"
+	type = string
 }
 
-variable "project_name" {
-  description = "The GCP project name"
-  type        = string	
+variable "org_id" {
+	description = "the gcp organization id"
+	type = string
+}
+
+variable "project_id" {
+	description = "academeez-k8s-flux created project id"
+	type = string
 }
 ```
 
@@ -103,46 +185,70 @@ Create a `terraform.tfvars` file and place the following content to populate the
 ```terraform
 org_id = "YOUR_ORG_ID"
 billing_account = "YOUR_BILLING_ACCOUNT"
-project_name = "Your project name"
+project_id = "id of the created project"
 ```
 
-The `project_name` has to be unique across gcp, and replace `YOUR_ORG_ID` and `YOUR_BILLING_ACCOUNT` with your values.
+Replace `YOUR_ORG_ID` and `YOUR_BILLING_ACCOUNT` with your values, and also set the `project_id` to the created project id.
+
+We can examine what tofu is planning to create by running the command `tofu plan` (or `terraform plan` or terraform).
 
 You can now run `terraform init` and `terraform apply` to create the project.
 or with OpenTofu `tofu init` and `tofu apply`.
 
-## Create a VPC
+## Create a VPC and a subnet
+
+[VPC](https://cloud.google.com/vpc/?hl=en) represents a virtual network. A VPC is not associated to a region or a zone, so that private network can span in all the cloud locations.
+The VPC will help you with firewall rules and also isolation of resources.
+Depending on the use case you can decide that you entire web application resources will be placed in a single VPC, or if you have a more complex network architecture and you want to place teams of microservices in different VPC that is possible as well.
+In the usecase of this course we will go with the simple network architecture and create a single VPC for each environment.
+The resources within the VPC can communicate with each other, and you can also set firewall rules to allow or block traffic between the resources.
+Resources in the VPC can also communicate with GCP services.
+
+[Subnet](https://cloud.google.com/vpc/docs/subnets) is a range of IP addresses in your VPC. it allows you to create certain sections within the VPC which are region associated.
+It allows you to create further isolation within the VPC along with adding firewall rules to the subnet.
+Although the subnet is in a region it doesn't mean that the resources in the subnet are in the exact same location, they can be spreaded across different zones in that region.
 
 Let's create VPC and a subnet for our cluster.  
 At the bottom of the `main.tf` file add the following code:
 
 ```terraform
+/**
+ * We will place our application in a single VPC.
+ * We will also create a subnet to place our GKE cluster in.
+ */ 
 module "vpc" {
-  source       = "terraform-google-modules/network/google"
-  version      = "~> 9.3"
-  project_id   = module.project.project_id
-  network_name = "vpc-gke"
-  subnets = [
-    {
-      subnet_name   = "subnet-gke"
-      subnet_ip     = "10.0.0.0/17"
-      subnet_region = var.region
-    }
-  ]
-  secondary_ranges = {
-    "subnet-gke" = [
-      {
-        range_name    = "subnet-gke-pods"
-        ip_cidr_range = "192.168.0.0/18"
-      },
-      {
-        range_name    = "subnet-gke-services"
-        ip_cidr_range = "192.168.64.0/18"
-      }
-    ]
-  }
+	source  = "terraform-google-modules/network/google"
+	version = "~> 9.3"
+
+	project_id   = module.project.project_id
+	network_name = "academeez-k8s-flux"
+	routing_mode = "GLOBAL"
+
+	subnets = [
+		{
+				subnet_name           = "k8s"
+				subnet_ip             = "10.0.0.0/24"
+				subnet_region         = "us-central1"
+		}
+	]
+	
+	secondary_ranges = {
+		k8s = [
+			{
+				range_name    = "pods"
+				ip_cidr_range = "10.1.0.0/16"
+			},
+			{
+				range_name    = "services"
+				ip_cidr_range = "10.2.0.0/24"
+			}
+		]
+	}
+	
 }
 ```
+
+In the subnet where our k8s cluster will be, we will need to make sure that we have enough IP addresses for our nodes, pods and services.
 
 We added a VPC with a subnet, and we also added secondary ranges for pods and services.  
 There are many network architectures, and it highly depends on the organization and the needs of that organization.
@@ -151,26 +257,9 @@ In our case we simply went for something simple with enough IP addresses for our
 The number of ips in a CIDR of x.x.x.x/y is `2^(32-y)`. where y - means the first y bits are fixed, and the rest can change.
 
 Let's go over the address ranges:
-- For the nodes the ip address range is `10.0.0.0/17` which means we have 32,766 IP addresses for our nodes (first 17 bits are fixed, the rest can change starting from `10.0.0.0`).
-- For the pods the ip address range is `192.168.0.0/18` which means we have 16,382 IP addresses for our pods (first 18 bits are fixed, the rest can change starting from `192.168.0.0`).
-- For the services the ip address range is `192.168.64.0/18 ` which means we have 16,382 IP addresses for our services (first 18 bits are fixed, the rest can change starting from `192.168.64.0`).
-
-We added a `region` variable, so let's add it to the `variables.tf` file:
-
-```terraform
-variable "region" {
-	description = "The GCP region"
-	type        = string	
-}
-```
-
-and in the `terraform.tfvars` file add the following line:
-
-```terraform
-region = "asia-southeast1"
-```
-
-You can choose a different region if you want, I chose `asia-southeast1` because it is a cheap region (on the next lesson we will emphasize cost vs production requirements).
+- For the nodes the ip address range is `10.0.0.0/24` which means we have 255 IP addresses for our nodes (first 24 bits are fixed, the rest can change starting from `10.0.0.0`).
+- For the pods the ip address range is `10.1.0.0/16` which means we have 65536 IP addresses for our pods (first 16 bits are fixed, the rest can change starting from `10.1.0.0`).
+- For the services the ip address range is `10.2.0.0/24` which means we have 255 IP addresses for our services (first 24 bits are fixed, the rest can change starting from `10.2.0.0`).
 
 Notice that we again used the cloud foundation toolkit, and we are using the `terraform-google-modules/network/google` module.
 So we will need to run `terraform init` or `tofu init` again, to install the module.
@@ -179,112 +268,156 @@ You can now run `terraform apply` or `tofu apply` to create the VPC.
 
 ## Create a GKE cluster
 
+GKE is the managed kubernetes cluster service on GCP.
+It's highly recommended to use a managed kubernetes service, it provides many advantages like:
+- Managed control plane with high availability
+- monitoring
+- logs
+- scaling 
+- help with upgrades
+After we create our GKE cluster we want our `kubectl` to communicate with that cluster.
+To do that we will have to add to the `~/.kube/config` file the cluster information - add a context to our `kubectl`.
+Cloud providers are providing a cli tool that will help us add the context of our cluster. The GCP cli - [gcloud](https://cloud.google.com/sdk/docs/install) has a command to do exactly that.
+
+```bash
+gcloud container clusters get-credentials <cluster-name> --region=<region> --project=<project-id>
+```
+
 Time to create our kubernetes cluster.
 At the bottom of the `main.tf` file add the following code:
 
 ```terraform
+/**
+ * This will create our managed kubernetes cluster
+ */
 module "gke" {
-  source                          = "terraform-google-modules/kubernetes-engine/google"
-  version                         = "~> 33.1"
-  name                            = "gke"
-  project_id                      = module.project.project_id
-  regional                        = false
-  region                          = var.region
-  zones                           = ["asia-southeast1-a"]
-  initial_node_count              = 3
-  network                         = module.vpc.network_name
-  subnetwork                      = module.vpc.subnets_names[0]
-  ip_range_pods                   = module.vpc.subnets_secondary_ranges[0][0].range_name
-  ip_range_services               = module.vpc.subnets_secondary_ranges[0][1].range_name
-  deletion_protection             = false
-  remove_default_node_pool        = true  
-  horizontal_pod_autoscaling      = false
-  enable_vertical_pod_autoscaling = false
-
-  # terraform-google-modules/kubernetes-engine/google create a single node pool with preemptible nodes
-  node_pools = [
-    {
-      name               = "default-node-pool"
-      machine_type       = "e2-medium"
-      min_count          = 3
-      max_count          = 3
-      disk_size_gb       = 100
-      disk_type          = "pd-standard"
-      preemptible        = true
-      image_type         = "COS_CONTAINERD"
-      autoscaling        = false
-      initial_node_count = 3
-      node_count         = 3
-    }
-  ]
-
-  node_pools_oauth_scopes = {
+  source                     = "terraform-google-modules/kubernetes-engine/google"
+	version                    = "~> 33.1"
+	project_id = module.project.project_id
+	name = "academeez-k8s-flux"
+	region = "us-central1"
+	zones = ["us-central1-a", "us-central1-b", "us-central1-f"]
+	network = module.vpc.network_name
+	subnetwork                 = module.vpc.subnets_names[0]
+  ip_range_pods              = module.vpc.subnets_secondary_ranges[0][0].range_name
+  ip_range_services          = module.vpc.subnets_secondary_ranges[0][1].range_name
+	deletion_protection = false
+	node_pools = [
+		{
+			name                        = "default-node-pool"
+			machine_type                = "e2-medium"
+			node_locations              = "us-central1-a,us-central1-b,us-central1-f"
+			min_count                   = 1
+      max_count                   = 10
+			initial_node_count          = 3
+		}
+	]
+	
+	node_pools_oauth_scopes = {
     all = [
       "https://www.googleapis.com/auth/logging.write",
       "https://www.googleapis.com/auth/monitoring",
     ]
   }
-
-  node_pools_labels = {
-    all = {}
-    default-pool = {
-      default-pool = true
-    }
-  }
-
-  node_pools_taints = {
-    all = []
-    default-pool = [
-      {
-        key    = "default-pool"
-        value  = true
-        effect = "PREFER_NO_SCHEDULE"
-      },
-    ]
-  }
 }
 ```
 
-We are focusing here on development simple cheap cluster setup.
-We are creating a GKE cluster with a single node pool with preemptible nodes.
-We are setting the machine type to `e2-medium` and the disk size to 100GB.
-The node pool will have 3 nodes, and we are setting the `preemptible` flag to `true`.
+We are creating a GKE cluster with a single node pool with 1-10 nodes
+We are setting the machine type to `e2-medium`.
+The node pool will start with 3 nodes.
 This is not a production setup, but a simple setup for learning purposes (we will go over more professional and production ready cluster on the next lesson).
 
 We need to init and run our code again, so run `terraform init` or `tofu init`, and then run `terraform apply` or `tofu apply` to create the GKE cluster.
 
 ## Install Flux
 
-Last step is to install Flux on our cluster.
-We will need to configure terraform flux provider, so let's add the following code to the `main.tf` file:
+Flux can be installed using terraform/tofo. For that we will need to use the [Flux Provider](https://registry.terraform.io/providers/fluxcd/flux/latest/docs).
+We will have to configure the Flux provider and give information on our k8s cluster as well as information about our git repository.
+
+### Advantages of using IAC for installing Flux
+
+Installing Flux with infastucture as code (IAC), in our example OpenTofu/Terraform (but other solutions can be used as well) has several advantages:
+- Flux installation is declarative.
+- Flux version installed is declarative and the same in all of our cluster
+- Easier to install and update Flux in multiple clusters
+- Easier to add or remove flux components from all of our clusters.
+
+
+We can easily duplicate the same setup on different clusters, and if we need to make changes, we can do it in the code and run it again and easily apply it to all our clusters.
+This is a most if you are in a bigger organization with multiple clusters, or have many teams and want to arrange a multi-tenant solution for your organization.
+
+In case you are managing one cluster, and you are the only one managing it, then the advantages are less important, and you can use the CLI to install Flux.
+
+### Authenticate tofu with the cluster
+
+If tofu will need to create resources in our k8s cluster, it will need to authenticate with the cluster.
+There are different ways to authenticate with the cluster, for example tofu can use our `kubectl` and the `kubectl` has to authenticate before running tofu with the right cluster.
+But this sort of authentication can be problematic, mistakes can be made and it can accidently run not on the cluster that you want it to. Also it will be even harder if multiple team memebers are using that IAC project.
+Each one of them will need to make sure to authenticate to the right cluster, things will get more messy as you have more clusters and more developers.
+It's best to authenticate as declarative as possible where the cluster is mentioned in the authentication logic.
+It would also be best to use a short lived token for the authentication. 
+One way to authenticate tofu with the cluster (either with the Flux provider or with the kubernetes provider, which is the same) is to use the cloud provider cli tool.
+The configuration is allowing us to authenticate by generating a short lived token using the cloud provider cli tool, it's called the **Exec Plugin**.
+In `gcloud` to extend the cli for that extra functionality we can use the `gcloud-gke-auth-plugin` command.
+We install it by running the command:
+
+```bash
+gcloud components install gke-gcloud-auth-plugin
+```
+
+the [gke-gcloud-auth-plugin](https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke) is the best way at the time of this writing to authenticate with the cluster in our tofu code.
+
+Let's install Flux on our cluster.
+
+The first thing we will do is tell Tofu that we want the Flux provider to be installed.
+Modify the `providers.tf` file to include the Flux provider:
 
 ```terraform
 terraform {
-  required_providers {
-    flux = {
-      source  = "fluxcd/flux"
-      version = ">= 1.3.0"
+	required_version = "~> 1.8"
+	required_providers {
+		google = {
+			version = "~> 6.8"
+		}
+		flux = {
+			source = "fluxcd/flux"
+			version = "~> 1.4"
+		}
+	}
+}
+```
+
+We will need to configure terraform flux provider, and also install flux on our cluster with the `flux_bootstrap_git` resource.
+In the `main.tf` file add the following code:
+
+```terraform
+/**
+ * Configuring the flux provider will allow us to install flux in our cluster
+ * we need to authenticate the flux provider with our GKE cluster and with our github repo
+ */
+provider "flux" {
+	kubernetes = {
+		host = module.gke.endpoint
+		cluster_ca_certificate = base64decode(module.gke.ca_certificate)
+		exec = {
+			api_version = "client.authentication.k8s.io/v1beta1"
+			command = "gke-gcloud-auth-plugin"
+		}
+	}
+	git = {
+    url = "https://github.com/ywarezk/academeez-k8s-flux.git"
+    http = {
+      username = "git" # This can be any string when using a personal access token
+      password = var.github_pat
     }
   }
 }
 
-provider "flux" {
-	kubernetes = {		
-		exec = {
-			api_version = "client.authentication.k8s.io/v1beta1"
-			args        = []
-			command     = "gke-gcloud-auth-plugin"
-		}
-    host                   = "https://${module.gke.endpoint}"        
-    cluster_ca_certificate = base64decode(module.gke.ca_certificate)
-  }
-  git = {
-    url = "https://github.com/${var.github_org}/${var.github_repository}.git"
-    http = {
-      username = "git" # This can be any string when using a personal access token
-      password = "${var.github_token}"
-    }
-  }
+/**
+ * This will install flux on our GKE cluster
+ */
+resource "flux_bootstrap_git" "flux_test_cluster" {
+	path = "clusters/prod"	
 }
 ```
 
@@ -297,58 +430,24 @@ You have full instructions on how to create a PAT in the [first lesson](https://
 We need to add some variables to the `variables.tf` file:
 
 ```terraform
-variable "github_org" { 
-	description = "The GitHub organization name"
-	type        = string	
-}
-
-variable "github_repository" {
-	description = "The GitHub repository name"
-	type        = string	
-}
-
-variable "github_token" {
-	description = "The GitHub token"
-	type        = string	
+variable "github_pat" {
+	description = "The token used to talk to our github repo"
+	type = string
 }
 ```
 
 And in the `terraform.tfvars` file add the following lines:
 
 ```terraform
-github_org      = "<replace with repo organization>"
-github_repository = "<replace with repo name>"
-github_token    = "<replace with PAT>"
+github_pat=XXX
 ```
 
 After this we are now ready to install Flux on our cluster.
-Add the following code to the `main.tf` file:
 
-```terraform
-resource "flux_bootstrap_git" "bootstrap" {
-  embedded_manifests = true
-  path               = "clusters/test"
-  components = [
-    "source-controller", 
-    "kustomize-controller", 
-    "helm-controller", 
-    "notification-controller"
-  ]
-}
-```
 
 Run `terraform init` or `tofu init` and then run `terraform apply` or `tofu apply` to install Flux on your cluster.
 
 ## Check your cluster
-
-Time to check our cluster and verify that everything is working. You will need to set your `kubectl` context to point to the new cluster.  
-There is a `gcloud` command that will help you with that:
-
-```bash
-gcloud container clusters get-credentials <cluster-name> --region <zone> --project <project-name>
-```
-
-after doing that we can run the command:
 
 ```bash
 kubectl get pods -n flux-system
@@ -358,6 +457,8 @@ We can examine all the flux pods and see that all of them are running
 
 ## Summary
 
-If you are managing a single cluster it's not that important if you install flux using CLI or terraform, but when things start to scale, and you have multiple clusters, or you have multiple teams, or you have multiple environments, then it's important to have everything as code.
+If you are managing a single cluster it's not that important if you install flux using CLI or terraform, but when things start to scale, and you have multiple clusters, or you have multiple teams, or you have multiple environments, then it's important to have your infastructure and flux installation using IAC.
 As a reminder this is the minimal setup, and in the next lesson we will go over best practices and how to do things right.
+Everything in our course repo is declarative, so you can create the cluster before a lesson and also run `tofu destroy` after the lesson to save money and only use the resources on the lessons.
+During this course we will show cloud infrastructure as code examples using OpenTofu, but you can use Terraform or any other IAC technology you want, feel free to raise an issue if you want an example in another technology or cloud placed in our course repository.
 Check out the source code [here](https://github.com/ywarezk/academeez-k8s-flux/tree/lesson-04/iac)
