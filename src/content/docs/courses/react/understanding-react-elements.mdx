@@ -1,0 +1,553 @@
+---
+title: Understanding React Elements
+description: Creating an hello world with React and going over the basics of a react application
+authors:
+	- yariv-katz
+publishDate: 2024-10-01
+---
+
+import {Sandpack} from '@codesandbox/sandpack-react';
+
+<div class="not-content flex">
+	<iframe
+		className="mx-auto mb-10"
+		width="560"
+		height="315"
+		src="https://www.youtube.com/embed/8HHXZcoovt4?si=91cgdzxiphQfNdsr"
+		title="YouTube video player"
+		frameBorder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+		allowFullScreen
+	/>
+</div>
+
+Let's take our first steps to become a [React](https://react.dev/) developer.  
+In this lesson we will learn about the basics of **React**, and we will even create out first **React** powered website.  
+Mastering **React** starts with understanding the fundamentals, so open you computer and try to follow along and write the code with us.
+
+## What we will learn
+
+In this lesson we will cover the following topics:
+
+- The main job of the React library
+- Simple hello world with React
+- React Components
+- JSX
+
+## Creating an hello world
+
+We will learn the basics of React by creating a simple web site that displays an hello world message to the user (How original of us?).
+
+We don't need any fancy UI library like React to create a website displaying hello world right!?  
+Let's just create that hello world page using simple html.
+
+In this example we created a simple html file that displays an hello world message:
+
+<div className="mt-5 not-content">
+<Sandpack 
+	client:load
+	template="vanilla"
+	options={{
+		visibleFiles: ["/index.html"],
+		activeFile: "/index.html"
+	}}
+	files={{
+		
+		"index.html": {
+			code: `
+<html>
+	<body>
+		<div id="container">
+			<h1>Hello world with HTML</h1>
+		</div>		
+	</body>
+</html>
+			`
+		},
+		"index.js": {
+			code: ``,			
+		},
+	}}
+/>
+</div>
+
+## DOM
+
+The browser processed our HTML and from that file the browser created a tree of Javascript objects called the [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model).
+
+After the browser created the `DOM` what determines what we see on the website is the `DOM` and not the `HTML`.  
+The `HTML` is simply a recipe for creating the initial `DOM`, after the initial `DOM` is created the browser will not look at the `HTML` any more.
+
+We can open the browser developer tools and in Chrome developer tools there is the **Elements** tab which shows us the current DOM we are seeing in the screen.  
+You can view the `DOM` tree with the global `document`.  
+
+You can also click an element in the **Elements** tab, for example choose the `<h1>` element, and you can view the Javascript dom object by going to the **Console** tab and typing:
+
+```javascript
+$0
+```
+
+This will grab the javascript dom object of the selected element from the **Elements** tab.  
+grabbing the element with `$0` we can now change the `<h1>` element and view the changes on the screen.  
+In the developer tools in the **Console** tab type:
+
+```javascript
+$0.innerText = 'i can change the text with javascript'
+```
+
+You will notice the text on the screen is changing.
+
+When used in the browser `React` main job is:
+- Create DOM elements
+- Delete DOM elements
+- Update DOM elements
+
+`React` can even create your initial HTML but that will be covered in a later lesson.
+
+## Creating DOM without HTML
+
+The HTML is the recipe for creating a tree of javascript objects called `DOM` that represents how our website looks like.  
+So the same **Hello World** application we can also create by constructing the DOM using Javascript and not using HTML.  
+
+Take a look at the following example where the HTML is empty and now the Javascript is creating that hello world.
+
+<div className="mt-5 not-content">
+<Sandpack 
+	client:load
+	template="static"
+	options={{	
+		visibleFiles: ["/index.html"],	
+		activeFile: "/index.html"
+	}}
+	files={{
+		
+		"index.html": {
+			code: `
+<html>
+	<body>
+		<div id="container">			
+		</div>
+		<script>
+			// create h1 element
+			const h1 = document.createElement('h1');
+			h1.innerText = 'Hello world with JS';
+
+			// append h1 to container
+			const container = document.getElementById('container');
+			container.appendChild(h1);
+		</script>		
+	</body>
+</html>
+			`
+		},
+		"index.js": {
+			code: `
+
+			`,			
+		},
+	}}
+/>
+</div>
+
+## Hello world with React
+
+Now let's try to create the same hello world website using `React`.  
+We are loading the react library from a CDN (usually react is not installed from a CDN but in our simple example it's perfect).
+
+<div className="mt-5 not-content">
+<Sandpack 
+	client:load
+	template="static"
+	options={{		
+		activeFile: "/index.html",
+		visibleFiles: ["/index.html"],
+	}}
+	files={{
+		
+		"index.html": {
+			code: `
+<html>
+	<head>
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+	</head>
+	<body>
+		<div id="container">			
+		</div>	
+		<script>
+			// create h1 element
+			const h1 = React.createElement('h1', null, 'Hello world with React!');
+			
+			// render to dom
+			const root = ReactDOM.createRoot(document.getElementById('container'));
+			root.render(h1);
+		</script>
+	</body>
+</html>
+			`
+		},
+		"index.js": {
+			code: `
+			`,			
+		},
+	}}
+/>
+</div>
+
+It's important to state that this is not how you start a real world react application, rather we are creating a minimal learning platform for learning React.  
+It's a bit easier when you only focus on minimum amount of files needed to learn React.  
+
+Going over the code we see that in the `<head>` we are loading `react` and `react-dom`, loading those 2 scripts makes them available globally.
+
+After that the api kind of reminds us the same api we used to create the dom elements in Javascript.  
+We use `React.createElement` in `React` when in `Javascript` we used `document.createElement` this creates our `h1` and instead of attaching to the dom like we did in `Javascript` we attach to the `DOM` using `ReactDOM.createRoot` this will attach to the dom and we can render elements inside our created `root`.
+
+## Virtual DOM
+
+Let's focus on the React example we just created.  
+Notice that we did not directly interacted with the `DOM`, we just pointed React to the place where React should interact with the dom:
+
+```javascript
+const root = ReactDOM.createRoot(document.getElementById('container'));
+```
+
+When using React you do not manipulate the DOM rather you let React do that job.  
+
+We did not create any DOM elements rather we created React elements:
+
+```javascript
+const h1 = React.createElement('h1', null, 'Hello world with React!');
+```
+
+When working with React you do not create `DOM` elements, rather you create React elements, when you change those react elements in a certain way then React will update those elements as well as compare the DOM to the virtual dom and update the dom if needed to match the virtual dom.
+
+React created an abstraction layer between you and the DOM, it's a common practice in software development to create a middleman, for example instead of interacting directly with a database, you can use `ORM` which let's you interact with different databases using Javascript classes. another example is the adapter pattern, which is really similar to what React is doing.
+
+React will give you tools to create a VirtualDOM and update and maintain that VirtualDOM, it will later take that VirtualDOM and upate the real DOM in a really quick way to match your virtual dom.
+
+So basically `React` library is giving you tools for creating and updating a VirtualDOM and `ReactDOM` will take that web adapted virtual dom and create a website.  
+
+This adapter pattern is what gives React the ability to create UI not only for the web.  
+You can use `React` for creating mobile adapter virtual dom, and then [react-native](https://reactnative.dev/) can take the virtual dom and construct a native ios and android mobile application.
+
+## JSX
+
+Let's try and expand our react example a bit.  
+We will now add a span and an underline under the `<h1>` element we created.
+
+Take a look in the editor at the following example:
+
+<div className="mt-5 not-content">
+<Sandpack 
+	client:load
+	template="static"
+	options={{		
+		activeFile: "/index.html",
+		visibleFiles: ["/index.html"],
+	}}
+	files={{
+		
+		"index.html": {
+			code: `
+<html>
+	<head>
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+	</head>
+	<body>
+		<div id="container">			
+		</div>	
+		<script>
+			// create h1 element
+			const h1 = React.createElement(
+				'h1', 
+				null, 
+				React.createElement(
+					'span', 
+					null, 
+					React.createElement(
+						'u', 
+						null, 
+						'Hello world with React!'
+					)
+				)
+			);
+			
+			// render to dom
+			const root = ReactDOM.createRoot(document.getElementById('container'));
+			root.render(h1);
+		</script>
+	</body>
+</html>
+			`
+		},
+		"index.js": {
+			code: `
+			`,			
+		},
+	}}
+/>
+</div>
+
+Notice that the 3rd argument of `React.createElement` doesn't have to be a text, rather it can be and item or array of `ReactNode` (we will talk about `ReactNode` on the `jsx` lesson).  
+So to extend our `<h1>` with a `<span>` and a `<u>` means to add more `React.createElement` to the 3rd argument.  
+
+Seems a bit cumbersome to create an entire screen, the entire virtual dom this way, but even before react when you had to create your website screen you did not use `document.createElement(...)` to create the entire screen, rather you used `HTML` which was processed to the initial `DOM` tree.  
+Just like `HTML` is a different syntax from which `document.createElement` are created, it would be nice if we had a similar syntax to `HTML` for creating `React.createElement`
+
+## JSX
+
+When working with `React` you can choose different languages for developing your app. For example you can choose: `Javascript`, `Typescript`, `CoffeeScript`, etc.  But the end result when building a web application is that the end files would be Javascript (the browser can only run javascript). Also it needs to be a Javascript version that is supported by all modern browsers.  
+It is common that you take your code and compile your code to supported `Javascript`.  
+For example:
+- if working with Javascript I can use [Babel](https://babeljs.io/) to compile to vanilla Javascript
+- if working with [Typescript](https://www.typescriptlang.org/) then typescript ships with compiler that compiles my typescript files to javascript.
+
+Because we are working with compiler to process our code, it means we can install extensions for our programming language.  
+For example I can support EcmaScript features that the browser do not support yet, write them in my code and let the compiler create those features in old javascript so it will be supported by the browsers.
+
+I can use the compilers to add additional syntax which is not supported by Javascript, for example I can support an XML like syntax which the compiler will transpile in my code and turn it to something else.
+
+`JSX` stands for **Javascript as XML** it allows us to write `XML` syntax which will be translated to `Javascript`.  
+For example I can create the following code in the file: `jsx-example.js`
+
+```Javascript
+const h1 = <h1>hello world with jsx</h1>
+```
+
+I can then take that file and use a compiler which will translate that file to:
+
+```Javascript
+const h1 = React.createElement('h1', null, 'hello world with jsx')
+```
+
+This will solve our problem of creating unreadable nested `React.createElement` like we did with the example of hello world with underline.  
+This means that our code can be transformed to this (if we add a compiler):
+
+```javascript
+	// create h1 element
+	/*
+	// this is unreadable
+	const h1 = React.createElement(
+		'h1', 
+		null, 
+		React.createElement(
+			'span', 
+			null, 
+			React.createElement(
+				'u', 
+				null, 
+				'Hello world with React!'
+			)
+		)
+	);
+	*/
+	
+	// this is much better
+	const h1 = (
+		<h1>
+			<span>
+				<u>
+					Hello world with React!
+				</u>
+			</span>
+		</h1>
+	);
+	
+	// render to dom
+	const root = ReactDOM.createRoot(document.getElementById('container'));
+	root.render(h1);
+```
+
+## Babel
+
+Babel is a Javascript compiler, it will transform your advanced Javascript, to vanilla, browser supported, Javascript.  
+Usually you won't have to install the compiler yourself, there are popular react starters which you can use which already configured the compiler for you, but in our case of exploring the basics of React and creating a minimal playground with only HTML file, it might be worth it to do a simple Babel installation in our current HTML file.
+
+<div className="mt-5 not-content">
+<Sandpack 
+	client:load
+	template="static"
+	options={{		
+		activeFile: "/index.html",
+		visibleFiles: ["/index.html"],
+	}}
+	files={{
+		
+		"index.html": {
+			code: `
+<html>
+	<head>
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	</head>
+	<body>
+		<div id="container">			
+		</div>	
+		<script type="text/babel">
+			// create h1 element
+			const h1 = (
+				<h1>
+					<span>
+						<u>Hello world with React and JSX!</u>
+					</span>
+				</h1>
+			);
+			
+			// render to dom
+			const root = ReactDOM.createRoot(document.getElementById('container'));
+			root.render(h1);
+		</script>
+	</body>
+</html>
+			`
+		},
+		"index.js": {
+			code: `
+			`,			
+		},
+	}}
+/>
+</div>
+
+Notice that after installing `Babel` we can now use JSX syntax instead of `React.createElement` and behind the scenes Babel will transpile our code and translate `JSX` to `React.createElement`.  
+There are many aspects of `JSX` that still need to be discussed and we have a full lesson on the topic.
+
+## Component
+
+Rather you are using `JSX` or calling `React.createElement` essentially both ways are actually calling `React.createElement`.  
+`React.createElement` has a few declarations, here is the declaration that we used:
+
+```typescript
+function createElement<P extends DOMAttributes<T>, T extends Element>(
+	type: string,
+	props?: ClassAttributes<T> & P | null,
+	...children: ReactNode[]
+): DOMElement<P, T>;
+```
+
+I will write the above in a different way which hopefully would be clearer (but not accurate in terms of the actual types):
+
+```typescript
+function createElement(
+	type: string, // a dom element string
+	props?: DomElementAttributes, // this is the attributes that dom element can get
+	...children: ReactNode[] // children of the element
+): DOMElement<P, T>;
+```
+
+We will have a full lesson on React components where we will discuss about the second `props` argument in more details.
+
+Let's examine another type of declaration we can pass to `React.createElement`:
+
+```typescript
+function createElement<P extends {}>(
+	type: FunctionComponent<P> | ComponentClass<P> | string,
+	props?: Attributes & P | null,
+	...children: ReactNode[]
+): ReactElement<P>;
+```
+
+or is simple terms (but changing the name of the types to be more clear, so less accurate):
+
+```typescript
+function createElement<P extends {}>(
+	type: ReactComponent, // we can place here entire component
+	props?: Props, // component props
+	...children: ReactNode[] // component children
+): ReactElement<P>;
+```
+
+the important thing that I want to focus on in this lesson is the first argument which can be a `FunctionComponent<P> | ComponentClass<P>` or as I named it later on it can be `ReactComponent`.  
+We will focus in this course on the `FunctionComponent<P>` as the way to create a `ReactComponent`, and the word to focus on in the `Function` part, this means that I can pass to `React.createElement` a function as the first argument.  
+For example instead of doing:
+
+```typescript
+React.createElement('h1', null, 'hello world')
+```
+
+I can do this:
+
+```typescript
+const h1 = React.createElement(() => {
+	return <h1>hello world 3</h1>
+})
+```
+
+Most of the times you will use `JSX` instead of directly calling `React.createElement` so this:
+
+```typescript
+const h1 = React.createElement(() => {
+	return (
+		<h1>
+			<span>
+				<u>Hello world with React and JSX!</u>
+			</span>
+		</h1>
+	);
+})
+```
+
+could be replaced with:
+
+```typescript
+const H1 = () => {
+	return (
+		<h1>
+			<span>
+				<u>Hello world with React and JSX!</u>
+			</span>
+		</h1>
+	)
+}
+```
+
+I created a React UI component and now every place that takes `React.createElement` I can instead place the component I just created by using the function name `H1`, for example:
+
+```typescript
+const root = ReactDOM.createRoot(document.getElementById('container'));
+root.render(<H1 />);
+```
+
+So React allows me to create Virtual Dom element, also I can create multiple Virtual Dom elements, and I can also group multiple virtual dom elements to a UI component and create a new `"<Tag />"`.
+
+When developing with React we split the ui we are developing to logical group using React Components which are transformed to new tags we can use multiple times.  
+Also each component will take care of the change hapenning in that component but we will talk about component changes in our lesson about React components.
+
+## Components tree
+
+There is more power to React components, in fact we will have an entire lesson about those UI components, but for now let's keep things simple and understand that the main goal of the library is to give you tools for creating UI components.  
+Those components will create the virtual dom which will create the real dom.  
+Those components will represent your dom and will take care of updating the dom when you make changes in your components in a certain way.
+
+Basically when creating a React application you create a tree of those UI components.  
+For example you can create a component that represents the **Header** of your app `<Header />`.  
+You can create a component for the `<Footer />`.  
+And you can create a form for login form `<Login />`.  
+You can then create a component `<App />` that place all those components on the screen you are creating:
+
+```typescript
+function App() {
+	return (
+		<div>
+			<Header />
+			
+			<Login />
+			
+			<Footer />
+		</div>
+	)
+}
+```
+
+So in a React application you will create a tree of those UI components.
+
+## Summary
+
+React is a library for creating UI components, it gives you the tools for creating components that will generate a virtual dom, react will take that virtual dom and create and update the real dom to match the virtual dom.  
+
+When developing with React you will logically break the screen you are creating to UI components, those component will take care of it's own logic, and will also take care about all the updates and transformations of that component.
+
+There is a lot to learn about the React library by simply creating an `HTML` file and including the React cdn javascript, and now that we covered it we can learn how to bootstrap a react application using a cli tool called `create-react-app`.
+
