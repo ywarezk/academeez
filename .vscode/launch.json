@@ -15,14 +15,11 @@
     },
     {
       "name": "test",
-      "program": "${workspaceFolder}/node_modules/.bin/playwright",
-      "args": ["test"],
+      "runtimeExecutable": "pnpm",
+      "args": ["playwright", "test"],
       "request": "launch",
       "skipFiles": ["<node_internals>/**"],
-      "type": "node",
-      "env": {
-        "BASE_URL": "https://academeez-git-feat-coverage-nerdeez.vercel.app"
-      }
+      "type": "node"
     }
   ]
 }

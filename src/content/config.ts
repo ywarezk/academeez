@@ -26,6 +26,7 @@ export const collections = {
 		schema: i18nSchema({
 			extend: z.object({
 				'header.courses': z.string(),
+				'header.explore': z.string(),
 				'pagesidebar.authors': z.string(),
 				'pagesidebar.source': z.string(),
 				'breadcrumbs.home': z.string(),
