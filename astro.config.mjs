@@ -155,7 +155,7 @@ export default defineConfig({
 						},
 						{
 							label: '4. JSX',
-							items: [{ autogenerate: { directory: 'courses/react/JSX', collapsed: true } }],
+							items: [{ autogenerate: { directory: 'courses/react/jsx', collapsed: true } }],
 						},
 						{
 							label: '5. Props',
