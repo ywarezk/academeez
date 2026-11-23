@@ -8,3 +8,28 @@ export function cn(...inputs: ClassValue[]) {
 export function isRtl(locale: string) {
 	return ['ar', 'he'].includes(locale);
 }
+
+export const thumbnails = import.meta.glob(
+	'/src/content/docs/**/thumbnail.png', // ✅ No /he/ prefix — only default locale
+	{ eager: true, import: 'default' }
+) as Record<string, { src: string }>;
+
+/**
+ * returns the thumbnail for a given lesson slug and locale
+ * @param slug the slug of the lesson
+ * @param locale the locale since we need to strip it
+ * @returns the thumbnail for the lesson or undefined if not found
+ */
+export function getThumbnailBySlug(slug: string, locale: string): { src: string } | undefined {
+	// If non-default locale, strip it from the slug
+	const normalizedSlug = locale
+		? slug.startsWith(`${locale}/`)
+			? slug.slice(locale.length + 1)
+			: slug
+		: slug;
+
+	const entry = Object.entries(thumbnails).find(([path]) => {
+		return path.includes(`/docs/${normalizedSlug}/thumbnail.png`);
+	});
+	return entry?.[1]; // the built URL
+}
