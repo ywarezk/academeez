@@ -13,10 +13,10 @@ import { isRtl } from './utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro';
 import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro';
-import type {
-	SidebarEntry,
-	SidebarGroup,
-} from 'node_modules/@astrojs/starlight/utils/routing/types';
+import type { StarlightRouteData } from '@astrojs/starlight/route-data';
+
+type SidebarEntry = StarlightRouteData['sidebar'][number];
+type SidebarGroup = Extract<SidebarEntry, { type: 'group' }>;
 
 const locale = Astro.currentLocale || 'en';
 

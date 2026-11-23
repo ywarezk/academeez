@@ -1,6 +1,5 @@
 ---
 import { getEntry } from 'astro:content';
-// @ts-expect-error - Starlight virtual module
 import SocialIcons from 'virtual:starlight/components/SocialIcons';
 import { getCourses } from '../utils/courses';
 import logoLight from '../assets/logo-light.svg';
@@ -51,16 +50,13 @@ const githubRepoUrl = 'https://github.com/ywarezk/academeez';
 			<h3 class="footer-heading">{coursesLabel}</h3>
 			<ul class="footer-links-list">
 				{
-					courses.map((course) => {
-						const courseHref = `${localePrefix}/courses/${course.slug}`;
-						return (
-							<li>
-								<a href={courseHref} class="footer-link">
-									{course.title}
-								</a>
-							</li>
-						);
-					})
+					courses.map((course) => (
+						<li>
+							<a href={`${localePrefix}/courses/${course.slug}`} class="footer-link">
+								{course.title}
+							</a>
+						</li>
+					))
 				}
 			</ul>
 		</nav>

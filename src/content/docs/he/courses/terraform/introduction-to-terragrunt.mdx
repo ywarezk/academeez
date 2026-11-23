@@ -17,7 +17,8 @@ video:
     - Terragrunt
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import TerragruntCommonModuleTabs from '../../../courses/terraform/_components/TerragruntCommonModuleTabs.astro';
+import TerragruntEnvModuleTabs from '../../../courses/terraform/_components/TerragruntEnvModuleTabs.astro';
 
 <div class="not-content flex">
   <iframe
@@ -231,50 +232,7 @@ EOF
 ניתן גם לקודד את ה input ים שחוזרים על עצמם באותם הקבצים זה יחסוך  את העבודה של להכניס אינפוטים שחוזרים על עצמם.
 בתוך התיקייה `/iac/gcp/tofu/_env` ניצור את הקבצים: `folder.hcl`, `project.hcl`.
 
-<Tabs>
-  <TabItem value="folder.hcl" label="folder.hcl">
-```hcl
-/**
- * terragrunt function to create a folder
- */
- 
-locals {
-	org_id = yamldecode(file(find_in_parent_folders("common_vars.yaml"))).org_id
-}
-
-terraform {
-	source = "tfr:///terraform-google-modules/folders/google?version=5.0.0"
-}
-
-inputs = {
-	parent = "organizations/${local.org_id}"
-}
-```
-  </TabItem>
-  <TabItem value="project.hcl" label="project.hcl">
-```hcl
-/**
- * terragrunt function to create a project
- */
- 
-locals {
-	org_id = yamldecode(file(find_in_parent_folders("common_vars.yaml"))).org_id
-	billing_account = yamldecode(file(find_in_parent_folders("billing_vars.yaml"))).billing_account
-}
-
-terraform {
-	source = "tfr:///terraform-google-modules/project-factory/google?version=17.1.0"
-}
-
-inputs = {
-	random_project_id    = true
-	org_id = local.org_id
-	billing_account = local.billing_account
-	budget_amount = 20
-}
-```
-  </TabItem>  
-</Tabs>
+<TerragruntEnvModuleTabs />
 
 אחרי שיצרנו את הפונקציות terragrunt שלנו המבוססות על `terraform-google-modules`, נוכל להשתמש בקונפיגורציות הפונקציות האלו כדי ליצור משאבים שנצטרך כדי ליצור את ה state ב bucket.
 
@@ -286,77 +244,7 @@ inputs = {
 - `common/folders/shared/terragrunt.hcl` - תחת התיקייה הראשית ניצור תיקייה שנקראת `shared` למשאבים שמשותפים
 - `common/project/terragrunt.hcl` - זה יצור את הפרוייקט `academeez-k8s-flux-common`
 
-<Tabs>
-  <TabItem value="common/folder/terragrunt.hcl" label="common/folder/root/terragrunt.hcl">
-```hcl
-/**
- * Create the root folder, all the resources will be created under this folder
- */
-
-include "root" {
-  path   = find_in_parent_folders()
-}
-
-include "folder" {
-	path = "${dirname(find_in_parent_folders())}/_env/folder.hcl"
-}
-
-inputs = {
-	names = [ "academeez-k8s-flux" ]
-}
-```
-  </TabItem>
-  <TabItem value="common/folder/shared/terragrunt.hcl" label="common/folder/shared/terragrunt.hcl">
-```hcl
-/**
- * The shared folder will contain all the shared resources between environments
- */
-
-include "root" {
-	path   = find_in_parent_folders()
-}
-
-include "folder" {
-	path = "${dirname(find_in_parent_folders())}/_env/folder.hcl"
-}
-
-# since this folder is under the root folder we will use dependency to get the parent folder
-dependency "root_folder" {
-	config_path = "../root"
-}
-
-inputs = {
-	parent = dependency.root_folder.outputs.id
-	names = [ "shared" ]
-}
-```
-  </TabItem>
-  <TabItem value="common/project/terragrunt.hcl" label="common/project/terragrunt.hcl">
-```hcl
-/**
- * The common resources that are shared between the environments will be under the common project
- */
-
-include "root" {
-	path   = find_in_parent_folders()
-}
-
-include "project" {
-	path = "${dirname(find_in_parent_folders())}/_env/project.hcl"
-}
-
-# since the project will be under the shared folder we will grab it using the dependency block
-dependency "shared_folder" {
-	config_path = "../folders/shared"
-}
-
-inputs = {
-	folder_id = dependency.shared_folder.outputs.id
-	name = "academeez-k8s-flux-common"
-}
-```
-  </TabItem>  
-</Tabs>
+<TerragruntCommonModuleTabs />
 
 אנחנו משתמשים בקונפיגורציות שיצרנו בתיקיית `_env` כדי ליצור תיקיית root, shared, ופרוייקט שיכיל את המשאבים המשותפים.
 כמה נקודות לשים לב:

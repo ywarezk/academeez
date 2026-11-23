@@ -1,0 +1,77 @@
+---
+import CodeTabs from '~/components/CodeTabs.astro';
+
+const tabs = [
+	{
+		label: 'common/folders/root/terragrunt.hcl',
+		code: `/**
+ * Create the root folder, all the resources will be created under this folder
+ */
+
+include "root" {
+  path   = find_in_parent_folders()
+}
+
+include "folder" {
+	path = "\${dirname(find_in_parent_folders())}/_env/folder.hcl"
+}
+
+inputs = {
+	names = [ "academeez-k8s-flux" ]
+}
+`,
+	},
+	{
+		label: 'common/folders/shared/terragrunt.hcl',
+		code: `/**
+ * The shared folder will contain all the shared resources between environments
+ */
+
+include "root" {
+	path   = find_in_parent_folders()
+}
+
+include "folder" {
+	path = "\${dirname(find_in_parent_folders())}/_env/folder.hcl"
+}
+
+# since this folder is under the root folder we will use dependency to get the parent folder
+dependency "root_folder" {
+	config_path = "../root"
+}
+
+inputs = {
+	parent = dependency.root_folder.outputs.id
+	names = [ "shared" ]
+}
+`,
+	},
+	{
+		label: 'common/project/terragrunt.hcl',
+		code: `/**
+ * The common resources that are shared between the environments will be under the common project
+ */
+
+include "root" {
+	path   = find_in_parent_folders()
+}
+
+include "project" {
+	path = "\${dirname(find_in_parent_folders())}/_env/project.hcl"
+}
+
+# since the project will be under the shared folder we will grab it using the dependency block
+dependency "shared_folder" {
+	config_path = "../folders/shared"
+}
+
+inputs = {
+	folder_id = dependency.shared_folder.outputs.id
+	name = "academeez-k8s-flux-common"
+}
+`,
+	},
+];
+---
+
+<CodeTabs tabs={tabs} lang="hcl" />
