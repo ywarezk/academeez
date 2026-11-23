@@ -4,6 +4,9 @@ description: Change commit message, proper conventions, and more
 publishDate: 2024-12-25
 authors:
   - yariv-katz
+sources:
+  - title: git commit messages
+    url: https://github.com/ywarezk/academeez-commit-messages
 ---
 
 Let's talk about commit messages.  
@@ -340,27 +343,28 @@ You commit message is now changed.
 
 Since release automation is now being done based on the commit messages, and if we accidently push a wrong commit message it could affect the release process, it is recommended to force developers
 to write proper commit messages (doing that would protect us from the wrong commit message we just fixed).
-We can use a tool called [commitlint](https://commitlint.js.org/#/) to enforce commit message rules on a pre-commit hook (we can use [husky](https://typicode.github.io/husky/)).
-Another popular solution is to use [commitizen](https://commitizen-tools.github.io/commitizen/) which is a cli tool that helps us write commit messages following rules defined in the project. (we do recommend using a pre-commit hook even if commitizen is used cause it can be bypassed).
+We can use a tool called [commitlint](https://commitlint.js.org/#/) to enforce commit message rules on a `commit-msg` git hook.
+Preparing the git hooks with [husky](https://typicode.github.io/husky/) is the easiest solution in my opinion.
 
-Install commitizen:
-
-```bash
-npm install --save-dev commitizen
-```
-
-Init commitizen with the adapter of choice:
+Install commitlint and husky:
 
 ```bash
-npx commitizen init cz-conventional-changelog --save-dev --save-exact
+npm install --save-dev @commitlint/{config-conventional,cli} husky
 ```
 
-Now if we add our changes a commit can be done using `npx cz` and it will guide us through the commit message.
+initialize husky:
 
 ```bash
-git add -A
-npx cz
+npx husky init
 ```
+
+Create a `commit-msg` hook that will run commitlint:
+
+```bash
+echo "npx --no -- commitlint --edit \$1" > .husky/commit-msg
+```
+
+Now every time a developer will commit their commit message will be checked by commitlint, if the message is not following the conventional commit rules the commit will be rejected.
 
 ## Conclusion
 
