@@ -13,11 +13,17 @@ export const CourseCarousel: FC<{
 	const [articles, setArticles] = useState<Array<any>>([]);
 	
   useEffect(() => {    
-    getCollection('docs', content => {
-      return content.data.template === 'doc' && content.slug.indexOf(courseLink) > -1 && content.data.preview;
+    getCollection('docs', content => {   
+      let prefix = '';
+      if (locale) {
+        prefix = `${locale}/courses/${courseLink}`;
+      } else {
+        prefix = `courses/${courseLink}`;
+      }
+      return content.data.template === 'doc' && content.slug.startsWith(prefix) && content.data.preview;
     }).then(allCollections => {			
       setArticles(allCollections.sort((a: any, b: any) => {
-				return a.data.order - b.data.order;
+				return a.data.sidebar.order - b.data.sidebar.order;
 			}))			
 		});
   }, []);
@@ -34,6 +40,7 @@ export const CourseCarousel: FC<{
 						articles.map((article: any) => (
 							<CarouselItem className="basis-1/3" key={article.id}>
 								<LessonCard
+                  locale={locale}
 									article={article}									
 								/>																
 							</CarouselItem>
