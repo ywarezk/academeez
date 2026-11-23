@@ -20,14 +20,15 @@ export async function getStaticPaths() {
 	})	
 }
 
+export const prerender = true;
+
 const { name } = Astro.params;
 const authorEntry = await getEntry('authors', name)
-const {Content} = await authorEntry.render()
+const {Content} = await authorEntry?.render() as any;
 
 const astroProps = await generateStarlightPageRouteData({ 
-	props: {...Astro.props as any, frontmatter: {title: 'hide me', template: 'splash', hero: {}}}, 
+	props: {...Astro.props as any, frontmatter: {title: 'hide me', template: 'splash', hero: {}, publishDate: new Date()}}, 
 	url: Astro.url  })
-
 ---
 
 
@@ -37,7 +38,7 @@ const astroProps = await generateStarlightPageRouteData({
 	}
 </style>
 
-<Page {...astroProps} >
+<Page {...astroProps}>
 	<Content />
 </Page>
 
