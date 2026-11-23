@@ -1,0 +1,85 @@
+---
+globs: **/COMMIT_EDITMSG
+alwaysApply: true
+---
+
+Rules for writing commit messages.
+
+- We are using conventional commits
+- With gitmoji after the header colon
+- We add scope when possible (scope will be specified further in the document)
+
+## When to use
+
+
+When the opened file is `**/.git/COMMIT_EDITMSG` it means we are writing a commit message.
+If a developer wants to use AI for commit messages they will need to set cursor as the git editor:
+
+```bash
+> git config --global core.editor "cursor --wait --reuse-window"
+> git config --global sequence.editor "cursor --wait --reuse-window"
+```
+
+In addition, they will have to use `git commit` without the `-m` flag to write the commit with cursor.
+
+## scope
+
+Conventional commits have an optional scope.
+For example:
+
+```bash
+<type>(<scope>)?: <description>
+```
+
+That scope is optional and in our use case it can be one of the following:
+
+- `astro` - for modification to the astro application as well as components section that astro is using.
+- `content` - everything that relates to the content of the lessons
+- `ci` - everything that relates to github actions automation
+- `test` - relates to e2e playwright test
+
+If none of those scopes seems fitting remember that the scope is optional and you can omit that scope.
+Remember that the scope should be one from the list, don't invent different scope that is not on the list.
+
+## Format
+
+We are using conventional commits as the format of the commit messages
+
+- **Header (required)**: `<type>(<scope>)?: <description>`
+  - `type` ∈ { feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert }
+  - `scope` is optional but preferred – use one of the project-specific scopes listed above (see "scope" section).
+  - Put a single **gitmoji** **AFTER** the colon or at the end of the subject. Do **not** put emoji before `<type>`.
+- **Body (optional)**: short bullets explaining _why_ and _how_; wrap at ~72 chars/line.
+- **Footer (as needed)**:
+  - `BREAKING CHANGE: ...` for breaking changes also use `!` in header.
+  - Reference issues as `Refs: #123`, `Fixes: #456`.
+
+## Gitmoji mapping (examples)
+
+- feat → ✨ (`:sparkles:`)
+- fix → 🐛 (`:bug:`) or 🚑 (`:ambulance:`) for hotfix
+- docs → 📝 (`:memo:`)
+- style → 🎨 (`:art:`)
+- refactor → ♻️ (`:recycle:`)
+- perf → 🚀 (`:rocket:`)
+- test → ✅ (`:white_check_mark:`)
+- chore(deps): ⬆️ (`:arrow_up:`) for upgrades, ⬇️ (`:arrow_down:`) for downgrades
+- revert → ⏪ (`:rewind:`)
+
+## Rules
+
+- Start the header with the **Conventional** pattern so tooling can parse it.
+- Keep subjects imperative, ~50–72 chars.
+- Prefer one emoji; Unicode or shortcode is fine.
+- If the diff includes API changes, add `!` and a `BREAKING CHANGE:` footer.
+- If the diff only changes formatting, use `style:` not `refactor:`.
+
+## Examples
+
+- `feat(auth): ✨ add PKCE support`
+- `fix(api): 🐛 handle 429 retry-after`
+- `chore(deps): ⬆️ bump next to 15.0.2`
+
+## Output policy
+
+Return **only** the final commit message (no extra commentary).
