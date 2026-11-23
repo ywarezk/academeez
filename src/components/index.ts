@@ -4,6 +4,6 @@ export { Button } from './Button';
 export * from './Card';
 export * from './LessonCard';
 export * from './Carousel';
-export * from './CourseCarousel';
+export { default as LocalCourseCarousel} from './LocaleCourseCarousel.astro';
 export * from './Breadcrumb';
 export * from './Avatar';
