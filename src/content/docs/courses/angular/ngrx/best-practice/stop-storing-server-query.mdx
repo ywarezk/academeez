@@ -7,13 +7,16 @@ sidebar:
   hidden: true
 ---
 
+import {Sandpack} from '@codesandbox/sandpack-react';
+
 Let's examine this simple scenario:
 - Angular application
 - with service that fetch a list of github repositories
 - Display the list of repositories in `AppComponent`
 
-<div className="mt-5">
+<div className="mt-5 not-content">
 <Sandpack 
+	client:load
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",
@@ -149,8 +152,9 @@ Instead of sending 2 queries lets send one query and also define that the data i
 This task would have been complex if we did our own solution, but using the power of **Tanstack** and `@ngneat/query` it becomes easy.
 
 
-<div className="mt-5">
+<div className="mt-5 not-content">
 <Sandpack 
+	client:load
 	customSetup={{ 
 		dependencies: { 			
 			"@angular/core": "^17.0.0",
