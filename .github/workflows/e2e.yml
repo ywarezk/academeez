@@ -16,11 +16,14 @@ on:
       ref:
         description: "Commit SHA or branch to test"
         required: true
+      url:
+        description: "Preview environment URL"
+        required: true
         
 jobs:
   run-e2es:    
     runs-on: ubuntu-latest
-    steps:                 
+    steps:    
       - uses: actions/create-github-app-token@a8d616148505b5069dccd32f177bb87d7f39123b
         id: app-token
         with:

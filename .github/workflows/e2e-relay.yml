@@ -50,7 +50,8 @@ jobs:
               workflow_id: 'e2e.yml', // Replace with your workflow file name
               ref,
               inputs: {
-                ref: sha
+                ref: sha,
+                url: `${{ github.event.client_payload.url }}`
               }
             });
           
