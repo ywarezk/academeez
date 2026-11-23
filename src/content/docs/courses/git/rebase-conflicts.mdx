@@ -9,15 +9,48 @@ authors:
 I see many developers struggle with using `git rebase` and I think the main reason of the struggle is 
 caused by the conflicts that arise when rebasing.
 So right from the start let's clarify something:
-**Does `git rebase` has more conflicts than `merge`?**: The answer is neither yes or no - annoying I know, we love to hear a black and white answer, but the truth often lies in the gray area, 
-and it oftens depends on the developer plan and experience.
-
-Let's start by understanding why the usually when we start using `git rebase` we stumble on many conflicts.
-
+**Does `git rebase` has more conflicts than `merge`?**: The answer is if you **know what you are doing** than usually no - the number of conflicts will be the same.
+The **know what you are doing** is often the problem.
+If you are working in a branch and your commits are **messy** (We will explain what messy means) then you will have ton of conflicts when working with rebase.
+In this article we will try and understand how `git rebase` works, and why we have so many conflicts when rebasing.
 
 ## Rebase and Merge
 
 Let's start by understanding what `git rebase` and `git merge` are doing.
 
 Our starting point is that we started from a branch called `main`.
-We wanted to work on a new feature, so we created a new branch called `feature/`.
+We wanted to work on a new feature, so we created a new branch called `feature`.
+We created a few commits on the `feature` branch and while we were working on the branch, the `main` branch was updated with new commits.
+
+![feature main commits](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/store-state-angular.png?raw=true)
+
+We want to get the new commits from `main` into our `feature/something` branch.
+Usually developers will do something like this:
+
+```bash
+git pull origin main
+```
+
+this is assuming that they are now on the `feature/something` branch.
+We will discuss what this command does in a moment.
+But let's assume something else, let's assume our local repository `main` branch is up to date with the remote `main` branch.
+Now to get the new commits from `main` into our `feature/something` branch we can do one of two things:
+
+1. We can use `git merge` to merge the `main` branch into our `feature/something` branch.
+
+```bash
+git merge main
+```
+
+This assumes we are on the `feature/something` branch.
+
+2. We can use `git rebase` to rebase our `feature/something` branch on top of the `main` branch.
+
+```bash
+git rebase main
+```
+
+Let's try and understand what each of these commands does.
+
+### Git Merge
+
