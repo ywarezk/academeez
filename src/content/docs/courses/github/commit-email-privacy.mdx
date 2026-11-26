@@ -9,31 +9,39 @@ sources:
     title: "github-noreply-email"
 ---
 
-## TL;DR
+## Most developers get at least one of these wrong
 
-This lesson is about which email address lands in Git commit metadata, and what we recommend for public work on GitHub. Start here if you only want the setup; the sections below explain **why** each step matters.
+This lesson is about which email address lands in Git commit metadata on public GitHub work. **Most developers are doing at least one of these things wrong.** If you recognize yourself below, the **fix** under each item is what we recommend; the sections that follow explain **why**.
 
-1. Find your GitHub no-reply email on [Settings → Emails](https://github.com/settings/emails). It looks like `2714362+username@users.noreply.github.com` (a numeric ID, `+`, your username, `@users.noreply.github.com`).
-2. On the same page, enable **Keep my email addresses private**. That reveals **Block command line pushes that expose my email**—turn that on too. With blocking enabled, GitHub rejects a push when the latest commit uses a verified private address on your account (until you complete step 3).
-3. Point Git at that no-reply address globally:
+1. **You still push with a real inbox (or any verified private address on your account) in `user.email`.**  
+   **Fix:** Copy your GitHub no-reply address from [Settings → Emails](https://github.com/settings/emails)—it looks like `2714362+username@users.noreply.github.com` (numeric ID, `+`, username, `@users.noreply.github.com`). Use that in Git, not your work or personal address.
+
+2. **GitHub email privacy is off, or only half on.**  
+   **Fix:** On [Settings → Emails](https://github.com/settings/emails), enable **Keep my email addresses private**. That reveals **Block command line pushes that expose my email**—turn that on too. With blocking enabled, GitHub rejects a push when the latest commit uses a verified private address on your account. Until you set `git config user.email` to that noreply address (typically with `git config --global user.email`), those pushes stay rejected.
+
+:::note
+If you deliberately want your real inbox in commit metadata—for example so collaborators can email you from `git log`—set a local `git config user.email` to a verified address on your account. That conflicts with blocking: turn **off** **Block command line pushes that expose my email** for the whole account (there is no per-repository exception). Your address is back in history for any GitHub repo you push to with that config.
+:::
+
+3. **Your browser is safe but local Git is not.**  
+   Privacy settings help for web-based commits; pushes from your machine still use `git config`. If you turned on **Keep my email addresses private** and **Block command line pushes that expose my email**, GitHub rejects pushes from local Git until the author email on the commit is your noreply—not a verified private address on your account.  
+   **Fix:** Point Git at that no-reply address globally:
 
 ```bash
 git config --global user.email "ID+username@users.noreply.github.com"
 ```
 
-Replace the placeholder with the exact address GitHub shows in step 1. Check per-repo settings too: `git config user.email` overrides global config inside that repository.
+Replace the placeholder with the exact address GitHub shows on [Settings → Emails](https://github.com/settings/emails). Check per-repo settings too: `git config user.email` overrides global config inside that repository.
 
-4. If you deliberately want your real inbox in commit metadata on GitHub—for example so collaborators can email you from `git log`—you can set a local `git config user.email` to a private address verified on your account. That conflicts with step 2: you must turn off **Block command line pushes that expose my email** for the whole account (there is no per-repository exception), and your address is back in history for any GitHub repo you push to with that config.
-
-**Later (future lessons)**—but also part of our best-practice recommendations:
+**Part of our best-practice recommendations** (later lessons in this course):
 
 - Create a GPG key whose email identity is your GitHub noreply address, configure Git to sign commits, and add the public key to GitHub.
-- Add a ruleset (organization or repository) that rejects unsigned commits.
+- Add a ruleset (organization or repository) with **Require signed commits**—GitHub enforces **verified** signatures, so unsigned and **Unverified** commits are rejected.
 - Enable [vigilant mode](https://docs.github.com/en/authentication/managing-commit-signature-verification/displaying-verification-statuses-for-all-of-your-commits) on your account so unsigned or unverified commits show that status instead of looking fully trusted.
 
-We explain those steps in a later lesson in this course.
+We explain those in a future lesson.
 
-With the TL;DR above, the rest of the lesson explains **why** we recommend that setup. We start with the problem.
+The rest of the lesson explains **why** each fix matters. We start with the problem.
 
 ## Email is exposed for everyone to see
 
@@ -68,7 +76,7 @@ Notice **Commit** is `GitHub <noreply@github.com>` (typical for a merged PR) whi
 
 ## Recommendation: do not expose your email address in public commit metadata
 
-Your email in a commit is not “just metadata.” It is a **public, copy-pasteable identifier** that rides along with the code forever.
+Your email in a commit is not “just metadata.” On a **public repository**, it is exposed for everyone to see—it rides along with the code forever.
 
 Git does not forget. Once your real address is in history, it stays in the object database for anyone who clones or forks the repo. Deleting a branch or making the repository private on GitHub does not erase commits that already spread to other clones and mirrors. You can rewrite history in a repo you control, but you cannot take back what people already copied.
 
@@ -107,7 +115,7 @@ So the question is, if I don't want my mail exposed I could simply set the name 
 
 So you could set `git config user.email "not-my@real.email"`
 
-Few problems with that approach...
+That shortcut still “works” in Git, but on GitHub it runs into separate problems: profile linking, commit verification, and branch rules that enforce verified signatures. We walk through all three with the same small experiment.
 
 ### Commits are connected to profiles
 
@@ -151,8 +159,6 @@ git config user.email "non-existing-address@academeez.com"
 
 We changed `README.md` again, committed, and pushed. The new commit is **not** linked to any GitHub profile—the author email is not on anyone’s account.
 
-The push still succeeded, which can feel harmless. Later lessons cover **commit signing**: GitHub shows a **Verified** badge only when the signature checks out, signing is set up, and the signing key is on your account. You can still *create* commits with a random author email, but they stay **unsigned** (or **Unverified** if you sign with a key that does not match that email). If the repository later requires signed commits—rulesets can enforce that—those pushes will be rejected—not because Git forbids the email, but because the commit will not pass the rule.
-
 In this experiment the **Contributors** list did not change; GitHub still showed only one contributor.
 
 One more experiment: we misbehave a bit and set `user.email` to an address we know belongs to someone else’s GitHub account—we took it from a contributor in ohmyzsh (you can lift author emails from public `git log` output on many projects).
@@ -167,17 +173,31 @@ We create another commit and push. On the commits page the UI may attribute the 
 
 That happens when the **author email** matches their account; it does not always add them everywhere GitHub surfaces contributors. That does **not** mean they logged in or approved the push—you still pushed with **your** credentials; only the **metadata** claims to be them. (`git config user.name` is just as easy to fake.)
 
-This is why we care about signing commits, branch rules that require verified signatures, and—for your own account—[vigilant mode](https://docs.github.com/en/authentication/managing-commit-signature-verification/displaying-verification-statuses-for-all-of-your-commits), which marks commits that are unsigned or not fully verified instead of hiding the gap:
-
-![Unsigned or unverified commit with vigilant mode](commit-email-privacy/unverified.png)
-
-Signing and vigilant mode deserve their own lesson. For now: treat author name and email in Git as claims anyone with push access can forge—do not trust a commit just because GitHub shows an avatar unless it carries a **Verified** signature you expect (signing set up and the key on your account).
-
 Also notice what **Contributors** may show for our repository now:
 
 ![Unsigned or unverified commit with vigilant mode](commit-email-privacy/three-contributors.png)
 
 In our demo, playing with `git config user.email` pushed the **Contributors** count to 3 on that repo—what you see can differ, and GitHub may not treat every forged-author commit as a new contributor in every view.
+
+### Wrong author email cannot be verified
+
+Profile linking is only one axis. Later lessons cover **commit signing** in depth; for this demo, the important part is what GitHub shows on the commit.
+
+GitHub awards a **Verified** badge only when the signature checks out, you have signing set up, and the signing key is on your account **and** aligned with the **Author** email. You can still *create* commits with a random or forged author email, but they stay **unsigned**, or **Unverified** if you sign with your key while `user.email` does not match the emails on that key and your GitHub account.
+
+Even if you sign the ohmyzsh-style commits with **your** key, GitHub will not show **Verified** for the reasons above—a “wrong” `user.email` (random, unused, or borrowed from someone else) cannot become a verified commit on your identity.
+
+On your own account, [vigilant mode](https://docs.github.com/en/authentication/managing-commit-signature-verification/displaying-verification-statuses-for-all-of-your-commits) makes that gap visible: it marks commits that are unsigned or not fully verified instead of hiding them:
+
+![Unsigned or unverified commit with vigilant mode](commit-email-privacy/unverified.png)
+
+Signing and vigilant mode deserve their own lesson. For now: treat author name and email in Git as claims anyone with push access can forge—do not trust a commit just because GitHub shows an avatar unless it carries a **Verified** signature you expect.
+
+### Rulesets reject unsigned and unverified commits
+
+In our experiment every push still succeeded—Git does not block odd metadata. Organizations and repositories can tighten that with a ruleset rule **Require signed commits**; GitHub enforces **verified** signatures, not merely an attached signature.
+
+Once that rule applies to the branches you push to, commits that are **unsigned** or **Unverified**—including everything we made with a wrong `user.email`—are rejected on push or merge. That is not Git forbidding the email; the commit simply fails the rule.
 
 ## GitHub private email
 
@@ -189,7 +209,7 @@ The explanation on this option (quoted from GitHub):
 >
 > Previously authored commits associated with a public email will remain public.
 
-On that same page GitHub shows your account’s noreply address—the special `ID+username@users.noreply.github.com` mail GitHub provides so commits can link to your profile without exposing a real inbox. We recommend copying the exact address from **Settings → Emails** and setting it in `git config user.email` for command-line work (step 3 in the TL;DR). GitHub applies it for you on the website when privacy is on; your local Git does not switch unless you configure it.
+On that same page GitHub shows your account’s noreply address—the special `ID+username@users.noreply.github.com` mail GitHub provides so commits can link to your profile without exposing a real inbox. We recommend copying the exact address from **Settings → Emails** and setting it in `git config user.email` for local Git—for example with `git config --global user.email "…"`. GitHub applies noreply for you on the website when privacy is on; your local Git does not switch unless you configure it.
 
 Web-based operations are commit changes you make on the website—popular examples are merging a pull request or editing a file in the browser. In those cases, new commits use your GitHub noreply email. That setting does not change commits you push from your computer; those still use the address from `git config user.email`.
 
@@ -203,7 +223,7 @@ That check applies to the **Author** email on the commit GitHub inspects only—
 
 Another extra protection—we will cover this in a future lesson—is signed commits. **Verified** on GitHub means the signature checks out and the key is on your account; a later lesson covers GitHub’s email and key matching rules in full. A GPG key is tied to an email address; we will create one for your GitHub noreply address, turn on signing in `git config`, and use rules on the remote so unsigned or **Unverified** commits cannot land. That proves the commit came from you and gives you another check that commit metadata uses the noreply GitHub mail—not a verified private address by mistake.
 
-In some cases—personally, it has not happened to me—you may want a verified address on your account in commit metadata. For example, you contribute to a private repository and maintainers ask you to leave a reachable email for questions about a certain commit. Then you set `git config user.email` to that address and turn **off** **Block command line pushes that expose my email** for the whole account (there is no per-repository exception), as we noted in the TL;DR.
+In some cases—personally, it has not happened to me—you may want a verified address on your account in commit metadata. For example, you contribute to a private repository and maintainers ask you to leave a reachable email for questions about a certain commit. Then you set `git config user.email` to that address and turn **off** **Block command line pushes that expose my email** for the whole account (there is no per-repository exception).
 
 If you keep the recommended settings turned on, you still need to adjust Git before you push—otherwise your next push to the remote might be rejected.
 
@@ -224,7 +244,7 @@ cd git-repo-with-different-email
 git config user.email "some-other@mail-then.default"
 ```
 
-If that local address is a verified email on your GitHub account, you will have to turn **off** **Block command line pushes that expose my email** on [Settings → Emails](https://github.com/settings/emails) for the whole account—as in step 4 of the TL;DR.
+If that local address is a verified email on your GitHub account, you will have to turn **off** **Block command line pushes that expose my email** on [Settings → Emails](https://github.com/settings/emails) for the whole account (there is no per-repository exception).
 
 ## Summary
 
@@ -241,7 +261,7 @@ Optional: if you deliberately want a verified address on your account in metadat
 **Also part of our best-practice recommendations** (covered in later lessons in this course):
 
 - Create a GPG key whose email identity is your GitHub noreply address, configure Git to sign commits, and add the public key to GitHub.
-- Add a ruleset (organization or repository) that rejects unsigned commits.
+- Add a ruleset (organization or repository) with **Require signed commits**—GitHub enforces **verified** signatures, so unsigned and **Unverified** commits are rejected.
 - Enable [vigilant mode](https://docs.github.com/en/authentication/managing-commit-signature-verification/displaying-verification-statuses-for-all-of-your-commits) so unsigned or unverified commits are visible instead of looking fully trusted.
 
 Noreply plus privacy and blocking gives you profile-linked commits without exposing your real inbox. Signing, rulesets, and vigilant mode close the gap between “metadata says who you are” and “we can trust who actually made the commit.”
