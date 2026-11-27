@@ -42,7 +42,7 @@ This video explains the fundamentals of data flow in @ngrx/store, illustrating t
 
 עם אלמנטים אלו ועם הרכיבים שלנו באנגולר, יש זרימת נתונים פשוטה שמתוארת בתרשים הבא:
 
-![@ngrx/store - data flow](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/data-flow.gif?raw=true)
+![@ngrx/store - data flow](https://github.com/Nerdeez/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/data-flow.gif?raw=true)
 
 הדיאגרמה אינה מתארת את הדיאגרמה המלאה של `NGRX`, חשוב לראות אותה כמנוע של הרכב, לדיאגרמה זו נוסיף בהדרגה חלקים נוספים עד שנבין את הרכב כולו, אבל כדאי להתחיל מגרסה פשוטה ולבנות את הדרך משם.
 
@@ -80,7 +80,7 @@ export class SomeComponent {
 
 Component של אנגולר שקורא את ה - `State` מיוצג בחלק זה של הדיאגרמה:
 
-![@ngrx/store - data flow - reading the state](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/store-state-angular.png?raw=true)
+![@ngrx/store - data flow - reading the state](https://github.com/Nerdeez/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/store-state-angular.png?raw=true)
 
 ניתן לקרוא את ה - `State` על ידי הזרקת ה - `Store` ושימוש בפעולת ה - `select`.
 
@@ -148,7 +148,7 @@ export class AppComponent {
 
 אחרי שהזרקנו את ה - `Store` וקראנו את ה - `State`, נוכל לשנות את ה - `State` על ידי שימוש ב - `store.dispatch`. החלק הזה של הזרימה קצת מורכב, אז נפרק אותו לפרטים.
 
-![Trigger state change](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/trigger-change.png?raw=true)
+![Trigger state change](https://github.com/Nerdeez/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/trigger-change.png?raw=true)
 
 שינוי יתחיל ממשהו שמפעיל את תהליך השינוי (בדוגמא של הדיאגרמה שלמעלה זה לחיצת כפתור).
 
@@ -230,7 +230,7 @@ export class AppComponent {
 מטרת השיעור היא להתמקד בזרימת הנתונים, במציאות האמיתית של NGRX לא תיצורו `Actions` או `Reducers` כמו בדוגמא כאן.
 :::
 
-![store.dispatch](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/store-dispatch.png?raw=true)
+![store.dispatch](https://github.com/Nerdeez/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/store-dispatch.png?raw=true)
 
 כאשר נרצה להתחיל שינוי ב - `State`, אנחנו מזריקים את ה - `Store` וקוראים ל - `store.dispatch(action)` ושולחים מידע על האירוע שקרה.
 
@@ -317,7 +317,7 @@ export class AppComponent {
 
 ה- `Reducer` הוא פונקציה שמקבלת את ה - `State` הנוכחי ואת ה - `Action` שקרה ומחזירה את ה - `State` החדש.
 
-![reducer](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/reducer.png?raw=true)
+![reducer](https://github.com/Nerdeez/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/reducer.png?raw=true)
 
 וזהו החלק האחרון בזרימת הנתונים של `NGRX`.
 

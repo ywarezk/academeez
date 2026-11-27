@@ -49,13 +49,13 @@ This video provides a comprehensive overview of React Suspense, explaining its p
 
 הפתרון הנאיבי יהיה ליצור `<Parent />` component שיציב את ה - `<Table />` וה - `<TableSummary />`, component זה ישלח את שתי השאילתות לשרת ויעביר את הנתונים ל - children components.
 
-![Naive solution](https://github.com/ywarezk/academeez/blob/main/content/en/course/react/suspense/parent-tree.png?raw=true)
+![Naive solution](https://github.com/Nerdeez/academeez/blob/main/content/en/course/react/suspense/parent-tree.png?raw=true)
 
 ## הבעיה עם הפתרון הנאיבי
 
 לעתים זה עוזר לראות שהפתרון אינו אידיאלי כאשר מנסים להגדיל את הבעיה, נניח במקום 2 components שצריכים לשלוח שאילתה, יש לנו 50 components אסינכרוניים, כל אחד בעומק אחר.
 
-![Naive solution problem](https://github.com/ywarezk/academeez/blob/main/content/en/course/react/suspense/larger-tree.png?raw=true)
+![Naive solution problem](https://github.com/Nerdeez/academeez/blob/main/content/en/course/react/suspense/larger-tree.png?raw=true)
 
 אם ננסה לשלוח את כל הנתונים מה - `<Parent />` ל - 50 components האלו זה יהיה מסובך, נצטרך ליצור משהו בסגנון `Context` כדי להעביר את הנתונים, והעובדה שה - `<Parent />` צריך להתמודד עם המון נתונים שלא באמת קשורים אליו (למעט כאשר להציג את הספינר) לא עושה את הקוד שלנו להיראות יותר טוב (גם פוגע ב - single responsibility של ה - `<Parent />`).
 
