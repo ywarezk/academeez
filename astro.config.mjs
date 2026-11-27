@@ -58,7 +58,7 @@ export default defineConfig({
 			],
 			favicon: '/favicon-32x32.png',
 			editLink: {
-				baseUrl: 'https://github.com/ywarezk/academeez/edit/main/docs/',
+				baseUrl: 'https://github.com/Nerdeez/academeez/edit/main/src/content/docs/',
 			},
 			components: {
 				Header: './src/components/Header/Header.astro',
@@ -225,7 +225,7 @@ export default defineConfig({
 					label: 'Follow us on X',
 				},
 				{
-					href: 'https://github.com/ywarezk/academeez',
+					href: 'https://github.com/Nerdeez/academeez',
 					icon: 'github',
 					label: 'Follow us on GitHub',
 				},
