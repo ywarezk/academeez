@@ -58,7 +58,7 @@ export default defineConfig({
 			],
 			favicon: '/favicon-32x32.png',
 			editLink: {
-				baseUrl: 'https://github.com/Nerdeez/academeez/edit/main/src/content/docs/',
+				baseUrl: 'https://github.com/Nerdeez/academeez/edit/main/',
 			},
 			components: {
 				Header: './src/components/Header/Header.astro',
