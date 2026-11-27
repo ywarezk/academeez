@@ -13,8 +13,8 @@
 </p>
 
 <p align="center">
-  <a href="https://codecov.io/github/ywarezk/academeez" >
-    <img src="https://codecov.io/github/ywarezk/academeez/graph/badge.svg?token=HWFK0337XR"/>
+  <a href="https://codecov.io/gh/Nerdeez/academeez">
+    <img src="https://codecov.io/gh/Nerdeez/academeez/graph/badge.svg?token=HWFK0337XR"/>
   </a>
 </p>
 
