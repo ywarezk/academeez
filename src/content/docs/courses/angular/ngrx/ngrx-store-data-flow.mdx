@@ -43,7 +43,7 @@ We will target this lesson to understand 3 key elements from `@ngrx/store`:
 
 With these elements and our angular components, there is a simple flow of data that is described in the following diagram:
 
-![@ngrx/store - data flow](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/data-flow.gif?raw=true)
+![@ngrx/store - data flow](https://github.com/Nerdeez/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/data-flow.gif?raw=true)
 
 This diagram does not represent the full diagram of `NGRX`, think of it as representing the engine of the car, to this diagram we will gradually add additional parts until we understand the entire car, but it's best to start with a simple version and build our way from there.
 
@@ -81,7 +81,7 @@ The `Store` is holding the entire state of the application, where the main usage
 
 An Angular component that is reading the state is represented in this part of the diagram:
 
-![@ngrx/store - data flow - reading the state](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/store-state-angular.png?raw=true)
+![@ngrx/store - data flow - reading the state](https://github.com/Nerdeez/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/store-state-angular.png?raw=true)
 
 We can read the state by injecting the `Store` service and calling the `select` method.
 
@@ -149,7 +149,7 @@ It's recommended to select from the state using <a className="text-green/80 unde
 
 After you inject the `Store` service, you can trigger a change of state process using the `store.dispatch` method. This part of the flow is a bit tricky, so let's break it down.
 
-![Trigger state change](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/trigger-change.png?raw=true)
+![Trigger state change](https://github.com/Nerdeez/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/trigger-change.png?raw=true)
 
 Change will start from something that triggers a state change (In the diagram example we see above it's a button click).
 
@@ -231,7 +231,7 @@ we use `this._store.dispatch(...);` function to send an `Action`, we will have a
 The goal of this lesson is to focus on the data flow, in real world NGRX you will not create `Actions` or `Reducers` like the example here.
 :::
 
-![store.dispatch](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/store-dispatch.png?raw=true)
+![store.dispatch](https://github.com/Nerdeez/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/store-dispatch.png?raw=true)
 
 When we want to start a change in the state, we inject the `Store` service and call `store.dispatch(action)` sending information about the action that happened.
 
@@ -319,7 +319,7 @@ export class AppComponent {
 
 The reducer decides what is the new state by getting the current state and the action that happened, and returns the new state.
 
-![reducer](https://github.com/ywarezk/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/reducer.png?raw=true)
+![reducer](https://github.com/Nerdeez/academeez/blob/main/content/en/course/angular/ngrx/ngrx-store-data-flow/reducer.png?raw=true)
 
 And that is the last piece of the puzzle of `NGRX` data flow.
 

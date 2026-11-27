@@ -48,7 +48,7 @@ Our starting point is that we started from a branch called `main`.
 We wanted to work on a new feature, so we created a new branch called `feature`.
 We created a few commits on the `feature` branch and while we were working on the branch, the `main` branch was updated with new commits.
 
-![feature main commits](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/feature-main1.png?raw=true)
+![feature main commits](https://github.com/Nerdeez/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/feature-main1.png?raw=true)
 
 we are on the `feaure` branch and we want to get the new commits from `main` into our `feature` branch we can do one of two things:
 
@@ -74,7 +74,7 @@ When we run `git merge main` we are **telling** git to merge the `main` branch i
 Git will create a new commit that combines the changes from both branches.
 This new commit will have two parents: the last commit on the `main` branch and the last commit on the `feature` branch.
 
-![merge main](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/merge-main.png?raw=true)
+![merge main](https://github.com/Nerdeez/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/merge-main.png?raw=true)
 
 Notice that a new commit was added on the `feature` branch.
 
@@ -102,7 +102,7 @@ When we run `git rebase main` we are telling git to take all the commits from th
 Git will take each commit from the `feature` branch and apply it on top of the `main` branch.
 This means that the commits from the `feature` branch will be added to the `main` branch one by one.
 
-![rebase main](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/rebase-anim4.gif?raw=true)
+![rebase main](https://github.com/Nerdeez/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/rebase-anim4.gif?raw=true)
 
 ### Conflicts with Rebase
 
@@ -148,12 +148,12 @@ Then you realize that the package you chose are not maintained and has a lot of 
 The you decide to go with a 3rd package `awesome-pdf` which you manage to create all the features you need.
 So a commit history in your branch might look like this:
 
-![rebase interactive1](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/rebase-interactive1.png?raw=true)
+![rebase interactive1](https://github.com/Nerdeez/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/rebase-interactive1.png?raw=true)
 
 That trial and error is not necessarily something you want to keep in your commit history, and at times can be sufficient just placing a trial you did in a commit body instead of creating a full commit.
 For example that same commit history can be arranged differently using git rebase interactive mode:
 
-![rebase interactive2](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/rebase-interactive2.png?raw=true)
+![rebase interactive2](https://github.com/Nerdeez/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/rebase-interactive2.png?raw=true)
 
 I would argue that the second commit history is much cleaner and easier to understand.
 And what about conflicts?
@@ -183,7 +183,7 @@ I'm on a branch called `feature` I create 3 commits on that branch.
 commit `1` and commit `3` are changing the same file `package.json`.
 On the `main` branch a developer pushed a commit with changes to the `package.json` file.
 
-![git pull](https://github.com/ywarezk/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/pull1.png?raw=true)
+![git pull](https://github.com/Nerdeez/academeez/blob/main/src/content/docs/courses/git/rebase-conflicts/pull1.png?raw=true)
 
 This image describe the scenario, we want to examine what happens on different pull commands.
 
